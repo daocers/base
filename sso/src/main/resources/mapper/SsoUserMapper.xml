@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="sso.user">
+    <resultMap id="UserMap" type="co.bugu.sso.model.SsoUser">
+        <id column="user_id" property="id" jdbcType="INTEGER"/>
+        <result column="user_email" property="email" jdbcType="VARCHAR"/>
+        <result column="user_id_no" property="idNo" jdbcType="VARCHAR"/>
+        <result column="user_name" property="name" jdbcType="VARCHAR"/>
+        <result column="user_password" property="password" jdbcType="VARCHAR"/>
+        <result column="user_salt" property="salt" jdbcType="VARCHAR"/>
+        <result column="user_status" property="status" jdbcType="INTEGER"/>
+        <result column="user_username" property="username" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="user_list">
+    user.id as user_id, user.email as user_email, user.id_no as user_id_no, user.name as user_name, 
+    user.password as user_password, user.salt as user_salt, user.status as user_status, 
+    user.username as user_username
+  </sql>
+
+    <select id="selectById" resultMap="UserMap" parameterType="java.lang.Integer">
+        select
+        <include refid="user_list"/>
+        from sso_user user
+        where user.id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from sso_user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+    <insert id="insert" parameterType="co.bugu.sso.model.SsoUser">
+        insert into sso_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="idNo != null">
+                id_no,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="salt != null">
+                salt,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="username != null">
+                username,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="idNo != null">
+                #{idNo,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="salt != null">
+                #{salt,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="username != null">
+                #{username,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateById" parameterType="co.bugu.sso.model.SsoUser">
+        update sso_user
+        <set>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="idNo != null">
+                id_no = #{idNo,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="salt != null">
+                salt = #{salt,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="username != null">
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+
+    <select id="listByObject" resultMap="UserMap" parameterType="co.bugu.sso.model.SsoUser">
+        select
+        <include refid="user_list"/>
+        from sso_user user
+        <where>
+            <if test="id != null">
+                user.id = #{id}
+            </if>
+            <if test="username != null">
+                and user.username = #{username}
+            </if>
+            <if test="email != null">
+                and user.email = #{email}
+            </if>
+            <if test="password != null">
+                and user.password = #{password}
+            </if>
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="tes.property">
+    <resultMap id="PropertyMap" type="co.bugu.tes.model.Property">
+        <id column="property_id" property="id" jdbcType="INTEGER"/>
+        <result column="property_code" property="code" jdbcType="VARCHAR"/>
+        <result column="property_description" property="description" jdbcType="VARCHAR"/>
+        <result column="property_idx" property="idx" jdbcType="INTEGER"/>
+        <result column="property_name" property="name" jdbcType="VARCHAR"/>
+        <result column="property_status" property="status" jdbcType="INTEGER"/>
+        <collection property="propertyItemList" ofType="co.bugu.tes.model.PropertyItem" resultMap="PropertyItemMap"/>
+    </resultMap>
+
+    <resultMap id="PropertyItemMap" type="co.bugu.tes.model.PropertyItem">
+        <id column="prop_item_id" property="id" jdbcType="INTEGER"/>
+        <result column="prop_item_code" property="code" jdbcType="VARCHAR"/>
+        <result column="prop_item_idx" property="idx" jdbcType="INTEGER"/>
+        <result column="prop_item_name" property="name" jdbcType="VARCHAR"/>
+        <result column="prop_item_property_id" property="propertyId" jdbcType="INTEGER"/>
+        <result column="prop_item_value" property="value" jdbcType="VARCHAR"/>
+        <result column="prop_item_items_idx" property="itemsIdx" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="propertyItem_list">
+    prop_item.id as prop_item_id, prop_item.code as prop_item_code, prop_item.idx as prop_item_idx,
+    prop_item.name as prop_item_name, prop_item.property_id as prop_item_property_id,
+    prop_item.value as prop_item_value, prop_item.items_idx as prop_item_items_idx
+  </sql>
+    <sql id="property_list">
+    property.id as property_id, property.code as property_code, property.description as property_description, 
+    property.idx as property_idx, property.name as property_name, property.status as property_status
+  </sql>
+    <select id="selectById" resultMap="PropertyMap" parameterType="java.lang.Integer">
+        select
+        <include refid="property_list"/>,
+        <include refid="propertyItem_list"/>
+        from property property
+        left join property_item as prop_item on prop_item.property_id = property.id
+        where property.id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from property
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="co.bugu.tes.model.Property">
+        insert into property
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="idx != null">
+                idx,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="code != null">
+                #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="idx != null">
+                #{idx,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateById" parameterType="co.bugu.tes.model.Property">
+        update property
+        <set>
+            <if test="code != null">
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="idx != null">
+                idx = #{idx,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+
+    <select id="listByObject" resultMap="PropertyMap" parameterType="co.bugu.tes.model.Property">
+        select
+        <include refid="property_list"/>,
+        <include refid="propertyItem_list"/>
+        from property property
+        left join property_item as prop_item on prop_item.property_id = property.id
+    </select>
+</mapper>

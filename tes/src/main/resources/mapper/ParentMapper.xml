@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="tes.parent">
+    <resultMap id="ParentMap" type="co.bugu.tes.model.Parent">
+        <id column="parent_id" property="id" jdbcType="INTEGER"/>
+        <result column="parent_name" property="name" jdbcType="VARCHAR"/>
+        <result column="parent_age" property="age" jdbcType="INTEGER"/>
+        <result column="parent_prop1" property="prop1" jdbcType="VARCHAR"/>
+        <result column="parent_prop" property="prop" jdbcType="VARCHAR"/>
+        <result column="parent_prop2" property="prop2" jdbcType="VARCHAR"/>
+        <result column="parent_prop3" property="prop3" jdbcType="VARCHAR"/>
+        <result column="parent_prop12" property="prop12" jdbcType="VARCHAR"/>
+        <collection property="children" resultMap="ChildMap" ofType="co.bugu.tes.model.Child"/>
+    </resultMap>
+
+    <resultMap id="SingleMap" type="co.bugu.tes.model.Parent">
+        <id column="parent_id" property="id" jdbcType="INTEGER"/>
+        <result column="parent_name" property="name" jdbcType="VARCHAR"/>
+        <result column="parent_age" property="age" jdbcType="INTEGER"/>
+        <result column="parent_prop1" property="prop1" jdbcType="VARCHAR"/>
+        <result column="parent_prop" property="prop" jdbcType="VARCHAR"/>
+        <result column="parent_prop2" property="prop2" jdbcType="VARCHAR"/>
+        <result column="parent_prop3" property="prop3" jdbcType="VARCHAR"/>
+        <result column="parent_prop12" property="prop12" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="ChildMap" type="co.bugu.tes.model.Child">
+        <id column="child_id" property="id" jdbcType="INTEGER"/>
+        <result column="child_parent_id" property="parentId" jdbcType="INTEGER"/>
+        <result column="child_name" property="name" jdbcType="VARCHAR"/>
+        <result column="child_a" property="a" jdbcType="VARCHAR"/>
+        <result column="child_b" property="b" jdbcType="VARCHAR"/>
+        <result column="child_c" property="c" jdbcType="VARCHAR"/>
+        <result column="child_d" property="d" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="child_list">
+    child.id as child_id, child.parent_id as child_parent_id, child.name as child_name,
+    child.a as child_a, child.b as child_b, child.c as child_c, child.d as child_d
+  </sql>
+
+    <sql id="parent_list">
+    parent.id as parent_id, parent.name as parent_name, parent.age as parent_age, parent.prop1 as parent_prop1, 
+    parent.prop as parent_prop, parent.prop2 as parent_prop2, parent.prop3 as parent_prop3, 
+    parent.prop12 as parent_prop12
+  </sql>
+    <select id="selectById" resultMap="ParentMap" parameterType="java.lang.Integer">
+        select
+        <include refid="parent_list"/>
+        from parent parent
+        where parent.id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from parent
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="co.bugu.tes.model.Parent">
+        insert into parent
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="age != null">
+                age,
+            </if>
+            <if test="prop1 != null">
+                prop1,
+            </if>
+            <if test="prop != null">
+                prop,
+            </if>
+            <if test="prop2 != null">
+                prop2,
+            </if>
+            <if test="prop3 != null">
+                prop3,
+            </if>
+            <if test="prop12 != null">
+                prop12,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="age != null">
+                #{age,jdbcType=INTEGER},
+            </if>
+            <if test="prop1 != null">
+                #{prop1,jdbcType=VARCHAR},
+            </if>
+            <if test="prop != null">
+                #{prop,jdbcType=VARCHAR},
+            </if>
+            <if test="prop2 != null">
+                #{prop2,jdbcType=VARCHAR},
+            </if>
+            <if test="prop3 != null">
+                #{prop3,jdbcType=VARCHAR},
+            </if>
+            <if test="prop12 != null">
+                #{prop12,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateById" parameterType="co.bugu.tes.model.Parent">
+        update parent
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="age != null">
+                age = #{age,jdbcType=INTEGER},
+            </if>
+            <if test="prop1 != null">
+                prop1 = #{prop1,jdbcType=VARCHAR},
+            </if>
+            <if test="prop != null">
+                prop = #{prop,jdbcType=VARCHAR},
+            </if>
+            <if test="prop2 != null">
+                prop2 = #{prop2,jdbcType=VARCHAR},
+            </if>
+            <if test="prop3 != null">
+                prop3 = #{prop3,jdbcType=VARCHAR},
+            </if>
+            <if test="prop12 != null">
+                prop12 = #{prop12,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+
+    <!--<select id="listByObject" resultMap="ParentMap" parameterType="co.bugu.tes.model.Parent">-->
+        <!--select-->
+        <!--<include refid="parent_list"/>-->
+        <!--from parent parent-->
+    <!--</select>-->
+
+    <select id="listByObject" resultMap="ParentMap" parameterType="co.bugu.tes.model.Parent">
+        select
+        <include refid="parent_list"/>,
+        <include refid="child_list"/>
+        from parent parent
+        LEFT  JOIN child child on child.parent_id = parent.id
+    </select>
+</mapper>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <classPathEntry location="t_mysqlDriver\src\main\resources\templates\mysql-connector-java-5.1.13.jar"/>
+
+    <context id="mysqlTables" targetRuntime="MyBatis3">
+
+        <property name="mergeable" value="false"></property>
+
+        <!-- 去除注释 显示注释false -->
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+
+        <!-- jdbc连接信息 -->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://t_ip:3306/t_db"
+                        userId="t_user" password="t_pwd"/>
+
+        <!-- java类型解析器 可选配置 -->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="t_package.model" targetProject="target_project">
+            <property name="enableSubPackages" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="t_package.dao" targetProject="target_project">
+        <!--<sqlMapGenerator targetPackage="t_namespace.t_variable" targetProject="target_project">-->
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+
+
+
+        <table tableName="t_table" domainObjectName="t_class" alias="t_alias"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false">
+        </table>
+
+    </context>
+</generatorConfiguration>

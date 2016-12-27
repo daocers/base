@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="tes.scene" >
+  <resultMap id="SceneMap" type="co.bugu.tes.model.Scene" >
+    <id column="scene_id" property="id" jdbcType="INTEGER" />
+    <result column="scene_auth_code" property="authCode" jdbcType="VARCHAR" />
+    <result column="scene_begin_time" property="beginTime" jdbcType="TIMESTAMP" />
+    <result column="scene_branch_id" property="branchId" jdbcType="INTEGER" />
+    <result column="scene_change_paper" property="changePaper" jdbcType="INTEGER" />
+    <result column="scene_code" property="code" jdbcType="VARCHAR" />
+    <result column="scene_create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="scene_create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="scene_delay" property="delay" jdbcType="INTEGER" />
+    <result column="scene_department_id" property="departmentId" jdbcType="INTEGER" />
+    <result column="scene_duration" property="duration" jdbcType="INTEGER" />
+    <result column="scene_end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="scene_name" property="name" jdbcType="VARCHAR" />
+    <result column="scene_paper_policy_id" property="paperPolicyId" jdbcType="INTEGER" />
+    <result column="scene_paper_type" property="paperType" jdbcType="INTEGER" />
+    <result column="scene_reason" property="reason" jdbcType="VARCHAR" />
+    <result column="scene_remark" property="remark" jdbcType="VARCHAR" />
+    <result column="scene_status" property="status" jdbcType="INTEGER" />
+    <result column="scene_update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="scene_update_user_id" property="updateUserId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="scene_list" >
+    scene.id as scene_id, scene.auth_code as scene_auth_code, scene.begin_time as scene_begin_time, 
+    scene.branch_id as scene_branch_id, scene.change_paper as scene_change_paper, scene.code as scene_code, 
+    scene.create_time as scene_create_time, scene.create_user_id as scene_create_user_id, 
+    scene.delay as scene_delay, scene.department_id as scene_department_id, scene.duration as scene_duration, 
+    scene.end_time as scene_end_time, scene.name as scene_name, scene.paper_policy_id as scene_paper_policy_id,
+    scene.paper_type as scene_paper_type,
+    scene.reason as scene_reason, scene.remark as scene_remark, scene.status as scene_status, 
+    scene.update_time as scene_update_time, scene.update_user_id as scene_update_user_id
+  </sql>
+  <select id="selectById" resultMap="SceneMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="scene_list" />
+    from scene scene
+    where scene.id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteById" parameterType="java.lang.Integer" >
+    delete from scene
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="insert"  useGeneratedKeys="true" keyProperty="id"  parameterType="co.bugu.tes.model.Scene" >
+    insert into scene
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="authCode != null" >
+        auth_code,
+      </if>
+      <if test="beginTime != null" >
+        begin_time,
+      </if>
+      <if test="branchId != null" >
+        branch_id,
+      </if>
+      <if test="changePaper != null" >
+        change_paper,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="delay != null" >
+        delay,
+      </if>
+      <if test="departmentId != null" >
+        department_id,
+      </if>
+      <if test="duration != null" >
+        duration,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="paperPolicyId != null" >
+        paper_policy_id,
+      </if>
+      <if test="reason != null" >
+        reason,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="paperType != null">
+        paper_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="authCode != null" >
+        #{authCode,jdbcType=VARCHAR},
+      </if>
+      <if test="beginTime != null" >
+        #{beginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="branchId != null" >
+        #{branchId,jdbcType=INTEGER},
+      </if>
+      <if test="changePaper != null" >
+        #{changePaper,jdbcType=INTEGER},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="delay != null" >
+        #{delay,jdbcType=INTEGER},
+      </if>
+      <if test="departmentId != null" >
+        #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="duration != null" >
+        #{duration,jdbcType=INTEGER},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="paperPolicyId != null" >
+        #{paperPolicyId,jdbcType=INTEGER},
+      </if>
+      <if test="reason != null" >
+        #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="paperType != null">
+        #{paperType},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateById" parameterType="co.bugu.tes.model.Scene" >
+    update scene
+    <set >
+      <if test="authCode != null" >
+        auth_code = #{authCode,jdbcType=VARCHAR},
+      </if>
+      <if test="beginTime != null" >
+        begin_time = #{beginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="branchId != null" >
+        branch_id = #{branchId,jdbcType=INTEGER},
+      </if>
+      <if test="changePaper != null" >
+        change_paper = #{changePaper,jdbcType=INTEGER},
+      </if>
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="delay != null" >
+        delay = #{delay,jdbcType=INTEGER},
+      </if>
+      <if test="departmentId != null" >
+        department_id = #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="duration != null" >
+        duration = #{duration,jdbcType=INTEGER},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="paperPolicyId != null" >
+        paper_policy_id = #{paperPolicyId,jdbcType=INTEGER},
+      </if>
+      <if test="reason != null" >
+        reason = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="paperType != null">
+        paper_type = #{paperType},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+
+<select id="listByObject" resultMap="SceneMap" parameterType="co.bugu.tes.model.Scene" >
+    select 
+    <include refid="scene_list" />
+    from scene scene
+    </select>
+</mapper>

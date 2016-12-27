@@ -1,0 +1,23 @@
+@charset "utf-8";
+
+.foot {
+	position: absolute;
+	clear: both;
+	height: 60px;
+	background-color: #D4D5D9;
+	text-align: center;
+	font-size: 12px;
+	line-height: 50px;
+	color: #4b4b4c;
+	left: 190px;
+	bottom: -37px;
+	right: 0px;
+}
+
+.carouselImg {
+	vertical-align: middle;
+	max-height: 260px;
+	max-width: 420px;
+	width: expression(this.width > 420 && this.height < this.width ? 420 : true);
+	height: expression(this.height > 260 ? 260 : true);
+}

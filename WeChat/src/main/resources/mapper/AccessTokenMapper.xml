@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wechat.accesstoken">
+    <resultMap id="AccessTokenMap" type="co.bugu.wechat.model.common.AccessToken">
+        <id column="token_appid" property="appid" jdbcType="VARCHAR"/>
+        <result column="token_expires_in" property="expiresIn" jdbcType="INTEGER"/>
+        <result column="token_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="token_access_token" property="accessToken" jdbcType="LONGVARCHAR"/>
+    </resultMap>
+    <sql id="accessToken_list">
+    token.appid as token_appid, token.expires_in as token_expires_in, 
+    token.create_time as token_create_time, token.access_token as token_access_token
+  </sql>
+    <select id="selectById" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
+        select
+        <include refid="accessToken_list"/>
+        from access_token token
+        where token.appid = #{appid,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteById" parameterType="java.lang.String">
+    delete from access_token
+    where appid = #{appid,jdbcType=VARCHAR}
+  </delete>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="co.bugu.wechat.model.common.AccessToken">
+        insert into access_token
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="appid != null">
+                appid,
+            </if>
+            <if test="expiresIn != null">
+                expires_in,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="accessToken != null">
+                access_token,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="appid != null">
+                #{appid,jdbcType=VARCHAR},
+            </if>
+            <if test="expiresIn != null">
+                #{expiresIn,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="accessToken != null">
+                #{accessToken,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateById" parameterType="co.bugu.wechat.model.common.AccessToken">
+        update access_token
+        <set>
+            <if test="expiresIn != null">
+                expires_in = #{expiresIn,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="accessToken != null">
+                access_token = #{accessToken,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where appid = #{appid,jdbcType=VARCHAR}
+    </update>
+
+</mapper>

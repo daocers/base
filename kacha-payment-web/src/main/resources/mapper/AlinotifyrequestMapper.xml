@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="pay.alinotifyrequest">
+    <resultMap id="AlinotifyrequestMap" type="com.pinkbox.kacha.payment.domain.alipay.AliNotifyRequest">
+        <id column="trade_no" property="tradeNo" jdbcType="VARCHAR"/>
+        <result column="notify_time" property="notifyTime" jdbcType="TIMESTAMP"/>
+        <result column="notify_type" property="notifyType" jdbcType="VARCHAR"/>
+        <result column="notify_id" property="notifyId" jdbcType="VARCHAR"/>
+        <result column="sign_type" property="signType" jdbcType="VARCHAR"/>
+        <result column="sign" property="sign" jdbcType="VARCHAR"/>
+        <result column="out_trade_no" property="outTradeNo" jdbcType="VARCHAR"/>
+        <result column="subject" property="subject" jdbcType="VARCHAR"/>
+        <result column="payment_type" property="paymentType" jdbcType="VARCHAR"/>
+        <result column="trade_status" property="tradeStatus" jdbcType="VARCHAR"/>
+        <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP"/>
+        <result column="gmt_payment" property="gmtPayment" jdbcType="TIMESTAMP"/>
+        <result column="gmt_close" property="gmtClose" jdbcType="TIMESTAMP"/>
+        <result column="seller_email" property="sellerEmail" jdbcType="VARCHAR"/>
+        <result column="buyer_email" property="buyerEmail" jdbcType="VARCHAR"/>
+        <result column="seller_id" property="sellerId" jdbcType="VARCHAR"/>
+        <result column="buyer_id" property="buyerId" jdbcType="VARCHAR"/>
+        <result column="price" property="price" jdbcType="VARCHAR"/>
+        <result column="total_fee" property="totalFee" jdbcType="VARCHAR"/>
+        <result column="quantity" property="quantity" jdbcType="INTEGER"/>
+        <result column="body" property="body" jdbcType="VARCHAR"/>
+        <result column="discount" property="discount" jdbcType="VARCHAR"/>
+        <result column="is_total_fee_adjust" property="isTotalFeeAdjust" jdbcType="VARCHAR"/>
+        <result column="use_coupon" property="useCoupon" jdbcType="VARCHAR"/>
+        <result column="refund_status" property="refundStatus" jdbcType="VARCHAR"/>
+        <result column="gmt_refund" property="gmtRefund" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="alinotifyrequest_list">
+    trade_no, notify_time, notify_type, notify_id, sign_type, sign, out_trade_no, subject, 
+    payment_type, trade_status, gmt_create, gmt_payment, gmt_close, seller_email, buyer_email, 
+    seller_id, buyer_id, price, total_fee, quantity, body, discount, is_total_fee_adjust, 
+    use_coupon, refund_status, gmt_refund
+  </sql>
+    <select id="selectById" resultMap="AlinotifyrequestMap" parameterType="java.lang.String">
+        select
+        <include refid="alinotifyrequest_list"/>
+        from aliNotifyRequest
+        where trade_no = #{tradeNo,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteById" parameterType="java.lang.String">
+    delete from aliNotifyRequest
+    where trade_no = #{tradeNo,jdbcType=VARCHAR}
+  </delete>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.pinkbox.kacha.payment.domain.alipay.AliNotifyRequest">
+        insert into aliNotifyRequest
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tradeNo != null">
+                trade_no,
+            </if>
+            <if test="notifyTime != null">
+                notify_time,
+            </if>
+            <if test="notifyType != null">
+                notify_type,
+            </if>
+            <if test="notifyId != null">
+                notify_id,
+            </if>
+            <if test="signType != null">
+                sign_type,
+            </if>
+            <if test="sign != null">
+                sign,
+            </if>
+            <if test="outTradeNo != null">
+                out_trade_no,
+            </if>
+            <if test="subject != null">
+                subject,
+            </if>
+            <if test="paymentType != null">
+                payment_type,
+            </if>
+            <if test="tradeStatus != null">
+                trade_status,
+            </if>
+            <if test="gmtCreate != null">
+                gmt_create,
+            </if>
+            <if test="gmtPayment != null">
+                gmt_payment,
+            </if>
+            <if test="gmtClose != null">
+                gmt_close,
+            </if>
+            <if test="sellerEmail != null">
+                seller_email,
+            </if>
+            <if test="buyerEmail != null">
+                buyer_email,
+            </if>
+            <if test="sellerId != null">
+                seller_id,
+            </if>
+            <if test="buyerId != null">
+                buyer_id,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="totalFee != null">
+                total_fee,
+            </if>
+            <if test="quantity != null">
+                quantity,
+            </if>
+            <if test="body != null">
+                body,
+            </if>
+            <if test="discount != null">
+                discount,
+            </if>
+            <if test="isTotalFeeAdjust != null">
+                is_total_fee_adjust,
+            </if>
+            <if test="useCoupon != null">
+                use_coupon,
+            </if>
+            <if test="refundStatus != null">
+                refund_status,
+            </if>
+            <if test="gmtRefund != null">
+                gmt_refund,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tradeNo != null">
+                #{tradeNo,jdbcType=VARCHAR},
+            </if>
+            <if test="notifyTime != null">
+                #{notifyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="notifyType != null">
+                #{notifyType,jdbcType=VARCHAR},
+            </if>
+            <if test="notifyId != null">
+                #{notifyId,jdbcType=VARCHAR},
+            </if>
+            <if test="signType != null">
+                #{signType,jdbcType=VARCHAR},
+            </if>
+            <if test="sign != null">
+                #{sign,jdbcType=VARCHAR},
+            </if>
+            <if test="outTradeNo != null">
+                #{outTradeNo,jdbcType=VARCHAR},
+            </if>
+            <if test="subject != null">
+                #{subject,jdbcType=VARCHAR},
+            </if>
+            <if test="paymentType != null">
+                #{paymentType,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeStatus != null">
+                #{tradeStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreate != null">
+                #{gmtCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gmtPayment != null">
+                #{gmtPayment,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gmtClose != null">
+                #{gmtClose,jdbcType=TIMESTAMP},
+            </if>
+            <if test="sellerEmail != null">
+                #{sellerEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="buyerEmail != null">
+                #{buyerEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="sellerId != null">
+                #{sellerId,jdbcType=VARCHAR},
+            </if>
+            <if test="buyerId != null">
+                #{buyerId,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null">
+                #{price,jdbcType=VARCHAR},
+            </if>
+            <if test="totalFee != null">
+                #{totalFee,jdbcType=VARCHAR},
+            </if>
+            <if test="quantity != null">
+                #{quantity,jdbcType=INTEGER},
+            </if>
+            <if test="body != null">
+                #{body,jdbcType=VARCHAR},
+            </if>
+            <if test="discount != null">
+                #{discount,jdbcType=VARCHAR},
+            </if>
+            <if test="isTotalFeeAdjust != null">
+                #{isTotalFeeAdjust,jdbcType=VARCHAR},
+            </if>
+            <if test="useCoupon != null">
+                #{useCoupon,jdbcType=VARCHAR},
+            </if>
+            <if test="refundStatus != null">
+                #{refundStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtRefund != null">
+                #{gmtRefund,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateById" parameterType="com.pinkbox.kacha.payment.domain.alipay.AliNotifyRequest">
+        update aliNotifyRequest
+        <set>
+            <if test="notifyTime != null">
+                notify_time = #{notifyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="notifyType != null">
+                notify_type = #{notifyType,jdbcType=VARCHAR},
+            </if>
+            <if test="notifyId != null">
+                notify_id = #{notifyId,jdbcType=VARCHAR},
+            </if>
+            <if test="signType != null">
+                sign_type = #{signType,jdbcType=VARCHAR},
+            </if>
+            <if test="sign != null">
+                sign = #{sign,jdbcType=VARCHAR},
+            </if>
+            <if test="outTradeNo != null">
+                out_trade_no = #{outTradeNo,jdbcType=VARCHAR},
+            </if>
+            <if test="subject != null">
+                subject = #{subject,jdbcType=VARCHAR},
+            </if>
+            <if test="paymentType != null">
+                payment_type = #{paymentType,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeStatus != null">
+                trade_status = #{tradeStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreate != null">
+                gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gmtPayment != null">
+                gmt_payment = #{gmtPayment,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gmtClose != null">
+                gmt_close = #{gmtClose,jdbcType=TIMESTAMP},
+            </if>
+            <if test="sellerEmail != null">
+                seller_email = #{sellerEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="buyerEmail != null">
+                buyer_email = #{buyerEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="sellerId != null">
+                seller_id = #{sellerId,jdbcType=VARCHAR},
+            </if>
+            <if test="buyerId != null">
+                buyer_id = #{buyerId,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=VARCHAR},
+            </if>
+            <if test="totalFee != null">
+                total_fee = #{totalFee,jdbcType=VARCHAR},
+            </if>
+            <if test="quantity != null">
+                quantity = #{quantity,jdbcType=INTEGER},
+            </if>
+            <if test="body != null">
+                body = #{body,jdbcType=VARCHAR},
+            </if>
+            <if test="discount != null">
+                discount = #{discount,jdbcType=VARCHAR},
+            </if>
+            <if test="isTotalFeeAdjust != null">
+                is_total_fee_adjust = #{isTotalFeeAdjust,jdbcType=VARCHAR},
+            </if>
+            <if test="useCoupon != null">
+                use_coupon = #{useCoupon,jdbcType=VARCHAR},
+            </if>
+            <if test="refundStatus != null">
+                refund_status = #{refundStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtRefund != null">
+                gmt_refund = #{gmtRefund,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where trade_no = #{tradeNo,jdbcType=VARCHAR}
+    </update>
+
+
+    <select id="listByObject" resultMap="AlinotifyrequestMap" parameterType="java.lang.String">
+        select
+        <include refid="alinotifyrequest_list"/>
+        from aliNotifyRequest
+    </select>
+</mapper>

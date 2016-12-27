@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="tes.child" >
+  <resultMap id="ChildMap" type="co.bugu.tes.model.Child" >
+    <id column="child_id" property="id" jdbcType="INTEGER" />
+    <result column="child_parent_id" property="parentId" jdbcType="INTEGER" />
+    <result column="child_name" property="name" jdbcType="VARCHAR" />
+    <result column="child_a" property="a" jdbcType="VARCHAR" />
+    <result column="child_b" property="b" jdbcType="VARCHAR" />
+    <result column="child_c" property="c" jdbcType="VARCHAR" />
+    <result column="child_d" property="d" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="child_list" >
+    child.id as child_id, child.parent_id as child_parent_id, child.name as child_name, 
+    child.a as child_a, child.b as child_b, child.c as child_c, child.d as child_d
+  </sql>
+  <select id="selectById" resultMap="ChildMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="child_list" />
+    from child child
+    where child.id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteById" parameterType="java.lang.Integer" >
+    delete from child
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="insert"  useGeneratedKeys="true" keyProperty="id"  parameterType="co.bugu.tes.model.Child" >
+    insert into child
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="parentId != null" >
+        parent_id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="a != null" >
+        a,
+      </if>
+      <if test="b != null" >
+        b,
+      </if>
+      <if test="c != null" >
+        c,
+      </if>
+      <if test="d != null" >
+        d,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="a != null" >
+        #{a,jdbcType=VARCHAR},
+      </if>
+      <if test="b != null" >
+        #{b,jdbcType=VARCHAR},
+      </if>
+      <if test="c != null" >
+        #{c,jdbcType=VARCHAR},
+      </if>
+      <if test="d != null" >
+        #{d,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateById" parameterType="co.bugu.tes.model.Child" >
+    update child
+    <set >
+      <if test="parentId != null" >
+        parent_id = #{parentId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="a != null" >
+        a = #{a,jdbcType=VARCHAR},
+      </if>
+      <if test="b != null" >
+        b = #{b,jdbcType=VARCHAR},
+      </if>
+      <if test="c != null" >
+        c = #{c,jdbcType=VARCHAR},
+      </if>
+      <if test="d != null" >
+        d = #{d,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+
+	<select id="listByObject" resultMap="ChildMap" parameterType="co.bugu.tes.model.Child" >
+    select 
+    <include refid="child_list" />
+    from child child
+    </select>
+</mapper>

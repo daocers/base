@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="tes.paperpolicy">
+    <resultMap id="PaperPolicyMap" type="co.bugu.tes.model.PaperPolicy">
+        <id column="paper_policy_id" property="id" jdbcType="INTEGER"/>
+        <result column="paper_policy_branch_id" property="branchId" jdbcType="INTEGER"/>
+        <result column="paper_policy_code" property="code" jdbcType="VARCHAR"/>
+        <result column="paper_policy_content" property="content" jdbcType="VARCHAR"/>
+        <result column="paper_policy_question_metainfo_id" property="questionMetaInfoId" jdbcType="VARCHAR"/>
+        <result column="paper_policy_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="paper_policy_create_user_id" property="createUserId" jdbcType="INTEGER"/>
+        <result column="paper_policy_department_id" property="departmentId" jdbcType="INTEGER"/>
+        <result column="paper_policy_name" property="name" jdbcType="VARCHAR"/>
+        <result column="paper_policy_station_id" property="stationId" jdbcType="INTEGER"/>
+        <result column="paper_policy_status" property="status" jdbcType="INTEGER"/>
+        <result column="paper_policy_update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="paper_policy_update_user_id" property="updateUserId" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="paperPolicy_list">
+    paper_policy.id as paper_policy_id, paper_policy.branch_id as paper_policy_branch_id, 
+    paper_policy.code as paper_policy_code, paper_policy.content as paper_policy_content,
+    paper_policy.question_metainfo_id as paper_policy_question_metainfo_id,
+    paper_policy.create_time as paper_policy_create_time,
+    paper_policy.create_user_id as paper_policy_create_user_id, paper_policy.department_id as paper_policy_department_id, 
+    paper_policy.name as paper_policy_name, paper_policy.station_id as paper_policy_station_id, 
+    paper_policy.status as paper_policy_status, paper_policy.update_time as paper_policy_update_time, 
+    paper_policy.update_user_id as paper_policy_update_user_id
+  </sql>
+    <select id="selectById" resultMap="PaperPolicyMap" parameterType="java.lang.Integer">
+        select
+        <include refid="paperPolicy_list"/>
+        from paper_policy paper_policy
+        where paper_policy.id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from paper_policy
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="co.bugu.tes.model.PaperPolicy">
+        insert into paper_policy
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="branchId != null">
+                branch_id,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="questionMetaInfoId != null">
+                question_metainfo_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="createUserId != null">
+                create_user_id,
+            </if>
+            <if test="departmentId != null">
+                department_id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="stationId != null">
+                station_id,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="updateUserId != null">
+                update_user_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="branchId != null">
+                #{branchId,jdbcType=INTEGER},
+            </if>
+            <if test="code != null">
+                #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                #{content},
+            </if>
+            <if test="questionMetaInfoId != null">
+                #{questionMetaInfoId},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUserId != null">
+                #{createUserId,jdbcType=INTEGER},
+            </if>
+            <if test="departmentId != null">
+                #{departmentId,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="stationId != null">
+                #{stationId,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUserId != null">
+                #{updateUserId,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateById" parameterType="co.bugu.tes.model.PaperPolicy">
+        update paper_policy
+        <set>
+            <if test="branchId != null">
+                branch_id = #{branchId,jdbcType=INTEGER},
+            </if>
+            <if test="code != null">
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                content = #{content}
+            </if>
+            <if test="questionMetaInfoId != null">
+                question_metainfo_id = #{questionMetaInfoId}
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUserId != null">
+                create_user_id = #{createUserId,jdbcType=INTEGER},
+            </if>
+            <if test="departmentId != null">
+                department_id = #{departmentId,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="stationId != null">
+                station_id = #{stationId,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUserId != null">
+                update_user_id = #{updateUserId,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+
+    <select id="listByObject" resultMap="PaperPolicyMap" parameterType="co.bugu.tes.model.PaperPolicy">
+        select
+        <include refid="paperPolicy_list"/>
+        from paper_policy paper_policy
+    </select>
+</mapper>

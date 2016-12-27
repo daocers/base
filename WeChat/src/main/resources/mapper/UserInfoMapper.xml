@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wechat.userinfo" >
+    <resultMap id="UserInfoMap" type="co.bugu.wechat.model.common.UserInfo" >
+        <id column="user_unionid" property="unionid" jdbcType="VARCHAR" />
+        <result column="user_openid" property="openid" jdbcType="VARCHAR" />
+        <result column="user_nickname" property="nickname" jdbcType="VARCHAR" />
+        <result column="user_sex" property="sex" jdbcType="INTEGER" />
+        <result column="user_country" property="country" jdbcType="VARCHAR" />
+        <result column="user_city" property="city" jdbcType="VARCHAR" />
+        <result column="user_province" property="province" jdbcType="VARCHAR" />
+        <result column="user_headingurl" property="headingurl" jdbcType="VARCHAR" />
+        <result column="user_privilege" property="privilege" jdbcType="VARCHAR" />
+        <result column="user_subscribe" property="subscribe" jdbcType="INTEGER" />
+        <result column="user_language" property="language" jdbcType="VARCHAR" />
+        <result column="user_subscribe_time" property="subscribeTime" jdbcType="TIMESTAMP" />
+        <result column="user_remark" property="remark" jdbcType="VARCHAR" />
+        <result column="user_groupid" property="groupid" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="userInfo_list" >
+        user.unionid as user_unionid, user.openid as user_openid, user.nickname as user_nickname,
+        user.sex as user_sex, user.country as user_country, user.city as user_city, user.province as user_province,
+        user.headingurl as user_headingurl, user.privilege as user_privilege, user.subscribe as user_subscribe,
+        user.language as user_language, user.subscribe_time as user_subscribe_time, user.remark as user_remark,
+        user.groupid as user_groupid
+    </sql>
+    <select id="selectById" resultMap="UserInfoMap" parameterType="java.lang.String" >
+        select
+        <include refid="userInfo_list" />
+        from user_info user
+        where user.unionid = #{unionid,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteById" parameterType="java.lang.String" >
+        delete from user_info
+        where unionid = #{unionid,jdbcType=VARCHAR}
+    </delete>
+
+    <insert id="insert"  useGeneratedKeys="true" keyProperty="id"  parameterType="co.bugu.wechat.model.common.UserInfo" >
+        insert into user_info
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="unionid != null" >
+                unionid,
+            </if>
+            <if test="openid != null" >
+                openid,
+            </if>
+            <if test="nickname != null" >
+                nickname,
+            </if>
+            <if test="sex != null" >
+                sex,
+            </if>
+            <if test="country != null" >
+                country,
+            </if>
+            <if test="city != null" >
+                city,
+            </if>
+            <if test="province != null" >
+                province,
+            </if>
+            <if test="headingurl != null" >
+                headingurl,
+            </if>
+            <if test="privilege != null" >
+                privilege,
+            </if>
+            <if test="subscribe != null" >
+                subscribe,
+            </if>
+            <if test="language != null" >
+                language,
+            </if>
+            <if test="subscribeTime != null" >
+                subscribe_time,
+            </if>
+            <if test="remark != null" >
+                remark,
+            </if>
+            <if test="groupid != null" >
+                groupid,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="unionid != null" >
+                #{unionid,jdbcType=VARCHAR},
+            </if>
+            <if test="openid != null" >
+                #{openid,jdbcType=VARCHAR},
+            </if>
+            <if test="nickname != null" >
+                #{nickname,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null" >
+                #{sex,jdbcType=INTEGER},
+            </if>
+            <if test="country != null" >
+                #{country,jdbcType=VARCHAR},
+            </if>
+            <if test="city != null" >
+                #{city,jdbcType=VARCHAR},
+            </if>
+            <if test="province != null" >
+                #{province,jdbcType=VARCHAR},
+            </if>
+            <if test="headingurl != null" >
+                #{headingurl,jdbcType=VARCHAR},
+            </if>
+            <if test="privilege != null" >
+                #{privilege,jdbcType=VARCHAR},
+            </if>
+            <if test="subscribe != null" >
+                #{subscribe,jdbcType=INTEGER},
+            </if>
+            <if test="language != null" >
+                #{language,jdbcType=VARCHAR},
+            </if>
+            <if test="subscribeTime != null" >
+                #{subscribeTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="groupid != null" >
+                #{groupid,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateById" parameterType="co.bugu.wechat.model.common.UserInfo" >
+        update user_info
+        <set >
+            <if test="openid != null" >
+                openid = #{openid,jdbcType=VARCHAR},
+            </if>
+            <if test="nickname != null" >
+                nickname = #{nickname,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null" >
+                sex = #{sex,jdbcType=INTEGER},
+            </if>
+            <if test="country != null" >
+                country = #{country,jdbcType=VARCHAR},
+            </if>
+            <if test="city != null" >
+                city = #{city,jdbcType=VARCHAR},
+            </if>
+            <if test="province != null" >
+                province = #{province,jdbcType=VARCHAR},
+            </if>
+            <if test="headingurl != null" >
+                headingurl = #{headingurl,jdbcType=VARCHAR},
+            </if>
+            <if test="privilege != null" >
+                privilege = #{privilege,jdbcType=VARCHAR},
+            </if>
+            <if test="subscribe != null" >
+                subscribe = #{subscribe,jdbcType=INTEGER},
+            </if>
+            <if test="language != null" >
+                language = #{language,jdbcType=VARCHAR},
+            </if>
+            <if test="subscribeTime != null" >
+                subscribe_time = #{subscribeTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null" >
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="groupid != null" >
+                groupid = #{groupid,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where unionid = #{unionid,jdbcType=VARCHAR}
+    </update>
+
+
+    <select id="listByObject" resultMap="UserInfoMap" parameterType="java.lang.String" >
+        select
+        <include refid="userInfo_list" />
+        from user_info user
+    </select>
+</mapper>

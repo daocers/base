@@ -1,0 +1,56 @@
+package ${mainPkg}.service.impl;
+
+
+import ${mainPkg}.model.${className};
+import ${mainPkg}.service.I${className}Service;
+import ${rootPkg}.framework.core.dao.BaseDao;
+import ${rootPkg}.framework.core.dao.PageInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class ${className}ServiceImpl implements I${className}Service {
+    @Autowired
+    BaseDao baseDao;
+
+    @Override
+    public int save(${className} ${variableName}) {
+        return baseDao.insert("${mapperNameSpace}.${variableName}.insert", ${variableName});
+    }
+
+    @Override
+    public int updateById(${className} ${variableName}) {
+        return baseDao.update("${mapperNameSpace}.${variableName}.updateById", ${variableName});
+    }
+
+    @Override
+    public int saveOrUpdate(${className} ${variableName}) {
+        if(${variableName}.getId() == null){
+            return baseDao.insert("${mapperNameSpace}.${variableName}.insert", ${variableName});
+        }else{
+            return baseDao.update("${mapperNameSpace}.${variableName}.updateById", ${variableName});
+        }
+    }
+
+    @Override
+    public int delete(${className} ${variableName}) {
+        return baseDao.delete("${mapperNameSpace}.${variableName}.deleteById", ${variableName});
+    }
+
+    @Override
+    public ${className} findById(Integer id) {
+        return baseDao.selectOne("${mapperNameSpace}.${variableName}.selectById", id);
+    }
+
+    @Override
+    public List<${className}> findAllByObject(${className} ${variableName}) {
+        return baseDao.selectList("${mapperNameSpace}.${variableName}.listByObject", ${variableName});
+    }
+
+    @Override
+    public PageInfo listByObject(${className} ${variableName}, PageInfo<${className}> pageInfo) throws Exception {
+        return baseDao.listByObject("${mapperNameSpace}.${variableName}.listByObject", ${variableName}, pageInfo);
+    }
+}
