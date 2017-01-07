@@ -1,3 +1,4 @@
-*.imp
+*.iml
 *.class
-*.war
+.idea/*
+target/*
