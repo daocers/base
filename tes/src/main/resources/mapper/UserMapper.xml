@@ -142,7 +142,7 @@
     </update>
 
 
-    <select id="listByObject" resultMap="UserMap" parameterType="co.bugu.tes.model.User">
+    <select id="findByObject" resultMap="UserMap" parameterType="co.bugu.tes.model.User">
         select
         <include refid="user_list"/>
         from user user

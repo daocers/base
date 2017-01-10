@@ -111,7 +111,7 @@
   </update>
   
 
-<select id="listByObject" resultMap="StationMap" parameterType="co.bugu.tes.model.Station" >
+<select id="findByObject" resultMap="StationMap" parameterType="co.bugu.tes.model.Station" >
     select 
     <include refid="station_list" />
     from station station

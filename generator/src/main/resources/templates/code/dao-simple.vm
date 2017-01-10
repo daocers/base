@@ -1,0 +1,24 @@
+package ${mainPkg}.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import ${mainPkg}.model.${className};
+##import ${rootPkg}.framework.page.PaginationSupport;
+
+public interface ${className}Mapper {
+	
+	int insert(${className} ${variableName});
+	
+	int deleteById(Integer id);
+
+	int updateById(${className} ${variableName});
+
+	${className} selectById(Integer id);
+
+
+##	List<${className}> queryPage(
+##			@Param("pageBean") PaginationSupport ps,
+##			@Param("vo") ${className} record);
+}

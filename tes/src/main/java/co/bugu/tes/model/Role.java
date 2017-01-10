@@ -11,7 +11,17 @@ public class Role {
 
     private Integer status;
 
+    private String code;
+
     private List<Authority> authorityList;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public Integer getId() {
         return id;

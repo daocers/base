@@ -43,7 +43,7 @@ public class QuestionPolicyController {
     public String list(QuestionPolicy questionpolicy, Integer curPage, Integer showCount, ModelMap model){
         try{
             PageInfo<QuestionPolicy> pageInfo = new PageInfo<>(showCount, curPage);
-            pageInfo = questionpolicyService.listByObject(questionpolicy, pageInfo);
+            pageInfo = questionpolicyService.findByObject(questionpolicy, pageInfo);
             model.put("pi", pageInfo);
             model.put("questionpolicy", questionpolicy);
         }catch (Exception e){
@@ -82,7 +82,7 @@ public class QuestionPolicyController {
             }
             model.put("questionPolicy", questionPolicy);
 
-            List<QuestionMetaInfo> questionMetaInfoList = questionMetaInfoService.findAllByObject(null);
+            List<QuestionMetaInfo> questionMetaInfoList = questionMetaInfoService.findByObject(null);
             model.put("questionMetaInfoList", questionMetaInfoList);
         }catch (Exception e){
             logger.error("获取信息失败", e);
@@ -162,7 +162,11 @@ public class QuestionPolicyController {
             questionpolicy.setCreateUserId(0);
             questionpolicy.setUpdateTime(new Date());
             questionpolicy.setUpdateUserId(0);
-            questionpolicyService.saveOrUpdate(questionpolicy);
+            if(questionpolicy.getId() == null){
+                questionpolicyService.save(questionpolicy);
+            }else{
+                questionpolicyService.updateById(questionpolicy);
+            }
 
         }catch (Exception e){
             logger.error("保存失败", e);
@@ -182,7 +186,7 @@ public class QuestionPolicyController {
     @ResponseBody
     public String listAll(QuestionPolicy questionpolicy){
         try{
-            List<QuestionPolicy> list = questionpolicyService.findAllByObject(questionpolicy);
+            List<QuestionPolicy> list = questionpolicyService.findByObject(questionpolicy);
             return JsonUtil.toJsonString(list);
         }catch (Exception e){
             logger.error("获取全部列表失败", e);

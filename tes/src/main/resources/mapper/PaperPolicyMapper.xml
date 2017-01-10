@@ -166,7 +166,7 @@
     </update>
 
 
-    <select id="listByObject" resultMap="PaperPolicyMap" parameterType="co.bugu.tes.model.PaperPolicy">
+    <select id="findByObject" resultMap="PaperPolicyMap" parameterType="co.bugu.tes.model.PaperPolicy">
         select
         <include refid="paperPolicy_list"/>
         from paper_policy paper_policy

@@ -41,7 +41,7 @@ public class IndexController {
         try{
             User user = new User();
             user.setUsername(username);
-            List<User> userList = userService.findAllByObject(user);
+            List<User> userList = userService.findByObject(user);
             if(userList.size() == 0){
                 return "1";//用户不存在
             }else if(userList.size() > 1){

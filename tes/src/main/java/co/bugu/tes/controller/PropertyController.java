@@ -40,7 +40,7 @@ public class PropertyController {
     public String list(Property property, Integer curPage, Integer showCount, ModelMap model){
         try{
             PageInfo<Property> pageInfo = new PageInfo<>(showCount, curPage);
-            pageInfo = propertyService.listByObject(property, pageInfo);
+            pageInfo = propertyService.findByObject(property, pageInfo);
             model.put("pi", pageInfo);
             model.put("property", property);
         }catch (Exception e){
@@ -112,7 +112,7 @@ public class PropertyController {
     @ResponseBody
     public String listAll(Property property){
         try{
-            List<Property> list = propertyService.findAllByObject(property);
+            List<Property> list = propertyService.findByObject(property);
             return JsonUtil.toJsonString(list);
         }catch (Exception e){
             logger.error("获取全部列表失败", e);

@@ -114,7 +114,7 @@ public class XmlUtil {
             }else{
                 pageSql = text;
             }
-            pageSql = pageSql.replace("selectById", "listByObject");
+            pageSql = pageSql.replace("selectById", "findByObject");
             pageSql = pageSql.substring(0, pageSql.indexOf("where"));
             pageSql = "\t" + pageSql + "</select>";
 

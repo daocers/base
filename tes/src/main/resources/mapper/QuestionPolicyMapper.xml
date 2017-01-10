@@ -154,7 +154,7 @@
     </update>
 
 
-    <select id="listByObject" resultMap="QuestionPolicyMap" parameterType="co.bugu.tes.model.QuestionPolicy">
+    <select id="findByObject" resultMap="QuestionPolicyMap" parameterType="co.bugu.tes.model.QuestionPolicy">
         select
         <include refid="questionPolicy_list"/>
         from question_policy ques_policy

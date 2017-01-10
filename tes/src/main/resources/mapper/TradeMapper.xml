@@ -142,7 +142,7 @@
   </update>
   
 
-<select id="listByObject" resultMap="TradeMap" parameterType="co.bugu.tes.model.Trade" >
+<select id="findByObject" resultMap="TradeMap" parameterType="co.bugu.tes.model.Trade" >
     select 
     <include refid="trade_list" />
     from trade trade

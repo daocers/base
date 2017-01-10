@@ -138,13 +138,13 @@
     </update>
 
 
-    <!--<select id="listByObject" resultMap="ParentMap" parameterType="co.bugu.tes.model.Parent">-->
+    <!--<select id="findByObject" resultMap="ParentMap" parameterType="co.bugu.tes.model.Parent">-->
         <!--select-->
         <!--<include refid="parent_list"/>-->
         <!--from parent parent-->
     <!--</select>-->
 
-    <select id="listByObject" resultMap="ParentMap" parameterType="co.bugu.tes.model.Parent">
+    <select id="findByObject" resultMap="ParentMap" parameterType="co.bugu.tes.model.Parent">
         select
         <include refid="parent_list"/>,
         <include refid="child_list"/>

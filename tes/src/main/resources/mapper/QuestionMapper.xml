@@ -146,7 +146,7 @@
     </update>
 
 
-    <select id="listByObject" resultMap="QuestionMap" parameterType="co.bugu.tes.model.Question">
+    <select id="findByObject" resultMap="QuestionMap" parameterType="co.bugu.tes.model.Question">
         select
         <include refid="question_list"/>,
         <include refid="propertyItem_list"/>,

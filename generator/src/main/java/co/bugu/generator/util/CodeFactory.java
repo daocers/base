@@ -62,11 +62,11 @@ public class CodeFactory {
         // CODE
         String codePackPath = codePath + GenStringUtil.toPkgPath(pb.getFullPack());
 //        MergeUtil.outputCode(context, "/code/dao.vm", codePackPath + "/dao/", className + "Mapper.java");
-        MergeUtil.outputCode(context, "/code/service-bugu.vm", codePackPath + "/service/", "I" + className + "Service.java");
-        MergeUtil.outputCode(context, "/code/serviceImpl-bugu.vm", codePackPath + "/service/impl/", className + "ServiceImpl.java");
+        MergeUtil.outputCode(context, "/code/service-simple.vm", codePackPath + "/service/", "I" + className + "Service.java");
+        MergeUtil.outputCode(context, "/code/serviceImpl-simple.vm", codePackPath + "/service/impl/", className + "ServiceImpl.java");
 
         if (!"api".equals(pb.getProType())) {
-            MergeUtil.outputCode(context, "/code/action-bugu.vm", codePackPath + "/controller/", className + "Controller.java");
+            MergeUtil.outputCode(context, "/code/action-simple.vm", codePackPath + "/controller/", className + "Controller.java");
             MergeUtil.outputCode(context, "/page/list-bugu.vm", webPath + pb.getWebDir() + "/", "list.jsp");
             MergeUtil.outputCode(context, "/page/edit-bugu.vm", webPath + pb.getWebDir() + "/", "edit.jsp");
 //            MergeUtil.outputCode(context, "/page/add.vm", webPath + pb.getWebDir() + "/", "add.vm");
@@ -76,7 +76,7 @@ public class CodeFactory {
 //            MergeUtil.outputCode(context, "/page/add.vm", webPath + pb.getWebDir() + "/", pb.getPrefix() + "_add.vm");
 //            MergeUtil.outputCode(context, "/page/modify.vm", webPath + pb.getWebDir() + "/", pb.getPrefix() + "_modify.vm");
         } else {
-            MergeUtil.outputCode(context, "/code/action-api-bugu.vm", codePackPath + "/controller/", className + "Controller.java");
+            MergeUtil.outputCode(context, "/code/action-api-simple.vm", codePackPath + "/controller/", className + "Controller.java");
         }
 
 
