@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="tes.questionpolicy">
+<mapper namespace="tes.questionPolicy">
     <resultMap id="QuestionPolicyMap" type="co.bugu.tes.model.QuestionPolicy">
         <id column="ques_policy_id" property="id" jdbcType="INTEGER"/>
         <result column="ques_policy_code" property="code" jdbcType="VARCHAR"/>
