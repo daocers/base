@@ -2,14 +2,16 @@ package co.bugu.tes.service;
 
 
 import co.bugu.framework.core.service.IBaseService;
+import co.bugu.framework.util.exception.TesException;
 import co.bugu.tes.model.Question;
 import co.bugu.framework.core.dao.PageInfo;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface IQuestionService extends IBaseService<Question>{
-    int save(Question question, List<Map<String, Integer>> xList);
+//    int save(Question question, List<Map<String, Integer>> xList);
 
 //    int updateById(Question question);
 
@@ -26,4 +28,8 @@ public interface IQuestionService extends IBaseService<Question>{
     List<Map<String, Object>> selectCountOfPropInfo(Integer metaInfoId);
 
     int batchAdd(List<Question> questionList);
+
+    Set<String> findQuestionByPropItemId(Integer... ids) throws TesException;
+
+    int getCountByPropItemId(Integer... ids) throws TesException;
 }

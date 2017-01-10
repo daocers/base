@@ -36,4 +36,6 @@ public interface Constant {
     String USER_INFO_PREFIX = "USER_INFO_";
 
     String SESSION_USER_ID = "user_id";
+
+    String QUESTION_PROPITEM_ID = "QUESTION_PROPITEM_ID_";
 }

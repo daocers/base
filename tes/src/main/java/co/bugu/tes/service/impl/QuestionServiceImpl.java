@@ -2,27 +2,36 @@ package co.bugu.tes.service.impl;
 
 
 import co.bugu.framework.core.service.impl.BaseServiceImpl;
+import co.bugu.framework.util.JedisUtil;
+import co.bugu.framework.util.exception.TesException;
+import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.Question;
 import co.bugu.tes.service.IQuestionService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 public class QuestionServiceImpl extends BaseServiceImpl<Question> implements IQuestionService {
 //    @Autowired
 //    BaseDao baseDao;
 
-    @Override
-    public int save(Question question, List<Map<String, Integer>> xList) {
-        int num = baseDao.insert("tes.question.insert", question);
-        for (Map<String, Integer> map : xList) {
-            map.put("questionId", question.getId());
-            baseDao.insert("tes.question.addToPropItem", map);
-        }
-        return num;
-    }
+//    @Override
+//    public int save(Question question, List<Map<String, Integer>> xList) {
+//        int num = baseDao.insert("tes.question.insert", question);
+//        for (Map<String, Integer> map : xList) {
+//            map.put("questionId", question.getId());
+//            baseDao.insert("tes.question.addToPropItem", map);
+//
+//            //            将属性信息添加到redis中的set上
+//            Integer propItemId = map.get("propItemId");
+//            JedisUtil.sadd(Constant.QUESTION_PROPITEM_ID + propItemId, question.getId() + "");
+//        }
+//        return num;
+//    }
 
 //    @Override
 //    public int updateById(Question question) {
@@ -43,30 +52,14 @@ public class QuestionServiceImpl extends BaseServiceImpl<Question> implements IQ
         for (Map<String, Integer> map : xList) {
             map.put("questionId", question.getId());
             baseDao.insert("tes.question.addToPropItem", map);
+
+//            将属性信息添加到redis中的set上
+            Integer propItemId = map.get("propItemId");
+            JedisUtil.sadd(Constant.QUESTION_PROPITEM_ID + propItemId, question.getId() + "");
         }
         return num;
     }
 
-//    @Override
-//    public int delete(Question question) {
-//        return baseDao.delete("tes.question.deleteById", question);
-//    }
-//
-//    @Override
-//    public Question findById(Integer id) {
-//        return baseDao.selectOne("tes.question.selectById", id);
-//    }
-//
-//    @Override
-//    public List<Question> findAllByObject(Question question) {
-//        return baseDao.selectList("tes.question.listByObject", question);
-//    }
-//
-//    @Override
-//    public PageInfo listByObject(Question question, PageInfo<Question> pageInfo) throws Exception {
-//        return baseDao.listByObject("tes.question.listByObject", question, pageInfo);
-//    }
-//
     @Override
     public List<Map<String, Object>> selectCountOfPropInfo(Integer metaInfoId) {
         return baseDao.selectList("tes.question.selectCountOfPropInfo", metaInfoId);
@@ -81,4 +74,24 @@ public class QuestionServiceImpl extends BaseServiceImpl<Question> implements IQ
         }
         return num;
     }
+
+    @Override
+    public Set<String> findQuestionByPropItemId(Integer... ids) throws TesException{
+        String[] keys = new String[ids.length];
+        for(int i = 0; i < ids.length; i++){
+            keys[i] = Constant.QUESTION_PROPITEM_ID + ids[i];
+        }
+        return JedisUtil.sinterForObj(keys);
+    }
+
+    @Override
+    public int getCountByPropItemId(Integer... ids) throws TesException {
+        String[] keys = new String[ids.length];
+        for(int i = 0; i < ids.length; i++){
+            keys[i] = Constant.QUESTION_PROPITEM_ID + ids[i];
+        }
+        return JedisUtil.sinterForSize(keys);
+    }
+
+
 }

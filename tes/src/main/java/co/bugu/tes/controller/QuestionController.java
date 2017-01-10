@@ -367,19 +367,25 @@ public class QuestionController {
     @ResponseBody
     public String getCountByPropItemId(String propId, Integer metaId){
         try{
-            Set<String> keys = JedisUtil.keysLike(Constant.METAINFO_PROP_COUNT + "*");
-            if(keys == null || keys.size() == 0){
-                initQuestion();
+//            Set<String> keys = JedisUtil.keysLike(Constant.METAINFO_PROP_COUNT + "*");
+//            if(keys == null || keys.size() == 0){
+//                initQuestion();
+//            }
+//            List<Integer> idList = JSON.parseArray(propId, Integer.class);
+//            String itemInfo = arrToString(idList);
+//            String key = Constant.METAINFO_PROP_COUNT + metaId + "_" +itemInfo;
+//            String res = JedisUtil.get(key);
+//            if(res == null){
+//                return  "0";
+//            }else{
+//                return res;
+//            }
+            List<Integer> ids = JSON.parseArray(propId, Integer.class);
+            Integer[] keys = new Integer[ids.size()];
+            for(int i = 0; i < ids.size(); i++){
+                keys[i] = ids.get(i);
             }
-            List<Integer> idList = JSON.parseArray(propId, Integer.class);
-            String itemInfo = arrToString(idList);
-            String key = Constant.METAINFO_PROP_COUNT + metaId + "_" +itemInfo;
-            String res = JedisUtil.get(key);
-            if(res == null){
-                return  "0";
-            }else{
-                return res;
-            }
+            return questionService.getCountByPropItemId(keys) + "";
         }catch (Exception e){
             logger.error("获取指定属性的试题数量失败", e);
             return "-1";
