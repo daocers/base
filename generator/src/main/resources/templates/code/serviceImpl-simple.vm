@@ -2,11 +2,12 @@ package ${mainPkg}.service.impl;
 
 
 import ${rootPkg}.framework.service.impl.BaseServiceImpl;
+import ${mainPkg}.domain.${className};
 import ${mainPkg}.service.I${className}Service;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserServiceImpl extends BaseServiceImpl<${className}> implements IUserService {
+public class ${className}ServiceImpl extends BaseServiceImpl<${className}> implements I${className}Service {
 
 }
 

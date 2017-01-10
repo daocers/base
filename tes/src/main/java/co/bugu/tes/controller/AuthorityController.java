@@ -42,7 +42,7 @@ public class AuthorityController {
     public String list(Authority authority, Integer curPage, Integer showCount, ModelMap model){
         try{
             PageInfo<Authority> pageInfo = new PageInfo<>(showCount, curPage);
-            pageInfo = authorityService.listByObject(authority, pageInfo);
+            pageInfo = authorityService.findByObject(authority, pageInfo);
             model.put("pi", pageInfo);
             model.put("authority", authority);
         }catch (Exception e){
@@ -103,7 +103,7 @@ public class AuthorityController {
     @ResponseBody
     public String listAll(Authority authority){
         try{
-            List<Authority> list = authorityService.findAllByObject(authority);
+            List<Authority> list = authorityService.findByObject(authority);
             return JsonUtil.toJsonString(list);
         }catch (Exception e){
             logger.error("获取全部列表失败", e);
@@ -137,7 +137,7 @@ public class AuthorityController {
     @RequestMapping(value = "/init")
     public String init(ModelMap model){
         try{
-            List<Authority> authorities = authorityService.findAllByObject(null);
+            List<Authority> authorities = authorityService.findByObject(null);
             List<String> urlList = new ArrayList<>();
             for(Authority auth : authorities){
                 urlList.add(auth.getUrl());
@@ -173,7 +173,7 @@ public class AuthorityController {
 
             Authority authority = new Authority();
             authority.setType(Constant.AUTH_TYPE_BOX);
-            authorities = authorityService.findAllByObject(authority);
+            authorities = authorityService.findByObject(authority);
             List<String> controllerList = new ArrayList<>();
             for(Authority auth: authorities){
                 controllerList.add(auth.getController());
@@ -210,7 +210,7 @@ public class AuthorityController {
         try{
             Authority authority = new Authority();
             authority.setStatus(Constant.STATUS_ENABLE);
-            List<Authority> list = authorityService.findAllByObject(authority);
+            List<Authority> list = authorityService.findByObject(authority);
             List<Map<String, Object>> res = new ArrayList<>();
             for(Authority auth : list){
                 Map<String, Object> map = new HashedMap();

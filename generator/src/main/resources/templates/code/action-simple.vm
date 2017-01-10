@@ -39,7 +39,7 @@ public class ${className}Controller {
     public String list(${className} ${variableName}, Integer curPage, Integer showCount, ModelMap model){
         try{
             PageInfo<${className}> pageInfo = new PageInfo<>(showCount, curPage);
-            pageInfo = ${variableName}Service.listByObject(${variableName}, pageInfo);
+            pageInfo = ${variableName}Service.findByObject(${variableName}, pageInfo);
             model.put("pi", pageInfo);
             model.put("${variableName}", ${variableName});
         }catch (Exception e){

@@ -47,7 +47,7 @@ public class UserController {
     public String list(User user, Integer curPage, Integer showCount, ModelMap model){
         try{
             PageInfo<User> pageInfo = new PageInfo<>(showCount, curPage);
-            pageInfo = userService.listByObject(user, pageInfo);
+            pageInfo = userService.findByObject(user, pageInfo);
             model.put("pi", pageInfo);
             model.put("user", user);
         }catch (Exception e){
@@ -69,9 +69,9 @@ public class UserController {
         try{
             User user = userService.findById(id);
             model.put("user", user);
-            List<Department> departmentList = departmentService.findAllByObject(null);
-            List<Station> stationList = stationService.findAllByObject(null);
-            List<Branch> branchList = branchService.findAllByObject(null);
+            List<Department> departmentList = departmentService.findByObject(null);
+            List<Station> stationList = stationService.findByObject(null);
+            List<Branch> branchList = branchService.findByObject(null);
             model.put("departmentList", departmentList);
             model.put("stationList", stationList);
             model.put("branchList", branchList);
@@ -91,7 +91,11 @@ public class UserController {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(User user, ModelMap model){
         try{
-            userService.saveOrUpdate(user);
+            if(user.getId() == null){
+                userService.save(user);
+            }else{
+                userService.updateById(user);
+            }
         }catch (Exception e){
             logger.error("保存失败", e);
             model.put("user", user);
@@ -110,7 +114,7 @@ public class UserController {
     @ResponseBody
     public String listAll(User user){
         try{
-            List<User> list = userService.findAllByObject(user);
+            List<User> list = userService.findByObject(user);
             return JsonUtil.toJsonString(list);
         }catch (Exception e){
             logger.error("获取全部列表失败", e);

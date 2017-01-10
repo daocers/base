@@ -3,6 +3,7 @@ package co.bugu.framework.util;
 import co.bugu.framework.util.exception.TesException;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.sun.glass.ui.Size;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
@@ -519,4 +520,50 @@ public class JedisUtil {
             release(jedis);
         }
     }
+
+
+    /**
+     * 获取交集数量
+     * @param keys
+     * @return
+     * @throws TesException
+     */
+    public static int sinterForSize(String... keys) throws TesException {
+        Jedis jedis = null;
+        try{
+            jedis = pool.getResource();
+            Set<String> set = jedis.sinter(keys);
+            return set.size();
+
+        }catch (Exception e){
+            logger.error("jedis sinter 操作异常", e);
+            throw new TesException("jedis操作失败", e);
+        }finally {
+            release(jedis);
+        }
+    }
+
+    /**
+     * 获取交集集合
+     * 返回实际元素
+     * @param keys
+     * @return
+     * @throws TesException
+     */
+    public static Set<String> sinterForObj(String... keys) throws TesException {
+        Jedis jedis = null;
+        try{
+            jedis = pool.getResource();
+            Set<String> set = jedis.sinter(keys);
+            return set;
+
+        }catch (Exception e){
+            logger.error("jedis sinter 操作异常", e);
+            throw new TesException("jedis操作失败", e);
+        }finally {
+            release(jedis);
+        }
+    }
+
+
 }

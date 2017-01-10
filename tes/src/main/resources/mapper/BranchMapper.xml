@@ -125,7 +125,7 @@
   </update>
   
 
-<select id="listByObject" resultMap="BranchMap" parameterType="co.bugu.tes.model.Branch" >
+<select id="findByObject" resultMap="BranchMap" parameterType="co.bugu.tes.model.Branch" >
     select 
     <include refid="branch_list" />
     from branch branch

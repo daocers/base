@@ -121,7 +121,7 @@
   </update>
   
 
-<select id="listByObject" resultMap="ProfileMap" parameterType="co.bugu.tes.model.Profile" >
+<select id="findByObject" resultMap="ProfileMap" parameterType="co.bugu.tes.model.Profile" >
     select 
     <include refid="profile_list" />
     from profile profile

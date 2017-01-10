@@ -45,7 +45,7 @@ public class DepartmentController {
     public String list(Department department, Integer curPage, Integer showCount, ModelMap model){
         try{
             PageInfo<Department> pageInfo = new PageInfo<>(showCount, curPage);
-            pageInfo = departmentService.listByObject(department, pageInfo);
+            pageInfo = departmentService.findByObject(department, pageInfo);
             model.put("pi", pageInfo);
             model.put("department", department);
         }catch (Exception e){
@@ -68,7 +68,7 @@ public class DepartmentController {
             Department department = departmentService.findById(id);
             model.put("department", department);
 
-            List<Department> departmentList = departmentService.findAllByObject(null);
+            List<Department> departmentList = departmentService.findByObject(null);
             model.put("departmentList", departmentList);
         }catch (Exception e){
             logger.error("获取信息失败", e);
@@ -91,7 +91,11 @@ public class DepartmentController {
                 department.setCreateTime(now);
             }
             department.setUpdateTime(now);
-            departmentService.saveOrUpdate(department);
+            if(department.getId() == null){
+                departmentService.save(department);
+            }else{
+                departmentService.updateById(department);
+            }
         }catch (Exception e){
             logger.error("保存失败", e);
             model.put("department", department);
@@ -110,7 +114,7 @@ public class DepartmentController {
     @ResponseBody
     public String listAll(Department department){
         try{
-            List<Department> list = departmentService.findAllByObject(department);
+            List<Department> list = departmentService.findByObject(department);
             return JsonUtil.toJsonString(list);
         }catch (Exception e){
             logger.error("获取全部列表失败", e);

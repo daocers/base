@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * Created by daocers on 2016/5/31.
  */
-public class BaseDao extends SqlSessionDaoSupport {
+public class BaseDao<T> extends SqlSessionDaoSupport {
     private static Logger logger = LoggerFactory.getLogger(BaseDao.class);
 
     public <T> T selectOne(String statement) {

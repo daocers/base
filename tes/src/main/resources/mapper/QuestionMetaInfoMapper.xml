@@ -120,7 +120,7 @@
     </update>
 
 
-    <select id="listByObject" resultMap="QuestionMetaInfoMap" parameterType="co.bugu.tes.model.QuestionMetaInfo">
+    <select id="findByObject" resultMap="QuestionMetaInfoMap" parameterType="co.bugu.tes.model.QuestionMetaInfo">
         select
         <include refid="questionMetaInfo_list"/>,
         <include refid="propertyItem_list"/>,

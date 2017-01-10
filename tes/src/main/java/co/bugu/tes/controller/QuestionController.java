@@ -57,7 +57,7 @@ public class QuestionController {
     public String list(Question question, Integer curPage, Integer showCount, ModelMap model){
         try{
             PageInfo<Question> pageInfo = new PageInfo<>(showCount, curPage);
-            pageInfo = questionService.listByObject(question, pageInfo);
+            pageInfo = questionService.findByObject(question, pageInfo);
             model.put("pi", pageInfo);
             model.put("question", question);
         }catch (Exception e){
@@ -102,9 +102,9 @@ public class QuestionController {
                 QuestionMetaInfo metaInfo = questionMetaInfoService.findById(question.getMetaInfoId());
                 model.put("propertyList", metaInfo == null ? null: metaInfo.getPropertyList());
             }
-            List<QuestionMetaInfo> metaInfoList = questionMetaInfoService.findAllByObject(null);
+            List<QuestionMetaInfo> metaInfoList = questionMetaInfoService.findByObject(null);
             model.put("metaInfoList", metaInfoList);
-            List<QuestionBank> questionBankList = questionBankService.findAllByObject(null);
+            List<QuestionBank> questionBankList = questionBankService.findByObject(null);
             model.put("questionBankList", questionBankList);
         }catch (Exception e){
             logger.error("获取信息失败", e);
@@ -150,7 +150,7 @@ public class QuestionController {
     @ResponseBody
     public String listAll(Question question){
         try{
-            List<Question> list = questionService.findAllByObject(question);
+            List<Question> list = questionService.findByObject(question);
             return JsonUtil.toJsonString(list);
         }catch (Exception e){
             logger.error("获取全部列表失败", e);
@@ -202,9 +202,9 @@ public class QuestionController {
     @RequestMapping(value = "/batchAdd", method = RequestMethod.GET)
     public String batchAdd(ModelMap model){
         try{
-            List<QuestionMetaInfo> metaInfoList = questionMetaInfoService.findAllByObject(null);
+            List<QuestionMetaInfo> metaInfoList = questionMetaInfoService.findByObject(null);
             model.put("metaInfoList", metaInfoList);
-            List<QuestionBank> questionBankList = questionBankService.findAllByObject(null);
+            List<QuestionBank> questionBankList = questionBankService.findByObject(null);
             model.put("questionBankList", questionBankList);
         }catch (Exception e){
             logger.error("批量导入试题，获取题型信息失败", e);
@@ -395,7 +395,7 @@ public class QuestionController {
         JedisUtil.delKeysLike(Constant.METAINFO_PROP_COUNT + "*");
 
 //        该放发还需要优化，处理之前要删除所有的 关于题型的缓存
-        List<QuestionMetaInfo> questionMetaInfoList = questionMetaInfoService.findAllByObject(null);
+        List<QuestionMetaInfo> questionMetaInfoList = questionMetaInfoService.findByObject(null);
         for(QuestionMetaInfo metaInfo: questionMetaInfoList){
             Integer metaInfoId = metaInfo.getId();
 

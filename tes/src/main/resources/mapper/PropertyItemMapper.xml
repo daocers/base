@@ -101,7 +101,7 @@
   </update>
   
 
-<select id="listByObject" resultMap="PropertyItemMap" parameterType="co.bugu.tes.model.PropertyItem" >
+<select id="findByObject" resultMap="PropertyItemMap" parameterType="co.bugu.tes.model.PropertyItem" >
     select 
     <include refid="propertyItem_list" />
     from property_item prop_item

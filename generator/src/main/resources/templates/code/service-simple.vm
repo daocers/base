@@ -1,7 +1,8 @@
 package ${mainPkg}.service;
 
 import ${rootPkg}.framework.service.IBaseService;
+import ${mainPkg}.domain.${className};
 
-public interface IUserService<${className}> extends IBaseService<${className}> {
+public interface I${className}Service extends IBaseService<${className}> {
 
 }

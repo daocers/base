@@ -96,7 +96,7 @@ public class ${className}Controller {
                 showCount = 10;
             }
             PageInfo<${className}> pageInfo = new PageInfo<>(showCount, curPage);
-            ${variableName}Service.listByObject(${variableName}, pageInfo);
+            ${variableName}Service.findByObject(${variableName}, pageInfo);
             return JsonUtil.getData("0", pageInfo.getData());
         } catch (Exception e) {
             logger.error("分页查询失败", e);

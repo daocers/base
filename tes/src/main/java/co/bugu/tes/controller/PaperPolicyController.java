@@ -52,7 +52,7 @@ public class PaperPolicyController {
     public String list(PaperPolicy paperpolicy, Integer curPage, Integer showCount, ModelMap model){
         try{
             PageInfo<PaperPolicy> pageInfo = new PageInfo<>(showCount, curPage);
-            pageInfo = paperpolicyService.listByObject(paperpolicy, pageInfo);
+            pageInfo = paperpolicyService.findByObject(paperpolicy, pageInfo);
             model.put("pi", pageInfo);
             model.put("paperpolicy", paperpolicy);
         }catch (Exception e){
@@ -72,7 +72,7 @@ public class PaperPolicyController {
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String toEdit(Integer id, ModelMap model){
         try{
-            List<QuestionMetaInfo> questionMetaInfoList = questionMetaInfoService.findAllByObject(null);
+            List<QuestionMetaInfo> questionMetaInfoList = questionMetaInfoService.findByObject(null);
             model.put("questionMetaInfoList", questionMetaInfoList);
             PaperPolicy paperpolicy = paperpolicyService.findById(id);
             if(paperpolicy == null){
@@ -85,7 +85,7 @@ public class PaperPolicyController {
             for(QuestionMetaInfo questionMetaInfo : questionMetaInfoList){
                 QuestionPolicy questionPolicy = new QuestionPolicy();
                 questionPolicy.setQuestionMetaInfoId(questionMetaInfo.getId());
-                List<QuestionPolicy> questionPolicyList = questionPolicyService.findAllByObject(questionPolicy);
+                List<QuestionPolicy> questionPolicyList = questionPolicyService.findByObject(questionPolicy);
                 if(questionMetaInfoList != null && questionPolicyList.size() > 0){
                     data.add(questionPolicyList);
                 }
@@ -125,7 +125,11 @@ public class PaperPolicyController {
                 return "paper_policy/edit";
             }
             paperpolicy.setQuestionMetaInfoId(JSON.toJSONString(questionMetaInfoId));
-            paperpolicyService.saveOrUpdate(paperpolicy);
+            if(paperpolicy.getId() == null){
+                paperpolicyService.save(paperpolicy);
+            }else{
+                paperpolicyService.updateById(paperpolicy);
+            }
         }catch (Exception e){
             logger.error("保存失败", e);
             model.put("paperpolicy", paperpolicy);
@@ -144,7 +148,7 @@ public class PaperPolicyController {
     @ResponseBody
     public String listAll(PaperPolicy paperpolicy){
         try{
-            List<PaperPolicy> list = paperpolicyService.findAllByObject(paperpolicy);
+            List<PaperPolicy> list = paperpolicyService.findByObject(paperpolicy);
             return JsonUtil.toJsonString(list);
         }catch (Exception e){
             logger.error("获取全部列表失败", e);

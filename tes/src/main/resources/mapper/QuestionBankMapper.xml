@@ -111,7 +111,7 @@
   </update>
   
 
-<select id="listByObject" resultMap="QuestionBankMap" parameterType="co.bugu.tes.model.QuestionBank" >
+<select id="findByObject" resultMap="QuestionBankMap" parameterType="co.bugu.tes.model.QuestionBank" >
     select 
     <include refid="questionBank_list" />
     from question_bank bank

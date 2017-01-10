@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 
 <generatorConfiguration>
-    <classPathEntry location="D:\CODE\daocers\bugu\generator\\src\main\resources\templates\mysql-connector-java-5.1.13.jar"/>
+    <classPathEntry location="D:\code\daocers\base\generator\\src\main\resources\templates\mysql-connector-java-5.1.13.jar"/>
 
     <context id="mysqlTables" targetRuntime="MyBatis3">
 
@@ -17,27 +17,27 @@
 
         <!-- jdbc连接信息 -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://localhost:3306/test"
-                        userId="root" password="root"/>
+                        connectionURL="jdbc:mysql://114.215.142.252:3306/tes"
+                        userId="admin" password="admin!@#$%"/>
 
         <!-- java类型解析器 可选配置 -->
         <javaTypeResolver>
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
 
-        <javaModelGenerator targetPackage="co.bugu.mq.model" targetProject="D:\CODE\daocers\bugu/generator//generate/src/main/java/">
+        <javaModelGenerator targetPackage="co.bugu.tes.model" targetProject="D:\code\daocers\base/generator//generate/src/main/java/">
             <property name="enableSubPackages" value="true"/>
         </javaModelGenerator>
 
-        <sqlMapGenerator targetPackage="co.bugu.mq.dao" targetProject="D:\CODE\daocers\bugu/generator//generate/src/main/java/">
-        <!--<sqlMapGenerator targetPackage="mq.order" targetProject="D:\CODE\daocers\bugu/generator//generate/src/main/java/">-->
+        <sqlMapGenerator targetPackage="co.bugu.tes.dao" targetProject="D:\code\daocers\base/generator//generate/src/main/java/">
+        <!--<sqlMapGenerator targetPackage="tes.user" targetProject="D:\code\daocers\base/generator//generate/src/main/java/">-->
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
 
 
 
 
-        <table tableName="mall_order" domainObjectName="Order" alias="order"
+        <table tableName="user" domainObjectName="User" alias="user"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">

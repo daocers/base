@@ -90,7 +90,7 @@
   </update>
   
 
-<select id="listByObject" resultMap="SystemParamMap" parameterType="co.bugu.tes.model.SystemParam" >
+<select id="findByObject" resultMap="SystemParamMap" parameterType="co.bugu.tes.model.SystemParam" >
     select 
     <include refid="systemParam_list" />
     from system_param param

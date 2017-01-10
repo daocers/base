@@ -111,7 +111,7 @@
   </update>
   
 
-<select id="listByObject" resultMap="PaperMap" parameterType="co.bugu.tes.model.Paper" >
+<select id="findByObject" resultMap="PaperMap" parameterType="co.bugu.tes.model.Paper" >
     select 
     <include refid="paper_list" />
     from paper paper

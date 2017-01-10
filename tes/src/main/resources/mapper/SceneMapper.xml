@@ -236,7 +236,7 @@
   </update>
   
 
-<select id="listByObject" resultMap="SceneMap" parameterType="co.bugu.tes.model.Scene" >
+<select id="findByObject" resultMap="SceneMap" parameterType="co.bugu.tes.model.Scene" >
     select 
     <include refid="scene_list" />
     from scene scene
