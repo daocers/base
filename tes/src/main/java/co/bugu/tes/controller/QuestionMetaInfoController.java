@@ -43,7 +43,7 @@ public class QuestionMetaInfoController {
     public String list(QuestionMetaInfo questionmetainfo, Integer curPage, Integer showCount, ModelMap model){
         try{
             PageInfo<QuestionMetaInfo> pageInfo = new PageInfo<>(showCount, curPage);
-            pageInfo = questionmetainfoService.listByObject(questionmetainfo, pageInfo);
+            pageInfo = questionmetainfoService.findByObject(questionmetainfo, pageInfo);
             model.put("pi", pageInfo);
             model.put("questionmetainfo", questionmetainfo);
         }catch (Exception e){
@@ -74,7 +74,7 @@ public class QuestionMetaInfoController {
                 model.put("propertyIdList", propertyIdList);
             }
 
-            List<Property> propertyList = propertyService.findAllByObject(null);
+            List<Property> propertyList = propertyService.findByObject(null);
             model.put("propertyList", propertyList);
         }catch (Exception e){
             logger.error("获取信息失败", e);
@@ -121,7 +121,7 @@ public class QuestionMetaInfoController {
     @ResponseBody
     public String listAll(QuestionMetaInfo questionmetainfo){
         try{
-            List<QuestionMetaInfo> list = questionmetainfoService.findAllByObject(questionmetainfo);
+            List<QuestionMetaInfo> list = questionmetainfoService.findByObject(questionmetainfo);
             return JsonUtil.toJsonString(list);
         }catch (Exception e){
             logger.error("获取全部列表失败", e);

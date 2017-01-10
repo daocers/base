@@ -88,13 +88,13 @@ public class TestController {
     public String get(Integer showcount, Integer page) throws Exception {
         Long begin = System.currentTimeMillis();
         PageInfo<Parent> pageInfo = new PageInfo<>(showcount, page);
-        pageInfo = parentService.listByObject(null, pageInfo);
+        pageInfo = parentService.findByObject(null, pageInfo);
         List<Parent> list = pageInfo.getData();
         for(Parent parent : list){
             Integer parentId = parent.getId();
             Child child = new Child();
             child.setParentId(parentId);
-            List<Child> children = childService.findAllByObject(child);
+            List<Child> children = childService.findByObject(child);
             parent.setChildren(children);
         }
 //        logger.info("获取到parent数量： {}", list.size());
@@ -107,7 +107,7 @@ public class TestController {
     public String list(Integer showcount, Integer page) throws Exception {
         Long begin = System.currentTimeMillis();
         PageInfo<Parent> pageInfo = new PageInfo<>(showcount, page);
-        pageInfo = parentService.listByObject(null, pageInfo);
+        pageInfo = parentService.findByObject(null, pageInfo);
         List<Parent> list = pageInfo.getData();
         long end = System.currentTimeMillis();
         logger.info("单表逐表查询，随机查询数据 {} 条，耗时： {} 毫秒", new Object[]{list.size(), end - begin});

@@ -35,7 +35,7 @@ public class RecordController {
     public String list(Record record, Integer curPage, Integer showCount, ModelMap model){
         try{
             PageInfo<Record> pageInfo = new PageInfo<>(showCount, curPage);
-            pageInfo = recordService.listByObject(record, pageInfo);
+            pageInfo = recordService.findByObject(record, pageInfo);
             model.put("pi", pageInfo);
             model.put("record", record);
         }catch (Exception e){
@@ -73,7 +73,11 @@ public class RecordController {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(Record record, ModelMap model){
         try{
-            recordService.saveOrUpdate(record);
+            if(record.getId() == null){
+                recordService.save(record);
+            }else{
+                recordService.updateById(record);
+            }
         }catch (Exception e){
             logger.error("保存失败", e);
             model.put("record", record);
@@ -92,7 +96,7 @@ public class RecordController {
     @ResponseBody
     public String listAll(Record record){
         try{
-            List<Record> list = recordService.findAllByObject(record);
+            List<Record> list = recordService.findByObject(record);
             return JsonUtil.toJsonString(list);
         }catch (Exception e){
             logger.error("获取全部列表失败", e);

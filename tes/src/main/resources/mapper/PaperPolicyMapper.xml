@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="tes.paperpolicy">
+<mapper namespace="tes.paperPolicy">
     <resultMap id="PaperPolicyMap" type="co.bugu.tes.model.PaperPolicy">
         <id column="paper_policy_id" property="id" jdbcType="INTEGER"/>
         <result column="paper_policy_branch_id" property="branchId" jdbcType="INTEGER"/>
@@ -166,7 +166,7 @@
     </update>
 
 
-    <select id="listByObject" resultMap="PaperPolicyMap" parameterType="co.bugu.tes.model.PaperPolicy">
+    <select id="findByObject" resultMap="PaperPolicyMap" parameterType="co.bugu.tes.model.PaperPolicy">
         select
         <include refid="paperPolicy_list"/>
         from paper_policy paper_policy

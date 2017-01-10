@@ -43,7 +43,7 @@ public class QuestionBankController {
     public String list(QuestionBank questionbank, Integer curPage, Integer showCount, ModelMap model){
         try{
             PageInfo<QuestionBank> pageInfo = new PageInfo<>(showCount, curPage);
-            pageInfo = questionbankService.listByObject(questionbank, pageInfo);
+            pageInfo = questionbankService.findByObject(questionbank, pageInfo);
             model.put("pi", pageInfo);
             model.put("questionbank", questionbank);
         }catch (Exception e){
@@ -91,7 +91,11 @@ public class QuestionBankController {
             questionbank.setUpdateTime(now);
             questionbank.setUpdateUserId(currentUserId);
             questionbank.setStatus(Constant.STATUS_ENABLE);
-            questionbankService.saveOrUpdate(questionbank);
+            if(questionbank.getId() == null){
+                questionbankService.save(questionbank);
+            }else{
+                questionbankService.updateById(questionbank);
+            }
         }catch (Exception e){
             logger.error("保存失败", e);
             model.put("questionbank", questionbank);
@@ -110,7 +114,7 @@ public class QuestionBankController {
     @ResponseBody
     public String listAll(QuestionBank questionbank){
         try{
-            List<QuestionBank> list = questionbankService.findAllByObject(questionbank);
+            List<QuestionBank> list = questionbankService.findByObject(questionbank);
             return JsonUtil.toJsonString(list);
         }catch (Exception e){
             logger.error("获取全部列表失败", e);

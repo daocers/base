@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="tes.questionbank" >
+<mapper namespace="tes.questionBank" >
   <resultMap id="QuestionBankMap" type="co.bugu.tes.model.QuestionBank" >
     <id column="bank_id" property="id" jdbcType="INTEGER" />
     <result column="bank_create_time" property="createTime" jdbcType="TIMESTAMP" />
@@ -111,7 +111,7 @@
   </update>
   
 
-<select id="listByObject" resultMap="QuestionBankMap" parameterType="co.bugu.tes.model.QuestionBank" >
+<select id="findByObject" resultMap="QuestionBankMap" parameterType="co.bugu.tes.model.QuestionBank" >
     select 
     <include refid="questionBank_list" />
     from question_bank bank

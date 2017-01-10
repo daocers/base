@@ -45,7 +45,7 @@ public class BranchController {
     public String list(HttpServletRequest request, Branch branch, Integer curPage, Integer showCount, ModelMap model){
         try{
             PageInfo<Branch> pageInfo = new PageInfo<>(showCount, curPage);
-            pageInfo = branchService.listByObject(branch, pageInfo);
+            pageInfo = branchService.findByObject(branch, pageInfo);
             model.put("pi", pageInfo);
             model.put("branch", branch);
         }catch (Exception e){
@@ -83,7 +83,11 @@ public class BranchController {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(Branch branch, ModelMap model){
         try{
-            branchService.saveOrUpdate(branch);
+            if(branch.getId() == null){
+                branchService.save(branch);
+            }else{
+                branchService.updateById(branch);
+            }
         }catch (Exception e){
             logger.error("保存失败", e);
             model.put("branch", branch);
@@ -102,7 +106,7 @@ public class BranchController {
     @ResponseBody
     public String listAll(Branch branch){
         try{
-            List<Branch> list = branchService.findAllByObject(branch);
+            List<Branch> list = branchService.findByObject(branch);
             return JsonUtil.toJsonString(list);
         }catch (Exception e){
             logger.error("获取全部列表失败", e);

@@ -1,6 +1,7 @@
 package co.bugu.tes.service;
 
 
+import co.bugu.framework.core.service.IBaseService;
 import co.bugu.tes.model.Paper;
 import co.bugu.tes.model.Scene;
 import co.bugu.tes.model.User;
@@ -8,20 +9,20 @@ import co.bugu.framework.core.dao.PageInfo;
 
 import java.util.List;
 
-public interface IPaperService {
-    int save(Paper paper);
-
-    int updateById(Paper paper);
-
-    int saveOrUpdate(Paper paper);
-
-    int delete(Paper paper);
-
-    Paper findById(Integer id);
-
-    List<Paper> findAllByObject(Paper paper);
-
-    PageInfo listByObject(Paper paper, PageInfo<Paper> pageInfo) throws Exception;
+public interface IPaperService extends IBaseService<Paper>{
+//    int save(Paper paper);
+//
+//    int updateById(Paper paper);
+//
+//    int saveOrUpdate(Paper paper);
+//
+//    int delete(Paper paper);
+//
+//    Paper findById(Integer id);
+//
+//    List<Paper> findAllByObject(Paper paper);
+//
+//    PageInfo listByObject(Paper paper, PageInfo<Paper> pageInfo) throws Exception;
 
     //开场生成所有试卷。 scene中包含所有的场次信息，包含出题策略，考试人员等信息。
     boolean generateAllPaper(Scene scene);

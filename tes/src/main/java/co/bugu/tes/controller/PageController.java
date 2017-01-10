@@ -35,7 +35,7 @@ public class PageController {
     public String list(Page page, Integer curPage, Integer showCount, ModelMap model){
         try{
             PageInfo<Page> pageInfo = new PageInfo<>(showCount, curPage);
-            pageInfo = pageService.listByObject(page, pageInfo);
+            pageInfo = pageService.findByObject(page, pageInfo);
             model.put("pi", pageInfo);
             model.put("page", page);
         }catch (Exception e){
@@ -73,7 +73,11 @@ public class PageController {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(Page page, ModelMap model){
         try{
-            pageService.saveOrUpdate(page);
+            if(page.getId() == null){
+                pageService.save(page);
+            }else{
+                pageService.updateById(page);
+            }
         }catch (Exception e){
             logger.error("保存失败", e);
             model.put("page", page);
@@ -92,7 +96,7 @@ public class PageController {
     @ResponseBody
     public String listAll(Page page){
         try{
-            List<Page> list = pageService.findAllByObject(page);
+            List<Page> list = pageService.findByObject(page);
             return JsonUtil.toJsonString(list);
         }catch (Exception e){
             logger.error("获取全部列表失败", e);

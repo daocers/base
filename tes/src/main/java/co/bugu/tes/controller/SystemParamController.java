@@ -35,7 +35,7 @@ public class SystemParamController {
     public String list(SystemParam systemparam, Integer curPage, Integer showCount, ModelMap model){
         try{
             PageInfo<SystemParam> pageInfo = new PageInfo<>(showCount, curPage);
-            pageInfo = systemparamService.listByObject(systemparam, pageInfo);
+            pageInfo = systemparamService.findByObject(systemparam, pageInfo);
             model.put("pi", pageInfo);
             model.put("systemparam", systemparam);
         }catch (Exception e){
@@ -73,7 +73,11 @@ public class SystemParamController {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(SystemParam systemparam, ModelMap model){
         try{
-            systemparamService.saveOrUpdate(systemparam);
+            if(systemparam.getId() == null){
+                systemparamService.save(systemparam);
+            }else{
+                systemparamService.updateById(systemparam);
+            }
         }catch (Exception e){
             logger.error("保存失败", e);
             model.put("systemparam", systemparam);
@@ -92,7 +96,7 @@ public class SystemParamController {
     @ResponseBody
     public String listAll(SystemParam systemparam){
         try{
-            List<SystemParam> list = systemparamService.findAllByObject(systemparam);
+            List<SystemParam> list = systemparamService.findByObject(systemparam);
             return JsonUtil.toJsonString(list);
         }catch (Exception e){
             logger.error("获取全部列表失败", e);

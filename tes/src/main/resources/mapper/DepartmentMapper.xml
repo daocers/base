@@ -101,7 +101,7 @@
   </update>
   
 
-<select id="listByObject" resultMap="DepartmentMap" parameterType="co.bugu.tes.model.Department" >
+<select id="findByObject" resultMap="DepartmentMap" parameterType="co.bugu.tes.model.Department" >
     select 
     <include refid="department_list" />
     from department dept

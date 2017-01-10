@@ -40,7 +40,7 @@ public class SceneController {
     public String list(Scene scene, Integer curPage, Integer showCount, ModelMap model){
         try{
             PageInfo<Scene> pageInfo = new PageInfo<>(showCount, curPage);
-            pageInfo = sceneService.listByObject(scene, pageInfo);
+            pageInfo = sceneService.findByObject(scene, pageInfo);
             model.put("pi", pageInfo);
             model.put("scene", scene);
         }catch (Exception e){
@@ -78,8 +78,11 @@ public class SceneController {
     @RequestMapping(value = "/selectUser", method = RequestMethod.POST)
     public String saveAndToSelectUser(Scene scene, ModelMap model){
         try{
-            sceneService.saveOrUpdate(scene);
-
+            if(scene.getId() == null){
+                sceneService.save(scene);
+            }else{
+                sceneService.updateById(scene);
+            }
         }catch (Exception e){
             logger.error("保存信息失败", e);
             model.put("errMsg", "保存信息失败");
@@ -131,7 +134,11 @@ public class SceneController {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(Scene scene, ModelMap model){
         try{
-            sceneService.saveOrUpdate(scene);
+            if(scene.getId() == null){
+                sceneService.save(scene);
+            }else{
+                sceneService.updateById(scene);
+            }
         }catch (Exception e){
             logger.error("保存失败", e);
             model.put("scene", scene);
@@ -150,7 +157,7 @@ public class SceneController {
     @ResponseBody
     public String listAll(Scene scene){
         try{
-            List<Scene> list = sceneService.findAllByObject(scene);
+            List<Scene> list = sceneService.findByObject(scene);
             return JsonUtil.toJsonString(list);
         }catch (Exception e){
             logger.error("获取全部列表失败", e);

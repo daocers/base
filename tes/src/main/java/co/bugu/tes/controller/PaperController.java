@@ -38,7 +38,7 @@ public class PaperController {
     public String list(Paper paper, Integer curPage, Integer showCount, ModelMap model){
         try{
             PageInfo<Paper> pageInfo = new PageInfo<>(showCount, curPage);
-            pageInfo = paperService.listByObject(paper, pageInfo);
+            pageInfo = paperService.findByObject(paper, pageInfo);
             model.put("pi", pageInfo);
             model.put("paper", paper);
         }catch (Exception e){
@@ -77,7 +77,11 @@ public class PaperController {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(Paper paper, ModelMap model){
         try{
-            paperService.saveOrUpdate(paper);
+            if(paper.getId() == null){
+                paperService.save(paper);
+            }else{
+                paperService.updateById(paper);
+            }
         }catch (Exception e){
             logger.error("保存失败", e);
             model.put("paper", paper);
@@ -96,7 +100,7 @@ public class PaperController {
     @ResponseBody
     public String listAll(Paper paper){
         try{
-            List<Paper> list = paperService.findAllByObject(paper);
+            List<Paper> list = paperService.findByObject(paper);
             return JsonUtil.toJsonString(list);
         }catch (Exception e){
             logger.error("获取全部列表失败", e);

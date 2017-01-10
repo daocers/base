@@ -1,20 +1,18 @@
 package co.bugu.tes.service.impl;
 
 
+import co.bugu.framework.core.service.impl.BaseServiceImpl;
 import co.bugu.tes.model.Question;
 import co.bugu.tes.service.IQuestionService;
-import co.bugu.framework.core.dao.BaseDao;
-import co.bugu.framework.core.dao.PageInfo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 
 @Service
-public class QuestionServiceImpl implements IQuestionService {
-    @Autowired
-    BaseDao baseDao;
+public class QuestionServiceImpl extends BaseServiceImpl<Question> implements IQuestionService {
+//    @Autowired
+//    BaseDao baseDao;
 
     @Override
     public int save(Question question, List<Map<String, Integer>> xList) {
@@ -26,10 +24,10 @@ public class QuestionServiceImpl implements IQuestionService {
         return num;
     }
 
-    @Override
-    public int updateById(Question question) {
-        return baseDao.update("tes.question.updateById", question);
-    }
+//    @Override
+//    public int updateById(Question question) {
+//        return baseDao.update("tes.question.updateById", question);
+//    }
 
 
     @Override
@@ -49,26 +47,26 @@ public class QuestionServiceImpl implements IQuestionService {
         return num;
     }
 
-    @Override
-    public int delete(Question question) {
-        return baseDao.delete("tes.question.deleteById", question);
-    }
-
-    @Override
-    public Question findById(Integer id) {
-        return baseDao.selectOne("tes.question.selectById", id);
-    }
-
-    @Override
-    public List<Question> findAllByObject(Question question) {
-        return baseDao.selectList("tes.question.listByObject", question);
-    }
-
-    @Override
-    public PageInfo listByObject(Question question, PageInfo<Question> pageInfo) throws Exception {
-        return baseDao.listByObject("tes.question.listByObject", question, pageInfo);
-    }
-
+//    @Override
+//    public int delete(Question question) {
+//        return baseDao.delete("tes.question.deleteById", question);
+//    }
+//
+//    @Override
+//    public Question findById(Integer id) {
+//        return baseDao.selectOne("tes.question.selectById", id);
+//    }
+//
+//    @Override
+//    public List<Question> findAllByObject(Question question) {
+//        return baseDao.selectList("tes.question.listByObject", question);
+//    }
+//
+//    @Override
+//    public PageInfo listByObject(Question question, PageInfo<Question> pageInfo) throws Exception {
+//        return baseDao.listByObject("tes.question.listByObject", question, pageInfo);
+//    }
+//
     @Override
     public List<Map<String, Object>> selectCountOfPropInfo(Integer metaInfoId) {
         return baseDao.selectList("tes.question.selectCountOfPropInfo", metaInfoId);

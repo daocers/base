@@ -519,4 +519,46 @@ public class JedisUtil {
             release(jedis);
         }
     }
+
+
+    /**
+     * 获取交集的数量
+     * @param keys
+     * @return
+     * @throws TesException
+     */
+    public static int sinterForSize(String... keys) throws TesException {
+        Jedis jedis = null;
+        try{
+            jedis = pool.getResource();
+            Set<String> set = jedis.sinter(keys);
+            return set.size();
+        }catch (Exception e ){
+            logger.error("jedis sinter异常", e);
+            throw new TesException("jedis操作失败", e);
+        }finally {
+            release(jedis);
+        }
+    }
+
+
+    /**
+     * 获取交集
+     * @param keys
+     * @return
+     * @throws TesException
+     */
+    public static Set<String> sinterForObj(String... keys) throws TesException {
+        Jedis jedis = null;
+        try{
+            jedis =pool.getResource();
+            Set<String> set = jedis.sinter(keys);
+            return set;
+        }catch (Exception e){
+            logger.error("jedis sinter异常", e);
+            throw new TesException("jedis操作失败", e);
+        }finally {
+            release(jedis);
+        }
+    }
 }

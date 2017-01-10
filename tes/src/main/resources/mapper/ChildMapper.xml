@@ -100,7 +100,7 @@
   </update>
   
 
-	<select id="listByObject" resultMap="ChildMap" parameterType="co.bugu.tes.model.Child" >
+	<select id="findByObject" resultMap="ChildMap" parameterType="co.bugu.tes.model.Child" >
     select 
     <include refid="child_list" />
     from child child

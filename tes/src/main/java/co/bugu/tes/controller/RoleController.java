@@ -47,7 +47,7 @@ public class RoleController {
     public String list(Role role, Integer curPage, Integer showCount, ModelMap model){
         try{
             PageInfo<Role> pageInfo = new PageInfo<>(showCount, curPage);
-            pageInfo = roleService.listByObject(role, pageInfo);
+            pageInfo = roleService.findByObject(role, pageInfo);
             model.put("pi", pageInfo);
             model.put("role", role);
         }catch (Exception e){
@@ -78,7 +78,7 @@ public class RoleController {
             }
 
 
-            List<Authority> authorityList = authorityService.findAllByObject(null);
+            List<Authority> authorityList = authorityService.findByObject(null);
             List<Map<String, Object>> data = new ArrayList<>();
             for(Authority auth: authorityList){
                 Map<String, Object> map = new HashMap<>();
@@ -143,7 +143,7 @@ public class RoleController {
     @ResponseBody
     public String listAll(Role role){
         try{
-            List<Role> list = roleService.findAllByObject(role);
+            List<Role> list = roleService.findByObject(role);
             return JsonUtil.toJsonString(list);
         }catch (Exception e){
             logger.error("获取全部列表失败", e);

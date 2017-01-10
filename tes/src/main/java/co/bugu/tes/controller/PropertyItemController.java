@@ -35,7 +35,7 @@ public class PropertyItemController {
     public String list(PropertyItem propertyitem, Integer curPage, Integer showCount, ModelMap model){
         try{
             PageInfo<PropertyItem> pageInfo = new PageInfo<>(showCount, curPage);
-            pageInfo = propertyitemService.listByObject(propertyitem, pageInfo);
+            pageInfo = propertyitemService.findByObject(propertyitem, pageInfo);
             model.put("pi", pageInfo);
             model.put("propertyitem", propertyitem);
         }catch (Exception e){
@@ -73,7 +73,11 @@ public class PropertyItemController {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(PropertyItem propertyitem, ModelMap model){
         try{
-            propertyitemService.saveOrUpdate(propertyitem);
+            if(propertyitem.getId() == null){
+                propertyitemService.save(propertyitem);
+            }else{
+                propertyitemService.updateById(propertyitem);
+            }
         }catch (Exception e){
             logger.error("保存失败", e);
             model.put("propertyitem", propertyitem);
@@ -92,7 +96,7 @@ public class PropertyItemController {
     @ResponseBody
     public String listAll(PropertyItem propertyitem){
         try{
-            List<PropertyItem> list = propertyitemService.findAllByObject(propertyitem);
+            List<PropertyItem> list = propertyitemService.findByObject(propertyitem);
             return JsonUtil.toJsonString(list);
         }catch (Exception e){
             logger.error("获取全部列表失败", e);

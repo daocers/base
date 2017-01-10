@@ -1,6 +1,7 @@
 package co.bugu.tes.service.impl;
 
 
+import co.bugu.framework.core.service.impl.BaseServiceImpl;
 import co.bugu.tes.model.QuestionMetaInfo;
 import co.bugu.tes.service.IQuestionMetaInfoService;
 import co.bugu.framework.core.dao.BaseDao;
@@ -13,28 +14,28 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class QuestionMetaInfoServiceImpl implements IQuestionMetaInfoService {
-    @Autowired
-    BaseDao baseDao;
-
-    @Override
-    public int save(QuestionMetaInfo questionmetainfo) {
-        return baseDao.insert("tes.questionmetainfo.insert", questionmetainfo);
-    }
-
-    @Override
-    public int updateById(QuestionMetaInfo questionmetainfo) {
-        return baseDao.update("tes.questionmetainfo.updateById", questionmetainfo);
-    }
-
-    @Override
-    public int saveOrUpdate(QuestionMetaInfo questionmetainfo) {
-        if(questionmetainfo.getId() == null){
-            return baseDao.insert("tes.questionmetainfo.insert", questionmetainfo);
-        }else{
-            return baseDao.update("tes.questionmetainfo.updateById", questionmetainfo);
-        }
-    }
+public class QuestionMetaInfoServiceImpl extends BaseServiceImpl<QuestionMetaInfo> implements IQuestionMetaInfoService {
+//    @Autowired
+//    BaseDao baseDao;
+//
+//    @Override
+//    public int save(QuestionMetaInfo questionmetainfo) {
+//        return baseDao.insert("tes.questionmetainfo.insert", questionmetainfo);
+//    }
+//
+//    @Override
+//    public int updateById(QuestionMetaInfo questionmetainfo) {
+//        return baseDao.update("tes.questionmetainfo.updateById", questionmetainfo);
+//    }
+//
+//    @Override
+//    public int saveOrUpdate(QuestionMetaInfo questionmetainfo) {
+//        if(questionmetainfo.getId() == null){
+//            return baseDao.insert("tes.questionmetainfo.insert", questionmetainfo);
+//        }else{
+//            return baseDao.update("tes.questionmetainfo.updateById", questionmetainfo);
+//        }
+//    }
 
     @Override
     public int saveOrUpdate(QuestionMetaInfo questionmetainfo, List<Map<String, Integer>> list) {
@@ -57,25 +58,25 @@ public class QuestionMetaInfoServiceImpl implements IQuestionMetaInfoService {
         return 0;
     }
 
-    @Override
-    public int delete(QuestionMetaInfo questionmetainfo) {
-        return baseDao.delete("tes.questionmetainfo.deleteById", questionmetainfo);
-    }
-
-    @Override
-    public QuestionMetaInfo findById(Integer id) {
-        return baseDao.selectOne("tes.questionmetainfo.selectById", id);
-    }
-
-    @Override
-    public List<QuestionMetaInfo> findAllByObject(QuestionMetaInfo questionmetainfo) {
-        return baseDao.selectList("tes.questionmetainfo.listByObject", questionmetainfo);
-    }
-
-    @Override
-    public PageInfo listByObject(QuestionMetaInfo questionmetainfo, PageInfo<QuestionMetaInfo> pageInfo) throws Exception {
-        return baseDao.listByObject("tes.questionmetainfo.listByObject", questionmetainfo, pageInfo);
-    }
+//    @Override
+//    public int delete(QuestionMetaInfo questionmetainfo) {
+//        return baseDao.delete("tes.questionmetainfo.deleteById", questionmetainfo);
+//    }
+//
+//    @Override
+//    public QuestionMetaInfo findById(Integer id) {
+//        return baseDao.selectOne("tes.questionmetainfo.selectById", id);
+//    }
+//
+//    @Override
+//    public List<QuestionMetaInfo> findAllByObject(QuestionMetaInfo questionmetainfo) {
+//        return baseDao.selectList("tes.questionmetainfo.listByObject", questionmetainfo);
+//    }
+//
+//    @Override
+//    public PageInfo listByObject(QuestionMetaInfo questionmetainfo, PageInfo<QuestionMetaInfo> pageInfo) throws Exception {
+//        return baseDao.listByObject("tes.questionmetainfo.listByObject", questionmetainfo, pageInfo);
+//    }
 
     @Override
     public void addProperty(Map<String, String> map) {

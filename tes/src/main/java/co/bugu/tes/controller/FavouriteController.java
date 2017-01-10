@@ -35,7 +35,7 @@ public class FavouriteController {
     public String list(Favourite favourite, Integer curPage, Integer showCount, ModelMap model){
         try{
             PageInfo<Favourite> pageInfo = new PageInfo<>(showCount, curPage);
-            pageInfo = favouriteService.listByObject(favourite, pageInfo);
+            pageInfo = favouriteService.findByObject(favourite, pageInfo);
             model.put("pi", pageInfo);
             model.put("favourite", favourite);
         }catch (Exception e){
@@ -73,7 +73,11 @@ public class FavouriteController {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(Favourite favourite, ModelMap model){
         try{
-            favouriteService.saveOrUpdate(favourite);
+            if(favourite.getId() == null){
+                favouriteService.save(favourite);
+            }else{
+                favouriteService.updateById(favourite);
+            }
         }catch (Exception e){
             logger.error("保存失败", e);
             model.put("favourite", favourite);
@@ -92,7 +96,7 @@ public class FavouriteController {
     @ResponseBody
     public String listAll(Favourite favourite){
         try{
-            List<Favourite> list = favouriteService.findAllByObject(favourite);
+            List<Favourite> list = favouriteService.findByObject(favourite);
             return JsonUtil.toJsonString(list);
         }catch (Exception e){
             logger.error("获取全部列表失败", e);

@@ -95,7 +95,7 @@
     </update>
 
 
-    <select id="listByObject" resultMap="RoleMap" parameterType="co.bugu.tes.model.Role">
+    <select id="findByObject" resultMap="RoleMap" parameterType="co.bugu.tes.model.Role">
         select
         <include refid="role_list"/>
         from role role

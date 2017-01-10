@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="tes.questionmetainfo">
+<mapper namespace="tes.questionMetaInfo">
     <resultMap id="QuestionMetaInfoMap" type="co.bugu.tes.model.QuestionMetaInfo">
         <id column="ques_meta_id" property="id" jdbcType="INTEGER"/>
         <result column="ques_meta_code" property="code" jdbcType="VARCHAR"/>
@@ -120,7 +120,7 @@
     </update>
 
 
-    <select id="listByObject" resultMap="QuestionMetaInfoMap" parameterType="co.bugu.tes.model.QuestionMetaInfo">
+    <select id="findByObject" resultMap="QuestionMetaInfoMap" parameterType="co.bugu.tes.model.QuestionMetaInfo">
         select
         <include refid="questionMetaInfo_list"/>,
         <include refid="propertyItem_list"/>,

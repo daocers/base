@@ -70,7 +70,7 @@
   </update>
   
 
-<select id="listByObject" resultMap="RecordMap" parameterType="co.bugu.tes.model.Record" >
+<select id="findByObject" resultMap="RecordMap" parameterType="co.bugu.tes.model.Record" >
     select 
     <include refid="record_list" />
     from record record

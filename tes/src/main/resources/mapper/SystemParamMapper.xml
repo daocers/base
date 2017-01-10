@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="tes.systemparam" >
+<mapper namespace="tes.systemParam" >
   <resultMap id="SystemParamMap" type="co.bugu.tes.model.SystemParam" >
     <id column="param_id" property="id" jdbcType="INTEGER" />
     <result column="param_code" property="code" jdbcType="VARCHAR" />
@@ -90,7 +90,7 @@
   </update>
   
 
-<select id="listByObject" resultMap="SystemParamMap" parameterType="co.bugu.tes.model.SystemParam" >
+<select id="findByObject" resultMap="SystemParamMap" parameterType="co.bugu.tes.model.SystemParam" >
     select 
     <include refid="systemParam_list" />
     from system_param param

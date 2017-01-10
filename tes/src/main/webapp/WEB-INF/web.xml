@@ -51,9 +51,9 @@
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
-  <listener>
-    <listener-class>co.bugu.tes.init.MqConsumerListener</listener-class>
-  </listener>
+  <!--<listener>-->
+    <!--&lt;!&ndash;<listener-class>co.bugu.tes.init.MqConsumerListener</listener-class>&ndash;&gt;-->
+  <!--</listener>-->
 
   <!--转发器-->
   <servlet>

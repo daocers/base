@@ -59,7 +59,7 @@
   </update>
   
 
-<select id="listByObject" resultMap="FavouriteMap" parameterType="co.bugu.tes.model.Favourite" >
+<select id="findByObject" resultMap="FavouriteMap" parameterType="co.bugu.tes.model.Favourite" >
     select 
     <include refid="favourite_list" />
     from favourite favt

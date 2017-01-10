@@ -1,6 +1,7 @@
 package co.bugu.tes.service.impl;
 
 
+import co.bugu.framework.core.service.impl.BaseServiceImpl;
 import co.bugu.tes.model.Role;
 import co.bugu.tes.service.IRoleService;
 import co.bugu.framework.core.dao.BaseDao;
@@ -13,19 +14,19 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class RoleServiceImpl implements IRoleService {
-    @Autowired
-    BaseDao baseDao;
-
-    @Override
-    public int save(Role role) {
-        return baseDao.insert("tes.role.insert", role);
-    }
-
-    @Override
-    public int updateById(Role role) {
-        return baseDao.update("tes.role.updateById", role);
-    }
+public class RoleServiceImpl extends BaseServiceImpl<Role> implements IRoleService {
+//    @Autowired
+//    BaseDao baseDao;
+//
+//    @Override
+//    public int save(Role role) {
+//        return baseDao.insert("tes.role.insert", role);
+//    }
+//
+//    @Override
+//    public int updateById(Role role) {
+//        return baseDao.update("tes.role.updateById", role);
+//    }
 
     @Override
     public void save(Role role, List<Map<String, Integer>> xList) {
@@ -44,23 +45,23 @@ public class RoleServiceImpl implements IRoleService {
         }
     }
 
-    @Override
-    public int delete(Role role) {
-        return baseDao.delete("tes.role.deleteById", role);
-    }
-
-    @Override
-    public Role findById(Integer id) {
-        return baseDao.selectOne("tes.role.selectById", id);
-    }
-
-    @Override
-    public List<Role> findAllByObject(Role role) {
-        return baseDao.selectList("tes.role.listByObject", role);
-    }
-
-    @Override
-    public PageInfo listByObject(Role role, PageInfo<Role> pageInfo) throws Exception {
-        return baseDao.listByObject("tes.role.listByObject", role, pageInfo);
-    }
+//    @Override
+//    public int delete(Role role) {
+//        return baseDao.delete("tes.role.deleteById", role);
+//    }
+//
+//    @Override
+//    public Role findById(Integer id) {
+//        return baseDao.selectOne("tes.role.selectById", id);
+//    }
+//
+//    @Override
+//    public List<Role> findAllByObject(Role role) {
+//        return baseDao.selectList("tes.role.listByObject", role);
+//    }
+//
+//    @Override
+//    public PageInfo listByObject(Role role, PageInfo<Role> pageInfo) throws Exception {
+//        return baseDao.listByObject("tes.role.listByObject", role, pageInfo);
+//    }
 }

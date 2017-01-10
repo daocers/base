@@ -163,7 +163,7 @@
     </update>
 
 
-    <select id="listByObject" resultMap="AuthorityMap" parameterType="co.bugu.tes.model.Authority">
+    <select id="findByObject" resultMap="AuthorityMap" parameterType="co.bugu.tes.model.Authority">
         select
         <include refid="authority_list"/>
         from authority auth

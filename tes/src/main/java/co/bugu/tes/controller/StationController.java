@@ -44,7 +44,7 @@ public class StationController {
     public String list(Station station, Integer curPage, Integer showCount, ModelMap model){
         try{
             PageInfo<Station> pageInfo = new PageInfo<>(showCount, curPage);
-            pageInfo = stationService.listByObject(station, pageInfo);
+            pageInfo = stationService.findByObject(station, pageInfo);
             model.put("pi", pageInfo);
             model.put("station", station);
         }catch (Exception e){
@@ -66,9 +66,9 @@ public class StationController {
         try{
             Station station = stationService.findById(id);
             model.put("station", station);
-            List<Department> departmentList = departmentService.findAllByObject(null);
+            List<Department> departmentList = departmentService.findByObject(null);
             model.put("departmentList", departmentList);
-            List<Branch> branchList = branchService.findAllByObject(null);
+            List<Branch> branchList = branchService.findByObject(null);
             model.put("branchList", branchList);
         }catch (Exception e){
             logger.error("获取信息失败", e);
@@ -91,7 +91,11 @@ public class StationController {
                 station.setCreateTime(now);
             }
             station.setUpdateTime(now);
-            stationService.saveOrUpdate(station);
+            if(station.getId() == null){
+                stationService.save(station);
+            }else{
+                stationService.updateById(station);
+            }
         }catch (Exception e){
             logger.error("保存失败", e);
             model.put("station", station);
@@ -110,7 +114,7 @@ public class StationController {
     @ResponseBody
     public String listAll(Station station){
         try{
-            List<Station> list = stationService.findAllByObject(station);
+            List<Station> list = stationService.findByObject(station);
             return JsonUtil.toJsonString(list);
         }catch (Exception e){
             logger.error("获取全部列表失败", e);

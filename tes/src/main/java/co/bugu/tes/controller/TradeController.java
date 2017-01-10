@@ -35,7 +35,7 @@ public class TradeController {
     public String list(Trade trade, Integer curPage, Integer showCount, ModelMap model){
         try{
             PageInfo<Trade> pageInfo = new PageInfo<>(showCount, curPage);
-            pageInfo = tradeService.listByObject(trade, pageInfo);
+            pageInfo = tradeService.findByObject(trade, pageInfo);
             model.put("pi", pageInfo);
             model.put("trade", trade);
         }catch (Exception e){
@@ -73,7 +73,11 @@ public class TradeController {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(Trade trade, ModelMap model){
         try{
-            tradeService.saveOrUpdate(trade);
+            if(trade.getId() == null){
+                tradeService.save(trade);
+            }else{
+                tradeService.updateById(trade);
+            }
         }catch (Exception e){
             logger.error("保存失败", e);
             model.put("trade", trade);
@@ -92,7 +96,7 @@ public class TradeController {
     @ResponseBody
     public String listAll(Trade trade){
         try{
-            List<Trade> list = tradeService.findAllByObject(trade);
+            List<Trade> list = tradeService.findByObject(trade);
             return JsonUtil.toJsonString(list);
         }catch (Exception e){
             logger.error("获取全部列表失败", e);

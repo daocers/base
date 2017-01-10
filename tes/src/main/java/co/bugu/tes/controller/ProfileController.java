@@ -1,5 +1,6 @@
 package co.bugu.tes.controller;
 
+import co.bugu.tes.model.Paper;
 import co.bugu.tes.model.Profile;
 import co.bugu.tes.service.IProfileService;
 import co.bugu.framework.core.dao.PageInfo;
@@ -35,7 +36,7 @@ public class ProfileController {
     public String list(Profile profile, Integer curPage, Integer showCount, ModelMap model){
         try{
             PageInfo<Profile> pageInfo = new PageInfo<>(showCount, curPage);
-            pageInfo = profileService.listByObject(profile, pageInfo);
+            pageInfo = profileService.findByObject(profile, pageInfo);
             model.put("pi", pageInfo);
             model.put("profile", profile);
         }catch (Exception e){
@@ -73,7 +74,11 @@ public class ProfileController {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(Profile profile, ModelMap model){
         try{
-            profileService.saveOrUpdate(profile);
+            if(profile.getId() == null){
+                profileService.save(profile);
+            }else{
+                profileService.updateById(profile);
+            }
         }catch (Exception e){
             logger.error("保存失败", e);
             model.put("profile", profile);
@@ -92,7 +97,7 @@ public class ProfileController {
     @ResponseBody
     public String listAll(Profile profile){
         try{
-            List<Profile> list = profileService.findAllByObject(profile);
+            List<Profile> list = profileService.findByObject(profile);
             return JsonUtil.toJsonString(list);
         }catch (Exception e){
             logger.error("获取全部列表失败", e);
