@@ -14,7 +14,19 @@ public class PropertyServiceImpl extends BaseServiceImpl<Property> implements IP
 
     @Override
     public void saveOrUpdate(Property property, List<PropertyItem> itemList) {
-
+        if(property.getId() == null){
+            baseDao.insert("tes.property.insert", property);
+        }else{
+            baseDao.update("tes.property.updateById", property);
+        }
+        for(PropertyItem item: itemList){
+            item.setPropertyId(property.getId());
+            if(item.getId() == null){
+                baseDao.insert("tes.propertyitem.insert", item);
+            }else{
+                baseDao.update("tes.propertyitem.updateById", item);
+            }
+        }
     }
 }
 
