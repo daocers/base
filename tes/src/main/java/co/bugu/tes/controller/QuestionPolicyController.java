@@ -210,4 +210,18 @@ public class QuestionPolicyController {
         }
     }
 
+
+    /**
+     * 从content转化为对应的文字显示
+     * @param content
+     * @return
+     */
+    public String getShowInfoByContent(String content){
+        List<String> items = JSON.parseArray(content, String.class);
+        for(String item: items){
+            List<Integer> lsit = JSON.parseArray(item, int.class);
+
+        }
+    }
+
 }

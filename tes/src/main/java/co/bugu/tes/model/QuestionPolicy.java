@@ -31,6 +31,20 @@ public class QuestionPolicy {
 
     private Department department;
 
+    /**
+     * 用于展示给用户看的信息，和content对应，
+     * content用于记录id信息，showInfo用于记录文字信息
+     */
+    private String showInfo;
+
+    public String getShowInfo() {
+        return showInfo;
+    }
+
+    public void setShowInfo(String showInfo) {
+        this.showInfo = showInfo;
+    }
+
     public Integer getCount() {
         return count;
     }

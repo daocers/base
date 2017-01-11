@@ -518,7 +518,7 @@ $.formValidator =
 			if((typeof regexArray)=="string") regexArray = [regexArray];
 			$.each(regexArray, function() {
 			    var r = this;
-			    if(setting.dataType=="enum"){r = eval("regexEnum."+r);}			
+			    if(setting.dataType=="enums"){r = eval("regexEnum."+r);}
 			    if(r==undefined || r=="") 
 			    {
 			        return false;

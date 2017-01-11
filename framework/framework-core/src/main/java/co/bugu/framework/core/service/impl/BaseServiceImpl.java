@@ -34,7 +34,7 @@ public class BaseServiceImpl<T> implements IBaseService<T> {
 
     @Override
     public int updateById(T record) {
-        return baseDao.update(nameSpace + "updateById");
+        return baseDao.update(nameSpace + "updateById", record);
     }
 
     @Override
