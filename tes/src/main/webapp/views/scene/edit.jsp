@@ -78,7 +78,7 @@
                     <label class="control-label col-md-2">考试顺延时间</label>
                     <div class="col-md-10">
                         <input class="form-control" type="text" name="delay" value="${scene.delay}" required>
-                        <span class="help-block with-errors">考生顺延时间内开始考试，作答时间不变。超过顺眼时间，作答时间需要减去超出部分。</span>
+                        <span class="help-block with-errors">考生顺延时间内开始考试，作答时间不变。超过顺延时间，作答时间需要减去超出部分。</span>
                     </div>
                 </div>
                 <div class="form-group">

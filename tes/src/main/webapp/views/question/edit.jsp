@@ -14,7 +14,7 @@
             <li><a href="#" class="active">品类编辑</a></li>
         </ol>
     </div>
-    <input type="hidden" value="${type}" id="type">
+    <input type="hidden" value="${param.type}" id="type">
     <div class="row">
         <div class="col-md-8">
             <form class="form-horizontal" method="post" action="save.do" data-toggle="validator" role="form">
@@ -30,7 +30,7 @@
                 <div class="form-group">
                     <label class="control-label col-md-2">题干</label>
                     <div class="col-md-10">
-                        <textarea class="form-control" name="content" rows="5">${question.content}</textarea>
+                        <textarea class="form-control" name="content" rows="5" required>${question.content}</textarea>
                         <%--<input class="form-control" type="text" name="content" value="${question.content}" required>--%>
                         <span class="help-block with-errors">试题选项等题干信息</span>
                     </div>
@@ -119,6 +119,7 @@
         var res = new Array();
         if($("ul.list-group").length != $("[type='radio']:checked").length){
             swal("", "请选择试题属性", "error");
+//            zeroModal.error("请选择试题属性！");
             return false;
         }
         $("[type='radio']:checked").each(function (idx, e) {
@@ -133,6 +134,7 @@
     $("[name='metaInfoId']").on("change", function () {
         var id = $(this).val();
         if(!id){
+//            zeroModal.error("请选择题型！");
             swal("", "请选择题型", "warning");
             return false;
         }

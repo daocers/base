@@ -148,12 +148,12 @@ public class BaseDao<T> extends SqlSessionDaoSupport {
         Connection connection = this.getSqlSession().getConfiguration().getEnvironment().getDataSource().getConnection()    ;
 
         String sql = boundSql.getSql();
-        sql = sql.toLowerCase();
+//        sql = sql.toLowerCase();
         String newSql = "";
 
-        if(sql.contains("join")){
-            if(sql.contains("order by")){
-                newSql = sql.split("order by")[0];
+        if(sql.toLowerCase().contains("join")){
+            if(sql.toLowerCase().contains("order by")){
+                newSql = sql.toLowerCase().split("order by")[0];
             }else{
                 newSql = sql;
             }
@@ -163,9 +163,10 @@ public class BaseDao<T> extends SqlSessionDaoSupport {
 
             newSql = "select count(0) as cnt from (" + newSql + " group by 1) as tmp";
         }else{
-            newSql = "select count(0) ac cnt from " + sql.split("from")[1];
+            newSql = "select count(0) as cnt from " + sql.split("from")[1];
         }
 
+        newSql = "select count(0) as cnt from (" + sql + ") as tmp";
         logger.debug("执行分页，查询语句为： {}", newSql);
 
         // 执行统计SQL

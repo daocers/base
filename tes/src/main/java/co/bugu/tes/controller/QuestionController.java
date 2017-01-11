@@ -385,7 +385,7 @@ public class QuestionController {
             for(int i = 0; i < ids.size(); i++){
                 keys[i] = ids.get(i);
             }
-            return questionService.getCountByPropItemId(keys) + "";
+            return questionService.getCountByPropItemId(metaId, keys) + "";
         }catch (Exception e){
             logger.error("获取指定属性的试题数量失败", e);
             return "-1";

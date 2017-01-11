@@ -62,8 +62,26 @@
     <%--美化checkbox和radio--%>
     <%--<link href="../assets/css/square/blue.css" rel="stylesheet">--%>
     <%--<script src="../assets/js/icheck.min.js"></script>--%>
+
+
+    <%--模态对话框--%>
+    <link href="../assets/css/zeroModal.css" rel="stylesheet">
+    <script src="../assets/js/zeroModal.min.js"></script>
+
+
+    <%--日期选择框--%>
+    <link href="../assets/css/flatpickr.material_blue.min.css" rel="stylesheet">
+    <script src="../assets/js/flatpickr.min.js"></script>
+    <script src="../assets/js/flatpickr.l10n.zh.js"></script>
 </head>
 <body>
+
+    <div class="hide" id="err">
+        ${err}
+    </div>
+    <div class="hide" id="msg">
+        ${msg}
+    </div>
 
 </body>
 </html>

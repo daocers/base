@@ -54,8 +54,9 @@ public class QuestionServiceImpl extends BaseServiceImpl<Question> implements IQ
             baseDao.insert("tes.question.addToPropItem", map);
 
 //            将属性信息添加到redis中的set上
+//            QUESTION_PROPITEM_ID_ + 题型id + 属性id
             Integer propItemId = map.get("propItemId");
-            JedisUtil.sadd(Constant.QUESTION_PROPITEM_ID + propItemId, question.getId() + "");
+            JedisUtil.sadd(Constant.QUESTION_PROPITEM_ID + question.getMetaInfoId() + "_" + propItemId, question.getId() + "");
         }
         return num;
     }
@@ -76,19 +77,19 @@ public class QuestionServiceImpl extends BaseServiceImpl<Question> implements IQ
     }
 
     @Override
-    public Set<String> findQuestionByPropItemId(Integer... ids) throws TesException{
+    public Set<String> findQuestionByPropItemId(Integer questionMetaInfoId, Integer... ids) throws TesException{
         String[] keys = new String[ids.length];
         for(int i = 0; i < ids.length; i++){
-            keys[i] = Constant.QUESTION_PROPITEM_ID + ids[i];
+            keys[i] = Constant.QUESTION_PROPITEM_ID + questionMetaInfoId + "_"+ ids[i];
         }
         return JedisUtil.sinterForObj(keys);
     }
 
     @Override
-    public int getCountByPropItemId(Integer... ids) throws TesException {
+    public int getCountByPropItemId(Integer questionMetaInfoId, Integer... ids) throws TesException {
         String[] keys = new String[ids.length];
         for(int i = 0; i < ids.length; i++){
-            keys[i] = Constant.QUESTION_PROPITEM_ID + ids[i];
+            keys[i] = Constant.QUESTION_PROPITEM_ID +questionMetaInfoId + "_" + ids[i];
         }
         return JedisUtil.sinterForSize(keys);
     }
