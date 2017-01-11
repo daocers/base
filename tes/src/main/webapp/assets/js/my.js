@@ -20,7 +20,6 @@ $(function () {
  */
 $(function () {
     var type = $("#type").val();
-    alert(type)
     if (type == "detail") {
         $("input").attr("readonly", true);
         $("select").attr("readonly", true);

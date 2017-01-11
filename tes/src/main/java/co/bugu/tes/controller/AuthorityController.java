@@ -11,6 +11,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.http.auth.AUTH;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,14 +56,14 @@ public class AuthorityController {
 
     /**
     * 查询数据后跳转到对应的编辑页面
-    * @param authority 查询数据，一般查找id
+    * @param id 查询数据，一般查找id
     * @param model
     * @return
     */
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
-    public String toEdit(Authority authority, ModelMap model){
+    public String toEdit(Integer id, ModelMap model){
         try{
-            authority = authorityService.findById(authority.getId());
+            Authority authority = authorityService.findById(id);
             model.put("authority", authority);
         }catch (Exception e){
             logger.error("获取信息失败", e);
