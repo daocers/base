@@ -95,4 +95,19 @@ public class LoginController {
         VerifyCodeUtil.outputImage(80, 35, response.getOutputStream(), code);
         return null;
     }
+
+    /**
+     * 获取在线信息
+     * 有对应的页面信息
+     * 管理员，考试教师可用
+     * @return
+     */
+    public String getOnlineInfo(){
+        try{
+
+        }catch (Exception e){
+            logger.error("获取在线信息失败", e);
+        }
+        return null;
+    }
 }

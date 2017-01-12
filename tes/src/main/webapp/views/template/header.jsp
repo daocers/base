@@ -10,6 +10,7 @@
            uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ include file="navi.jsp"%>
 <html>
 <head>
     <link href="../assets/css/bootstrap.css" rel="stylesheet" >
@@ -82,6 +83,7 @@
     <div class="hide" id="msg">
         ${msg}
     </div>
+
 
 </body>
 </html>

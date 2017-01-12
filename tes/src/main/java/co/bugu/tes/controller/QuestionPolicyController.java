@@ -4,6 +4,7 @@ import co.bugu.tes.model.Property;
 import co.bugu.tes.model.PropertyItem;
 import co.bugu.tes.model.QuestionMetaInfo;
 import co.bugu.tes.model.QuestionPolicy;
+import co.bugu.tes.service.IPropertyItemService;
 import co.bugu.tes.service.IQuestionMetaInfoService;
 import co.bugu.tes.service.IQuestionPolicyService;
 import com.alibaba.fastjson.JSON;
@@ -28,6 +29,8 @@ public class QuestionPolicyController {
     IQuestionPolicyService questionpolicyService;
     @Autowired
     IQuestionMetaInfoService questionMetaInfoService;
+    @Autowired
+    IPropertyItemService propertyItemService;
 
     private static Logger logger = LoggerFactory.getLogger(QuestionPolicyController.class);
 
@@ -219,9 +222,15 @@ public class QuestionPolicyController {
     public String getShowInfoByContent(String content){
         List<String> items = JSON.parseArray(content, String.class);
         for(String item: items){
-            List<Integer> lsit = JSON.parseArray(item, int.class);
+            List<Integer> list = JSON.parseArray(item, int.class);
+            for(Integer id: list){
+                PropertyItem propertyItem = propertyItemService.findById(id);
+                String name = propertyItem.getName();
+            }
+
 
         }
+        return null;
     }
 
 }
