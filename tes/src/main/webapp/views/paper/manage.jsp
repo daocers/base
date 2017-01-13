@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>查看试卷</title>
+    <title>试卷管理</title>
 </head>
 <body>
 <div class="container">
@@ -11,7 +11,7 @@
         <ol class="breadcrumb">
             <li><a href="#">首页</a></li>
             <li><a href="#">试卷管理</a></li>
-            <li><a href="#" class="active">查看试卷</a></li>
+            <li><a href="#" class="active">试卷管理</a></li>
         </ol>
     </div>
     <input type="hidden" value="${type}" id="type">
@@ -69,6 +69,47 @@
                         <span class="help-block with-errors">提示信息</span>
                     </div>
                 </div>
+                <table class="table table-bordered table-condensed">
+                    <thead>
+                        <tr>
+                            <th>题型</th>
+                            <th>题目</th>
+                            <th>最佳答案</th>
+                            <th>作答记录</th>
+                            <th>得分</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>单选</td>
+                            <td>我国最大的商业银行是？</td>
+                            <td>A</td>
+                            <td>A</td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <td>单选</td>
+                            <td>我国最大的商业银行是？</td>
+                            <td>A</td>
+                            <td>A</td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <td>单选</td>
+                            <td>我国最大的商业银行是？</td>
+                            <td>A</td>
+                            <td>A</td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <td>单选</td>
+                            <td>我国最大的商业银行是？</td>
+                            <td>A</td>
+                            <td>A</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
 
                 <div class="button pull-right">
                     <button class="btn btn-primary btn-commit">保存</button>

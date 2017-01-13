@@ -1,5 +1,6 @@
 package co.bugu.tes.controller;
 
+import co.bugu.framework.util.exception.TesException;
 import co.bugu.tes.model.Paper;
 import co.bugu.tes.service.IPaperService;
 import co.bugu.tes.service.IQuestionPolicyService;
@@ -123,5 +124,16 @@ public class PaperController {
             logger.error("删除失败", e);
             return "-1";
         }
+    }
+
+    @RequestMapping("/manage")
+    public String toManage(Paper paper, ModelMap model) throws TesException {
+       try{
+
+       }catch (Exception e){
+           logger.error("获取试卷信息失败", e);
+           throw new TesException("获取试卷信息失败", e);
+       }
+       return null;
     }
 }

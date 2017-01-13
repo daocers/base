@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <title>品类编辑</title>
     <style>
-        .inline{
+        .inline {
             margin-right: 50px;
             display: inline-block;
         }
@@ -22,17 +22,17 @@
     </div>
     <div class="row" style="border: 1px dashed lightgreen;">
         <div class="col-md-4">
-            当前考试：第三次模拟考试
+            当前考试：<span class="label label-info">第三次模拟考试</span>
         </div>
-        <div class="col-md-3">
-            当前试题<select class="form-control" style="display: inline; width: auto"><option>单选第一题</option></select>
-        </div>
+        <%--<div class="col-md-3">--%>
+        <%--当前试题<select class="form-control" style="display: inline; width: auto"><option>单选第一题</option></select>--%>
+        <%--</div>--%>
         <div class="col-md-3 pull-right">
-            剩余做答时间: <label id="timer"></label>
+            剩余做答时间: <label id="timer" style="color: red;"></label>
         </div>
         <%--<label>考试名称</label><input style="display: inline-block;" value="三综合考试第一场" disabled>--%>
         <%--<div class="pull-right" style="font-size: 15px;">--%>
-            <%--剩余做答时间: <label id="timer"></label>--%>
+        <%--剩余做答时间: <label id="timer"></label>--%>
         <%--</div>--%>
 
     </div>
@@ -71,7 +71,7 @@
                             <input type="checkbox" name="answer" value="A"> A
                         </label>
                         <label class="checkbox inline">
-                            <input type="checkbox"  name="answer" value="B"> B
+                            <input type="checkbox" name="answer" value="B"> B
                         </label>
                         <label class="checkbox inline">
                             <input type="checkbox" name="answer" value="C"> C
@@ -119,68 +119,81 @@
             <label class="control-label">答题信息</label>
             <table class="table table-bordered">
                 <thead>
-                    <tr>
-                        <th>题目序号</th>
-                        <th>做答信息</th>
-                        <th>正确答案</th>
-                    </tr>
+                <tr>
+                    <th>题目序号</th>
+                    <th>做答信息</th>
+                    <th>正确答案</th>
+                </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>A</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>B</td>
-                        <td>A</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>C</td>
-                        <td>A</td>
-                    </tr>
+                <tr>
+                    <td>1</td>
+                    <td>A</td>
+                    <td>A</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>B</td>
+                    <td>A</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>C</td>
+                    <td>A</td>
+                </tr>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
 <script>
-//    $("#timer").syotimer({
-//        dayVisible: false,
-//        year: 2016,
-//        month: 8,
-//        day: 8,
-//        hour: 1,
-//        minute: 25,
-//        second: 0,
-//        afterDeadline: function(timerBlock){
-//            timerBlock.bodyBlock.html('<p style="font-size: 1.2em;">The countdown is finished!</p>');
-//            alert("时间到");
-//        }
-//    })
+    //    $("#timer").syotimer({
+    //        dayVisible: false,
+    //        year: 2016,
+    //        month: 8,
+    //        day: 8,
+    //        hour: 1,
+    //        minute: 25,
+    //        second: 0,
+    //        afterDeadline: function(timerBlock){
+    //            timerBlock.bodyBlock.html('<p style="font-size: 1.2em;">The countdown is finished!</p>');
+    //            alert("时间到");
+    //        }
+    //    })
 
-    $("#timer").countdown("2016/08/07 09:20:30", function(event) {
-        console.log(event)
-        var type = event.type;
-//
-//        if(type == 'update'){
-            $(this).html(event.strftime('%H小时 %M分钟 %S秒'));
-//        }
-        if(type == "stoped"){
-            alert("暂停了")
-        }
-        if(type == "finish"){
-            alert("时间到")
-        }
-    });
+    //    $("#timer").countdown("2017/08/07 09:20:30", function(event) {
+    //        console.log(event)
+    //        var type = event.type;
+    ////
+    ////        if(type == 'update'){
+    //            $(this).html(event.strftime('%H小时 %M分钟 %S秒'));
+    ////        }
+    //        if(type == "stoped"){
+    //            alert("暂停了")
+    //        }
+    //        if(type == "finish"){
+    //            alert("时间到")
+    //        }
+    //    });
+    $(function () {
+        $("#timer").countdown("2017/01/13 13:56:30")
+            .on("update.countdown", function (event) {
+                $(this).html(event.strftime('%H小时 %M分钟 %S秒'));
 
-    $("[type='checkbox'], [type='radio']").iCheck({
-        checkboxClass: 'icheckbox_square-blue',
-        radioClass: 'iradio_square-blue',
-        increaseArea: '20%' // optional
-    });
+                console.log($("#timer").text());
+            }).on("finish.countdown", function (event) {
+                $(this).html(event.strftime('%H小时 %M分钟 %S秒'));
+
+                console.log("时间到");
+        });
+    })
+
+
+    //    $("[type='checkbox'], [type='radio']").iCheck({
+    //        checkboxClass: 'icheckbox_square-blue',
+    //        radioClass: 'iradio_square-blue',
+    //        increaseArea: '20%' // optional
+    //    });
 </script>
 </body>
 </html>
