@@ -137,3 +137,7 @@ select.show-count.form-control{
 .form-group > label.control-label{
     text-align: left;
 }
+
+.row{
+    margin-bottom: 20px;
+}

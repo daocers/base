@@ -2,6 +2,7 @@ package co.bugu.tes.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -9,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * 考试类
  * 处理考试
  */
+@Controller
+@RequestMapping("/exam")
 public class ExamController {
     private static Logger logger = LoggerFactory.getLogger(ExamController.class);
 
@@ -40,5 +43,10 @@ public class ExamController {
             logger.error("提交试题答案失败", e);
         }
         return null;
+    }
+
+    @RequestMapping("/edit")
+    public String toEdit(){
+        return "exam/edit";
     }
 }

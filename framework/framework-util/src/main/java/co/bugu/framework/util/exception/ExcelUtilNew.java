@@ -130,7 +130,7 @@ public class ExcelUtilNew {
         cellStyle.setAlignment(CellStyle.ALIGN_LEFT);
         cellStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
         if (isTitle) {
-            cellStyle.setFillBackgroundColor(XSSFColor.toXSSFColor().BLUE_GREY.index);
+            cellStyle.setFillBackgroundColor(HSSFColor.BLUE.index2);
             font.setBoldweight(XSSFFont.BOLDWEIGHT_BOLD);
         }
         return cellStyle;
