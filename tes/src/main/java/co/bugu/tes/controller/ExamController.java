@@ -1,9 +1,15 @@
 package co.bugu.tes.controller;
 
+import co.bugu.tes.model.Scene;
+import co.bugu.tes.service.ISceneService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 /**
  * Created by user on 2017/1/12.
@@ -14,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/exam")
 public class ExamController {
     private static Logger logger = LoggerFactory.getLogger(ExamController.class);
+
+    @Autowired
+    ISceneService sceneService;
 
     /**
      * 检查考试状态，包括参考人员的状态， 未入场，已入场，已提交等
@@ -46,7 +55,20 @@ public class ExamController {
     }
 
     @RequestMapping("/edit")
-    public String toEdit(){
+    public String toEdit(Integer id, String authCode, ModelMap model){
+        Scene scene = new Scene();
+        scene.setAuthCode(authCode);
+        List<Scene> sceneList = sceneService.findByObject(scene);
+        if(sceneList == null || sceneList.size() == 0){
+            logger.warn("没有找到对应的场次, 授权码为： {}", authCode);
+            model.put("err", "授权码错误");
+        }
+        if(sceneList.size() > 1){
+            logger.warn("找到");
+        }
+        scene = sceneList.get(0);
         return "exam/edit";
     }
+
+
 }
