@@ -71,4 +71,10 @@ public class ExamController {
     }
 
 
+    public String list(){
+        Scene scene = new Scene();
+        scene.setStatus(0);
+        scene.
+    }
+
 }
