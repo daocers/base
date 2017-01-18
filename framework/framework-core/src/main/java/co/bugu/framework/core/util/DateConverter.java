@@ -1,5 +1,6 @@
 package co.bugu.framework.core.util;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.converter.Converter;
@@ -17,6 +18,12 @@ public class DateConverter implements Converter<String, Date> {
 
     @Override
     public Date convert(String stringDate) {
+        if(StringUtils.isEmpty(stringDate)){
+            return null;
+        }
+        if(stringDate.length() == 10){
+            stringDate = stringDate + " 00:00:00";
+        }
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try{
             return format.parse(stringDate);

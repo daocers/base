@@ -65,8 +65,12 @@ public class SceneController {
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String toEdit(Integer id, ModelMap model){
         try{
-            Scene scene = sceneService.findById(id);
-//            List<PaperPolicy> paperPolicyList = paperPolicyService.findByObject()
+            Scene scene = null;
+            if(id == null){
+                scene = new Scene();
+            }else{
+                scene = sceneService.findById(id);
+            }
             model.put("scene", scene);
         }catch (Exception e){
             logger.error("获取信息失败", e);

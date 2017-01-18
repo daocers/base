@@ -53,8 +53,9 @@ $(function () {
     });
 
     $(".time").flatpickr({
-        dataFormat: 'yyyy-mm-dd HH:SS',
+        dataFormat: 'yyyy-mm-dd HH:ii:SS',
         enableTime: true,
+        enableSeconds: true,
         minuteIncrement: 1,
     })
 })

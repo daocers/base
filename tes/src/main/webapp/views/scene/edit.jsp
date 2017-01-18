@@ -17,8 +17,8 @@
     <input type="hidden" value="${type}" id="type">
     <div class="row">
         <div class="col-md-8">
-            <form class="form-horizontal" method="post" action="save.do" data-toggle="validator" role="form">
-                <input id="id" type="hidden" name="id" value="${scene.id}">
+            <form class="form-horizontal" method="post" action="selectUser.do" data-toggle="validator" role="form">
+                <%--<input id="id" type="hidden" name="id" value="${scene.id}">--%>
                 <div class="form-group">
                     <label class="control-label col-md-2">场次名称</label>
                     <div class="col-md-10">
@@ -37,7 +37,7 @@
                     <label class="control-label col-md-2">开始时间</label>
                     <div class="col-md-10">
                         <input class="form-control time" type="text" name="beginTime"
-                               value="${scene.beginTime}" required>
+                               value="${scene.beginTime}">
                         <span class="help-block with-errors">提示信息</span>
                     </div>
                 </div>
@@ -61,7 +61,7 @@
                     <label class="control-label col-md-2">结束时间</label>
                     <div class="col-md-10">
                         <input class="form-control time" type="text" name="endTime"
-                               value="${scene.endTime}" required disabled>
+                               value="${scene.endTime}" disabled>
                         <span class="help-block with-errors">超过该时间点后，所有的本场考试的试卷将会被自动提交。(根据开始时间，作答时长，顺延时间计算，不能手动输入)</span>
                     </div>
                 </div>
@@ -84,7 +84,7 @@
                     <label class="control-label col-md-2">是否允许更换试卷</label>
                     <div class="col-md-10">
                         <div class="checkbox">
-                            <label><input type="checkbox" name="changePaper"></label>
+                            <label><input type="checkbox" name="changePaper" onclick="this.value=this.checked?1:-1"></label>
                         </div>
                         <%--<input class="form-control" type="checkbox" name="changePaper" value="${scene.changePaper}"--%>
                                <%--required>--%>
@@ -113,22 +113,22 @@
 
 
 
-                <div class="form-group">
-                    <label class="control-label col-md-2">试卷策略</label>
-                    <div class="col-md-10">
-                        <select class="form-control">
-                            <option value="">请选择</option>
-                            <c:forEach items="${paperPolicyList}" var="paperPolicy">
-                                <option value="${paperPolicy.id}"
-                                        <c:if test="${paperPolicy.id == scene.paperPolicyId}">selected</c:if>>
-                                        ${paperPolicy.name}</option>
-                            </c:forEach>
-                        </select>
-                        <input class="form-control" type="text" name="paperPolicyId" value="${scene.paperPolicyId}"
-                               required>
-                        <span class="help-block with-errors">提示信息</span>
-                    </div>
-                </div>
+                <%--<div class="form-group">--%>
+                    <%--<label class="control-label col-md-2">试卷策略</label>--%>
+                    <%--<div class="col-md-10">--%>
+                        <%--<select class="form-control">--%>
+                            <%--<option value="">请选择</option>--%>
+                            <%--<c:forEach items="${paperPolicyList}" var="paperPolicy">--%>
+                                <%--<option value="${paperPolicy.id}"--%>
+                                        <%--<c:if test="${paperPolicy.id == scene.paperPolicyId}">selected</c:if>>--%>
+                                        <%--${paperPolicy.name}</option>--%>
+                            <%--</c:forEach>--%>
+                        <%--</select>--%>
+                        <%--&lt;%&ndash;<input class="form-control" type="text" name="paperPolicyId" value="${scene.paperPolicyId}"&ndash;%&gt;--%>
+                               <%--&lt;%&ndash;required>&ndash;%&gt;--%>
+                        <%--<span class="help-block with-errors">提示信息</span>--%>
+                    <%--</div>--%>
+                <%--</div>--%>
                 <%--<div class="form-group">--%>
                     <%--<label class="control-label col-md-2">取消原因</label>--%>
                     <%--<div class="col-md-10">--%>
