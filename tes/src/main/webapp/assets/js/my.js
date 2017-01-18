@@ -48,7 +48,15 @@ $(function () {
     /**
      * 初始化时间日期插件，默认是不显示时间，如果有需要可以进行个性化设置，data-date-format进行设置
      */
-    $(".date").flatpickr();
+    $(".date").flatpickr({
+        dateFormat: 'yyyy-mm-dd'
+    });
+
+    $(".time").flatpickr({
+        dataFormat: 'yyyy-mm-dd HH:SS',
+        enableTime: true,
+        minuteIncrement: 1,
+    })
 })
 
 

@@ -27,6 +27,11 @@ public class QuestionPolicy {
 
     private Integer count;
 
+    /**
+     * 保密类型 0 公开， 1保密。
+     */
+    private Integer privaryType;
+
     private Branch branch;
 
     private Department department;
@@ -36,6 +41,14 @@ public class QuestionPolicy {
      * content用于记录id信息，showInfo用于记录文字信息
      */
     private String showInfo;
+
+    public Integer getPrivaryType() {
+        return privaryType;
+    }
+
+    public void setPrivaryType(Integer privaryType) {
+        this.privaryType = privaryType;
+    }
 
     public String getShowInfo() {
         return showInfo;

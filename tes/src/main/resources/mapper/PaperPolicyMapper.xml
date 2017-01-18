@@ -15,6 +15,7 @@
         <result column="paper_policy_status" property="status" jdbcType="INTEGER"/>
         <result column="paper_policy_update_time" property="updateTime" jdbcType="TIMESTAMP"/>
         <result column="paper_policy_update_user_id" property="updateUserId" jdbcType="INTEGER"/>
+        <result column="paper_policy_privary_type" property="privaryType" jdbcType="INTEGER"/>
     </resultMap>
     <sql id="paperPolicy_list">
     paper_policy.id as paper_policy_id, paper_policy.branch_id as paper_policy_branch_id, 
@@ -24,7 +25,7 @@
     paper_policy.create_user_id as paper_policy_create_user_id, paper_policy.department_id as paper_policy_department_id, 
     paper_policy.name as paper_policy_name, paper_policy.station_id as paper_policy_station_id, 
     paper_policy.status as paper_policy_status, paper_policy.update_time as paper_policy_update_time, 
-    paper_policy.update_user_id as paper_policy_update_user_id
+    paper_policy.update_user_id as paper_policy_update_user_id, paper_policy.privary_type as paper_policy_privary_type
   </sql>
     <select id="selectById" resultMap="PaperPolicyMap" parameterType="java.lang.Integer">
         select
@@ -79,6 +80,9 @@
             <if test="updateUserId != null">
                 update_user_id,
             </if>
+            <if test="privaryType != null">
+                privary_type,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -120,6 +124,9 @@
             <if test="updateUserId != null">
                 #{updateUserId,jdbcType=INTEGER},
             </if>
+            <if test="privaryType != null">
+                #{privaryType, jdbcType=INTEGER},
+            </if>
         </trim>
     </insert>
     <update id="updateById" parameterType="co.bugu.tes.model.PaperPolicy">
@@ -160,6 +167,9 @@
             </if>
             <if test="updateUserId != null">
                 update_user_id = #{updateUserId,jdbcType=INTEGER},
+            </if>
+            <if test="privaryType != null">
+                privary_type = #{privaryType, jdbcType=INTEGER},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}

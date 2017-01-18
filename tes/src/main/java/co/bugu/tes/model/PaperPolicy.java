@@ -27,9 +27,21 @@ public class PaperPolicy {
 
     private Date updateTime;
 
+    /**
+     * 保密类型， 0 公开， 1 保密
+     */
+    private Integer privaryType;
+
 
     private Integer updateUserId;
 
+    public Integer getPrivaryType() {
+        return privaryType;
+    }
+
+    public void setPrivaryType(Integer privaryType) {
+        this.privaryType = privaryType;
+    }
 
     public String getContent() {
         return content;

@@ -71,10 +71,20 @@ public class ExamController {
     }
 
 
+    /**
+     * 获取可参与的考试列表
+     * @return
+     */
+    @RequestMapping("/list")
     public String list(){
         Scene scene = new Scene();
         scene.setStatus(0);
-        scene.
+        List<Scene> sceneList = sceneService.findByObject(scene);
+        for(Scene item: sceneList){
+//            if(item.get)
+        }
+//        scene.
+        return null;
     }
 
 }

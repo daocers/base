@@ -14,6 +14,7 @@
         <result column="ques_policy_count" property="count" jdbcType="VARCHAR"/>
         <result column="ques_policy_department_id" property="departmentId" jdbcType="VARCHAR"/>
         <result column="ques_policy_branch_id" property="branchId" jdbcType="VARCHAR"/>
+        <result column="ques_policy_privary_type" property="privaryType" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="questionPolicy_list">
     ques_policy.id as ques_policy_id, ques_policy.code as ques_policy_code, ques_policy.content as ques_policy_content, 
@@ -21,7 +22,7 @@
     ques_policy.name as ques_policy_name, ques_policy.question_meta_info_id as ques_policy_question_meta_info_id, 
     ques_policy.update_time as ques_policy_update_time, ques_policy.update_user_id as ques_policy_update_user_id,
     ques_policy.count as ques_policy_count, ques_policy.department_id as ques_policy_department_id,
-    ques_policy.branch_id as ques_policy_branch_id
+    ques_policy.branch_id as ques_policy_branch_id, ques_policy.privary_type as ques_policy_privary_type
   </sql>
     <select id="selectById" resultMap="QuestionPolicyMap" parameterType="java.lang.Integer">
         select
@@ -73,6 +74,9 @@
             <if test="count != null">
                 count,
             </if>
+            <if test="privaryType != null">
+                privary_type,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -110,6 +114,9 @@
             </if>
             <if test="count != null">
                 #{count},
+            </if>
+            <if test="privaryType != null">
+                #{privaryType},
             </if>
         </trim>
     </insert>
@@ -149,6 +156,10 @@
             <if test="count != null">
                 count = #{count},
             </if>
+            <if test="privaryType != null">
+                privary_type = #{privaryType}
+            </if>
+
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>

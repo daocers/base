@@ -1,7 +1,9 @@
 package co.bugu.tes.controller;
 
 import co.bugu.tes.global.Constant;
+import co.bugu.tes.model.PaperPolicy;
 import co.bugu.tes.model.Scene;
+import co.bugu.tes.service.IPaperPolicyService;
 import co.bugu.tes.service.IPaperService;
 import co.bugu.tes.service.ISceneService;
 import co.bugu.framework.core.dao.PageInfo;
@@ -25,6 +27,9 @@ public class SceneController {
 
     @Autowired
     IPaperService paperService;
+
+    @Autowired
+    IPaperPolicyService paperPolicyService;
 
     private static Logger logger = LoggerFactory.getLogger(SceneController.class);
 
@@ -61,6 +66,7 @@ public class SceneController {
     public String toEdit(Integer id, ModelMap model){
         try{
             Scene scene = sceneService.findById(id);
+            List<PaperPolicy> paperPolicyList = paperPolicyService.findByObject()
             model.put("scene", scene);
         }catch (Exception e){
             logger.error("获取信息失败", e);
