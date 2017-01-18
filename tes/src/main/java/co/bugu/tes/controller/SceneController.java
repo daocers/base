@@ -66,7 +66,7 @@ public class SceneController {
     public String toEdit(Integer id, ModelMap model){
         try{
             Scene scene = sceneService.findById(id);
-            List<PaperPolicy> paperPolicyList = paperPolicyService.findByObject()
+//            List<PaperPolicy> paperPolicyList = paperPolicyService.findByObject()
             model.put("scene", scene);
         }catch (Exception e){
             logger.error("获取信息失败", e);

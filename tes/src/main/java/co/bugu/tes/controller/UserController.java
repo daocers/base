@@ -1,5 +1,6 @@
 package co.bugu.tes.controller;
 
+import co.bugu.framework.util.ExcelUtilNew;
 import co.bugu.tes.model.Branch;
 import co.bugu.tes.model.Department;
 import co.bugu.tes.model.Station;
@@ -19,6 +20,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -136,6 +144,27 @@ public class UserController {
         }catch (Exception e){
             logger.error("删除失败", e);
             return "-1";
+        }
+    }
+
+    @RequestMapping("/download")
+    public void download(HttpServletRequest request, HttpServletResponse response){
+        try {
+            List<String> title = new ArrayList<>();
+            title = Arrays.asList(new String[]{"项目", "电话"});
+            List<List> content = new ArrayList<>();
+            content.add(title);
+            content.add(title);
+            response.setContentType("application/x-msdownload;");
+
+            SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd");
+            String time=formatter.format(new Date());
+            response.setHeader("Content-disposition", "attachment; filename=" + new String(("内部产品" +time + ".xlsx").getBytes("utf-8"), "ISO8859-1"));
+            OutputStream outputStream = response.getOutputStream();
+            ExcelUtilNew.writeToOutputStream("xlsx", title, content, outputStream);
+            outputStream.close();
+        } catch (Exception e) {
+
         }
     }
 }

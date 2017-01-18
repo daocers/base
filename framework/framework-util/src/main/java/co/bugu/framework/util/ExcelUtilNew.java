@@ -11,7 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,7 +28,7 @@ public class ExcelUtilNew {
         title.add("项目");
         title.add("地址");
         title.add("电话");
-        List<List<String>> content = new ArrayList<>();
+        List<List> content = new ArrayList<>();
         content.add(title);
         excelToFile(writeToExcel("xlsx", title, content), "d:/txt.xlsx");
     }
@@ -40,7 +43,7 @@ public class ExcelUtilNew {
      * @return
      * @throws Exception
      */
-    public static File getFile(String name, String type, String dirPath, List<String> title, List<List<String>> content) throws Exception {
+    public static File getFile(String name, String type, String dirPath, List<String> title, List<List> content) throws Exception {
         File file = new File(dirPath, name + "." + type);
         OutputStream fileOutputStream = new FileOutputStream(file);
         fileOutputStream = writeToOutputStream(type, title, content, fileOutputStream);
@@ -57,7 +60,7 @@ public class ExcelUtilNew {
      * @return
      * @throws Exception
      */
-    public static OutputStream writeToOutputStream(String type, List<String> title, List<List<String>> content, OutputStream outputStream) throws Exception {
+    public static OutputStream writeToOutputStream(String type, List<String> title, List<List> content, OutputStream outputStream) throws Exception {
         if(type.equalsIgnoreCase("xls")){
             type = "xls";
         }else if(type.equalsIgnoreCase("xlsx")){
@@ -85,7 +88,7 @@ public class ExcelUtilNew {
      * @return
      * @throws Exception
      */
-    private static Workbook writeToExcel(String type, List<String> title, List<List<String>> content) throws Exception {
+    private static Workbook writeToExcel(String type, List<String> title, List<List> content) throws Exception {
         Workbook workbook = createExcel(type);
         Sheet sheet = createSheet(workbook, null);
         writeTitle(workbook, sheet, title);
@@ -143,10 +146,12 @@ public class ExcelUtilNew {
      * @param content
      * @param hasTitle 是否有title，没有title从第0行开始，有的话从第一行开始
      */
-    private static void writeContent(Workbook workbook, Sheet sheet, List<List<String>> content, boolean hasTitle) {
+    private static void writeContent(Workbook workbook, Sheet sheet, List<List> content, boolean hasTitle) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
         CellStyle cellStyle = createCellStyle(workbook, false);
         for (int i = 0; i < content.size(); i++) {
-            List<String> rowData = content.get(i);
+            List rowData = content.get(i);
             Row row = null;
             if(hasTitle){
                 row = sheet.createRow(i + 1);
@@ -154,9 +159,29 @@ public class ExcelUtilNew {
                 row = sheet.createRow(i);
             }
             for (int j = 0; j < rowData.size(); j++) {
+                String res = "";
+                Object val = rowData.get(i);
+                if(val == null){
+
+                }else if(val instanceof String){
+                    res = (String) val;
+                }else if(val instanceof Date){
+                    res = format.format((Date)val);
+                }else if(val instanceof Integer){
+                    res = val + "";
+                }else if(val instanceof Double){
+                    res = val + "";
+                }else if(val instanceof Short){
+                    res = val + "";
+                }else if(val instanceof BigDecimal){
+                    res = val + "";
+                }else{
+                    res = val.toString();
+                }
+
                 Cell cell = row.createCell(j);
                 cell.setCellStyle(cellStyle);
-                cell.setCellValue(rowData.get(j));
+                cell.setCellValue(res);
             }
         }
     }
