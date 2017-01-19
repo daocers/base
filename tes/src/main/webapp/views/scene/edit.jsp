@@ -158,13 +158,13 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="control-label col-md-2">机构信息</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" name="branchId" value="${scene.branchId}" required>
-                        <span class="help-block with-errors">场次所属的机构信息</span>
-                    </div>
-                </div>
+                <%--<div class="form-group">--%>
+                    <%--<label class="control-label col-md-2">机构信息</label>--%>
+                    <%--<div class="col-md-10">--%>
+                        <%--<input class="form-control" type="text" name="branchId" value="${scene.branchId}" required>--%>
+                        <%--<span class="help-block with-errors">场次所属的机构信息</span>--%>
+                    <%--</div>--%>
+                <%--</div>--%>
                 <div class="form-group">
                     <label class="control-label col-md-2">是否允许更换试卷</label>
                     <div class="col-md-10">
@@ -192,14 +192,14 @@
                     <%--</div>--%>
                 <%--</div>--%>
 
-                <div class="form-group">
-                    <label class="control-label col-md-2">部门信息</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" name="departmentId" value="${scene.departmentId}"
-                               required>
-                        <span class="help-block with-errors">提示信息</span>
-                    </div>
-                </div>
+                <%--<div class="form-group">--%>
+                    <%--<label class="control-label col-md-2">部门信息</label>--%>
+                    <%--<div class="col-md-10">--%>
+                        <%--<input class="form-control" type="text" name="departmentId" value="${scene.departmentId}"--%>
+                               <%--required>--%>
+                        <%--<span class="help-block with-errors">提示信息</span>--%>
+                    <%--</div>--%>
+                <%--</div>--%>
 
 
 

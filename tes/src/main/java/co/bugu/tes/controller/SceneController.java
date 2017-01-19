@@ -2,11 +2,8 @@ package co.bugu.tes.controller;
 
 import co.bugu.framework.core.util.BuguWebUtil;
 import co.bugu.tes.global.Constant;
-import co.bugu.tes.model.PaperPolicy;
-import co.bugu.tes.model.Scene;
-import co.bugu.tes.service.IPaperPolicyService;
-import co.bugu.tes.service.IPaperService;
-import co.bugu.tes.service.ISceneService;
+import co.bugu.tes.model.*;
+import co.bugu.tes.service.*;
 import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.util.JsonUtil;
 import com.sun.beans.editors.DoubleEditor;
@@ -35,6 +32,13 @@ public class SceneController {
 
     @Autowired
     IPaperService paperService;
+
+    @Autowired
+    IDepartmentService departmentService;
+    @Autowired
+    IBranchService branchService;
+    @Autowired
+    IStationService stationService;
 
     @Autowired
     IPaperPolicyService paperPolicyService;
@@ -95,7 +99,7 @@ public class SceneController {
      * @return
      */
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public String saveSceneThenSelectUser(HttpServletRequest request, ModelMap model, Scene scene, RedirectAttributes redirectAttributes){
+    public String saveSceneThenSelectUser(HttpServletRequest request, ModelMap model, Scene scene){
         try{
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(scene.getBeginTime());
@@ -103,12 +107,21 @@ public class SceneController {
             calendar.add(Calendar.MINUTE, scene.getDuration());
             scene.setEndTime(calendar.getTime());
             scene.setCreateUserId((Integer) BuguWebUtil.getUserId(request));
-//            if(scene.getId() == null){
-//                sceneService.save(scene);
-//            }else{
-//                sceneService.updateById(scene);
-//            }
-            redirectAttributes.addFlashAttribute("scene", scene);
+            scene.setCreateTime(new Date());
+            //设置创建的用户id
+            scene.setCreateUserId(1);
+            if(scene.getId() == null){
+                sceneService.save(scene);
+            }else{
+                sceneService.updateById(scene);
+            }
+
+            List<Department> departmentList = departmentService.findByObject(null);
+            List<Branch> branchList = branchService.findByObject(null);
+            List<Station> stationList = stationService.findByObject(null);
+            model.put("departmentList", departmentList);
+            model.put("branchList", branchList);
+            model.put("stationList", stationList);
 
         }catch (Exception e){
             logger.error("保存信息失败", e);
@@ -118,8 +131,8 @@ public class SceneController {
     }
 
     @RequestMapping(value = "/saveUser", method = RequestMethod.POST)
-    public String saveUserThenSelectPaperPolciy(@ModelAttribute("scene")Scene scene, String userInfos, RedirectAttributes redirectAttributes){
-        redirectAttributes.addFlashAttribute("scene", scene);
+    public String saveUserThenSelectPaperPolciy(Scene scene, String userInfos){
+        sceneService.updateById(scene);
         return "scene/generatePaper";
     }
 

@@ -37,13 +37,13 @@
                         <span class="help-block with-errors">用户姓名</span>
                     </div>
                 </div>
-                <%--<div class="form-group hidden">--%>
-                    <%--<label class="control-label col-md-2">用户id</label>--%>
-                    <%--<div class="col-md-10">--%>
-                        <%--<input class="form-control" type="text" name="profile.userId" value="${user.id}" required readonly>--%>
-                        <%--<span class="help-block with-errors">提示信息</span>--%>
-                    <%--</div>--%>
-                <%--</div>--%>
+                <div class="form-group hidden">
+                    <label class="control-label col-md-2">profile id</label>
+                    <div class="col-md-10">
+                        <input class="form-control" type="text" name="profile.id" value="${user.profile.id}" required readonly>
+                        <span class="help-block with-errors">提示信息</span>
+                    </div>
+                </div>
 
                 <div class="form-group">
                     <label class="control-label col-md-2">身份证号码</label>
