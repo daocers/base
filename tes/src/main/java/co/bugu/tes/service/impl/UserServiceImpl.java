@@ -2,6 +2,7 @@ package co.bugu.tes.service.impl;
 
 
 import co.bugu.framework.core.service.impl.BaseServiceImpl;
+import co.bugu.tes.model.Profile;
 import co.bugu.tes.model.User;
 import co.bugu.tes.service.IUserService;
 import co.bugu.framework.core.dao.BaseDao;
@@ -16,15 +17,30 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
 //    @Autowired
 //    BaseDao baseDao;
 //
-//    @Override
-//    public int save(User user) {
-//        return baseDao.insert("tes.user.insert", user);
-//    }
+    @Override
+    public int save(User user) {
+        baseDao.insert("tes.user.insert", user);
+        if(user.getProfile() != null){
+            user.getProfile().setUserId(user.getId());
+            baseDao.insert("tes.profile.insert", user.getProfile());
+        }
+        return 1;
+    }
 //
-//    @Override
-//    public int updateById(User user) {
-//        return baseDao.update("tes.user.updateById", user);
-//    }
+    @Override
+    public int updateById(User user) {
+        baseDao.update("tes.user.updateById", user);
+        if(user.getProfile() != null){
+            Profile profile = user.getProfile();
+            profile.setUserId(user.getId());
+            if(profile.getId() == null){
+                baseDao.insert("tes.profile.insert", profile);
+            }else{
+                baseDao.update("tes.profile.updateById", profile);
+            }
+        }
+        return 1;
+    }
 //
 //    @Override
 //    public int saveOrUpdate(User user) {

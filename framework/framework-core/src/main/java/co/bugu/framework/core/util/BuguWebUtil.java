@@ -21,4 +21,7 @@ public class BuguWebUtil {
         return WebUtils.getSessionAttribute(request, key);
     }
 
+    public static Object getUserId(HttpServletRequest request){
+        return WebUtils.getSessionAttribute(request, "userId");
+    }
 }

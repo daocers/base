@@ -61,3 +61,22 @@ $(function () {
 })
 
 
+/**
+ * 扩展jqeury，添加设置时间和设置日期的功能
+ * 该扩展依赖于flatpickr日期选择插件
+ */
+jQuery.fn.extend({
+    setDate: function (date) {
+        $(this).flatpickr({
+            defaultDate: date
+        })
+    },
+    setTime: function (time) {
+        $(this).flatpickr({
+            dataFormat: 'yyyy-mm-dd HH:ii:SS',
+            enableTime: true,
+            enableSeconds: true,
+            defaultDate: time
+        })
+    }
+})

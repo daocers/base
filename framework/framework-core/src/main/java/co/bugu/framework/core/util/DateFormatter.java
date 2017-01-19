@@ -3,22 +3,20 @@ package co.bugu.framework.core.util;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.convert.converter.Converter;
+import org.springframework.format.Formatter;
 
-import javax.swing.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
- * Created by daocers on 2016/9/19.
+ * Created by user on 2017/1/19.
  */
-public class DateConverter implements Converter<String, Date> {
-
-    private static Logger logger = LoggerFactory.getLogger(DateConverter.class);
-
+public class DateFormatter implements Formatter<Date>{
+    private static Logger logger = LoggerFactory.getLogger(DateFormatter.class);
     @Override
-    public Date convert(String stringDate) {
+    public Date parse(String stringDate, Locale locale) throws ParseException {
         if(StringUtils.isEmpty(stringDate)){
             return null;
         }
@@ -34,9 +32,8 @@ public class DateConverter implements Converter<String, Date> {
         return null;
     }
 
-    public static void main(String[] args) throws ParseException {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String s = "2016-11-12";
-        format.parse(s);
+    @Override
+    public String print(Date date, Locale locale) {
+        return null;
     }
 }

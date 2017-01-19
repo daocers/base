@@ -17,7 +17,7 @@
     <input type="hidden" value="${type}" id="type">
     <div class="row">
         <div class="col-md-8">
-            <form class="form-horizontal" method="post" action="save.do" data-toggle="validator" role="form">
+            <form class="form-horizontal" method="post" action="saveUser.do" data-toggle="validator" role="form">
                 <input id="id" type="hidden" name="id" value="${scene.id}">
 
                 <div class="form-group">

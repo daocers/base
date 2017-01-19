@@ -7,15 +7,15 @@
 
     <!--用于时间日期绑定-->
     <mvc:annotation-driven conversion-service="conversionService"/>
-    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+
+    <bean id="conversionService"
+          class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
         <property name="converters">
             <set>
-                <bean class="co.bugu.framework.core.util.DateConverter"/>
+                <bean class="co.bugu.framework.core.util.DateConverter"></bean>
             </set>
         </property>
     </bean>
-    <bean id="dateConverter" class="co.bugu.framework.core.util.DateConverter"/>
-
 
 
     <context:component-scan base-package="co.bugu.tes.controller"/>
@@ -32,13 +32,13 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
-    <mvc:annotation-driven>
-        <mvc:message-converters register-defaults="true">
-            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
-                <constructor-arg value="UTF-8" />
-            </bean>
-        </mvc:message-converters>
-    </mvc:annotation-driven>
+    <!--<mvc:annotation-driven conversion-service="conversionService">-->
+        <!--<mvc:message-converters register-defaults="true">-->
+            <!--<bean class="org.springframework.http.converter.StringHttpMessageConverter">-->
+                <!--<constructor-arg value="UTF-8" />-->
+            <!--</bean>-->
+        <!--</mvc:message-converters>-->
+    <!--</mvc:annotation-driven>-->
 
 
     <!--拦截所有请求-->
@@ -59,15 +59,18 @@
     <!--</mvc:interceptors>-->
 
 
-    <bean id="stringHttpMessageConverter"
-          class="org.springframework.http.converter.StringHttpMessageConverter">
-        <property name="supportedMediaTypes" value="text/html;charset=UTF-8" />
-    </bean>
+    <!--<bean id="stringHttpMessageConverter"-->
+          <!--class="org.springframework.http.converter.StringHttpMessageConverter">-->
+        <!--<property name="supportedMediaTypes" value="text/html;charset=UTF-8" />-->
+    <!--</bean>-->
 
-    <mvc:annotation-driven>
-        <mvc:message-converters register-defaults="true">
-            <ref bean="stringHttpMessageConverter" />
-            <!--<ref bean="mappingJackson2HttpMessageConverter" />-->
-        </mvc:message-converters>
-    </mvc:annotation-driven>
+    <!--<mvc:annotation-driven>-->
+        <!--<mvc:message-converters register-defaults="true">-->
+            <!--<ref bean="stringHttpMessageConverter" />-->
+            <!--&lt;!&ndash;<ref bean="mappingJackson2HttpMessageConverter" />&ndash;&gt;-->
+        <!--</mvc:message-converters>-->
+        <!--<mvc:argument-resolvers>-->
+            <!--<bean class="co.bugu.framework.core.util.DateConverter"/>-->
+        <!--</mvc:argument-resolvers>-->
+    <!--</mvc:annotation-driven>-->
 </beans>

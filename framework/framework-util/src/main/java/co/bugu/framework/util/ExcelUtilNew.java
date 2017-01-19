@@ -160,7 +160,7 @@ public class ExcelUtilNew {
             }
             for (int j = 0; j < rowData.size(); j++) {
                 String res = "";
-                Object val = rowData.get(i);
+                Object val = rowData.get(j);
                 if(val == null){
 
                 }else if(val instanceof String){

@@ -4,6 +4,91 @@
 <head>
     <meta charset="utf-8">
     <title>设置场次参数</title>
+    <style>
+        .switch-btn {
+            position: relative;
+            display: block;
+            vertical-align: top;
+            width: 80px;
+            height: 30px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .checked-switch {
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+        }
+        .text-switch {
+            background-color: #ed5b49;
+            border: 1px solid #d2402e;
+            border-radius: inherit;
+            color: #fff;
+            display: block;
+            font-size: 15px;
+            height: inherit;
+            position: relative;
+            text-transform: uppercase;
+        }
+        .text-switch:before,
+        .text-switch:after {
+            position: absolute;
+            top: 50%;
+            margin-top: -.5em;
+            line-height: 1;
+            -webkit-transition: inherit;
+            -moz-transition: inherit;
+            -o-transition: inherit;
+            transition: inherit;
+        }
+        .text-switch:before {
+            content: attr(data-no);
+            right: 11px;
+        }
+        .text-switch:after {
+            content: attr(data-yes);
+            left: 11px;
+            color: #FFFFFF;
+            opacity: 0;
+        }
+        .checked-switch:checked ~ .text-switch {
+            background-color: #285eaf;
+            border: 1px solid #1d53af;
+        }
+        .checked-switch:checked ~ .text-switch:before {
+            opacity: 0;
+        }
+        .checked-switch:checked ~ .text-switch:after {
+            opacity: 1;
+        }
+        .toggle-btn {
+            background: linear-gradient(#eee, #fafafa);
+            border-radius: 5px;
+            height: 28px;
+            left: 1px;
+            position: absolute;
+            top: 1px;
+            width: 28px;
+        }
+        .toggle-btn::before {
+            color: #aaaaaa; content: "|||";
+            display: inline-block;
+            font-size: 12px;
+            letter-spacing: -2px;
+            padding: 4px 0;
+            vertical-align: middle;
+        }
+        .checked-switch:checked ~ .toggle-btn {
+            left: 51px;
+        }
+        .text-switch, .toggle-btn {
+            transition: All 0.3s ease;
+            -webkit-transition: All 0.3s ease;
+            -moz-transition: All 0.3s ease;
+            -o-transition: All 0.3s ease;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -17,7 +102,7 @@
     <input type="hidden" value="${type}" id="type">
     <div class="row">
         <div class="col-md-8">
-            <form class="form-horizontal" method="post" action="selectUser.do" data-toggle="validator" role="form">
+            <form class="form-horizontal" method="post" action="save.do" data-toggle="validator" role="form">
                 <%--<input id="id" type="hidden" name="id" value="${scene.id}">--%>
                 <div class="form-group">
                     <label class="control-label col-md-2">场次名称</label>
@@ -83,9 +168,14 @@
                 <div class="form-group">
                     <label class="control-label col-md-2">是否允许更换试卷</label>
                     <div class="col-md-10">
-                        <div class="checkbox">
-                            <label><input type="checkbox" name="changePaper" onclick="this.value=this.checked?1:-1"></label>
-                        </div>
+                        <label class="switch-btn">
+                            <input class="checked-switch" type="checkbox" name="changePaper" value="1" onclick="this.value=this.checked?0:1"/>
+                            <span class="text-switch" data-yes="是" data-no="否"></span>
+                            <span class="toggle-btn"></span>
+                        </label>
+                        <%--<div class="checkbox">--%>
+                            <%--<label><input type="checkbox" name="changePaper" onclick="this.value=this.checked?0:1"></label>--%>
+                        <%--</div>--%>
                         <%--<input class="form-control" type="checkbox" name="changePaper" value="${scene.changePaper}"--%>
                                <%--required>--%>
                         <span class="help-block with-errors">考试中允许更换一次试卷，成绩更换后的试卷为准</span>
@@ -167,11 +257,13 @@
                 <%--</div>--%>
 
                 <div class="button pull-right">
-                    <button class="btn btn-primary btn-commit">保存</button>
+                    <button class="btn btn-warning btn-cancel" onclick="history.back();">取消</button>
+
                     <div class="space">
 
                     </div>
-                    <button class="btn btn-warning btn-cancel">取消</button>
+                    <button class="btn btn-primary btn-commit">继续</button>
+
                 </div>
             </form>
         </div>
@@ -179,7 +271,22 @@
     </div>
 </div>
 <script>
-
+    /**
+     * 计算结束时间
+     */
+    $("[name='beginTime'], [name='delay'], [name='duration']").bind("change", function () {
+        var beginTime = $("[name='beginTime']").val();
+        var delay = $("[name='delay']").val().trim();
+        var duration = $("[name='duration']").val().trim();
+        var date = new Date(beginTime);
+        var time = date.getTime() + delay* 60 * 1000 + duration * 60 * 1000;
+        var endDate = new Date();
+        endDate.setTime(time);
+        console.log("time: ", time);
+        if(beginTime && delay && duration){
+            $("[name='endTime']").setTime(endDate);
+        }
+    })
 </script>
 </body>
 </html>

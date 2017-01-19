@@ -5,7 +5,7 @@ import java.util.Date;
 public class Profile {
     private Integer id;
 
-    private String examStatus;
+    private Integer examStatus;
 
     private Date examStatusUpdate;
 
@@ -29,11 +29,11 @@ public class Profile {
         this.id = id;
     }
 
-    public String getExamStatus() {
+    public Integer getExamStatus() {
         return examStatus;
     }
 
-    public void setExamStatus(String examStatus) {
+    public void setExamStatus(Integer examStatus) {
         this.examStatus = examStatus;
     }
 

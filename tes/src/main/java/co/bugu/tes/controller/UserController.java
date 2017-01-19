@@ -1,14 +1,10 @@
 package co.bugu.tes.controller;
 
 import co.bugu.framework.util.ExcelUtilNew;
-import co.bugu.tes.model.Branch;
-import co.bugu.tes.model.Department;
-import co.bugu.tes.model.Station;
-import co.bugu.tes.model.User;
-import co.bugu.tes.service.IBranchService;
-import co.bugu.tes.service.IDepartmentService;
-import co.bugu.tes.service.IStationService;
-import co.bugu.tes.service.IUserService;
+import co.bugu.tes.enums.ExamStatus;
+import co.bugu.tes.enums.UserStatus;
+import co.bugu.tes.model.*;
+import co.bugu.tes.service.*;
 import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.util.JsonUtil;
 import org.slf4j.Logger;
@@ -19,6 +15,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,6 +31,8 @@ import java.util.List;
 public class UserController {
     @Autowired
     IUserService userService;
+    @Autowired
+    IProfileService profileService;
     @Autowired
     IDepartmentService departmentService;
     @Autowired
@@ -76,6 +75,17 @@ public class UserController {
     public String toEdit(Integer id, ModelMap model){
         try{
             User user = userService.findById(id);
+            if(user != null){
+                Profile profile = new Profile();
+                profile.setUserId(user.getId());
+                List<Profile> list = profileService.findByObject(profile);
+                if(list.size() > 1){
+                    logger.error("数据紊乱， userId: {}", id);
+                    model.put("err", "数据有误，请联系管理员处理");
+                }else{
+                    user.setProfile(list.get(0));
+                }
+            }
             model.put("user", user);
             List<Department> departmentList = departmentService.findByObject(null);
             List<Station> stationList = stationService.findByObject(null);
@@ -166,5 +176,21 @@ public class UserController {
         } catch (Exception e) {
 
         }
+    }
+
+    @RequestMapping("/toRegister")
+    public String toRegister(){
+        return "user/register";
+    }
+
+    @RequestMapping("/register")
+    public String register(User user, RedirectAttributes redirectAttributes){
+        Profile profile = user.getProfile();
+        profile.setExamStatus(ExamStatus.ENABLE.getStatus());
+        profile.setExamStatusUpdate(new Date());
+        user.setStatus(UserStatus.NEEDINFO.getStatus());
+        userService.save(user);
+        redirectAttributes.addAttribute("id", user.getId());
+        return "redirect:edit.do";
     }
 }

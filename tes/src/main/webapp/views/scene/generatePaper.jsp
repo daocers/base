@@ -17,7 +17,7 @@
     <input type="hidden" value="${type}" id="type">
     <div class="row">
         <div class="col-md-8">
-            <form class="form-horizontal" method="post" action="save.do" data-toggle="validator" role="form">
+            <form class="form-horizontal" method="post" action="generatePaper.do" data-toggle="validator" role="form">
                 <input id="id" type="hidden" name="id" value="${scene.id}">
 
                 <div class="form-group">
@@ -43,11 +43,11 @@
                 </div>
 
                 <div class="button pull-right">
-                    <button class="btn btn-warning btn-commit">上一步</button>
+                    <button class="btn btn-warning btn-cancel" onclick="history.back();">上一步</button>
                     <div class="space">
 
                     </div>
-                    <button class="btn btn-primary btn-cancel">下一步</button>
+                    <button class="btn btn-primary btn-commit">下一步</button>
                 </div>
             </form>
         </div>

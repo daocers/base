@@ -10,8 +10,8 @@
     <div class="row nav-path">
         <ol class="breadcrumb">
             <li><a href="#">首页</a></li>
-            <li><a href="#">品类管理</a></li>
-            <li><a href="#" class="active">品类编辑</a></li>
+            <li><a href="#">用户管理</a></li>
+            <li><a href="#" class="active">添加用户</a></li>
         </ol>
     </div>
     <input type="hidden" value="${type}" id="type">
@@ -19,6 +19,39 @@
         <div class="col-md-8">
             <form class="form-horizontal" method="post" action="save.do" data-toggle="validator" role="form">
                 <input id="id" type="hidden" name="id" value="${user.id}">
+
+                <div class="form-group">
+                    <label class="control-label col-md-2">用户名</label>
+                    <div class="col-md-10">
+                        <input class="form-control" type="text" name="username" value="${user.username}" maxlength="16"
+                               minlength="3" required readonly>
+                        <span class="help-block">输入用户名，使用员工号</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-2">姓名</label>
+                    <div class="col-md-10">
+                        <input class="form-control" type="text" name="profile.name" value="${user.profile.name}"
+                               required minlength="2" maxlength="10">
+                        <span class="help-block with-errors">用户姓名</span>
+                    </div>
+                </div>
+                <%--<div class="form-group hidden">--%>
+                    <%--<label class="control-label col-md-2">用户id</label>--%>
+                    <%--<div class="col-md-10">--%>
+                        <%--<input class="form-control" type="text" name="profile.userId" value="${user.id}" required readonly>--%>
+                        <%--<span class="help-block with-errors">提示信息</span>--%>
+                    <%--</div>--%>
+                <%--</div>--%>
+
+                <div class="form-group">
+                    <label class="control-label col-md-2">身份证号码</label>
+                    <div class="col-md-10">
+                        <input class="form-control" type="text" name="profile.idNo" value="${user.profile.idNo}">
+                        <span class="help-block with-errors"></span>
+                    </div>
+                </div>
 
                 <div class="form-group">
                     <label class="control-label col-md-2">所属机构</label>
@@ -49,13 +82,6 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-md-2">用户密码</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" name="password" value="${user.password}" required>
-                        <span class="help-block">提示信息</span>
-                    </div>
-                </div>
-                <div class="form-group">
                     <label class="control-label col-md-2">岗位信息</label>
                     <div class="col-md-10">
                         <select class="form-control" name="stationId" required style="display: inline-block;">
@@ -69,21 +95,14 @@
                         <span class="help-block">用户当前岗位</span>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="control-label col-md-2">状态</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" name="status" value="${user.status}" required>
-                        <span class="help-block"></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-md-2">用户名</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" name="username" value="${user.username}" maxlength="16"
-                               minlength="3" required>
-                        <span class="help-block"></span>
-                    </div>
-                </div>
+                <%--<div class="form-group">--%>
+                    <%--<label class="control-label col-md-2">状态</label>--%>
+                    <%--<div class="col-md-10">--%>
+                        <%--<input class="form-control" type="text" name="status" value="${user.status}" required>--%>
+                        <%--<span class="help-block"></span>--%>
+                    <%--</div>--%>
+                <%--</div>--%>
+
 
 
                 <div class="form-group">
@@ -104,36 +123,17 @@
                 <div class="form-group">
                     <label class="control-label col-md-2">考试状态更新时间</label>
                     <div class="col-md-10">
-                        <input class="form-control" type="text" name="profile.examStatusUpdate"
-                               value="${profile.examStatusUpdate}" required>
+                        <input class="form-control time" type="text" name="profile.examStatusUpdate"
+                               value="<fmt:formatDate value="${user.profile.examStatusUpdate}" pattern="yyyy-MM-dd HH:mm:ss"/>" disabled
+                        >
                         <span class="help-block with-errors"></span>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="control-label col-md-2">身份证号码</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" name="profile.idNo" value="${user.profile.idNo}" >
-                        <span class="help-block with-errors"></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-md-2">姓名</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" name="profile.name" value="${user.profile.name}" required>
-                        <span class="help-block with-errors">提示信息</span>
-                    </div>
-                </div>
+
                 <div class="form-group hidden">
-                    <label class="control-label col-md-2">用户id</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" name="profile.userId" value="${user.id}" required>
-                        <span class="help-block with-errors">提示信息</span>
-                    </div>
-                </div>
-                <div class="form-group">
                     <label class="control-label col-md-2">注册时间</label>
                     <div class="col-md-10">
-                        <input class="form-control" type="text" name="profile.registTime" value="${user.profile.registTime}"
+                        <input class="form-control time" type="text" name="profile.registTime" value="${user.profile.registTime}"
                                required>
                         <span class="help-block with-errors">提示信息</span>
                     </div>
@@ -142,14 +142,14 @@
                     <label class="control-label col-md-2">柜员类型</label>
                     <div class="col-md-10">
                         <input class="form-control" type="text" name="profile.type" value="${user.profile.type}" required>
-                        <span class="help-block with-errors">提示信息</span>
+                        <span class="help-block with-errors"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-md-2">柜员等级</label>
                     <div class="col-md-10">
                         <input class="form-control" type="text" name="profile.level" value="${user.profile.level}" required>
-                        <span class="help-block with-errors">提示信息</span>
+                        <span class="help-block with-errors"></span>
                     </div>
                 </div>
 
