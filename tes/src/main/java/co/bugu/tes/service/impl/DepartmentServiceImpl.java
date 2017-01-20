@@ -13,6 +13,10 @@ import java.util.List;
 
 @Service
 public class DepartmentServiceImpl extends BaseServiceImpl<Department> implements IDepartmentService {
+    @Override
+    public void batchAdd(List<Department> departmentList) {
+
+    }
 //    @Autowired
 //    BaseDao baseDao;
 //

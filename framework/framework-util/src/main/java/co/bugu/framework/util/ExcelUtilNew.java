@@ -10,11 +10,14 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -280,6 +283,36 @@ public class ExcelUtilNew {
 
     }
 
+
+    /**
+     * 下载模板
+     * @param request
+     * @param response
+     * @param fileName
+     * @param title
+     * @throws Exception
+     */
+    public static  void downloadModel(HttpServletRequest request, HttpServletResponse response, String fileName, String... title) throws Exception {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        fileName += format.format(new Date()) + ".xlsx";
+        // 给文件名编码,防止ie下载时文件名乱码
+        if (request.getHeader("USER-AGENT").toLowerCase().contains("edge") // Edge-win10新的浏览器内核
+                || request.getHeader("USER-AGENT").toLowerCase().contains("trident")) { // trident-IE浏览器内核
+            fileName = URLEncoder.encode(fileName, "UTF-8");
+            fileName = fileName.replace("+", "%20"); // 处理空格变“+”的问题
+        } else { // 谷歌 火狐 360
+            fileName = new String(fileName.getBytes("UTF-8"), "ISO8859-1");
+        }
+        // 设置返回值头
+        response.setContentType("application/octet-stream;");
+        response.setHeader("Content-disposition", "attachment; filename=" + fileName);
+        List<String> titleList = Arrays.asList(title);
+
+        // 写入到文件
+        OutputStream out = response.getOutputStream();
+        ExcelUtilNew.writeToOutputStream("xlsx", titleList, null, out);
+        out.close();
+    }
 
 
 }

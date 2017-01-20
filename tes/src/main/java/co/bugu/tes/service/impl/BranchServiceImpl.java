@@ -20,4 +20,9 @@ public class BranchServiceImpl extends BaseServiceImpl<Branch> implements IBranc
         baseDao.delete("tes.branch.deleteAll");
     }
 
+    @Override
+    public void batchAdd(List<Branch> branchList) {
+
+    }
+
 }

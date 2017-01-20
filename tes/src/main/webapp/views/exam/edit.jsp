@@ -14,7 +14,7 @@
             <li><a href="#" class="active">答题</a></li>
         </ol>
     </div>
-    <input type="hidden" value="${type}" id="type">
+    <input type="hidden" value="${param.type}" id="type">
     <div class="row">
         <div class="form form-inline pull-left">
             <div class="input-group">

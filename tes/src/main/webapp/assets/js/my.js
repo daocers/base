@@ -19,6 +19,7 @@ $(function () {
  * 如果查看详情，禁用掉所有的 按钮和输入框
  */
 $(function () {
+    console.log("detail， 开始禁用")
     var type = $("#type").val();
     if (type == "detail") {
         $("input").attr("readonly", true);

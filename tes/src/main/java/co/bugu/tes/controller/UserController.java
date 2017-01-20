@@ -204,27 +204,8 @@ public class UserController {
     @RequestMapping("/download")
     public void download(HttpServletRequest request, HttpServletResponse response) {
         try {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            String fileName = "用户模板_" + format.format(new Date()) + ".xlsx";
-            // 给文件名编码,防止ie下载时文件名乱码
-            if (request.getHeader("USER-AGENT").toLowerCase().contains("edge") // Edge-win10新的浏览器内核
-                    || request.getHeader("USER-AGENT").toLowerCase().contains("trident")) { // trident-IE浏览器内核
-                fileName = URLEncoder.encode(fileName, "UTF-8");
-                fileName = fileName.replace("+", "%20"); // 处理空格变“+”的问题
-            } else { // 谷歌 火狐 360
-                fileName = new String(fileName.getBytes("UTF-8"), "ISO8859-1");
-            }
-            // 设置返回值头
-            response.setContentType("application/octet-stream;");
-            response.setHeader("Content-disposition", "attachment; filename=" + fileName);
-            List<String> title = null;
             String[] arrs = new String[]{"用户名（员工号）", "姓名", "身份证号", "机构", "部门", "岗位"};
-            title = Arrays.asList(arrs);
-
-            // 写入到文件
-            OutputStream out = response.getOutputStream();
-            ExcelUtilNew.writeToOutputStream("xlsx", title, null, out);
-            out.close();
+            ExcelUtilNew.downloadModel(request, response, "用户模板", arrs);
         } catch (Exception e) {
             logger.error("下载用户模板失败", e);
         }

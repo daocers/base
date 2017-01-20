@@ -24,4 +24,5 @@ public interface IBranchService extends IBaseService<Branch>{
 //
 //    PageInfo listByObject(Branch branch, PageInfo<Branch> pageInfo) throws Exception;
 
+    void batchAdd(List<Branch> branchList);
 }

@@ -93,9 +93,9 @@
             </div>
             <div class="modal-body">
                 <div class="row" style="margin-left: 10px;">
-                    <form class="form-horizontal" method="post" action="batchAdd.do"  enctype="multipart/form-data">
+                    <form id="upload" class="form-horizontal" method="post" action="batchAdd.do"  enctype="multipart/form-data">
                         <input type="file" name="file" class="jfilestyle" data-input="true" data-buttonText="导入文件">
-                        <button class="btn btn-success">上传</button>
+                        <button class="btn btn-success"onclick="javascript:upload()">上传</button>
                         ？   没有模板文件<a href="javascript:downloadModel()">点击下载</a>模板
                     </form>
                 </div>
@@ -109,14 +109,8 @@
 </div>
 <script>
     $(function () {
-        console.log("gods")
         $("#import").on("click", function () {
-            console.log("goods")
             $("#modal").modal('show');
-//            swal({
-//                title: "请选择文件",
-//                html: '<form class="form-horizontal" method="post" action="batchAdd.do"  enctype="multipart/form-data"><input type="file" name="file" class="jfilestyle" data-input="true" data-buttonText="导入文件"><button class="btn btn-success">上传</button></form>'
-//            })
         });
         $("#download").on("click", function () {
             window.location.href = "download.do";
@@ -126,6 +120,11 @@
     function downloadModel() {
         window.location.href = 'download.do';
         $("#modal").modal("hide");
+    }
+
+    function upload() {
+        zeroModal.loading(3);
+        $("#upload").submit();
     }
 
 </script>

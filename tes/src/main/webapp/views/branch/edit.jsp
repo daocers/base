@@ -14,7 +14,7 @@
             <li><a href="#" class="active">品类编辑</a></li>
         </ol>
     </div>
-    <input type="hidden" value="${type}" id="type">
+    <input type="hidden" value="${param.type}" id="type">
     <div class="row">
         <div class="col-md-8">
             <form class="form-horizontal" method="post" action="save.do" data-toggle="validator" role="form">
@@ -89,7 +89,7 @@
 
     </div>
 </div>
-<script>
+<script type="text/javascript">
 
 </script>
 </body>

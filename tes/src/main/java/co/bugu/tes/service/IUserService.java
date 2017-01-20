@@ -22,4 +22,5 @@ public interface IUserService extends IBaseService<User>{
 //
 //    PageInfo listByObject(User user, PageInfo<User> pageInfo) throws Exception;
 
+    void batchAdd(List<User> userList);
 }

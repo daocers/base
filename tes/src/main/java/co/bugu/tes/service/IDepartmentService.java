@@ -22,4 +22,5 @@ public interface IDepartmentService extends IBaseService<Department>{
 //
 //    PageInfo listByObject(Department department, PageInfo<Department> pageInfo) throws Exception;
 
+    void batchAdd(List<Department> departmentList);
 }

@@ -41,6 +41,11 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
         }
         return 1;
     }
+
+    @Override
+    public void batchAdd(List<User> userList) {
+
+    }
 //
 //    @Override
 //    public int saveOrUpdate(User user) {
