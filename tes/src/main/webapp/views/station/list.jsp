@@ -10,8 +10,8 @@
 <div class="container">
     <div class="row nav-path">
         <ol class="breadcrumb">
-            <li><a href="#">首页</a> </li>
-            <li><a href="#" class="active">商品管理</a> </li>
+            <li><a href="#">首页</a></li>
+            <li><a href="#" class="active">岗位管理</a></li>
         </ol>
     </div>
     <div class="row info-search">
@@ -31,29 +31,29 @@
         <table class="table table-bordered">
             <thead>
             <tr>
-                <th><input type="checkbox" class="selectAll"> </th>
-				                    <th >branchId</th>
-				                    <th >code</th>
-				                    <th >createTime</th>
-				                    <th >departmentId</th>
-				                    <th >description</th>
-				                    <th >name</th>
-				                    <th >updateTime</th>
-				                <th>操作</th>
+                <th><input type="checkbox" class="selectAll"></th>
+                <th>编码</th>
+                <th>岗位名称</th>
+                <th>岗位描述</th>
+                <th>部门</th>
+                <th>机构id</th>
+                <th>创建时间</th>
+                <th>更新时间</th>
+                <th>操作</th>
             </tr>
             </thead>
             <tbody>
             <c:forEach items="${pi.data}" var="station" varStatus="line">
                 <tr>
                     <td><input type="checkbox" objId="${station.id}"></td>
-					                        <td>${station.branchId}</td>
-					                        <td>${station.code}</td>
-					                        <td>${station.createTime}</td>
-					                        <td>${station.departmentId}</td>
-					                        <td>${station.description}</td>
-					                        <td>${station.name}</td>
-					                        <td>${station.updateTime}</td>
-					                    <td>
+                    <td>${station.code}</td>
+                    <td>${station.name}</td>
+                    <td>${station.description}</td>
+                    <td>${station.departmentId}</td>
+                    <td>${station.branchId}</td>
+                    <td><fmt:formatDate value="${station.createTime}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate> </td>
+                    <td><fmt:formatDate value="${station.updateTime}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate> </td>
+                    <td>
                         <a href="edit.do?id=${station.id}&type=detail" class="opr">详情</a>
                         <a href="edit.do?id=${station.id}" class="opr">修改</a>
                         <a href="javascript:del(${station.id})" class="opr">删除</a>
@@ -67,7 +67,7 @@
 
     <div class="row after-table">
         <div class="pull-left form-inline">
-                        <select class="form-control show-count" >
+            <select class="form-control show-count">
                 <option value="10" <c:if test="${ pi.showCount == 10 }">selected</c:if>>10</option>
                 <option value="25" <c:if test="${ pi.showCount == 25}">selected</c:if>>25</option>
                 <option value="50" <c:if test="${ pi.showCount == 50}">selected</c:if>>50</option>

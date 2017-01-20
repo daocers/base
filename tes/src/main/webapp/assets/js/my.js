@@ -11,41 +11,17 @@ $(function () {
         var checked = $(this).prop('checked');
         console.log(checked);
         $("table").find("input[type='checkbox']").prop("checked", checked);
-    }); 
+    });
 })
 
+$(function () {
+
+})
 
 /**
  * 如果查看详情，禁用掉所有的 按钮和输入框
  */
 $(function () {
-    console.log("detail， 开始禁用")
-    var type = $("#type").val();
-    if (type == "detail") {
-        $("input").attr("readonly", true);
-        $("select").attr("readonly", true);
-        $("button").attr("disabled", "disabled");
-    }
-});
-
-
-$(function () {
-
-    /**
-     * 页面加载完成查看是否有异常信息，进行提示
-     * @type {*}
-     */
-    var err = $("#err").text().trim();
-    if(err && err != ''){
-        zeroModal.error(err);
-    }
-
-    var msg = $("#msg").text().trim();
-    if(msg && msg != ''){
-        zeroModal.alert(msg);
-    }
-
-
     /**
      * 初始化时间日期插件，默认是不显示时间，如果有需要可以进行个性化设置，data-date-format进行设置
      */
@@ -59,6 +35,37 @@ $(function () {
         enableSeconds: true,
         minuteIncrement: 1,
     })
+
+    console.log("detail， 开始禁用")
+    var type = $("#type").val();
+    if (type == "detail") {
+        // $("input").attr("readonly", true);
+        // $("select").attr("readonly", true);
+        // $("button").attr("disabled", "disabled");
+        // $(".time").attr("disabled", "disabled");
+        // $(".date").attr("disabled", "disabled");
+        $(".date, .time, button, select, checkbox, raddio, input").attr("disabled", "disabled");
+    }
+});
+
+
+$(function () {
+
+    /**
+     * 页面加载完成查看是否有异常信息，进行提示
+     * @type {*}
+     */
+    var err = $("#err").text().trim();
+    if (err && err != '') {
+        zeroModal.error(err);
+    }
+
+    var msg = $("#msg").text().trim();
+    if (msg && msg != '') {
+        zeroModal.alert(msg);
+    }
+
+
 })
 
 

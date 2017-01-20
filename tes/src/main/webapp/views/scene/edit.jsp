@@ -122,7 +122,7 @@
                     <label class="control-label col-md-2">开始时间</label>
                     <div class="col-md-10">
                         <input class="form-control time" type="text" name="beginTime"
-                               value="${scene.beginTime}">
+                               value="<fmt:formatDate value="${scene.beginTime}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate> ">
                         <span class="help-block with-errors">提示信息</span>
                     </div>
                 </div>
@@ -146,7 +146,7 @@
                     <label class="control-label col-md-2">结束时间</label>
                     <div class="col-md-10">
                         <input class="form-control time" type="text" name="endTime"
-                               value="${scene.endTime}" disabled>
+                               value="<fmt:formatDate value="${scene.endTime}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate> " disabled>
                         <span class="help-block with-errors">超过该时间点后，所有的本场考试的试卷将会被自动提交。(根据开始时间，作答时长，顺延时间计算，不能手动输入)</span>
                     </div>
                 </div>
@@ -167,18 +167,27 @@
                 <%--</div>--%>
                 <div class="form-group">
                     <label class="control-label col-md-2">是否允许更换试卷</label>
-                    <div class="col-md-10">
-                        <label class="switch-btn">
-                            <input class="checked-switch" type="checkbox" name="changePaper" value="1" onclick="this.value=this.checked?0:1"/>
-                            <span class="text-switch" data-yes="是" data-no="否"></span>
-                            <span class="toggle-btn"></span>
-                        </label>
+                    <div class="col-md-10 switch" data-on="primary" data-off="danger" tabindex="0">
+                        <input type="checkbox" name="chanagePaper"
+                               value="${scene.changePaper}" onclick="this.value=this.checked?0:1">
+                        <%--<div class="switch" data-on="primary" data-off="danger" tabindex="0">--%>
+                            <%--<input type="checkbox" name="chanagePaper"--%>
+                                   <%--value="${scene.changePaper}" onclick="this.value=this.checked?0:1"/>--%>
+                        <%--</div>--%>
+                        <%--<label class="switch-btn">--%>
+                        <%--<input class="" type="checkbox" name="changePaper" data-ontext="是" data-off-text="否"--%>
+                        <%--value="${scene.changePaper}" onclick="this.value=this.checked?0:1"/>--%>
+                        <%--&lt;%&ndash;<input class="checked-switch" type="checkbox" name="changePaper" data-ontext="是" data-off-text="否"&ndash;%&gt;--%>
+                        <%--&lt;%&ndash;value="${scene.changePaper}" onclick="this.value=this.checked?0:1"/>&ndash;%&gt;--%>
+                        <%--&lt;%&ndash;<span class="text-switch" data-yes="是" data-no="否"></span>&ndash;%&gt;--%>
+                        <%--&lt;%&ndash;<span class="toggle-btn"></span>&ndash;%&gt;--%>
+                        <%--</label>--%>
                         <%--<div class="checkbox">--%>
                             <%--<label><input type="checkbox" name="changePaper" onclick="this.value=this.checked?0:1"></label>--%>
                         <%--</div>--%>
                         <%--<input class="form-control" type="checkbox" name="changePaper" value="${scene.changePaper}"--%>
                                <%--required>--%>
-                        <span class="help-block with-errors">考试中允许更换一次试卷，成绩更换后的试卷为准</span>
+                        <%--<span class="help-block with-errors">考试中允许更换一次试卷，成绩更换后的试卷为准</span>--%>
                     </div>
                 </div>
 
@@ -287,6 +296,9 @@
             $("[name='endTime']").setTime(endDate);
         }
     })
+
+    $(".switch").bootstrapSwitch("toggleState");
+
 </script>
 </body>
 </html>

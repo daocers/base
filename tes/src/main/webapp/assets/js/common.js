@@ -33,7 +33,7 @@ function del(id) {
         data: {"id": id},
         success: function (data) {
             if(data == "0"){
-                $("input[id=" + id + "]").parents("tr").remove();
+                $("input[objid=" + id + "]").parents("tr").remove();
             }else{
                 alert("删除失败");
             }

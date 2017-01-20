@@ -32,13 +32,13 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
-    <!--<mvc:annotation-driven conversion-service="conversionService">-->
-        <!--<mvc:message-converters register-defaults="true">-->
-            <!--<bean class="org.springframework.http.converter.StringHttpMessageConverter">-->
-                <!--<constructor-arg value="UTF-8" />-->
-            <!--</bean>-->
-        <!--</mvc:message-converters>-->
-    <!--</mvc:annotation-driven>-->
+    <mvc:annotation-driven conversion-service="conversionService">
+        <mvc:message-converters register-defaults="true">
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <constructor-arg value="UTF-8" />
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
 
 
     <!--拦截所有请求-->

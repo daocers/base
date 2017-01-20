@@ -4,6 +4,7 @@ import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.util.ExcelUtil;
 import co.bugu.framework.util.ExcelUtilNew;
 import co.bugu.framework.util.JsonUtil;
+import co.bugu.tes.enums.BranchLevel;
 import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.Branch;
 import co.bugu.tes.service.IBranchService;
@@ -67,7 +68,19 @@ public class BranchController {
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String toEdit(Integer id, ModelMap model){
         try{
+            Branch record = new Branch();
+            record.setLevel(BranchLevel.ZONGHANG.getLevel());
+            List<Branch> branchList = branchService.findByObject(record);
+            model.put("branchList", branchList);
             Branch branch = branchService.findById(id);
+            if(branch != null){
+                if(branch.getSuperiorId() != null){
+                    Branch superior = branchService.findById(branch.getSuperiorId());
+                    if(superior != null){
+                        branch.setSuperiorName(superior.getName());
+                    }
+                }
+            }
             model.put("branch", branch);
         }catch (Exception e){
             logger.error("获取信息失败", e);

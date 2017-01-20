@@ -19,7 +19,17 @@ public class Branch {
 
     private Integer superiorId;
 
+    private String superiorName;
+
     private Date updateTime;
+
+    public String getSuperiorName() {
+        return superiorName;
+    }
+
+    public void setSuperiorName(String superiorName) {
+        this.superiorName = superiorName;
+    }
 
     public Integer getId() {
         return id;

@@ -43,8 +43,8 @@
                 <div class="form-group">
                     <label class="control-label col-md-2">所属机构</label>
                     <div class="col-md-10">
-                        <select class="form-control" name="branchId">
-                            <option>请选择</option>
+                        <select class="form-control" name="branchId" required>
+                            <option value="">请选择</option>
                             <c:forEach var="branch" items="${branchList}">
                                 <option value="${branch.id}"
                                         <c:if test="${branch.id == station.branchId}">selected</c:if> >${branch.name}</option>
@@ -57,8 +57,8 @@
                 <div class="form-group">
                     <label class="control-label col-md-2">所属部门</label>
                     <div class="col-md-10">
-                        <select class="form-control" name="departmentId">
-                            <option>请选择</option>
+                        <select class="form-control" name="departmentId" required>
+                            <option value="">请选择</option>
                             <c:forEach items="${departmentList}" var="dept">
                                 <option value="${dept.id}"
                                         <c:if test="${dept.id == station.departmentId}">selected</c:if> >${dept.name}</option>
@@ -82,6 +82,15 @@
     </div>
 </div>
 <script>
+    $(".btn-commit").onclick(function () {
+        $("form select[required]").each(function () {
+            var val = $(this).val();
+            console.log("val: ", val);
+            if(!val || val == ''){
+                zeroModal.error("");
+            }
+        })
+    })
 
 </script>
 </body>
