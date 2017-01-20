@@ -111,8 +111,15 @@
                         <span class="help-block with-errors">提示信息</span>
                     </div>
                 </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">场次编码</label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" name="code" value="${scene.code}" required>
+                            <span class="help-block with-errors"></span>
+                        </div>
+                    </div>
                 <div class="form-group">
-                    <label class="control-label col-md-2">场次识别码</label>
+                    <label class="control-label col-md-2">场次授权码</label>
                     <div class="col-md-10">
                         <input class="form-control" type="text" name="authCode" value="${scene.authCode}" required>
                         <span class="help-block with-errors">本场考试的唯一标识，建议使用字母数字组合</span>
@@ -150,13 +157,7 @@
                         <span class="help-block with-errors">超过该时间点后，所有的本场考试的试卷将会被自动提交。(根据开始时间，作答时长，顺延时间计算，不能手动输入)</span>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="control-label col-md-2">考试编码</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" name="code" value="${scene.code}" required>
-                        <span class="help-block with-errors">标识本场考试，便于识别和记忆</span>
-                    </div>
-                </div>
+
 
                 <%--<div class="form-group">--%>
                     <%--<label class="control-label col-md-2">机构信息</label>--%>
@@ -167,28 +168,20 @@
                 <%--</div>--%>
                 <div class="form-group">
                     <label class="control-label col-md-2">是否允许更换试卷</label>
-                    <div class="col-md-10 switch" data-on="primary" data-off="danger" tabindex="0">
-                        <input type="checkbox" name="chanagePaper"
-                               value="${scene.changePaper}" onclick="this.value=this.checked?0:1">
-                        <%--<div class="switch" data-on="primary" data-off="danger" tabindex="0">--%>
-                            <%--<input type="checkbox" name="chanagePaper"--%>
-                                   <%--value="${scene.changePaper}" onclick="this.value=this.checked?0:1"/>--%>
-                        <%--</div>--%>
-                        <%--<label class="switch-btn">--%>
-                        <%--<input class="" type="checkbox" name="changePaper" data-ontext="是" data-off-text="否"--%>
-                        <%--value="${scene.changePaper}" onclick="this.value=this.checked?0:1"/>--%>
-                        <%--&lt;%&ndash;<input class="checked-switch" type="checkbox" name="changePaper" data-ontext="是" data-off-text="否"&ndash;%&gt;--%>
-                        <%--&lt;%&ndash;value="${scene.changePaper}" onclick="this.value=this.checked?0:1"/>&ndash;%&gt;--%>
-                        <%--&lt;%&ndash;<span class="text-switch" data-yes="是" data-no="否"></span>&ndash;%&gt;--%>
-                        <%--&lt;%&ndash;<span class="toggle-btn"></span>&ndash;%&gt;--%>
-                        <%--</label>--%>
-                        <%--<div class="checkbox">--%>
-                            <%--<label><input type="checkbox" name="changePaper" onclick="this.value=this.checked?0:1"></label>--%>
-                        <%--</div>--%>
-                        <%--<input class="form-control" type="checkbox" name="changePaper" value="${scene.changePaper}"--%>
-                               <%--required>--%>
+                    <%--<div class="col-md-10 switch" data-on="primary" data-off="danger" tabindex="0">--%>
+                        <%--<input type="checkbox" name="chanagePaper"--%>
+                               <%--value="${scene.changePaper}" onclick="this.value=this.checked?0:1">--%>
                         <%--<span class="help-block with-errors">考试中允许更换一次试卷，成绩更换后的试卷为准</span>--%>
+                    <%--</div>--%>
+                    <div class="col-md-3">
+                        <div class="switch" style="height:30px;">
+                            <input class="change-paper form-control" data-on="primary" data-off="info" type="checkbox"
+                                   data-on-text="是" data-off-text="否"
+                                   value="${scene.changePaper}" onclick="this.value=this.checked?0:1" style="height: 30px;">
+                        </div>
+
                     </div>
+
                 </div>
 
 
@@ -297,7 +290,10 @@
         }
     })
 
-    $(".switch").bootstrapSwitch("toggleState");
+    $(function () {
+        $(".change-paper").bootstrapSwitch();
+    })
+
 
 </script>
 </body>
