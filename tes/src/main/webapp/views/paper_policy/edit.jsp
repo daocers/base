@@ -80,7 +80,7 @@
                 <%--</div>--%>
 
                 <div class="form-group">
-                    <label class="control-label col-md-2">选择题型</label>
+                    <label class="control-label col-md-2">包含题型</label>
                     <div class="col-md-10">
                         <c:forEach var="questionMetaInfo" items="${questionMetaInfoList}">
                             <label class="checkbox inline">
@@ -104,26 +104,20 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <c:forEach items="${data}" var="questionPList">
-                                <tr metaInfoId="${questionPList.get(0).questionMetaInfoId}">
+                            <c:forEach varStatus="index" var="questionMetaInfo" items="${questionMetaInfoList}">
+                                <tr metaInfoId="${questionMetaInfo.id}" hidden>
                                     <td>
-                                        <select class="form-control  form-control-intable" disabled>
-                                            <c:forEach items="${questionMetaInfoList}" var="questionMetaInfo">
-                                                <option value="${questionMetaInfo.id}"
-                                                        <c:if test="${questionMetaInfo.id == questionPList.get(0).questionMetaInfoId}">
-                                                            selected
-                                                        </c:if>
-                                                >
-                                                        ${questionMetaInfo.name}</option>
-                                            </c:forEach>
+                                        <select class="form-control form-control-intable" disabled>
+                                            <option value="${questionMetaInfo.id}"
+                                                    selected>${questionMetaInfo.name}</option>
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control  form-control-intable">
-                                            <option>请选择</option>
-                                            <c:forEach var="questionP" items="${questionPList}">
-                                                <option value="${questionP.id}"
-                                                        count="${questionP.count}">${questionP.name}</option>
+                                        <select class="form-control form-control-intable">
+                                            <option value="">请选择</option>
+                                            <c:forEach items="${data[index.index]}" var="questionPolicy">
+                                                <option value="${questionPolicy.id}"
+                                                        count="${questionPolicy.count}">${questionPolicy.name}</option>
                                             </c:forEach>
                                         </select>
                                     </td>
@@ -136,6 +130,40 @@
                                     </td>
                                 </tr>
                             </c:forEach>
+
+
+                            <%--<c:forEach items="${data}" var="questionPolicyList">--%>
+                            <%--<tr metaInfoId="${questionPList.get(0).questionMetaInfoId}">--%>
+                            <%--<td width="120px">--%>
+                            <%--<select class="form-control  form-control-intable" disabled>--%>
+                            <%--<c:forEach items="${questionMetaInfoList}" var="questionMetaInfo">--%>
+                            <%--<option value="${questionMetaInfo.id}"--%>
+                            <%--<c:if test="${questionMetaInfo.id == questionPolicyList.get(0).questionMetaInfoId}">--%>
+                            <%--selected--%>
+                            <%--</c:if>--%>
+                            <%-->--%>
+                            <%--${questionMetaInfo.name}</option>--%>
+                            <%--</c:forEach>--%>
+                            <%--</select>--%>
+                            <%--</td>--%>
+                            <%--<td>--%>
+                            <%--<select class="form-control  form-control-intable">--%>
+                            <%--<option>请选择</option>--%>
+                            <%--<c:forEach var="questionP" items="${questionPList}">--%>
+                            <%--<option value="${questionP.id}"--%>
+                            <%--count="${questionP.count}">${questionP.name}</option>--%>
+                            <%--</c:forEach>--%>
+                            <%--</select>--%>
+                            <%--</td>--%>
+                            <%--<td width="80px">--%>
+                            <%--<input class="form-control form-control-intable" value="" readonly>--%>
+                            <%--</td>--%>
+                            <%--<td width="80px">--%>
+                            <%--<input class="form-control form-control-intable"--%>
+                            <%--onkeyup="value=value.replace(/[^\d{1,}\.\d{1, 2}]/g,'')">--%>
+                            <%--</td>--%>
+                            <%--</tr>--%>
+                            <%--</c:forEach>--%>
                             </tbody>
                         </table>
                     </div>
@@ -153,8 +181,14 @@
                 </div>
 
                 <div class="form-group">
+                    <label class="control-label col-md-2"> &nbsp;&nbsp;是否百分制</label>
+                    <div class="col-md-10">
+                        <input type="radio" value="" name="percentable">
+                        <span class="help-block with-errors">试卷总分将按照满分100分折合最终的成绩</span>
+                    </div>
                     <div class="radio inline">
-                        <label><input type="radio" value="" name="percentable"> &nbsp;&nbsp;是否百分制</label>
+
+
                     </div>
                 </div>
                 <div class="button pull-right">
@@ -170,6 +204,11 @@
     </div>
 </div>
 <script>
+
+    /**
+     *
+     *  提交操作
+     */
     function save() {
         var metaInfoIds = $("[name='questionMetaInfoId']:checked").val();
         console.log("metaInfoIds", metaInfoIds);
@@ -193,7 +232,9 @@
     }
 
 
-    //    $('[name="questionMetaInfoId"]').on("click", function () {
+    /**
+     * *勾选题型之后的事件
+     */
     $('[name="questionMetaInfoId"]').on("ifUnchecked ifChecked", function (event) {
         var id = $(this).val();
         var type = event.type;
