@@ -125,8 +125,8 @@
                                         <input class="form-control form-control-intable" value="" readonly>
                                     </td>
                                     <td width="80px">
-                                        <input class="form-control form-control-intable"
-                                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1, 2}]/g,'')">
+                                        <input class="form-control form-control-intable score" type="text" value=""
+                                               >
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -204,10 +204,26 @@
     </div>
 </div>
 <script>
+    $(function () {
+        $(".score").on("keyup", function () {
+            var val = $(this).val();
+            console.log("val:", val);
+            var reg = /^([1-9]\d*|0\.)(\.\d{1,2}){0,1}/g;
+            console.log("res:", reg.test(val));
+        })
+    })
+
+    function processNum() {
+        var val = $(this).val();
+        var r = val.match(/[^\d{1,}\.\d{1, 2}]/g);
+        console.log("r: ", r);
+//        val.match(/\d/)
+//        val = val.replace(/^0+/g, '');
+        var res = val.replace(/[^\d{1,}\.\d{1, 2}]/g, '')
+    }
 
     /**
-     *
-     *  提交操作
+     *     *  提交操作
      */
     function save() {
         var metaInfoIds = $("[name='questionMetaInfoId']:checked").val();
