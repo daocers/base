@@ -181,7 +181,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label col-md-2"> &nbsp;&nbsp;是否百分制</label>
+                    <label class="control-label col-md-2">是否百分制</label>
                     <div class="col-md-10">
                         <input type="radio" value="" name="percentable">
                         <span class="help-block with-errors">试卷总分将按照满分100分折合最终的成绩</span>
@@ -208,7 +208,7 @@
         $(".score").on("keyup", function () {
             var val = $(this).val();
             console.log("val:", val);
-            var reg = /^([1-9]\d*|0\.)(\.\d{1,2}){0,1}/g;
+            var reg = /^(([1-9]\d*(\.\d{1,2}){0,1})|0\.\d{1,2})$/g;
             console.log("res:", reg.test(val));
         })
     })
