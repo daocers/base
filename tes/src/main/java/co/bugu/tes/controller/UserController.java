@@ -143,6 +143,9 @@ public class UserController {
     public String listAll(User user) {
         try {
             List<User> list = userService.findByObject(user);
+            for(User u: list){
+                u.setProfile(profileService.findByUserId(u.getId()));
+            }
             return JsonUtil.toJsonString(list);
         } catch (Exception e) {
             logger.error("获取全部列表失败", e);

@@ -88,3 +88,84 @@ jQuery.fn.extend({
         })
     }
 })
+
+
+/**
+ * 当前有问题，需要排查，页面中引用以下modal方法无法弹出，提示方法undefined
+ * X x x x x x x  x x x x x x x x x x x x x x  x x x xx x  xx x x  x xx x x
+ *
+ * 以下是为了使用弹出层
+ *
+ * @param title
+ * @param content
+ * @param confirmTest
+ * @param cancelText
+ * @param type
+ * @param confirmFunc
+ * @param cancelFunc
+ */
+function swalBase(title, content, confirmTest, cancelText, type, confirmFunc, cancelFunc) {
+    if(!title){
+        title = "";
+    }
+    if(!confirmText){
+        confirmText = "确定";
+    }
+    if(!type){
+        type = "info";
+    }
+    if(!confirmFunc){
+        confirmFunc = function () {
+            return false;
+        }
+    }
+    if(!cancelFunc){
+        cancelFunc = function () {
+            return false;
+        }
+    }
+    if(type == 'confirm'){
+        swal({
+            title: title,
+            text: content,
+            confirmButtonText: confirmText,
+            cancelButtonText: cancelText,
+            type: type
+        }).then(function (isConfirm) {
+            if(isConfirm){
+                confirmFunc();
+            }else{
+                cancelFunc();
+            }
+        });
+    }else{
+        swal({
+            title: title,
+            text: content,
+            confirmButtonText: confirmText,
+            cancelButtonText: cancelText,
+            type: type
+        });
+    }
+
+}
+
+function tesAlert(title, content, confirmText) {
+    swalBase(title, content, confirmText, "info");
+}
+
+function tesWarning(title, content, confirmText) {
+    swalBase(title, content, confirmText, "warning");
+}
+
+function tesError(title, content, confirmText) {
+    swalBase(title, content, confirmText, "error");
+}
+
+function tesConfirm(title, content, confirmText, cancelText, type, confirmFunc, cancelFunc) {
+    if(!type){
+        type = "question";
+    }
+    swalBase(title, content, confirmText, cancelText, type, confirmFunc, cancelFunc);
+
+}

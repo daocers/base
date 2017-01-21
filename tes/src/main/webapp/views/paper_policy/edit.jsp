@@ -131,8 +131,9 @@
                                         <input class="form-control form-control-intable" value="" readonly>
                                     </td>
                                     <td width="80px">
-                                        <input class="form-control form-control-intable" onkeyup="value=value.replace(/[^\d{1,}\.\d{1, 2}]/g,'')">
-                                    </td>1
+                                        <input class="form-control form-control-intable"
+                                               onkeyup="value=value.replace(/[^\d{1,}\.\d{1, 2}]/g,'')">
+                                    </td>
                                 </tr>
                             </c:forEach>
                             </tbody>

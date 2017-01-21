@@ -146,5 +146,25 @@
         select
         <include refid="user_list"/>
         from user user
+        <where>
+            <if test="id != null">
+                id = #{id,jdbcType=INTEGER}
+            </if>
+            <if test="branchId != null">
+                and branch_id = #{branchId,jdbcType=INTEGER}
+            </if>
+            <if test="departmentId != null">
+                and department_id = #{departmentId,jdbcType=INTEGER}
+            </if>
+            <if test="stationId != null">
+                and station_id = #{stationId,jdbcType=INTEGER}
+            </if>
+            <if test="status != null">
+                and status = #{status,jdbcType=INTEGER}
+            </if>
+            <if test="username != null">
+                and username = #{username,jdbcType=VARCHAR}
+            </if>
+        </where>
     </select>
 </mapper>

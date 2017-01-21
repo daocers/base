@@ -80,6 +80,8 @@ public class SceneController {
 //            是否需要验证当前用户所属的部门，机构，岗位信息非常必要
             Scene scene = null;
             if(id == null){
+                SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+
                 scene = new Scene();
             }else{
                 scene = sceneService.findById(id);
@@ -99,7 +101,7 @@ public class SceneController {
      * @return
      */
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public String saveSceneThenSelectUser(HttpServletRequest request, ModelMap model, Scene scene){
+    public String saveSceneThenSelectUser(HttpServletRequest request, ModelMap model, Scene scene, RedirectAttributes redirectAttributes){
         try{
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(scene.getBeginTime());
@@ -108,33 +110,54 @@ public class SceneController {
             scene.setEndTime(calendar.getTime());
             scene.setCreateUserId((Integer) BuguWebUtil.getUserId(request));
             scene.setCreateTime(new Date());
+            if(scene.getChangePaper() == null){
+                scene.setChangePaper(1);//为空的时候表示不可更换试卷
+            }
             //设置创建的用户id
             scene.setCreateUserId(1);
+            scene.setCode("20170101121200");
             if(scene.getId() == null){
                 sceneService.save(scene);
             }else{
                 sceneService.updateById(scene);
             }
-
-            List<Department> departmentList = departmentService.findByObject(null);
-            List<Branch> branchList = branchService.findByObject(null);
-            List<Station> stationList = stationService.findByObject(null);
-            model.put("departmentList", departmentList);
-            model.put("branchList", branchList);
-            model.put("stationList", stationList);
-
+            redirectAttributes.addFlashAttribute("scene", scene);
         }catch (Exception e){
             logger.error("保存信息失败", e);
             model.put("errMsg", "保存信息失败");
         }
+        return "redirect:selectUser.do";
+    }
+
+    @RequestMapping(value = "/selectUser")
+    public String toSelectUser(ModelMap model){
+        List<Department> departmentList = departmentService.findByObject(null);
+        List<Branch> branchList = branchService.findByObject(null);
+        List<Station> stationList = stationService.findByObject(null);
+        model.put("departmentList", departmentList);
+        model.put("branchList", branchList);
+        model.put("stationList", stationList);
         return "scene/selectUser";
     }
 
     @RequestMapping(value = "/saveUser", method = RequestMethod.POST)
-    public String saveUserThenSelectPaperPolciy(Scene scene, String userInfos){
+    public String saveUserThenSelectPaperPolciy(Scene scene, String userInfos, RedirectAttributes redirectAttributes){
         sceneService.updateById(scene);
+        redirectAttributes.addFlashAttribute("scene", scene);
+        return "redirect:generatePaper.do";
+    }
+
+    @RequestMapping(value = "/generatePaper")
+    public String toGenPaper(ModelMap model){
+        List<Department> departmentList = departmentService.findByObject(null);
+        List<Branch> branchList = branchService.findByObject(null);
+        List<Station> stationList = stationService.findByObject(null);
+        model.put("departmentList", departmentList);
+        model.put("branchList", branchList);
+        model.put("stationList", stationList);
         return "scene/generatePaper";
     }
+
 
     @RequestMapping(value = "/savePolicy", method = RequestMethod.POST)
     public String savePolicyThenPriview(){
@@ -242,6 +265,7 @@ public class SceneController {
             return "-1";
         }
     }
+
 
 //    @InitBinder
 //    public void initBinder(WebDataBinder binder){

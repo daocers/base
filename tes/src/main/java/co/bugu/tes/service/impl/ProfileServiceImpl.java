@@ -13,6 +13,12 @@ import java.util.List;
 
 @Service
 public class ProfileServiceImpl extends BaseServiceImpl<Profile> implements IProfileService {
+    @Override
+    public Profile findByUserId(Integer userId) {
+        Profile profile = new Profile();
+        profile.setUserId(userId);
+        return baseDao.selectOne("tes.profile.findByObject", profile);
+    }
 //    @Autowired
 //    BaseDao baseDao;
 //

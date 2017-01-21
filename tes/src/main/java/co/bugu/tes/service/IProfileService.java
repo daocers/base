@@ -21,5 +21,6 @@ public interface IProfileService extends IBaseService<Profile>{
 //    List<Profile> findAllByObject(Profile profile);
 //
 //    PageInfo listByObject(Profile profile, PageInfo<Profile> pageInfo) throws Exception;
+    Profile findByUserId(Integer userId);
 
 }

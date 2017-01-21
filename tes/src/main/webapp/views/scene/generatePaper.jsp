@@ -10,8 +10,8 @@
     <div class="row nav-path">
         <ol class="breadcrumb">
             <li><a href="#">首页</a></li>
-            <li><a href="#">品类管理</a></li>
-            <li><a href="#" class="active">品类编辑</a></li>
+            <li><a href="#">考试管理</a></li>
+            <li><a href="#" class="active">选择试卷策略</a></li>
         </ol>
     </div>
     <input type="hidden" value="${type}" id="type">
@@ -20,26 +20,50 @@
             <form class="form-horizontal" method="post" action="generatePaper.do" data-toggle="validator" role="form">
                 <input id="id" type="hidden" name="id" value="${scene.id}">
 
-                <div class="form-group">
-                    <label class="control-label col-md-2">部门</label>
-                    <select class="form-group">
-                        <option value="">会计部</option>
+                <div class="form-group form-inline">
+                    <label class="control-label">部门</label>
+                    <select class="form-control" name="departmentId">
+                        <option value="">请选择</option>
+                        <c:forEach var="department" items="${departmentList}">
+                            <option value="${department.id}">${department.name}</option>
+                        </c:forEach>
                     </select>
-                    <label class="control-label col-md-2">机构</label>
-                    <select class="form-group">
-                        <option value="">总行</option>
+                    <label class="control-label">机构</label>
+                    <select class="form-control" name="branchId">
+                        <option value="">请选择</option>
+                        <c:forEach var="branch" items="${branchList}">
+                            <option value="${branch.id}">${branch.name}</option>
+                        </c:forEach>
                     </select>
-                    <label class="control-label col-md-2">岗位</label>
-                    <select class="form-group">
-                        <option value="">客户经理</option>
+                    <label class="control-label">岗位</label>
+                    <select class="form-control" name="stationId">
+                        <option value="">请选择</option>
+                        <c:forEach var="station" items="${stationList}">
+                            <option value="${station.id}">${station.name}</option>
+                        </c:forEach>
                     </select>
+                    <button class="btn btn-info" type="button" onclick="javascript:search();">查询</button>
+                    <span style="margin-left: 30px; padding-bottom: 5px; margin-bottom: 5px;">没有合适策略？<a href="/paperpolicy/edit.do">去添加</a> </span>
                 </div>
-                <div class="form-group">
-                    <label class="control-label col-md-2">已选人员</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" name="authCode" value="${scene.authCode}" required>
-                        <span class="help-block with-errors">提示信息</span>
-                    </div>
+
+                <div class="" style="min-height: 300px;">
+                    <table class="table table-bordered data-table">
+                        <thead>
+                        <tr>
+                            <th>名称</th>
+                            <th>机构</th>
+                            <th>部门</th>
+                            <th>岗位</th>
+                            <th>试题信息</th>
+                            <th>题量</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td colspan="6">请选择筛选条件！</td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
 
                 <div class="button pull-right">
@@ -55,7 +79,58 @@
     </div>
 </div>
 <script>
+    function search() {
+        var deptId = $("[name='departmentId']").val();
+        var branchId = $("[name='branchId']").val();
+        var stationId = $("[name='stationId']").val();
 
+        if (!deptId && !branchId && !stationId) {
+            zeroModal.alert("请选择筛选条件");
+            return false;
+        }
+        zeroModal.loading(3);
+        $.ajax({
+            url: '/paperpolicy/listAll.do',
+            data: {departmentId: deptId, branchId: branchId, stationId: stationId},
+            success: function (data) {
+                if (data == '-1') {
+                    zeroModal.closeAll();
+                    zeroModal.error("获取用户信息失败");
+                } else {
+                    console.log("data: ", data);
+
+                    var userList = JSON.parse(data);
+                    var html = "";
+                    $.each(userList, function (index, val) {
+                        console.log("index: ", index);
+                        html += "<tr>";
+                        html += '<td><input type="checkbox" value="' + val.id + '"></td>';
+                        var name = "";
+                        if (val.profile) {
+                            if (val.profile.name) {
+                                name = val.profile.name;
+                            }
+                        }
+                        html += "<td>" + name + "</td>"
+                        html += "<td>" + val.branchId + "</td>"
+                        html += "<td>" + val.departmentId + "</td>"
+                        html += "<td>" + val.stationId + "</td>"
+                        html += "</tr>";
+                    });
+                    if (html == "") {
+                        html = "<tr><td colspan='6'>查询无数据！</td></tr>";
+                    }
+                    console.log("html: ", html);
+                    $(".data-table > tbody").html(html);
+                    zeroModal.closeAll();
+                }
+            },
+            error: function (data) {
+                zeroModal.closeAll();
+                zeroModal.error("获取用户信息失败");
+            }
+        })
+    }
 </script>
 </body>
 </html>

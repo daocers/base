@@ -139,10 +139,10 @@
                 code = #{code,jdbcType=VARCHAR},
             </if>
             <if test="content != null">
-                content = #{content}
+                content = #{content},
             </if>
             <if test="questionMetaInfoId != null">
-                question_metainfo_id = #{questionMetaInfoId}
+                question_metainfo_id = #{questionMetaInfoId},
             </if>
             <if test="createTime != null">
                 create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -180,5 +180,46 @@
         select
         <include refid="paperPolicy_list"/>
         from paper_policy paper_policy
+        <where>
+            <if test="branchId != null">
+                and branch_id = #{branchId,jdbcType=INTEGER}
+            </if>
+            <if test="code != null">
+                and code = #{code,jdbcType=VARCHAR}
+            </if>
+            <if test="content != null">
+                and content = #{content}
+            </if>
+            <if test="questionMetaInfoId != null">
+                and question_metainfo_id = #{questionMetaInfoId}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="createUserId != null">
+                and create_user_id = #{createUserId,jdbcType=INTEGER}
+            </if>
+            <if test="departmentId != null">
+                and department_id = #{departmentId,jdbcType=INTEGER}
+            </if>
+            <if test="name != null">
+                and name = #{name,jdbcType=VARCHAR}
+            </if>
+            <if test="stationId != null">
+                and station_id = #{stationId,jdbcType=INTEGER}
+            </if>
+            <if test="status != null">
+                and status = #{status,jdbcType=INTEGER}
+            </if>
+            <if test="updateTime != null">
+                and update_time = #{updateTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="updateUserId != null">
+                and update_user_id = #{updateUserId,jdbcType=INTEGER}
+            </if>
+            <if test="privaryType != null">
+                and privary_type = #{privaryType, jdbcType=INTEGER}
+            </if>
+        </where>
     </select>
 </mapper>
