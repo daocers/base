@@ -276,6 +276,16 @@
         increaseArea: '20%' // optional
     });
 
+    $("[name='percentable']").on("ifChecked", function (event) {
+
+        console.log("type: ", event.type)
+        $(this).attr("checked");
+    });
+    $("[name='percentable']").on("ifUnchecked", function (event) {
+        console.log("unchecked")
+        $(this).removeAttr("checked");
+    })
+
     $("table td:eq(1) select").on("change", function () {
         var count = $(this).find("option:selected").attr("count");
         if (!count) {
