@@ -35,6 +35,19 @@ public class PaperPolicy {
 
     private Integer updateUserId;
 
+    /**
+     * 是否百分制
+     */
+    private Integer percentable;
+
+    public Integer getPercentable() {
+        return percentable;
+    }
+
+    public void setPercentable(Integer percentable) {
+        this.percentable = percentable;
+    }
+
     public Integer getPrivaryType() {
         return privaryType;
     }

@@ -16,6 +16,7 @@
         <result column="paper_policy_update_time" property="updateTime" jdbcType="TIMESTAMP"/>
         <result column="paper_policy_update_user_id" property="updateUserId" jdbcType="INTEGER"/>
         <result column="paper_policy_privary_type" property="privaryType" jdbcType="INTEGER"/>
+        <result column="paper_policy_percentable" property="percentable" jdbcType="INTEGER"/>
     </resultMap>
     <sql id="paperPolicy_list">
     paper_policy.id as paper_policy_id, paper_policy.branch_id as paper_policy_branch_id, 
@@ -25,7 +26,8 @@
     paper_policy.create_user_id as paper_policy_create_user_id, paper_policy.department_id as paper_policy_department_id, 
     paper_policy.name as paper_policy_name, paper_policy.station_id as paper_policy_station_id, 
     paper_policy.status as paper_policy_status, paper_policy.update_time as paper_policy_update_time, 
-    paper_policy.update_user_id as paper_policy_update_user_id, paper_policy.privary_type as paper_policy_privary_type
+    paper_policy.update_user_id as paper_policy_update_user_id, paper_policy.privary_type as paper_policy_privary_type,
+    paper_policy.percentable as paper_policy_percentable
   </sql>
     <select id="selectById" resultMap="PaperPolicyMap" parameterType="java.lang.Integer">
         select
@@ -83,6 +85,9 @@
             <if test="privaryType != null">
                 privary_type,
             </if>
+            <if test="percentable != null">
+                percentable,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -127,6 +132,9 @@
             <if test="privaryType != null">
                 #{privaryType, jdbcType=INTEGER},
             </if>
+            <if test="percentable != null">
+                #{percentable},
+            </if>
         </trim>
     </insert>
     <update id="updateById" parameterType="co.bugu.tes.model.PaperPolicy">
@@ -170,6 +178,9 @@
             </if>
             <if test="privaryType != null">
                 privary_type = #{privaryType, jdbcType=INTEGER},
+            </if>
+            <if test="percentable != null">
+                percentable = #{percentable},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
@@ -219,6 +230,9 @@
             </if>
             <if test="privaryType != null">
                 and privary_type = #{privaryType, jdbcType=INTEGER}
+            </if>
+            <if test="percentable != null">
+                and percentable = #{percentable, jdbcType=INTEGER}
             </if>
         </where>
     </select>

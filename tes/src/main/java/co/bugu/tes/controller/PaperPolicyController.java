@@ -13,6 +13,8 @@ import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.core.util.BuguWebUtil;
 import co.bugu.framework.util.JedisUtil;
 import co.bugu.framework.util.JsonUtil;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +23,11 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping("/paperpolicy")
@@ -80,9 +81,11 @@ public class PaperPolicyController {
                 SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmm");
                 paperpolicy.setCode(format.format(new Date()));//后续需要修改为加上对应的用户部门岗位信息
             }
+//            保存试题策略信息
             model.put("paperpolicy", paperpolicy);
             List<List<QuestionPolicy>> data = new ArrayList<>();
-            for(QuestionMetaInfo questionMetaInfo : questionMetaInfoList){
+            for(int i =0; i < questionMetaInfoList.size(); i++ ){
+                QuestionMetaInfo questionMetaInfo = questionMetaInfoList.get(i);
                 QuestionPolicy questionPolicy = new QuestionPolicy();
                 questionPolicy.setQuestionMetaInfoId(questionMetaInfo.getId());
                 List<QuestionPolicy> questionPolicyList = questionPolicyService.findByObject(questionPolicy);
@@ -107,10 +110,11 @@ public class PaperPolicyController {
     * @return
     */
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public String save(PaperPolicy paperpolicy, int[] questionMetaInfoId, ModelMap model, HttpServletRequest request){
+    public String save(PaperPolicy paperpolicy, int[] questionMetaInfoId, ModelMap model, HttpServletRequest request, RedirectAttributes redirectAttributes){
         try{
             Integer userId = (Integer) BuguWebUtil.get(request, Constant.SESSION_USER_ID);
-            User user = JedisUtil.getJson(Constant.USER_INFO_PREFIX + userId, User.class);
+            User user = new User();
+//            User user = JedisUtil.getJson(Constant.USER_INFO_PREFIX + userId, User.class);
             if(user != null){
                 paperpolicy.setUpdateTime(new Date());
                 paperpolicy.setCreateTime(new Date());
@@ -121,8 +125,9 @@ public class PaperPolicyController {
                 paperpolicy.setBranchId(user.getBranchId());
             }else{
                 logger.error("获取用户信息失败， 用户id: {}", userId);
-                model.put("errMsg", "用户信息异常");
-                return "paper_policy/edit";
+                redirectAttributes.addFlashAttribute("err", "用户信息异常");
+                redirectAttributes.addFlashAttribute(paperpolicy);
+                return "redirect:edit.do";
             }
             paperpolicy.setQuestionMetaInfoId(JSON.toJSONString(questionMetaInfoId));
             if(paperpolicy.getId() == null){
@@ -132,9 +137,9 @@ public class PaperPolicyController {
             }
         }catch (Exception e){
             logger.error("保存失败", e);
-            model.put("paperpolicy", paperpolicy);
-            model.put("errMsg", "保存失败");
-            return "paper_policy/edit";
+            redirectAttributes.addFlashAttribute("paperpolicy", paperpolicy);
+            redirectAttributes.addFlashAttribute("err", "保存试卷策略失败");
+            return "redirect:edit.do";
         }
         return "redirect:list.do";
     }

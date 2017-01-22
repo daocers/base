@@ -36,7 +36,7 @@ $(function () {
         minuteIncrement: 1,
     })
 
-    console.log("detail， 开始禁用")
+    // console.log("detail， 开始禁用")
     var type = $("#type").val();
     if (type == "detail") {
         // $("input").attr("readonly", true);

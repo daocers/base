@@ -30,6 +30,7 @@
             <form class="form-horizontal" method="post" action="save.do" data-toggle="validator" role="form">
                 <input id="id" type="hidden" name="id" value="${paperpolicy.id}">
 
+                <input type="hidden" name="content" value="${paperpolicy.content}">
                 <div class="form-group">
                     <label class="control-label col-md-2">策略名称</label>
                     <div class="col-md-10">
@@ -79,7 +80,7 @@
                 <%--</div>--%>
                 <%--</div>--%>
 
-                <div class="form-group">
+                <div class="form-group ques-type">
                     <label class="control-label col-md-2">包含题型</label>
                     <div class="col-md-10">
                         <c:forEach var="questionMetaInfo" items="${questionMetaInfoList}">
@@ -92,7 +93,6 @@
 
                 <div class="form-group">
                     <label class="control-label col-md-2">试题策略</label>
-                    <input type="hidden" name="content" value="">
                     <div class="col-md-10 table-responsive">
                         <table class="table table-bordered table-editable">
                             <thead>
@@ -117,6 +117,7 @@
                                             <option value="">请选择</option>
                                             <c:forEach items="${data[index.index]}" var="questionPolicy">
                                                 <option value="${questionPolicy.id}"
+                                                        <%--<c:if test="${paperpolicy.content}">selected</c:if>--%>
                                                         count="${questionPolicy.count}">${questionPolicy.name}</option>
                                             </c:forEach>
                                         </select>
@@ -126,44 +127,10 @@
                                     </td>
                                     <td width="80px">
                                         <input class="form-control form-control-intable score" type="text" value=""
-                                               >
+                                        >
                                     </td>
                                 </tr>
                             </c:forEach>
-
-
-                            <%--<c:forEach items="${data}" var="questionPolicyList">--%>
-                            <%--<tr metaInfoId="${questionPList.get(0).questionMetaInfoId}">--%>
-                            <%--<td width="120px">--%>
-                            <%--<select class="form-control  form-control-intable" disabled>--%>
-                            <%--<c:forEach items="${questionMetaInfoList}" var="questionMetaInfo">--%>
-                            <%--<option value="${questionMetaInfo.id}"--%>
-                            <%--<c:if test="${questionMetaInfo.id == questionPolicyList.get(0).questionMetaInfoId}">--%>
-                            <%--selected--%>
-                            <%--</c:if>--%>
-                            <%-->--%>
-                            <%--${questionMetaInfo.name}</option>--%>
-                            <%--</c:forEach>--%>
-                            <%--</select>--%>
-                            <%--</td>--%>
-                            <%--<td>--%>
-                            <%--<select class="form-control  form-control-intable">--%>
-                            <%--<option>请选择</option>--%>
-                            <%--<c:forEach var="questionP" items="${questionPList}">--%>
-                            <%--<option value="${questionP.id}"--%>
-                            <%--count="${questionP.count}">${questionP.name}</option>--%>
-                            <%--</c:forEach>--%>
-                            <%--</select>--%>
-                            <%--</td>--%>
-                            <%--<td width="80px">--%>
-                            <%--<input class="form-control form-control-intable" value="" readonly>--%>
-                            <%--</td>--%>
-                            <%--<td width="80px">--%>
-                            <%--<input class="form-control form-control-intable"--%>
-                            <%--onkeyup="value=value.replace(/[^\d{1,}\.\d{1, 2}]/g,'')">--%>
-                            <%--</td>--%>
-                            <%--</tr>--%>
-                            <%--</c:forEach>--%>
                             </tbody>
                         </table>
                     </div>
@@ -182,8 +149,19 @@
 
                 <div class="form-group">
                     <label class="control-label col-md-2">是否百分制</label>
+                    <div class="">
+
+                    </div>
                     <div class="col-md-10">
-                        <input type="radio" value="" name="percentable">
+                        <div class="switch" style="height:30px;">
+                            <input class="percentable form-control" data-on-color="info" data-off-color="warning"
+                                   type="checkbox" name="percentable"
+                                   data-on-text="是" data-off-text="否"
+                                   <c:if test="${paperpolicy.percentable == 0}">checked</c:if>
+                                   value="${paperpolicy.percentable}" onclick="this.checked?0:1"
+                                   style="height: 30px;">
+                        </div>
+                        <%--<input type="radio" value="" name="percentable">--%>
                         <span class="help-block with-errors">试卷总分将按照满分100分折合最终的成绩</span>
                     </div>
                     <div class="radio inline">
@@ -192,7 +170,7 @@
                     </div>
                 </div>
                 <div class="button pull-right">
-                    <button class="btn btn-primary btn-commit" onclick="javascript:save();">保存</button>
+                    <button type="button" class="btn btn-primary btn-commit save">保存</button>
                     <div class="space">
 
                     </div>
@@ -205,47 +183,116 @@
 </div>
 <script>
     $(function () {
+//        初始化已经选择的信息
+        var content = $('[name="content"]').val();
+        if(content){
+            var oldInfo = JSON.parse(content);
+            oldInfo.each(function (e) {
+                console.log("score: ", e.score);
+            })
+        }
+
+
+
+//        点击提交按钮
+        $(".btn.save").on("click", function () {
+            if (!$("[name='name']").val()) {
+                $("form").validator('validate');
+                return false;
+            }
+            $("form").validator('validate');
+            var flag = true;
+            $("form").on("invalid.bs.validator", function (event) {
+                console.log(event.detail);
+                flag = false;
+            });
+            if (!flag) {
+                return false;
+            } else {
+                var metaInfoIds = "";
+                $("[name='questionMetaInfoId']:checked").each(function () {
+                    metaInfoIds += $(this).val() + ",";
+                });
+                if (metaInfoIds == '') {
+                    swal("", "请选择包含的题型", "warning");
+                    return false;
+                } else {
+                    console.log("metaInfoIds", metaInfoIds);
+                    var data = new Array();
+                    var flag = true;
+                    $("table tbody tr").each(function (idx, e) {
+                        console.log("index: ", idx);
+                        var metaInfoId = $(e).attr("metaInfoId");
+                        if (metaInfoIds.indexOf(metaInfoId) > -1) {
+                            var questionPolicyId = $(e).find("td:eq(1) select").val();
+                            var score = $(e).find("td:eq(3) input").val();
+                            if (!score || score == 0) {
+                                $(e).find("td:eq(3) > input").addClass("input-warning");
+                                flag = false;
+                            }else{
+                                $(e).find("td:eq(3) > input").removeClass("input-warning");
+                            }
+
+                            if (!questionPolicyId) {
+                                $(e).find("td:eq(1) > select").addClass("input-warning");
+//                                swal("", "请完善表格第" + (idx + 1) + "行数据", "error");
+                                flag = false;
+                            }else{
+                                $(e).find("td:eq(1) > select").removeClass("input-warning");
+                            }
+                            var item = {questionMetaInfoId: questionPolicyId, score: score}
+                            data.push(item);
+                        }
+                    });
+                    if (!flag) {
+                        return false;
+                    }
+                    console.log(data);
+                    $('[name="content"]').val(JSON.stringify(data));
+                $("form").submit();
+                }
+
+            }
+            return false;
+        });
+
+        /**
+         * 分值只允许小数点后为5的小数或者整数
+         */
         $(".score").on("keyup", function () {
             var val = $(this).val();
-            console.log("val:", val);
-            var reg = /^(([1-9]\d*(\.\d{1,2}){0,1})|0\.\d{1,2})$/g;
-            console.log("res:", reg.test(val));
-        })
-    })
+            if (val == '0') {
+                console.log("录入为 0 ")
+                return false;
+            }
+            if (val.substring(val.length - 1) == ".") {
+                console.log("录入为.")
+                return false;
+            } else {
+                console.log("开始匹配")
+                /*两位小数*/
+//                var reg = /^(([1-9]\d*(\.\d{1,2}){0,1})|0\.\d{1,2})$/g;
 
-    function processNum() {
-        var val = $(this).val();
-        var r = val.match(/[^\d{1,}\.\d{1, 2}]/g);
-        console.log("r: ", r);
-//        val.match(/\d/)
-//        val = val.replace(/^0+/g, '');
-        var res = val.replace(/[^\d{1,}\.\d{1, 2}]/g, '')
-    }
+                var reg = /^(([1-9]\d*(\.5){0,1})|0\.5)$/g;
 
-    /**
-     *     *  提交操作
-     */
-    function save() {
-        var metaInfoIds = $("[name='questionMetaInfoId']:checked").val();
-        console.log("metaInfoIds", metaInfoIds);
-        var data = new Array();
-        $("table tr").each(function (idx, e) {
-            var metaInfoId = $(e).attr("metaInfoId");
-            if (metaInfoIds.indexOf(metaInfoId) > -1) {
-                var questionPolicyId = $(e).find("td:eq(1) select").val();
-                var score = $(e).find("td:eq(3) input").val();
-                if (!score) {
-                    $(e).find("td:eq(3)").addClass("input-warning");
-                    return false;
+                var right = reg.test(val);
+                if (!right) {
+                    $(this).val("");
                 }
-                var item = {questionMetaInfoId: questionPolicyId, score: score}
-                data.push(item);
             }
         });
-        console.log(data);
-        $('[name="content"]').val(JSON.stringify(data));
-        $("form").submit();
-    }
+
+
+        $(".percentable").bootstrapSwitch({
+            onSwitchChange: function (event, state) {
+                if (state == true) {
+                    $(this).val("0");
+                } else {
+                    $(this).val("1");
+                }
+            }
+        });
+    })
 
 
     /**
@@ -262,31 +309,17 @@
             console.log("unchecked");
         }
 
-//        var ids = new Array();
-//        $("[name='questionMetaInfoId']:checked").each(function (idx, e) {
-//            ids.push($(e).val());
-//        });
-//        console.log(JSON.stringify(ids));
     });
 
 
-    $("[type='checkbox'], [type='radio']").iCheck({
+    $(".ques-type [type='checkbox']").iCheck({
         checkboxClass: 'icheckbox_square-blue',
         radioClass: 'iradio_square-blue',
         increaseArea: '20%' // optional
     });
 
-    $("[name='percentable']").on("ifChecked", function (event) {
-
-        console.log("type: ", event.type)
-        $(this).attr("checked");
-    });
-    $("[name='percentable']").on("ifUnchecked", function (event) {
-        console.log("unchecked")
-        $(this).removeAttr("checked");
-    })
-
-    $("table td:eq(1) select").on("change", function () {
+    $("table tbody tr").find("td:eq(1) select").on("change", function () {
+        console.log("count");
         var count = $(this).find("option:selected").attr("count");
         if (!count) {
             count = 0;
