@@ -10,8 +10,8 @@
 <div class="container">
     <div class="row nav-path">
         <ol class="breadcrumb">
-            <li><a href="#">首页</a> </li>
-            <li><a href="#" class="active">商品管理</a> </li>
+            <li><a href="#">首页</a></li>
+            <li><a href="#" class="active">商品管理</a></li>
         </ol>
     </div>
     <div class="row info-search">
@@ -31,35 +31,35 @@
         <table class="table table-bordered">
             <thead>
             <tr>
-                <th><input type="checkbox" class="selectAll"> </th>
-				                    <th >branchId</th>
-				                    <th >code</th>
-				                    <th >createTime</th>
-				                    <th >createUserId</th>
-				                    <th >departmentId</th>
-				                    <th >name</th>
-				                    <th >stationId</th>
-				                    <th >status</th>
-				                    <th >updateTime</th>
-				                    <th >updateUserId</th>
-				                <th>操作</th>
+                <th><input type="checkbox" class="selectAll"></th>
+                <th>机构</th>
+                <th>试卷策略码</th>
+                <th>创建时间</th>
+                <th>创建用户</th>
+                <th>部门</th>
+                <th>策略名称</th>
+                <th>岗位</th>
+                <th>状态</th>
+                <th>更新时间</th>
+                <th>更新用户</th>
+                <th>操作</th>
             </tr>
             </thead>
             <tbody>
             <c:forEach items="${pi.data}" var="paperpolicy" varStatus="line">
                 <tr>
                     <td><input type="checkbox" objId="${paperpolicy.id}"></td>
-					                        <td>${paperpolicy.branchId}</td>
-					                        <td>${paperpolicy.code}</td>
-					                        <td>${paperpolicy.createTime}</td>
-					                        <td>${paperpolicy.createUserId}</td>
-					                        <td>${paperpolicy.departmentId}</td>
-					                        <td>${paperpolicy.name}</td>
-					                        <td>${paperpolicy.stationId}</td>
-					                        <td>${paperpolicy.status}</td>
-					                        <td>${paperpolicy.updateTime}</td>
-					                        <td>${paperpolicy.updateUserId}</td>
-					                    <td>
+                    <td>${paperpolicy.branchId}</td>
+                    <td>${paperpolicy.code}</td>
+                    <td><fmt:formatDate value="${paperpolicy.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/> </td>
+                    <td>${paperpolicy.createUserId}</td>
+                    <td>${paperpolicy.departmentId}</td>
+                    <td>${paperpolicy.name}</td>
+                    <td>${paperpolicy.stationId}</td>
+                    <td>${paperpolicy.status}</td>
+                    <td><fmt:formatDate value="${paperpolicy.updateTime}" pattern="yyyy-MM-dd HH:mm:ss"/> </td>
+                    <td>${paperpolicy.updateUserId}</td>
+                    <td>
                         <a href="edit.do?id=${paperpolicy.id}&type=detail" class="opr">详情</a>
                         <a href="edit.do?id=${paperpolicy.id}" class="opr">修改</a>
                         <a href="javascript:del(${paperpolicy.id})" class="opr">删除</a>
@@ -73,7 +73,7 @@
 
     <div class="row after-table">
         <div class="pull-left form-inline">
-                        <select class="form-control show-count" >
+            <select class="form-control show-count">
                 <option value="10" <c:if test="${ pi.showCount == 10 }">selected</c:if>>10</option>
                 <option value="25" <c:if test="${ pi.showCount == 25}">selected</c:if>>25</option>
                 <option value="50" <c:if test="${ pi.showCount == 50}">selected</c:if>>50</option>

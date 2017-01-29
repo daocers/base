@@ -17,26 +17,26 @@
     <input type="hidden" value="${type}" id="type">
     <div class="row">
         <div class="col-md-8">
-            <form class="form-horizontal" method="post" action="generatePaper.do" data-toggle="validator" role="form">
+            <form class="form-horizontal" method="post" action="savePolicy.do" data-toggle="validator" role="form">
                 <input id="id" type="hidden" name="id" value="${scene.id}">
 
                 <div class="form-group form-inline">
                     <label class="control-label">部门</label>
-                    <select class="form-control" name="departmentId">
+                    <select class="form-control" id="departmentId">
                         <option value="">请选择</option>
                         <c:forEach var="department" items="${departmentList}">
                             <option value="${department.id}">${department.name}</option>
                         </c:forEach>
                     </select>
                     <label class="control-label">机构</label>
-                    <select class="form-control" name="branchId">
+                    <select class="form-control" id="branchId">
                         <option value="">请选择</option>
                         <c:forEach var="branch" items="${branchList}">
                             <option value="${branch.id}">${branch.name}</option>
                         </c:forEach>
                     </select>
                     <label class="control-label">岗位</label>
-                    <select class="form-control" name="stationId">
+                    <select class="form-control" id="stationId">
                         <option value="">请选择</option>
                         <c:forEach var="station" items="${stationList}">
                             <option value="${station.id}">${station.name}</option>
@@ -50,6 +50,7 @@
                     <table class="table table-bordered data-table">
                         <thead>
                         <tr>
+                            <th></th>
                             <th>名称</th>
                             <th>机构</th>
                             <th>部门</th>
@@ -73,16 +74,30 @@
                     </div>
                     <button class="btn btn-primary btn-commit">下一步</button>
                 </div>
+                <div class="row">
+
+                </div>
             </form>
+        </div>
+
+        <div class="col-md-4">
+            <div class="input-group">
+                <div class="input-group-addon">已选策略</div>
+                <input id="paperPolicyId" value="${scene.paperPolicyId}" type="hidden"/>
+                <input id="policy" class="form-control" readonly value="${scene.paperPolicyId}" type="text">
+            </div>
+            <div class="form-group">
+                <textarea id="content" class="form-control" rows="10" readonly style="background-color: beige"> </textarea>
+            </div>
         </div>
 
     </div>
 </div>
 <script>
     function search() {
-        var deptId = $("[name='departmentId']").val();
-        var branchId = $("[name='branchId']").val();
-        var stationId = $("[name='stationId']").val();
+        var deptId = $("#departmentId").val();
+        var branchId = $("#branchId").val();
+        var stationId = $("#stationId").val();
 
         if (!deptId && !branchId && !stationId) {
             zeroModal.alert("请选择筛选条件");
@@ -95,26 +110,22 @@
             success: function (data) {
                 if (data == '-1') {
                     zeroModal.closeAll();
-                    zeroModal.error("获取用户信息失败");
+                    zeroModal.error("获取试卷策略信息失败");
                 } else {
                     console.log("data: ", data);
 
-                    var userList = JSON.parse(data);
+                    var paperPolicyList = JSON.parse(data);
                     var html = "";
-                    $.each(userList, function (index, val) {
+                    $.each(paperPolicyList, function (index, val) {
                         console.log("index: ", index);
                         html += "<tr>";
-                        html += '<td><input type="checkbox" value="' + val.id + '"></td>';
-                        var name = "";
-                        if (val.profile) {
-                            if (val.profile.name) {
-                                name = val.profile.name;
-                            }
-                        }
-                        html += "<td>" + name + "</td>"
+                        html += '<td><input type="checkbox" name="paperPolicyId" value="' + val.id + '"></td>';
+                        html += "<td>" + val.name + "</td>"
                         html += "<td>" + val.branchId + "</td>"
                         html += "<td>" + val.departmentId + "</td>"
                         html += "<td>" + val.stationId + "</td>"
+                        html += "<td>" + val.content + "</td>"
+                        html += "<td>" + val.count + "</td>"
                         html += "</tr>";
                     });
                     if (html == "") {
@@ -127,10 +138,32 @@
             },
             error: function (data) {
                 zeroModal.closeAll();
-                zeroModal.error("获取用户信息失败");
+                zeroModal.error("获取试卷策略信息失败");
             }
         })
     }
+    
+    $(function () {
+        $("table").on("click", "input[type='checkbox']", function () {
+            if($(this).is(":checked")){
+                $("#policy").val($(this).parentsUntil("tr").next().text());
+                $("#content").val($(this).parentsUntil("tr").parent().find("td:eq(5)").text());
+            }
+        });
+
+        var paperPolicyId = $("#paperPolicyId").val();
+        $.ajax({
+            url: "/paperpolicy/getPolicyInfo.do",
+            data: {id: paperPolicyId},
+            success: function (data) {
+                $("#content").val(data);
+            },
+            error: function (data) {
+                swal("", "获取已选策略信息失败", "error");
+                return false;
+            }
+        })
+    })
 </script>
 </body>
 </html>

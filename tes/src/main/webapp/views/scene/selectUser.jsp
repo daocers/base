@@ -74,11 +74,12 @@
                 </div>
 
                 <div class="button pull-right">
-                    <button class="btn btn-warning btn-commit">上一步</button>
+                    <button class="btn btn-warning btn-cancel">上一步</button>
                     <div class="space">
 
                     </div>
-                    <button class="btn btn-primary btn-cancel">下一步</button>
+                    <button class="btn btn-primary  btn-commit" type="button" onclick="javascript:saveUser();">下一步
+                    </button>
                 </div>
             </form>
         </div>
@@ -104,10 +105,62 @@
         </div>
 
     </div>
+    <input type="hidden" id="joinUser" value="${joinUser}">
 </div>
 <script src="../assets/js/my.js"></script>
 <script>
+    function saveUser() {
+        var id = $("[name='id']").val();
+        var data = new Array();
+        $(".data-selected > tbody > tr").each(function (index, val) {
+            var userid = $(val).attr("userid");
+            console.log(userid)
+            data.push(userid);
+        });
+        if (data.length == 0) {
+            swal("", "请选择本场考试人员", "warning");
+            console.log("需要选择人员")
+            return false;
+        } else {
+            console.log("准备提交请求")
+            $.ajax({
+                url: 'saveUser.do',
+                type: "post",
+                data: {userInfos: JSON.stringify(data), id: id},
+                success: function (data) {
+                    if (data == "-1") {
+                        swal("", "请选择本场考试人员", "warning");
+                        return false;
+                    }
+                    if (data == "0") {
+                        window.location.href = "selectPolicy.do?id=" + id;
+                        return false;
+                    }
+                },
+                error: function (data) {
+                    swal("", "保存考试人员失败", "error");
+                    return false;
+                }
+
+            })
+        }
+        return false;
+    }
     $(function () {
+        var joinUser = $("#joinUser").val();
+        if (joinUser) {
+            var html = "";
+            var data = JSON.parse(joinUser);
+            $("#count").val(data.length);
+            $.each(data, function (index, id) {
+                html += "<tr userid='" + id + "'>";
+                html += "<td>" + 11 + "</td>"
+                html += "<td><a href='javascript:remove(" + id + ")'>删除</a></td>";
+                html += "</tr>"
+            });
+            $(".data-selected > tbody").append(html);
+        }
+
         $("#selectAll").on("click", function () {
             $(".selectAll").trigger("click");
         });
@@ -116,11 +169,16 @@
             var html = "";
             $(".data-table tbody").find("input:checked").each(function () {
                 var id = $(this).val();
-                var name = $(this).parents("tr").find("td:eq(1)").html();
-                html += "<tr userid='" + id + "'>";
-                html = html + "<td>" + name + "</td>";
-                html += "<td><a href='javascript:remove(" + id + ")'>删除</a></td>";
-                html += "</tr>"
+                if ($(".data-selected > tbody tr[userid='" + id + "']").length == 0) {
+                    var name = $(this).parents("tr").find("td:eq(1)").html();
+                    html += "<tr userid='" + id + "'>";
+                    html = html + "<td>" + name + "</td>";
+                    html += "<td><a href='javascript:remove(" + id + ")'>删除</a></td>";
+                    html += "</tr>"
+                }else{
+                    $(this).attr("checked", false);
+                }
+
             });
             $(".data-selected > tbody").append(html);
             getSelectCount();

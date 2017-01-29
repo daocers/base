@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="../template/header.jsp" %>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>管理</title>
+    <%@ include file="../template/header.jsp" %>
 </head>
 <body>
 <div class="container">
@@ -32,9 +33,9 @@
             <thead>
             <tr>
                 <th><input type="checkbox" class="selectAll"></th>
-                <th>场次名称</th>
-                <th>场次编码</th>
-                <th>场次识别码</th>
+                <th>名称</th>
+                <th>编码</th>
+                <th>识别码</th>
                 <th>开场时间</th>
                 <th>顺延时间</th>
                 <th>考试时长</th>
@@ -75,18 +76,31 @@
                     <td>${scene.paperPolicyId}</td>
                     <td><fmt:formatDate value="${scene.createTime}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate></td>
 
-                    <td>${scene.createUserId}</td>
+                    <td>${scene.createUser == null ? "" : scene.createUser.username}</td>
 
-                    <td>${scene.branchId}</td>
-                    <td>${scene.departmentId}</td>
+                    <td>${scene.branch == null ? "" : scene.branch.name}</td>
+                    <td>${scene.department == null ? "" : scene.department.name}</td>
 
 
                     <td>${scene.reason}</td>
                     <td>${scene.remark}</td>
-                    <td>${scene.status}</td>
+                    <td>
+                        <c:if test="${scene.status == 0}">
+                            已开场
+                        </c:if>
+                        <c:if test="${scene.status == 1}">
+                            已封场
+                        </c:if>
+                        <c:if test="${scene.status == 2}">
+                            已作废
+                        </c:if>
+                        <c:if test="${scene.status == 3}">
+                            已取消
+                        </c:if>
+                    </td>
                     <td><fmt:formatDate value="${scene.updateTime}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate></td>
 
-                    <td>${scene.updateUserId}</td>
+                    <td>${scene.updateUser == null ? "" : scene.updateUser.username}</td>
                     <td>
                         <a href="edit.do?id=${scene.id}&type=detail" class="opr">详情</a>
                         <a href="edit.do?id=${scene.id}" class="opr">修改</a>

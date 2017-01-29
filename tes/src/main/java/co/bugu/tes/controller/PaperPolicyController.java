@@ -1,10 +1,7 @@
 package co.bugu.tes.controller;
 
 import co.bugu.tes.global.Constant;
-import co.bugu.tes.model.PaperPolicy;
-import co.bugu.tes.model.QuestionMetaInfo;
-import co.bugu.tes.model.QuestionPolicy;
-import co.bugu.tes.model.User;
+import co.bugu.tes.model.*;
 import co.bugu.tes.service.IPaperPolicyService;
 import co.bugu.tes.service.IQuestionMetaInfoService;
 import co.bugu.tes.service.IQuestionPolicyService;
@@ -15,6 +12,7 @@ import co.bugu.framework.util.JedisUtil;
 import co.bugu.framework.util.JsonUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,6 +81,15 @@ public class PaperPolicyController {
             }
 //            保存试题策略信息
             model.put("paperpolicy", paperpolicy);
+            List<String> checkedMetaInfoIds = new ArrayList<>();
+            String content = paperpolicy.getContent();
+            if(StringUtils.isNotEmpty(content)){
+                List<Map> list = JSON.parseArray(content, Map.class);
+                for(Map map: list){
+                    checkedMetaInfoIds.add((String) map.get("questionMetaInfoId"));
+                }
+            }
+            model.put("metaInfoIds", checkedMetaInfoIds);
             List<List<QuestionPolicy>> data = new ArrayList<>();
             for(int i =0; i < questionMetaInfoList.size(); i++ ){
                 QuestionMetaInfo questionMetaInfo = questionMetaInfoList.get(i);
@@ -128,6 +135,10 @@ public class PaperPolicyController {
                 redirectAttributes.addFlashAttribute("err", "用户信息异常");
                 redirectAttributes.addFlashAttribute(paperpolicy);
                 return "redirect:edit.do";
+            }
+            paperpolicy.setStatus(0);
+            if(paperpolicy.getPercentable() == null){
+                paperpolicy.setPercentable(1);
             }
             paperpolicy.setQuestionMetaInfoId(JSON.toJSONString(questionMetaInfoId));
             if(paperpolicy.getId() == null){
@@ -176,5 +187,41 @@ public class PaperPolicyController {
             logger.error("删除失败", e);
             return "-1";
         }
+    }
+
+    /**
+     * 获取策略信息
+     * 以方便阅读的方式显示
+     * @param id
+     * @return
+     */
+    @RequestMapping("/getPolicyInfo")
+    @ResponseBody
+    public String getPolicyInfo(Integer id){
+        PaperPolicy policy = paperpolicyService.findById(id);
+        String content = policy.getContent();
+        if(StringUtils.isNotEmpty(content)){
+            StringBuilder stringBuilder = new StringBuilder();
+            JSONArray jsonArray = JSON.parseArray(content);
+            for(int i = 0; i < jsonArray.size(); i++){
+                JSONObject data = (JSONObject) jsonArray.get(i);
+                Integer questionMetaInfoId = data.getInteger("questionMetaInfoId");
+                Integer questionPolicyId = data.getInteger("questionPolicyId");
+                double score = data.getShort("score");
+                QuestionMetaInfo questionMetaInfo = questionMetaInfoService.findById(questionMetaInfoId);
+                QuestionPolicy questionPolicy = questionPolicyService.findById(questionPolicyId);
+                stringBuilder.append(questionMetaInfo.getName())
+                        .append(": 试题策略 ")
+                        .append(questionPolicy.getName())
+                        .append(", ")
+                        .append("共 ")
+                        .append(questionPolicy.getCount())
+                        .append(" 题, 每题 ")
+                        .append(score)
+                        .append(" 分\n");
+            }
+            return stringBuilder.toString();
+        }
+        return "";
     }
 }

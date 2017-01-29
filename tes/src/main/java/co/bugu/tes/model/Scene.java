@@ -23,6 +23,8 @@ public class Scene {
 
     private Integer departmentId;
 
+    private Integer stationId;
+
     private Integer duration;
 
     private Date endTime;
@@ -42,6 +44,71 @@ public class Scene {
     private Integer updateUserId;
 
     private Integer paperType;
+
+    private String joinUser;
+
+    private Department department;
+    private Branch branch;
+    private Station station;
+
+    private User createUser;
+    private User updateUser;
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
+
+    public Branch getBranch() {
+        return branch;
+    }
+
+    public void setBranch(Branch branch) {
+        this.branch = branch;
+    }
+
+    public Station getStation() {
+        return station;
+    }
+
+    public void setStation(Station station) {
+        this.station = station;
+    }
+
+    public User getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(User createUser) {
+        this.createUser = createUser;
+    }
+
+    public User getUpdateUser() {
+        return updateUser;
+    }
+
+    public void setUpdateUser(User updateUser) {
+        this.updateUser = updateUser;
+    }
+
+    public Integer getStationId() {
+        return stationId;
+    }
+
+    public void setStationId(Integer stationId) {
+        this.stationId = stationId;
+    }
+
+    public String getJoinUser() {
+        return joinUser;
+    }
+
+    public void setJoinUser(String joinUser) {
+        this.joinUser = joinUser;
+    }
 
     public Integer getPaperType() {
         return paperType;

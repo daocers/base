@@ -2,6 +2,10 @@
     font-family: "Microsoft YaHei UI";
 }
 
+body{
+    background-color: #faf4f8;
+}
+
 .line-space {
     height: 20px;
 }

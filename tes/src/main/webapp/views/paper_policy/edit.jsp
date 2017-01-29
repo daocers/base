@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="../template/header.jsp" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <html>
 <head>
     <meta charset="utf-8">
@@ -30,7 +31,7 @@
             <form class="form-horizontal" method="post" action="save.do" data-toggle="validator" role="form">
                 <input id="id" type="hidden" name="id" value="${paperpolicy.id}">
 
-                <input type="hidden" name="content" value="${paperpolicy.content}">
+                <input type="hidden" name="content" value='${paperpolicy.content}'>
                 <div class="form-group">
                     <label class="control-label col-md-2">策略名称</label>
                     <div class="col-md-10">
@@ -85,7 +86,9 @@
                     <div class="col-md-10">
                         <c:forEach var="questionMetaInfo" items="${questionMetaInfoList}">
                             <label class="checkbox inline">
-                                <input type="checkbox" name="questionMetaInfoId" value="${questionMetaInfo.id}">&nbsp;&nbsp;${questionMetaInfo.name}
+                                <input type="checkbox" name="questionMetaInfoId"
+                                    <c:if test="${fn:contains(metaInfoIds, questionMetaInfo.id)}">checked</c:if>
+                                       value="${questionMetaInfo.id}">&nbsp;&nbsp;${questionMetaInfo.name}
                             </label>
                         </c:forEach>
                     </div>
@@ -149,9 +152,6 @@
 
                 <div class="form-group">
                     <label class="control-label col-md-2">是否百分制</label>
-                    <div class="">
-
-                    </div>
                     <div class="col-md-10">
                         <div class="switch" style="height:30px;">
                             <input class="percentable form-control" data-on-color="info" data-off-color="warning"
@@ -183,12 +183,23 @@
 </div>
 <script>
     $(function () {
+        $("[name='questionMetaInfoId']:checked").trigger("ifChecked");
 //        初始化已经选择的信息
         var content = $('[name="content"]').val();
+//        console.log("content: ", content);
         if(content){
             var oldInfo = JSON.parse(content);
-            oldInfo.each(function (e) {
-                console.log("score: ", e.score);
+//            console.log("old: ", oldInfo);
+            $.each(oldInfo, function (index, val) {
+                var questionMetaInfoId = val.questionMetaInfoId;
+                var questionPolicyId = val.questionPolicyId;
+                var score = val.score;
+                $("tr[metaInfoId='" + questionMetaInfoId + "']").find("td:eq(1) > select").val(questionPolicyId);
+                $("tr[metaInfoId='" + questionMetaInfoId + "']").find("td:eq(1) > select").trigger("change");
+                $("tr[metaInfoId='" + questionMetaInfoId + "']").find("td:eq(3) > input").val(score);
+
+//                console.log(val.score);
+//                console.log(val);
             })
         }
 
@@ -203,7 +214,7 @@
             $("form").validator('validate');
             var flag = true;
             $("form").on("invalid.bs.validator", function (event) {
-                console.log(event.detail);
+//                console.log(event.detail);
                 flag = false;
             });
             if (!flag) {
@@ -240,7 +251,7 @@
                             }else{
                                 $(e).find("td:eq(1) > select").removeClass("input-warning");
                             }
-                            var item = {questionMetaInfoId: questionPolicyId, score: score}
+                            var item = {questionMetaInfoId: metaInfoId, questionPolicyId: questionPolicyId, score: score}
                             data.push(item);
                         }
                     });
@@ -299,6 +310,7 @@
      * *勾选题型之后的事件
      */
     $('[name="questionMetaInfoId"]').on("ifUnchecked ifChecked", function (event) {
+        console.log(event)
         var id = $(this).val();
         var type = event.type;
         if (type == "ifChecked") {

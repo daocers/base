@@ -116,7 +116,7 @@
     <div class="row">
         <div class="col-md-8">
             <form class="form-horizontal" method="post" action="save.do" data-toggle="validator" role="form">
-                <%--<input id="id" type="hidden" name="id" value="${scene.id}">--%>
+                <input id="id" type="hidden" name="id" value="${scene.id}">
                 <div class="form-group">
                     <label class="control-label col-md-2">场次名称</label>
                     <div class="col-md-10">

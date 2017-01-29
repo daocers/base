@@ -6,7 +6,10 @@ import co.bugu.tes.model.*;
 import co.bugu.tes.service.*;
 import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.util.JsonUtil;
+import com.alibaba.dubbo.common.json.JSONArray;
+import com.alibaba.fastjson.JSON;
 import com.sun.beans.editors.DoubleEditor;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,7 @@ import org.springframework.web.util.WebUtils;
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -121,7 +125,8 @@ public class SceneController {
             }else{
                 sceneService.updateById(scene);
             }
-            redirectAttributes.addFlashAttribute("scene", scene);
+//            redirectAttributes.addFlashAttribute("scene", scene);
+            redirectAttributes.addFlashAttribute(scene);
         }catch (Exception e){
             logger.error("保存信息失败", e);
             model.put("errMsg", "保存信息失败");
@@ -130,37 +135,61 @@ public class SceneController {
     }
 
     @RequestMapping(value = "/selectUser")
-    public String toSelectUser(ModelMap model){
+    public String toSelectUser(ModelMap model, RedirectAttributes redirectAttributes){
         List<Department> departmentList = departmentService.findByObject(null);
         List<Branch> branchList = branchService.findByObject(null);
         List<Station> stationList = stationService.findByObject(null);
         model.put("departmentList", departmentList);
         model.put("branchList", branchList);
         model.put("stationList", stationList);
+        Scene scene = sceneService.findById(((Scene)model.get("scene")).getId());
+        String selectedUser = scene.getJoinUser();
+        model.put("joinUser", selectedUser);
         return "scene/selectUser";
     }
 
     @RequestMapping(value = "/saveUser", method = RequestMethod.POST)
+    @ResponseBody
     public String saveUserThenSelectPaperPolciy(Scene scene, String userInfos, RedirectAttributes redirectAttributes){
+        List<Integer> list =  JSON.parseArray(userInfos, Integer.class);
+        if(list == null || list.size() == 0){
+            redirectAttributes.addFlashAttribute("err", "请选择本场考试用户");
+//            return  "redirect:selectUser.do";
+            return  "-1";
+        }
+        Collections.sort(list);
+        scene.setJoinUser(JSON.toJSONString(list, true));
         sceneService.updateById(scene);
         redirectAttributes.addFlashAttribute("scene", scene);
-        return "redirect:generatePaper.do";
+
+//        return "redirect:generatePaper.do";
+        return "0";
     }
 
-    @RequestMapping(value = "/generatePaper")
-    public String toGenPaper(ModelMap model){
+    @RequestMapping(value = "/selectPolicy")
+    public String toGenPaper(ModelMap model, Scene scene){
+        scene = sceneService.findById(scene.getId());
+        model.put("scene", scene);
         List<Department> departmentList = departmentService.findByObject(null);
         List<Branch> branchList = branchService.findByObject(null);
         List<Station> stationList = stationService.findByObject(null);
         model.put("departmentList", departmentList);
         model.put("branchList", branchList);
         model.put("stationList", stationList);
-        return "scene/generatePaper";
+        return "scene/selectPolicy";
     }
 
 
     @RequestMapping(value = "/savePolicy", method = RequestMethod.POST)
-    public String savePolicyThenPriview(){
+    public String savePolicyThenPriview(Scene scene, RedirectAttributes redirectAttributes){
+        scene.setStatus(Constant.STATUS_ENABLE);
+        sceneService.updateById(scene);
+        scene = sceneService.findById(scene.getId());
+        redirectAttributes.addFlashAttribute(scene);
+        return "redirect:preview.do";
+    }
+    @RequestMapping(value = "/preview")
+    public String toPreview(){
         return "scene/preview";
     }
 
@@ -185,6 +214,8 @@ public class SceneController {
         try{
 
             paperService.generateAllPaper(scene);
+            scene = sceneService.findById(scene.getId());
+            model.put("scene", scene);
         }catch (Exception e){
             logger.error("保存用户，生成试卷失败", e);
             model.put("errMsg", "保存信息失败");
@@ -200,6 +231,7 @@ public class SceneController {
     @RequestMapping(value = "/confirm", method = RequestMethod.POST)
     public String confirm(Scene scene){
         try{
+
             scene.setStatus(Constant.STATUS_ENABLE);
             sceneService.updateById(scene);
             logger.info("开场成功");
