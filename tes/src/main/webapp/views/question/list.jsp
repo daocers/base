@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="../template/header.jsp" %>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>管理</title>
+    <title>试题管理</title>
+    <%@ include file="../template/header.jsp" %>
+
 </head>
 <body>
 <div class="container">
@@ -32,12 +33,14 @@
             <thead>
             <tr>
                 <th><input type="checkbox" class="selectAll"></th>
-                <th>answer</th>
-                <th>content</th>
-                <th>extraInfo</th>
-                <th>metaInfoId</th>
-                <th>questionBankId</th>
-                <th>title</th>
+                <th>题目</th>
+
+                <th>题干</th>
+                <th>答案</th>
+
+                <th>额外信息</th>
+                <th>题型</th>
+                <th>题库</th>
                 <th>操作</th>
             </tr>
             </thead>
@@ -45,12 +48,13 @@
             <c:forEach items="${pi.data}" var="question" varStatus="line">
                 <tr>
                     <td><input type="checkbox" objId="${question.id}"></td>
-                    <td>${question.answer}</td>
+                    <td>${question.title}</td>
                     <td>${question.content}</td>
+                    <td>${question.answer}</td>
+
                     <td>${question.extraInfo}</td>
                     <td>${question.metaInfoId}</td>
                     <td>${question.questionBankId}</td>
-                    <td>${question.title}</td>
                     <td>
                         <a href="edit.do?id=${question.id}&type=detail" class="opr">详情</a>
                         <a href="edit.do?id=${question.id}" class="opr">修改</a>

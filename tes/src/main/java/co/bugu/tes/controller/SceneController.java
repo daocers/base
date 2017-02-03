@@ -8,6 +8,7 @@ import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.util.JsonUtil;
 import com.alibaba.dubbo.common.json.JSONArray;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.sun.beans.editors.DoubleEditor;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -46,6 +47,11 @@ public class SceneController {
 
     @Autowired
     IPaperPolicyService paperPolicyService;
+
+    @Autowired
+    IQuestionMetaInfoService questionMetaInfoService;
+    @Autowired
+    IQuestionPolicyService questionPolicyService;
 
     private static Logger logger = LoggerFactory.getLogger(SceneController.class);
 
@@ -180,11 +186,60 @@ public class SceneController {
     }
 
 
+    /**
+     * 保存试题策略
+     * 如果是更改，paperPolicyId有值
+     * 如果没有做更改， paperPolicyId无值
+     * @param scene
+     * @param redirectAttributes
+     * @return
+     */
     @RequestMapping(value = "/savePolicy", method = RequestMethod.POST)
     public String savePolicyThenPriview(Scene scene, RedirectAttributes redirectAttributes){
+        Integer paperPolicyId = scene.getPaperPolicyId();
+
+
+
+
+
+        scene = sceneService.findById(scene.getId());
+
+
+        if(scene.getPaperPolicyId() != null){
+            PaperPolicy policy = paperPolicyService.findById(scene.getPaperPolicyId());
+            String content = policy.getContent();
+            if(StringUtils.isNotEmpty(content)){
+                StringBuilder stringBuilder = new StringBuilder();
+                com.alibaba.fastjson.JSONArray jsonArray = JSON.parseArray(content);
+                for(int i = 0; i < jsonArray.size(); i++){
+                    JSONObject data = (JSONObject) jsonArray.get(i);
+                    Integer questionMetaInfoId = data.getInteger("questionMetaInfoId");
+                    Integer questionPolicyId = data.getInteger("questionPolicyId");
+                    double score = data.getShort("score");
+                    QuestionMetaInfo questionMetaInfo = questionMetaInfoService.findById(questionMetaInfoId);
+                    QuestionPolicy questionPolicy = questionPolicyService.findById(questionPolicyId);
+                    stringBuilder.append(questionMetaInfo.getName())
+                            .append(": 试题策略 ")
+                            .append(questionPolicy.getName())
+                            .append(", ")
+                            .append("共 ")
+                            .append(questionPolicy.getCount())
+                            .append(" 题, 每题 ")
+                            .append(score)
+                            .append(" 分\n\t");
+                }
+                redirectAttributes.addFlashAttribute("policyInfo", stringBuilder.toString());
+            }
+        }
+
+        if(scene.getPaperPolicyId() == null && paperPolicyId == null){
+            redirectAttributes.addFlashAttribute("err", "请选择试卷策略");
+            redirectAttributes.addFlashAttribute(scene);
+            return "redirect:selectPolicy.do";
+        }
+        scene.setPaperPolicyId(paperPolicyId);
         scene.setStatus(Constant.STATUS_ENABLE);
         sceneService.updateById(scene);
-        scene = sceneService.findById(scene.getId());
         redirectAttributes.addFlashAttribute(scene);
         return "redirect:preview.do";
     }
@@ -213,6 +268,7 @@ public class SceneController {
     public String saveUserAndGeneratePaper(Scene scene, ModelMap model, @ModelAttribute("scene")Scene old){
         try{
 
+
             paperService.generateAllPaper(scene);
             scene = sceneService.findById(scene.getId());
             model.put("scene", scene);
@@ -231,6 +287,7 @@ public class SceneController {
     @RequestMapping(value = "/confirm", method = RequestMethod.POST)
     public String confirm(Scene scene){
         try{
+
 
             scene.setStatus(Constant.STATUS_ENABLE);
             sceneService.updateById(scene);

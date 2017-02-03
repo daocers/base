@@ -61,7 +61,7 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <td colspan="6">请选择筛选条件！</td>
+                            <td colspan="7">请选择筛选条件！</td>
                         </tr>
                         </tbody>
                     </table>
@@ -147,22 +147,41 @@
         $("table").on("click", "input[type='checkbox']", function () {
             if($(this).is(":checked")){
                 $("#policy").val($(this).parentsUntil("tr").next().text());
-                $("#content").val($(this).parentsUntil("tr").parent().find("td:eq(5)").text());
+                var paperPolicyId = $(this).val();
+                $.ajax({
+                    url: "/paperpolicy/getPolicyInfo.do",
+                    data: {id: paperPolicyId},
+                    success: function (data) {
+                        $("#content").val(data);
+                    },
+                    error: function (data) {
+                        swal("", "获取已选策略信息失败", "error");
+                        return false;
+                    }
+                });
+//                $("#content").val($(this).parentsUntil("tr").parent().find("td:eq(5)").text());
             }
         });
 
+        /**
+         * 如果已经选择试卷策略，获取信息
+         * @type {*}
+         */
         var paperPolicyId = $("#paperPolicyId").val();
-        $.ajax({
-            url: "/paperpolicy/getPolicyInfo.do",
-            data: {id: paperPolicyId},
-            success: function (data) {
-                $("#content").val(data);
-            },
-            error: function (data) {
-                swal("", "获取已选策略信息失败", "error");
-                return false;
-            }
-        })
+        if(paperPolicyId){
+            $.ajax({
+                url: "/paperpolicy/getPolicyInfo.do",
+                data: {id: paperPolicyId},
+                success: function (data) {
+                    $("#content").val(data);
+                },
+                error: function (data) {
+                    swal("", "获取已选策略信息失败", "error");
+                    return false;
+                }
+            })
+        }
+
     })
 </script>
 </body>

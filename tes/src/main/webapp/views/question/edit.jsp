@@ -32,7 +32,7 @@
                     <div class="col-md-10">
                         <textarea class="form-control" name="content" rows="5" required>${question.content}</textarea>
                         <%--<input class="form-control" type="text" name="content" value="${question.content}" required>--%>
-                        <span class="help-block with-errors">试题选项等题干信息</span>
+                        <span class="help-block with-errors">试题选项等题干信息,每个选项占用一行，序号和内容见用分号隔开，如 A：第一个选项</span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -139,6 +139,7 @@
             return false;
         }
         $(this).attr("disabled");
+        zeroModal.loading(3);
         $.ajax({
             url: "getPropertyList.do",
             type: "get",
@@ -166,9 +167,11 @@
 
                     $(".prop-box").html(builder);
                 }
+                zeroModal.closeAll();
             },
             error: function () {
                 swal("", "获取题型属性失败", "error");
+                zeroModal.closeAll();
             }
         })
         $(this).removeAttr("disabled");

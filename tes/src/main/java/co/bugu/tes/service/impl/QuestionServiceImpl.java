@@ -1,6 +1,7 @@
 package co.bugu.tes.service.impl;
 
 
+import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.core.service.impl.BaseServiceImpl;
 import co.bugu.framework.util.JedisUtil;
 import co.bugu.framework.util.exception.TesException;
@@ -92,6 +93,19 @@ public class QuestionServiceImpl extends BaseServiceImpl<Question> implements IQ
             keys[i] = Constant.QUESTION_PROPITEM_ID +questionMetaInfoId + "_" + ids[i];
         }
         return JedisUtil.sinterForSize(keys);
+    }
+
+    @Override
+    public PageInfo findByObject(Question record, Integer showCount, Integer curPage) throws Exception {
+        PageInfo<Question> pageInfo = new PageInfo<Question>(showCount, curPage);
+        baseDao.listByObject("tes.question.findByObject", record, pageInfo);
+        if(pageInfo.getData().size() > 0){
+            for(Question question: pageInfo.getData()){
+                question.setPropertyItemList(baseDao.selectList("tes.question.findPropItemByQuestionId", question));
+                question.setQuestionMetaInfo(baseDao.selectOne("tes.questionMetaInfo.selectById", question.getMetaInfoId()));
+            }
+        }
+        return pageInfo;
     }
 
 

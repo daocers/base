@@ -155,6 +155,15 @@
         LEFT JOIN question_propItem_x qp on qp.question_id = question.id
         LEFT JOIN property_item prop_item on prop_item.id = qp.property_item_id
         LEFT JOIN question_meta_info ques_meta on question.meta_info_id = ques_meta.id
+        order by question.id
+    </select>
+
+    <select id="findPropItemByQuestionId" resultMap="PropertyItemMap" parameterType="co.bugu.tes.model.Question">
+        SELECT
+        <include refid="propertyItem_list"/>
+        from property_item prop_item
+        LEFT JOIN question_propItem_x qp on qp.property_item_id = prop_item.id
+        WHERE qp.question_id = #{id}
     </select>
 
 

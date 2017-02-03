@@ -78,7 +78,7 @@
                     </tr>
                     <tr>
                         <th>策略详情</th>
-                        <td colspan="3"></td>
+                        <td colspan="3">${policyInfo}</td>
                     </tr>
                     <tr>
                         <th>所属机构</th>
@@ -94,7 +94,7 @@
                     </tr>
                     <tr>
                         <th>参考人员</th>
-                        <td colspan="3"></td>
+                        <td colspan="3">${scene.joinUser}</td>
                         <!--<th></th>-->
                         <!--<td></td>-->
                     </tr>
