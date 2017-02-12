@@ -1,6 +1,7 @@
 package co.bugu.tes.controller;
 
 import co.bugu.framework.core.util.BuguWebUtil;
+import co.bugu.framework.util.exception.TesException;
 import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.*;
 import co.bugu.tes.service.*;
@@ -23,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.WebUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
@@ -64,15 +66,20 @@ public class SceneController {
     * @return
     */
     @RequestMapping(value = "/list")
-    public String list(Scene scene, Integer curPage, Integer showCount, ModelMap model){
+    public String list(Scene scene, Integer curPage, Integer showCount, ModelMap model, HttpServletRequest request){
         try{
+            Integer userId = (Integer) BuguWebUtil.getUserId(request);
+            if(userId == null){
+                throw new TesException("用户信息获取异常");
+            }
+            scene.setJoinUser(userId + "");
             PageInfo<Scene> pageInfo = new PageInfo<>(showCount, curPage);
             pageInfo = sceneService.findByObject(scene, pageInfo);
             model.put("pi", pageInfo);
             model.put("scene", scene);
         }catch (Exception e){
             logger.error("获取列表失败", e);
-            model.put("errMsg", "获取列表失败");
+            model.put("err", "获取列表失败");
         }
         return "scene/list";
 
@@ -157,7 +164,7 @@ public class SceneController {
     @RequestMapping(value = "/saveUser", method = RequestMethod.POST)
     @ResponseBody
     public String saveUserThenSelectPaperPolciy(Scene scene, String userInfos, RedirectAttributes redirectAttributes){
-        List<Integer> list =  JSON.parseArray(userInfos, Integer.class);
+        List<String> list =  JSON.parseArray(userInfos, String.class);
         if(list == null || list.size() == 0){
             redirectAttributes.addFlashAttribute("err", "请选择本场考试用户");
 //            return  "redirect:selectUser.do";

@@ -7,6 +7,7 @@ import co.bugu.framework.util.JsonUtil;
 import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.Authority;
 import co.bugu.tes.service.IAuthorityService;
+import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -32,21 +33,22 @@ public class AuthorityController {
     private static Logger logger = LoggerFactory.getLogger(AuthorityController.class);
 
     /**
-    * 列表，分页显示
-    * @param authority  查询数据
-    * @param curPage 当前页码，从1开始
-    * @param showCount 当前页码显示数目
-    * @param model
-    * @return
-    */
+     * 列表，分页显示
+     *
+     * @param authority 查询数据
+     * @param curPage   当前页码，从1开始
+     * @param showCount 当前页码显示数目
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/list")
-    public String list(Authority authority, Integer curPage, Integer showCount, ModelMap model){
-        try{
+    public String list(Authority authority, Integer curPage, Integer showCount, ModelMap model) {
+        try {
             PageInfo<Authority> pageInfo = new PageInfo<>(showCount, curPage);
             pageInfo = authorityService.findByObject(authority, pageInfo);
             model.put("pi", pageInfo);
             model.put("authority", authority);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("获取列表失败", e);
             model.put("errMsg", "获取列表失败");
         }
@@ -55,17 +57,18 @@ public class AuthorityController {
     }
 
     /**
-    * 查询数据后跳转到对应的编辑页面
-    * @param id 查询数据，一般查找id
-    * @param model
-    * @return
-    */
+     * 查询数据后跳转到对应的编辑页面
+     *
+     * @param id    查询数据，一般查找id
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
-    public String toEdit(Integer id, ModelMap model){
-        try{
+    public String toEdit(Integer id, ModelMap model) {
+        try {
             Authority authority = authorityService.findById(id);
             model.put("authority", authority);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("获取信息失败", e);
             model.put("errMsg", "获取信息失败");
         }
@@ -73,20 +76,21 @@ public class AuthorityController {
     }
 
     /**
-    * 保存结果，根据是否带有id来表示更新或者新增
-    * @param authority
-    * @param model
-    * @return
-    */
+     * 保存结果，根据是否带有id来表示更新或者新增
+     *
+     * @param authority
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public String save(Authority authority, ModelMap model){
-        try{
-            if(authority.getId() == null){
+    public String save(Authority authority, ModelMap model) {
+        try {
+            if (authority.getId() == null) {
                 authorityService.save(authority);
-            }else{
+            } else {
                 authorityService.updateById(authority);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("保存失败", e);
             model.put("authority", authority);
             model.put("errMsg", "保存失败");
@@ -96,64 +100,67 @@ public class AuthorityController {
     }
 
     /**
-    * 异步请求 获取全部
-    * @param authority 查询条件
-    * @return
-    */
+     * 异步请求 获取全部
+     *
+     * @param authority 查询条件
+     * @return
+     */
     @RequestMapping(value = "/listAll")
     @ResponseBody
-    public String listAll(Authority authority){
-        try{
+    public String listAll(Authority authority) {
+        try {
             List<Authority> list = authorityService.findByObject(authority);
             return JsonUtil.toJsonString(list);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("获取全部列表失败", e);
             return "-1";
         }
     }
 
     /**
-    * 异步请求 删除
-    * @param authority id
-    * @return
-    */
+     * 异步请求 删除
+     *
+     * @param authority id
+     * @return
+     */
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
-    public String delete(Authority authority){
-        try{
+    public String delete(Authority authority) {
+        try {
             authorityService.delete(authority);
             return "0";
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("删除失败", e);
             return "-1";
         }
     }
 
     /**
-     *  初始化当前系统的所有mappingRequest，
-     *  并根据数据使用情况进行处理，已经存在的，忽略，否则入库
+     * 初始化当前系统的所有mappingRequest，
+     * 并根据数据使用情况进行处理，已经存在的，忽略，否则入库
+     *
      * @param model
      * @return
      */
     @RequestMapping(value = "/init")
-    public String init(ModelMap model){
-        try{
+    public String init(ModelMap model) {
+        try {
             List<Authority> authorities = authorityService.findByObject(null);
             List<String> urlList = new ArrayList<>();
-            for(Authority auth : authorities){
+            for (Authority auth : authorities) {
                 urlList.add(auth.getUrl());
             }
 
             List<MvcParam> list = ReflectUtil.getAnnotationInfo(AuthorityController.class.getPackage().getName());
 
             Set<String> controllerSet = new HashSet<>();
-            for(MvcParam param: list){
+            for (MvcParam param : list) {
                 controllerSet.add(param.getControllerName());
                 String url = param.getRootPath() + param.getPath();
-                if(urlList.contains(url)){
+                if (urlList.contains(url)) {
                     continue;
                 }
-                if(param.getPath() == null){
+                if (param.getPath() == null) {
                     continue;
                 }
                 Authority auth = new Authority();
@@ -176,11 +183,11 @@ public class AuthorityController {
             authority.setType(Constant.AUTH_TYPE_BOX);
             authorities = authorityService.findByObject(authority);
             List<String> controllerList = new ArrayList<>();
-            for(Authority auth: authorities){
+            for (Authority auth : authorities) {
                 controllerList.add(auth.getController());
             }
-            for(String con: controllerSet){
-                if(controllerList.contains(con)){
+            for (String con : controllerSet) {
+                if (controllerList.contains(con)) {
                     continue;
                 }
                 Authority auth = new Authority();
@@ -195,7 +202,7 @@ public class AuthorityController {
                 authorityService.batchUpdate(auth);
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("初始化工程内的信息失败", e);
         }
         return "redirect:list.do";
@@ -203,30 +210,31 @@ public class AuthorityController {
 
     /**
      * 通过ztree进行管理
+     *
      * @param modelMap
      * @return
      */
     @RequestMapping(value = "/manage", method = RequestMethod.GET)
-    public String manage(ModelMap modelMap){
-        try{
+    public String manage(ModelMap modelMap) {
+        try {
             Authority authority = new Authority();
             authority.setStatus(Constant.STATUS_ENABLE);
             List<Authority> list = authorityService.findByObject(authority);
             List<Map<String, Object>> res = new ArrayList<>();
-            for(Authority auth : list){
+            for (Authority auth : list) {
                 Map<String, Object> map = new HashedMap();
                 map.put("id", auth.getId());
                 map.put("pId", auth.getSuperiorId() == null ? 0 : auth.getSuperiorId());
-                map.put("name", auth.getName());
-                if(auth.getUrl() != null && !auth.getUrl().equals("")){//url菜单
+                map.put("name", StringUtils.isEmpty(auth.getName()) ? auth.getUrl() : auth.getName());
+                if (auth.getUrl() != null && !auth.getUrl().equals("")) {//url菜单
                     map.put("dropInner", false);
-                }else{//菜单目录
+                } else {//菜单目录
 
                 }
                 res.add(map);
             }
             modelMap.put("zNode", JSON.toJSONString(res));
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("获取权限管理信息失败", e);
             return "redirect:list.do";
         }
@@ -235,27 +243,28 @@ public class AuthorityController {
 
     /**
      * 批量更新ztree提交的数据
+     *
      * @param info
      * @return
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-    public String update(String info){
-        try{
+    public String update(String info) {
+        try {
             List<Authority> authorityList = new ArrayList<>();
             JSONArray arr = JSON.parseArray(info);
-            for(int i = 0; i < arr.size(); i++){
+            for (int i = 0; i < arr.size(); i++) {
                 JSONObject obj = (JSONObject) arr.get(i);
                 Authority authority = null;
                 Integer id = obj.getInteger("id");
                 Integer superiorId = obj.getInteger("pId");
                 String name = obj.getString("name");
-                if(id == null){//新增的
+                if (id == null) {//新增的
                     authority = new Authority();
                     authority.setId(id);
                     authority.setType(Constant.AUTH_TYPE_MENU);
                     authority.setDescription("");
-                }else{
+                } else {
                     authority = authorityService.findById(id);
                 }
                 authority.setIdx(i);
@@ -266,7 +275,7 @@ public class AuthorityController {
             }
             authorityService.rebuildInfo(authorityList);
             return "0";
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("批量更新失败", e);
             return "-1";
         }
@@ -274,10 +283,10 @@ public class AuthorityController {
 
     @RequestMapping(value = "/commit", method = RequestMethod.POST)
     @ResponseBody
-    public String commit(Authority authority){
-        try{
+    public String commit(Authority authority) {
+        try {
             authorityService.updateById(authority);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("表格提交失败", e);
             return "-1";
         }

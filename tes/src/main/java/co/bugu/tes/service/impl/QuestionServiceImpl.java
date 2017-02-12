@@ -95,6 +95,7 @@ public class QuestionServiceImpl extends BaseServiceImpl<Question> implements IQ
         return JedisUtil.sinterForSize(keys);
     }
 
+
     @Override
     public PageInfo findByObject(Question record, Integer showCount, Integer curPage) throws Exception {
         PageInfo<Question> pageInfo = new PageInfo<Question>(showCount, curPage);

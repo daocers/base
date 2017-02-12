@@ -72,19 +72,19 @@ public class ExamController {
 
 
     /**
-     * 获取可参与的考试列表
+     * 获取参与的考试列表
+     * 根据传入的状态值来判断是获取已经开始的还是未开始，或者未作答
      * @return
      */
     @RequestMapping("/list")
-    public String list(){
-        Scene scene = new Scene();
+    public String list(Scene scene){
         scene.setStatus(0);
         List<Scene> sceneList = sceneService.findByObject(scene);
         for(Scene item: sceneList){
 //            if(item.get)
         }
 //        scene.
-        return null;
+        return "exam/list";
     }
 
 }

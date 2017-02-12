@@ -6,26 +6,55 @@ import co.bugu.tes.model.Scene;
 import co.bugu.tes.service.ISceneService;
 import co.bugu.framework.core.dao.BaseDao;
 import co.bugu.framework.core.dao.PageInfo;
+import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class SceneServiceImpl extends BaseServiceImpl<Scene> implements ISceneService {
 //    @Autowired
 //    BaseDao baseDao;
 //
-//    @Override
-//    public int save(Scene scene) {
-//        return baseDao.insert("tes.scene.insert", scene);
-//    }
-//
-//    @Override
-//    public int updateById(Scene scene) {
-//        return baseDao.update("tes.scene.updateById", scene);
-//    }
-//
+    @Override
+    public int save(Scene scene) {
+        baseDao.insert("tes.scene.insert", scene);
+        if(scene.getJoinUser() != null){
+            List<Integer> userList = JSON.parseArray(scene.getJoinUser(), Integer.class);
+            if(userList.size() > 0){
+                baseDao.delete("tes.scene.deleteSceneUserX", scene.getId());
+            }
+            Map<String, Integer> map = new HashMap<>();
+            map.put("sceneId", scene.getId());
+            for(Integer userId: userList){
+                map.put("userId", userId);
+                baseDao.insert("tes.scene.addSceneUserX", map);
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public int updateById(Scene scene) {
+        baseDao.update("tes.scene.updateById", scene);
+        if(scene.getJoinUser() != null){
+            List<Integer> userList = JSON.parseArray(scene.getJoinUser(), Integer.class);
+            if(userList.size() > 0){
+                baseDao.delete("tes.scene.deleteSceneUserX", scene.getId());
+            }
+            Map<String, Integer> map = new HashMap<>();
+            map.put("sceneId", scene.getId());
+            for(Integer userId: userList){
+                map.put("userId", userId);
+                baseDao.insert("tes.scene.addSceneUserX", map);
+            }
+        }
+        return 0;
+    }
+
 //    @Override
 //    public int saveOrUpdate(Scene scene) {
 //        if(scene.getId() == null){

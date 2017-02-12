@@ -261,5 +261,21 @@
         select
         <include refid="scene_list"/>
         from scene scene
+        <where>
+            <if test="joinUser != null">
+                scene.id in (select scene_id from scene_user_x where user_id = #{joinUser})
+            </if>
+            <if test="status != null">
+                and scene.status = #{status}
+            </if>
+        </where>
     </select>
+
+    <insert id="addSceneUserX" parameterType="Map">
+        insert into scene_user_x (scene_id, user_id) VALUES (#{sceneId}, #{userId})
+    </insert>
+
+    <insert id="deleteSceneUserX" parameterType="int">
+        delete from scene_user_x where scene_id = #{sceneId}
+    </insert>
 </mapper>

@@ -2,8 +2,10 @@ package co.bugu.tes.service;
 
 
 import co.bugu.framework.core.service.IBaseService;
+import co.bugu.framework.util.exception.TesException;
 import co.bugu.tes.model.Branch;
 import co.bugu.framework.core.dao.PageInfo;
+import co.bugu.tes.model.Scene;
 
 import java.util.List;
 
@@ -24,5 +26,5 @@ public interface IBranchService extends IBaseService<Branch>{
 //
 //    PageInfo listByObject(Branch branch, PageInfo<Branch> pageInfo) throws Exception;
 
-    void batchAdd(List<Branch> branchList);
+    void batchAdd(List<List<String>> data) throws TesException;
 }

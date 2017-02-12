@@ -59,8 +59,9 @@
                 <div class="form-group">
                     <label class="control-label col-md-2">上级机构</label>
                     <div class="col-md-4">
-                        <input type="hidden" name="superiorId" value="${branch.superiorId}">
-                        <input type="text" class="form-control" name="superiorName" value="${branch.superiorName}" readonly>
+                        <input type="hidden" name="superiorId">
+                        <input type="text" class="form-control" name="superiorName" value="${branch.superiorName}"
+                               readonly>
                         <span class="help-block"></span>
                     </div>
                     <button class="btn btn-warning" id="changeSuper">修改</button>
@@ -71,7 +72,7 @@
                         <select class="form-control level branchItem">
                             <option value="">请选择</option>
                             <c:forEach var="branch" items="${branchList}">
-                                <option value="${branch.id}">${branch.name}</option>
+                                <option value="${branch.id}" level="${branch.level}">${branch.name}</option>
                             </c:forEach>
                         </select>
                     </div>
@@ -102,8 +103,12 @@
                     <div class="col-md-10">
                         <select class="form-control" name="status">
                             <option value="">请选择</option>
-                            <option value="0" <c:if test="${branch.status == 0}">selected</c:if> >正常</option>
-                            <option value="1" <c:if test="${branch.status == 1}">selected</c:if> >禁用</option>
+                            <option value="0"
+                                    <c:if test="${branch.status == 0}">selected</c:if> >正常
+                            </option>
+                            <option value="1"
+                                    <c:if test="${branch.status == 1}">selected</c:if> >禁用
+                            </option>
                         </select>
                         <%--<input class="form-control" type="text" name="status" value="${branch.status}" required>--%>
                         <span class="help-block"></span>
@@ -132,10 +137,13 @@
             var $this = $(this);
             console.log("goods");
             var id = $(this).val();
+            var level = $(this).attr("level");
+            console.log("level: ", level);
             console.log("id: ", id);
             if (id != undefined && id != '') {
                 $("[name='superiorId']").val(id);
                 $("[name='superiorName']").val($this.find('option:selected').text());
+                $("[name='level']").val(parseInt($this.find('option:selected').attr("level")) + 1);
                 zeroModal.loading(3);
                 $.ajax({
                     url: 'listAll.do',
@@ -143,14 +151,17 @@
                     success: function (data) {
                         zeroModal.closeAll();
                         var branchList = JSON.parse(data);
-                        var html = '<select class="form-control level branchItem">' +
-                            '<option value="">请选择</option>';
-                        $.each(branchList, function (i, val) {
-                            html += '<option value="' + val.id + '">' + val.name + "</option>";
-                        })
-                        html += '</select>';
-                        $this.nextAll().remove();
-                        $this.after(html);
+                        if (branchList.length > 0) {
+                            var html = '<select class="form-control level branchItem">' +
+                                '<option value="">请选择</option>';
+                            $.each(branchList, function (i, val) {
+                                html += '<option level="' + val.level + '" value="' + val.id + '">' + val.name + "</option>";
+                            })
+                            html += '</select>';
+                            $this.nextAll().remove();
+                            $this.after(html);
+                        }
+
                     }
                 })
             }

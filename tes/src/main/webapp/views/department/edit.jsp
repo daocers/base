@@ -20,20 +20,14 @@
             <form class="form-horizontal" method="post" action="save.do" data-toggle="validator" role="form">
                 <input id="id" type="hidden" name="id" value="${department.id}">
 
-                <div class="form-group">
-                    <label class="control-label col-md-2">部门编码</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" name="code" value="${department.code}" >
-                        <span class="help-block with-errors">部门代号，建议英文、拼音或者首字母简称等，用于直观区分部门，可为空</span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-md-2">创建时间</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" name="createTime" value="${department.createTime}">
-                        <span class="help-block with-errors">提示信息</span>
-                    </div>
-                </div>
+
+                <%--<div class="form-group">--%>
+                    <%--<label class="control-label col-md-2">创建时间</label>--%>
+                    <%--<div class="col-md-10">--%>
+                        <%--<input class="form-control" type="text" name="createTime" value="${department.createTime}">--%>
+                        <%--<span class="help-block with-errors">提示信息</span>--%>
+                    <%--</div>--%>
+                <%--</div>--%>
                 <div class="form-group">
                     <label class="control-label col-md-2">部门名称</label>
                     <div class="col-md-10">
@@ -41,13 +35,15 @@
                         <span class="help-block with-errors"></span>
                     </div>
                 </div>
+
                 <div class="form-group">
-                    <label class="control-label col-md-2">状态</label>
+                    <label class="control-label col-md-2">部门编码</label>
                     <div class="col-md-10">
-                        <input class="form-control" type="text" name="status" value="${department.status}" required>
-                        <span class="help-block with-errors">可用/禁用等</span>
+                        <input class="form-control" type="text" name="code" value="${department.code}" >
+                        <span class="help-block with-errors">部门代号，建议英文、拼音或者首字母简称等，用于直观区分部门，可为空</span>
                     </div>
                 </div>
+
                 <div class="form-group">
                     <label class="control-label col-md-2">上级部门</label>
                     <div class="col-md-10">
@@ -59,6 +55,14 @@
                         </select>
                         <%--<input class="form-control" type="text" name="superiorId" value="${department.superiorId}">--%>
                         <span class="help-block with-errors">当前部门所属的上级部门，可为空，默认为顶级部门</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-2">状态</label>
+                    <div class="col-md-10">
+                        <input class="form-control" type="text" name="status" value="${department.status}" required>
+                        <span class="help-block with-errors">可用/禁用等</span>
                     </div>
                 </div>
                 <%--<div class="form-group">--%>

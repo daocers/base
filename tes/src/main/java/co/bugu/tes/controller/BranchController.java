@@ -4,6 +4,7 @@ import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.util.ExcelUtil;
 import co.bugu.framework.util.ExcelUtilNew;
 import co.bugu.framework.util.JsonUtil;
+import co.bugu.framework.util.exception.TesException;
 import co.bugu.tes.enums.BranchLevel;
 import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.Branch;
@@ -23,10 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller("/branchController/v1")
 @RequestMapping("/branch")
@@ -146,33 +144,23 @@ public class BranchController {
         }
     }
 
-//    @RequestMapping(value = "/batchAdd", method = RequestMethod.GET)
-//    public String batchAdd(){
-//        return "branch/batchAdd";
-//    }
-//
-//    @RequestMapping(value = "/batchAdd", method = RequestMethod.POST)
-//    public String upload(MultipartFile file, ModelMap modelMap, HttpServletRequest request){
-//        try{
-//            //导入之前需要先删除数据
-//            branchService.deleteAll();
-//
-//            String path = request.getSession().getServletContext().getRealPath("tmp");
-//            Date date = new Date();
-//            File tarFile = new File(path, date.getTime() + file.getOriginalFilename());
-//            tarFile.mkdirs();
-//            file.transferTo(tarFile);
-//
+    @RequestMapping("/batchAdd")
+    public String batchAdd(MultipartFile file, ModelMap model, RedirectAttributes redirectAttributes) {
+        try {
+            String fileName = file.getOriginalFilename();
+            File tarFile = new File(fileName);
+            file.transferTo(tarFile);
+            List<List<String>> data = ExcelUtilNew.getData(tarFile);
+            data.remove(0);
+            logger.error("数据： {}", data);
+            tarFile.delete();
+
+//            //            保存基本信息
 //            Map<String, Integer> codeIdInfo = new HashMap();
-//            List<List<String>> data = ExcelUtil.getData(tarFile.getAbsolutePath());
-//            tarFile.delete();//用完删除
-//            data.remove(0);
-//
-////            保存基本信息
 //            for(List<String> line: data){
-//                String name = line.get(0);
-//                String code = line.get(1);
-//                String address = line.get(2);
+//                String name = line.get(1);
+//                String code = line.get(0);
+//                String address = line.get(3);
 //                Date now = new Date();
 //                Branch branch = new Branch();
 //                branch.setAddress(address);
@@ -192,8 +180,8 @@ public class BranchController {
 //
 ////            保存级联关系
 //            for(List<String> line : data){
-//                String code = line.get(1);
-//                String superiorCode = line.get(3);
+//                String code = line.get(0);
+//                String superiorCode = line.get(2);
 //                Branch branch = new Branch();
 //                branch.setCode(code);
 //                branch.setId(codeIdInfo.get(code));
@@ -202,90 +190,7 @@ public class BranchController {
 //                branchService.updateById(branch);
 //
 //            }
-//        }catch (Exception e){
-//            logger.error("解析文件失败", e);
-//            modelMap.put("err", "解析文件失败");
-//        }
-//        return "redirect:list.do";
-//    }
-
-    /**
-     * 根据解析的excel获取对应的level
-     * @param data
-     * @return
-     */
-    private Map<String, Integer> getCodeLevelInfo(List<List<String>> data){
-        boolean flag = true;
-        Map<String, Integer> codeLevelInfo = new HashMap<>();
-        while(flag){
-            flag = false;
-            for(List<String> line: data){
-                String code = line.get(1);
-                String superiorCode = line.get(3);
-
-//                该code已经处理
-                if(codeLevelInfo.containsKey(code)){
-                    continue;
-                }
-
-                if(superiorCode.equals("")){
-                    codeLevelInfo.put(code, Constant.BRANCH_LEVEL_TOP);
-                    flag = true;
-                }
-
-                if(codeLevelInfo.containsKey(superiorCode)){
-                    codeLevelInfo.put(code, codeLevelInfo.get(superiorCode) + 1);
-                    flag = true;
-                }
-            }
-        }
-        return codeLevelInfo;
-    }
-
-    @RequestMapping("/batchAdd")
-    public String batchAdd(MultipartFile file, ModelMap model, RedirectAttributes redirectAttributes) {
-        try {
-            String fileName = file.getOriginalFilename();
-            File tarFile = new File(fileName);
-            file.transferTo(tarFile);
-            List<List<String>> data = ExcelUtilNew.getData(tarFile);
-            logger.error("数据： {}", data);
-            tarFile.delete();
-            //            保存基本信息
-            Map<String, Integer> codeIdInfo = new HashMap();
-            for(List<String> line: data){
-                String name = line.get(0);
-                String code = line.get(1);
-                String address = line.get(2);
-                Date now = new Date();
-                Branch branch = new Branch();
-                branch.setAddress(address);
-                branch.setCreateTime(now);
-                branch.setCode(code);
-                branch.setName(name);
-                branch.setUpdateTime(now);
-                branch.setLevel(Constant.BRANCH_LEVEL_TOP);
-                branch.setStatus(Constant.STATUS_ENABLE);
-                branchService.save(branch);
-
-                codeIdInfo.put(code, branch.getId());
-            }
-
-            //根据数据处理level信息
-            Map<String, Integer> codeLevelInfo = getCodeLevelInfo(data);
-
-//            保存级联关系
-            for(List<String> line : data){
-                String code = line.get(1);
-                String superiorCode = line.get(3);
-                Branch branch = new Branch();
-                branch.setCode(code);
-                branch.setId(codeIdInfo.get(code));
-                branch.setLevel(codeLevelInfo.get(code));
-                branch.setSuperiorId(codeIdInfo.get(superiorCode));
-                branchService.updateById(branch);
-
-            }
+            branchService.batchAdd(data);
 
         } catch (Exception e) {
             logger.error("批量导入数据失败", e);
@@ -299,9 +204,9 @@ public class BranchController {
     public void download(HttpServletRequest request, HttpServletResponse response) {
         try {
             String[] arrs = new String[]{"机构编码", "机构名称", "上级机构", "地址", "联系电话", "负责人"};
-            ExcelUtilNew.downloadModel(request, response, "用户模板", arrs);
+            ExcelUtilNew.downloadModel(request, response, "机构信息模板", arrs);
         } catch (Exception e) {
-            logger.error("下载用户模板失败", e);
+            logger.error("下载机构信息模板失败", e);
         }
     }
 }
