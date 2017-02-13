@@ -8,6 +8,7 @@ import co.bugu.framework.util.exception.TesException;
 import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.Question;
 import co.bugu.tes.service.IQuestionService;
+import co.bugu.tes.util.QuestionUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -78,21 +79,23 @@ public class QuestionServiceImpl extends BaseServiceImpl<Question> implements IQ
     }
 
     @Override
-    public Set<String> findQuestionByPropItemId(Integer questionMetaInfoId, Integer... ids) throws TesException{
-        String[] keys = new String[ids.length];
-        for(int i = 0; i < ids.length; i++){
-            keys[i] = Constant.QUESTION_PROPITEM_ID + questionMetaInfoId + "_"+ ids[i];
-        }
-        return JedisUtil.sinterForObj(keys);
+    public Set<String> findQuestionByPropItemId(Integer questionMetaInfoId, List<Integer> ids) throws TesException{
+//        String[] keys = new String[ids.length];
+//        for(int i = 0; i < ids.length; i++){
+//            keys[i] = Constant.QUESTION_PROPITEM_ID + questionMetaInfoId + "_"+ ids[i];
+//        }
+//        return JedisUtil.sinterForObj(keys);
+        return QuestionUtil.findQuestionByPropItemId(questionMetaInfoId, ids);
     }
 
     @Override
-    public int getCountByPropItemId(Integer questionMetaInfoId, Integer... ids) throws TesException {
-        String[] keys = new String[ids.length];
-        for(int i = 0; i < ids.length; i++){
-            keys[i] = Constant.QUESTION_PROPITEM_ID +questionMetaInfoId + "_" + ids[i];
-        }
-        return JedisUtil.sinterForSize(keys);
+    public int getCountByPropItemId(Integer questionMetaInfoId, List<Integer> ids) throws TesException {
+//        String[] keys = new String[ids.length];
+//        for(int i = 0; i < ids.length; i++){
+//            keys[i] = Constant.QUESTION_PROPITEM_ID +questionMetaInfoId + "_" + ids[i];
+//        }
+//        return JedisUtil.sinterForSize(keys);
+        return QuestionUtil.getCountByPropItemId(questionMetaInfoId, ids);
     }
 
 

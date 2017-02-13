@@ -29,7 +29,7 @@ public interface IQuestionService extends IBaseService<Question>{
 
     int batchAdd(List<Question> questionList);
 
-    Set<String> findQuestionByPropItemId(Integer questionMetaInfoId, Integer... ids) throws TesException;
+    Set<String> findQuestionByPropItemId(Integer questionMetaInfoId, List<Integer> ids) throws TesException;
 
-    int getCountByPropItemId(Integer questionMetaInfoId, Integer... ids) throws TesException;
+    int getCountByPropItemId(Integer questionMetaInfoId, List<Integer> ids) throws TesException;
 }

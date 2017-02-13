@@ -381,11 +381,11 @@ public class QuestionController {
 //                return res;
 //            }
             List<Integer> ids = JSON.parseArray(propId, Integer.class);
-            Integer[] keys = new Integer[ids.size()];
-            for(int i = 0; i < ids.size(); i++){
-                keys[i] = ids.get(i);
-            }
-            return questionService.getCountByPropItemId(metaId, keys) + "";
+//            Integer[] keys = new Integer[ids.size()];
+//            for(int i = 0; i < ids.size(); i++){
+//                keys[i] = ids.get(i);
+//            }
+            return questionService.getCountByPropItemId(metaId, ids) + "";
         }catch (Exception e){
             logger.error("获取指定属性的试题数量失败", e);
             return "-1";
