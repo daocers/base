@@ -81,10 +81,11 @@ public class PaperServiceImpl extends BaseServiceImpl<Paper> implements IPaperSe
         if(StringUtils.isEmpty(content)){
             throw new Exception("该试卷策略内容为空，请联系管理员确认!");
         }
-
-        List<Integer> paperQuesIdList = getPaperQuestionIds(scene);
+//抽取出题逻辑
+//        List<Integer> paperQuesIdList = getPaperQuestionIds(scene);
         List<Integer> paperQeustionIdList = new ArrayList<>();
         List<HashMap> infos = JSON.parseArray(content, HashMap.class);
+
 
         for (Integer userId : userIds) {
             for(Map map: infos){
@@ -137,6 +138,7 @@ public class PaperServiceImpl extends BaseServiceImpl<Paper> implements IPaperSe
      * @return
      */
     private List<Integer> getPaperQuestionIds(Scene scene) {
+        return null;
     }
 
 
