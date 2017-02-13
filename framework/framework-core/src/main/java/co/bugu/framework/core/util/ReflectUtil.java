@@ -1,5 +1,6 @@
 package co.bugu.framework.core.util;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.URL;
@@ -212,6 +214,44 @@ public class ReflectUtil {
                 }
             }
         }
+    }
 
+
+    /**
+     * 反射赋值
+     * @param object
+     * @param fieldName
+     * @param value
+     * @throws Exception
+     */
+    public static void setValue(Object object, String fieldName, Object value) throws Exception {
+        if(object == null){
+            throw new Exception("Object参数不能为null");
+        }
+        if(StringUtils.isEmpty(fieldName)){
+            throw new Exception("字段名称不能为空");
+        }
+        Field field = object.getClass().getDeclaredField(fieldName);
+        field.setAccessible(true);
+        field.set(object, value);
+    }
+
+    /**
+     * 获取对应字段的值
+     * @param object
+     * @param fieldName
+     * @return
+     * @throws Exception
+     */
+    public static Object get(Object object, String fieldName) throws Exception {
+        if(object == null){
+            throw new Exception("Object参数不能为null");
+        }
+        if(StringUtils.isEmpty(fieldName)){
+            throw new Exception("字段名称不能为空");
+        }
+        Field field = object.getClass().getDeclaredField(fieldName);
+        field.setAccessible(true);
+        return field.get(object);
     }
 }

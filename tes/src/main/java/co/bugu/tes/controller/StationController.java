@@ -1,6 +1,7 @@
 package co.bugu.tes.controller;
 
 import co.bugu.framework.core.dao.PageInfo;
+import co.bugu.framework.core.mybatis.ThreadLocalUtil;
 import co.bugu.framework.util.JsonUtil;
 import co.bugu.tes.model.Branch;
 import co.bugu.tes.model.Department;
@@ -18,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/station")
@@ -43,6 +46,10 @@ public class StationController {
     @RequestMapping(value = "/list")
     public String list(Station station, Integer curPage, Integer showCount, ModelMap model){
         try{
+            Map<String, Object> map = new HashMap<>();
+            map.put("EQ_code", "al");
+            ThreadLocalUtil.set(map);
+            station.setCode("pay");
             PageInfo<Station> pageInfo = new PageInfo<>(showCount, curPage);
             pageInfo = stationService.findByObject(station, pageInfo);
             model.put("pi", pageInfo);

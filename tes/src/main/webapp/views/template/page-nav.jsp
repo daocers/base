@@ -15,7 +15,7 @@
 <nav>
     <ul class="pagination">
         <c:if test="${pi.curPage == 1}">
-            <li class="disabled"><a class="disable"><span>上一页</span></a>
+            <li class="disabled active"><a class=""><span>上一页</span></a>
             </li>
         </c:if>
         <c:if test="${pi.curPage  > 1}">

@@ -1,5 +1,6 @@
 package co.bugu.tes.controller;
 
+import co.bugu.framework.core.mybatis.ThreadLocalUtil;
 import co.bugu.framework.util.ExcelUtilNew;
 import co.bugu.tes.enums.ExamStatus;
 import co.bugu.tes.enums.UserStatus;
@@ -27,10 +28,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping("/user")
@@ -60,6 +58,12 @@ public class UserController {
     @RequestMapping(value = "/list")
     public String list(User user, Integer curPage, Integer showCount, ModelMap model) {
         try {
+//            Map<String, Object> param = new HashMap<>();
+//            param.put("LK_username", "%allen%");
+//            param.put("EQ_status", 1);
+//            ThreadLocalUtil.set(param);
+//            user.setStatus(1);
+//            user.setUsername("%allen%");
             PageInfo<User> pageInfo = new PageInfo<>(showCount, curPage);
             pageInfo = userService.findByObject(user, pageInfo);
             model.put("pi", pageInfo);

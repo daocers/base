@@ -9,6 +9,9 @@
         <!--<typeAlias alias="Authority" type="co.bugu.tes.model.Authority"/>-->
     </typeAliases>
 
-    <!--<plugins>-->
-    <!--</plugins>-->
+    <plugins>
+        <plugin interceptor="co.bugu.framework.core.mybatis.SearchInterceptor">
+            <property name="method" value="find*"/>
+        </plugin>
+    </plugins>
 </configuration>

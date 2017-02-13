@@ -105,7 +105,7 @@ tbody > tr > td.cell-edit{
 .person-center{
     height: 32px;
     width: 32px;
-    background-image: url("/tes/assets/img/head-off.png");
+    /*background-image: url("/tes/assets/img/head-off.png");*/
     background-size: cover;
 }
 
@@ -143,5 +143,14 @@ select.show-count.form-control{
 }
 
 .row{
-    margin-bottom: 20px;
+    /*margin-bottom: 20px;*/
+}
+
+
+table.table > thead > tr > th{
+    border-bottom-color: #56b4ff;
+}
+
+.pre-table{
+    margin-bottom: 5px;
 }

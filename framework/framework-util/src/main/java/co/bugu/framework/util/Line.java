@@ -1,7 +1,5 @@
 package co.bugu.framework.util;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
-
 /**
  * Created by daocers on 2016/9/26.
  */

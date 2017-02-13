@@ -175,7 +175,7 @@
 
     <insert id="addToPropItem" parameterType="map">
         insert into question_propItem_x (question_id, property_item_id)
-        values (#{questionId}, #{propItemId});
+        values (#{questionId},#{propItemId});
     </insert>
 
     <delete id="removeFromPropItem" parameterType="int">
