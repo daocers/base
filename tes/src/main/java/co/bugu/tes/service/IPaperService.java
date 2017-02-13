@@ -25,12 +25,11 @@ public interface IPaperService extends IBaseService<Paper>{
 //    PageInfo listByObject(Paper paper, PageInfo<Paper> pageInfo) throws Exception;
 
     //开场生成所有试卷。 scene中包含所有的场次信息，包含出题策略，考试人员等信息。
-    boolean generateAllPaper(Scene scene);
+    boolean generateAllPaper(Scene scene) throws Exception;
 
     //适合为开场之前添加的考试用户出题，开场之后禁止添加用户
     boolean generatePaperForUser(Scene scene, User user);
 
-    //禁止考试。此时需要把用户从场次关联表中的状态改为禁用
-    boolean disabledUserOfScene(Scene scene, User user);
+
 
 }

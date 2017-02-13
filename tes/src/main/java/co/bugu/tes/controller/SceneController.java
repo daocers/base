@@ -164,7 +164,7 @@ public class SceneController {
     @RequestMapping(value = "/saveUser", method = RequestMethod.POST)
     @ResponseBody
     public String saveUserThenSelectPaperPolciy(Scene scene, String userInfos, RedirectAttributes redirectAttributes){
-        List<String> list =  JSON.parseArray(userInfos, String.class);
+        List<Integer> list =  JSON.parseArray(userInfos, Integer.class);
         if(list == null || list.size() == 0){
             redirectAttributes.addFlashAttribute("err", "请选择本场考试用户");
 //            return  "redirect:selectUser.do";

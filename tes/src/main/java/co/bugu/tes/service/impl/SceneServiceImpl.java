@@ -3,6 +3,7 @@ package co.bugu.tes.service.impl;
 
 import co.bugu.framework.core.service.impl.BaseServiceImpl;
 import co.bugu.tes.model.Scene;
+import co.bugu.tes.model.User;
 import co.bugu.tes.service.ISceneService;
 import co.bugu.framework.core.dao.BaseDao;
 import co.bugu.framework.core.dao.PageInfo;
@@ -116,5 +117,10 @@ public class SceneServiceImpl extends BaseServiceImpl<Scene> implements ISceneSe
         }
         return  pageInfo;
 
+    }
+
+    @Override
+    public boolean disabledUserOfScene(Scene scene, User user) {
+        return false;
     }
 }

@@ -3,11 +3,14 @@ package co.bugu.tes.service.impl;
 
 import co.bugu.framework.core.service.impl.BaseServiceImpl;
 import co.bugu.tes.model.Paper;
+import co.bugu.tes.model.PaperPolicy;
 import co.bugu.tes.model.Scene;
 import co.bugu.tes.model.User;
 import co.bugu.tes.service.IPaperService;
 import co.bugu.framework.core.dao.BaseDao;
 import co.bugu.framework.core.dao.PageInfo;
+import com.alibaba.fastjson.JSON;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,8 +61,28 @@ public class PaperServiceImpl extends BaseServiceImpl<Paper> implements IPaperSe
 //    }
 
     @Override
-    public boolean generateAllPaper(Scene scene) {
-        return false;
+    public boolean generateAllPaper(Scene scene) throws Exception {
+        if (scene.getId() == null) {
+            throw new Exception("场次编号不能为空");
+        }
+        scene = baseDao.selectOne("tes.scene.selectById", scene.getId());
+        if (scene == null) {
+            throw new Exception("未找到对应的场次信息");
+        }
+        String joinUser = scene.getJoinUser();
+        if (StringUtils.isEmpty(joinUser)) {
+            throw new Exception("该场次没有选择参考人员");
+        }
+        List<Integer> userIds = JSON.parseArray(joinUser, Integer.class);
+        Integer paperPolicyId = scene.getPaperPolicyId();
+        if(paperPolicyId == null){
+            throw new Exception("该场次没有选择试卷生成策略");
+        }
+        PaperPolicy paperPolicy = baseDao.selectOne("tes.paperPolicy.selectById", paperPolicyId);
+        for (Integer id : userIds) {
+
+        }
+        return true;
     }
 
     @Override
@@ -67,8 +90,4 @@ public class PaperServiceImpl extends BaseServiceImpl<Paper> implements IPaperSe
         return false;
     }
 
-    @Override
-    public boolean disabledUserOfScene(Scene scene, User user) {
-        return false;
-    }
 }
