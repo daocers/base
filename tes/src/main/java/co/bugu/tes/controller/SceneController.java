@@ -48,6 +48,9 @@ public class SceneController {
     IStationService stationService;
 
     @Autowired
+    IQuestionBankService bankService;
+
+    @Autowired
     IPaperPolicyService paperPolicyService;
 
     @Autowired
@@ -69,10 +72,10 @@ public class SceneController {
     public String list(Scene scene, Integer curPage, Integer showCount, ModelMap model, HttpServletRequest request){
         try{
             Integer userId = (Integer) BuguWebUtil.getUserId(request);
-            if(userId == null){
-                throw new TesException("用户信息获取异常");
-            }
-            scene.setJoinUser(userId + "");
+//            if(userId == null){
+//                throw new TesException("用户信息获取异常");
+//            }
+//            scene.setJoinUser(userId + "");
             PageInfo<Scene> pageInfo = new PageInfo<>(showCount, curPage);
             pageInfo = sceneService.findByObject(scene, pageInfo);
             model.put("pi", pageInfo);
@@ -182,13 +185,19 @@ public class SceneController {
     @RequestMapping(value = "/selectPolicy")
     public String toGenPaper(ModelMap model, Scene scene){
         scene = sceneService.findById(scene.getId());
+        if(scene.getPaperPolicyId() != null){
+            PaperPolicy paperPolicy = paperPolicyService.findById(scene.getPaperPolicyId());
+            model.put("policyName", paperPolicy.getName());
+        }
         model.put("scene", scene);
         List<Department> departmentList = departmentService.findByObject(null);
         List<Branch> branchList = branchService.findByObject(null);
         List<Station> stationList = stationService.findByObject(null);
+        List<QuestionBank> bankList = bankService.findByObject(null);
         model.put("departmentList", departmentList);
         model.put("branchList", branchList);
         model.put("stationList", stationList);
+        model.put("bankList", bankList);
         return "scene/selectPolicy";
     }
 

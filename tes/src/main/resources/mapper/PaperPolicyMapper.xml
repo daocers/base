@@ -2,38 +2,41 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="tes.paperPolicy">
     <resultMap id="PaperPolicyMap" type="co.bugu.tes.model.PaperPolicy">
-        <id column="paper_policy_id" property="id" jdbcType="INTEGER"/>
-        <result column="paper_policy_branch_id" property="branchId" jdbcType="INTEGER"/>
-        <result column="paper_policy_code" property="code" jdbcType="VARCHAR"/>
-        <result column="paper_policy_content" property="content" jdbcType="VARCHAR"/>
-        <result column="paper_policy_question_metainfo_id" property="questionMetaInfoId" jdbcType="VARCHAR"/>
-        <result column="paper_policy_create_time" property="createTime" jdbcType="TIMESTAMP"/>
-        <result column="paper_policy_create_user_id" property="createUserId" jdbcType="INTEGER"/>
-        <result column="paper_policy_department_id" property="departmentId" jdbcType="INTEGER"/>
-        <result column="paper_policy_name" property="name" jdbcType="VARCHAR"/>
-        <result column="paper_policy_station_id" property="stationId" jdbcType="INTEGER"/>
-        <result column="paper_policy_status" property="status" jdbcType="INTEGER"/>
-        <result column="paper_policy_update_time" property="updateTime" jdbcType="TIMESTAMP"/>
-        <result column="paper_policy_update_user_id" property="updateUserId" jdbcType="INTEGER"/>
-        <result column="paper_policy_privary_type" property="privaryType" jdbcType="INTEGER"/>
-        <result column="paper_policy_percentable" property="percentable" jdbcType="INTEGER"/>
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="branch_id" property="branchId" jdbcType="INTEGER"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="question_metainfo_id" property="questionMetaInfoId" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="create_user_id" property="createUserId" jdbcType="INTEGER"/>
+        <result column="department_id" property="departmentId" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="station_id" property="stationId" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="update_user_id" property="updateUserId" jdbcType="INTEGER"/>
+        <result column="privary_type" property="privaryType" jdbcType="INTEGER"/>
+        <result column="percentable" property="percentable" jdbcType="INTEGER"/>
+        <result column="select_type" property="selectType" jdbcType="INTEGER"/>
+        <result column="count" property="count" jdbcType="INTEGER"/>
+        <result column="score" property="score" jdbcType="DOUBLE"/>
     </resultMap>
     <sql id="paperPolicy_list">
-    paper_policy.id as paper_policy_id, paper_policy.branch_id as paper_policy_branch_id, 
-    paper_policy.code as paper_policy_code, paper_policy.content as paper_policy_content,
-    paper_policy.question_metainfo_id as paper_policy_question_metainfo_id,
-    paper_policy.create_time as paper_policy_create_time,
-    paper_policy.create_user_id as paper_policy_create_user_id, paper_policy.department_id as paper_policy_department_id, 
-    paper_policy.name as paper_policy_name, paper_policy.station_id as paper_policy_station_id, 
-    paper_policy.status as paper_policy_status, paper_policy.update_time as paper_policy_update_time, 
-    paper_policy.update_user_id as paper_policy_update_user_id, paper_policy.privary_type as paper_policy_privary_type,
-    paper_policy.percentable as paper_policy_percentable
+    id, branch_id,
+    code, content,
+    question_metainfo_id,
+    create_time,
+    create_user_id, department_id,
+    name, station_id, count, score,
+    status, update_time,
+    update_user_id, privary_type,
+    percentable, select_type
   </sql>
     <select id="selectById" resultMap="PaperPolicyMap" parameterType="java.lang.Integer">
         select
         <include refid="paperPolicy_list"/>
         from paper_policy paper_policy
-        where paper_policy.id = #{id,jdbcType=INTEGER}
+        where id = #{id,jdbcType=INTEGER}
     </select>
     <delete id="deleteById" parameterType="java.lang.Integer">
     delete from paper_policy
@@ -88,6 +91,15 @@
             <if test="percentable != null">
                 percentable,
             </if>
+            <if test="selectType != null">
+                select_type,
+            </if>
+            <if test="count != null">
+                count,
+            </if>
+            <if test="score != null">
+                score,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -135,6 +147,15 @@
             <if test="percentable != null">
                 #{percentable},
             </if>
+            <if test="selectType != null">
+                #{selectType},
+            </if>
+            <if test="count != null">
+                #{count},
+            </if>
+            <if test="score != null">
+                #{score},
+            </if>
         </trim>
     </insert>
     <update id="updateById" parameterType="co.bugu.tes.model.PaperPolicy">
@@ -181,6 +202,15 @@
             </if>
             <if test="percentable != null">
                 percentable = #{percentable},
+            </if>
+            <if test="selectType != null">
+                select_type = #{selectType},
+            </if>
+            <if test="count != null">
+                count = #{count},
+            </if>
+            <if test="score != null">
+                score = #{score},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}

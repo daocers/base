@@ -1,5 +1,6 @@
 package co.bugu.tes.controller;
 
+import co.bugu.tes.enums.PaperPolicyType;
 import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.*;
 import co.bugu.tes.service.IPaperPolicyService;
@@ -124,7 +125,6 @@ public class PaperPolicyController {
 //            User user = JedisUtil.getJson(Constant.USER_INFO_PREFIX + userId, User.class);
             if(user != null){
                 paperpolicy.setUpdateTime(new Date());
-                paperpolicy.setCreateTime(new Date());
                 paperpolicy.setCreateUserId(userId);
                 paperpolicy.setUpdateUserId(userId);
                 paperpolicy.setDepartmentId(user.getDepartmentId());
@@ -142,6 +142,7 @@ public class PaperPolicyController {
             }
             paperpolicy.setQuestionMetaInfoId(JSON.toJSONString(questionMetaInfoId));
             if(paperpolicy.getId() == null){
+                paperpolicy.setCreateTime(new Date());
                 paperpolicyService.save(paperpolicy);
             }else{
                 paperpolicyService.updateById(paperpolicy);
@@ -205,20 +206,35 @@ public class PaperPolicyController {
             JSONArray jsonArray = JSON.parseArray(content);
             for(int i = 0; i < jsonArray.size(); i++){
                 JSONObject data = (JSONObject) jsonArray.get(i);
-                Integer questionMetaInfoId = data.getInteger("questionMetaInfoId");
-                Integer questionPolicyId = data.getInteger("questionPolicyId");
-                double score = data.getShort("score");
-                QuestionMetaInfo questionMetaInfo = questionMetaInfoService.findById(questionMetaInfoId);
-                QuestionPolicy questionPolicy = questionPolicyService.findById(questionPolicyId);
-                stringBuilder.append(questionMetaInfo.getName())
-                        .append(": 试题策略 ")
-                        .append(questionPolicy.getName())
-                        .append(", ")
-                        .append("共 ")
-                        .append(questionPolicy.getCount())
-                        .append(" 题, 每题 ")
-                        .append(score)
-                        .append(" 分\n");
+                if(policy.getSelectType() == PaperPolicyType.POLICY.getType()){
+                    Integer questionMetaInfoId = data.getInteger("questionMetaInfoId");
+                    Integer questionPolicyId = data.getInteger("questionPolicyId");
+                    double score = data.getShort("score");
+                    QuestionMetaInfo questionMetaInfo = questionMetaInfoService.findById(questionMetaInfoId);
+                    QuestionPolicy questionPolicy = questionPolicyService.findById(questionPolicyId);
+                    stringBuilder.append(questionMetaInfo.getName())
+                            .append(": 试题策略 ")
+                            .append(questionPolicy.getName())
+                            .append(", ")
+                            .append("共 ")
+                            .append(questionPolicy.getCount())
+                            .append(" 题, 每题 ")
+                            .append(score)
+                            .append(" 分\n");
+                }else{
+                    Integer questionMetaInfoId = data.getInteger("questionMetaInfoId");
+                    Integer count = data.getInteger("count");
+                    double score = data.getShort("score");
+                    QuestionMetaInfo questionMetaInfo = questionMetaInfoService.findById(questionMetaInfoId);
+
+                    stringBuilder.append(questionMetaInfo.getName())
+                            .append(":共 ")
+                            .append(count)
+                            .append(" 题, 每题 ")
+                            .append(score)
+                            .append(" 分\n");
+                }
+
             }
             return stringBuilder.toString();
         }

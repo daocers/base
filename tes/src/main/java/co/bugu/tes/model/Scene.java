@@ -25,6 +25,8 @@ public class Scene {
 
     private Integer stationId;
 
+    private Integer bankId;
+
     private Integer duration;
 
     private Date endTime;
@@ -53,6 +55,14 @@ public class Scene {
 
     private User createUser;
     private User updateUser;
+
+    public Integer getBankId() {
+        return bankId;
+    }
+
+    public void setBankId(Integer bankId) {
+        this.bankId = bankId;
+    }
 
     public Department getDepartment() {
         return department;

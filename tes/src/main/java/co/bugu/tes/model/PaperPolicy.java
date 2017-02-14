@@ -1,6 +1,7 @@
 package co.bugu.tes.model;
 
 import java.util.Date;
+import java.util.List;
 
 public class PaperPolicy {
     private Integer id;
@@ -27,6 +28,15 @@ public class PaperPolicy {
 
     private Date updateTime;
 
+    private Integer count;
+
+//试卷总分
+    private Double score;
+    /**
+     * 选题方式 0 普通模式， 1 策略模式
+     */
+    private Integer selectType;
+
     /**
      * 保密类型， 0 公开， 1 保密
      */
@@ -36,9 +46,43 @@ public class PaperPolicy {
     private Integer updateUserId;
 
     /**
-     * 是否百分制
+     * 是否百分制 0 是， 1 否
      */
     private Integer percentable;
+    private List<QuestionPolicy> questionPolicyList;
+
+    public Double getScore() {
+        return score;
+    }
+
+    public void setScore(Double score) {
+        this.score = score;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
+    }
+
+    public Integer getSelectType() {
+        return selectType;
+    }
+
+    public void setSelectType(Integer selectType) {
+        this.selectType = selectType;
+    }
+
+    public List<QuestionPolicy> getQuestionPolicyList() {
+        return questionPolicyList;
+    }
+
+    public void setQuestionPolicyList(List<QuestionPolicy> questionPolicyList) {
+        this.questionPolicyList = questionPolicyList;
+    }
+
 
     public Integer getPercentable() {
         return percentable;

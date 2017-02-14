@@ -2,6 +2,8 @@ package co.bugu.tes.service.impl;
 
 
 import co.bugu.framework.core.service.impl.BaseServiceImpl;
+import co.bugu.tes.enums.PaperPolicyType;
+import co.bugu.tes.enums.PaperType;
 import co.bugu.tes.model.*;
 import co.bugu.tes.service.IPaperService;
 import co.bugu.framework.core.dao.BaseDao;
@@ -16,48 +18,6 @@ import java.util.*;
 
 @Service
 public class PaperServiceImpl extends BaseServiceImpl<Paper> implements IPaperService {
-//    @Autowired
-//    BaseDao baseDao;
-//
-//    @Override
-//    public int save(Paper paper) {
-//        return baseDao.insert("tes.paper.insert", paper);
-//    }
-//
-//    @Override
-//    public int updateById(Paper paper) {
-//        return baseDao.update("tes.paper.updateById", paper);
-//    }
-//
-//    @Override
-//    public int saveOrUpdate(Paper paper) {
-//        if(paper.getId() == null){
-//            return baseDao.insert("tes.paper.insert", paper);
-//        }else{
-//            return baseDao.update("tes.paper.updateById", paper);
-//        }
-//    }
-//
-//    @Override
-//    public int delete(Paper paper) {
-//        return baseDao.delete("tes.paper.deleteById", paper);
-//    }
-//
-//    @Override
-//    public Paper findById(Integer id) {
-//        return baseDao.selectOne("tes.paper.selectById", id);
-//    }
-//
-//    @Override
-//    public List<Paper> findAllByObject(Paper paper) {
-//        return baseDao.selectList("tes.paper.listByObject", paper);
-//    }
-//
-//    @Override
-//    public PageInfo listByObject(Paper paper, PageInfo<Paper> pageInfo) throws Exception {
-//        return baseDao.listByObject("tes.paper.listByObject", paper, pageInfo);
-//    }
-
     @Override
     public boolean generateAllPaper(Scene scene) throws Exception {
         if (scene.getId() == null) {
@@ -73,72 +33,124 @@ public class PaperServiceImpl extends BaseServiceImpl<Paper> implements IPaperSe
         }
         List<Integer> userIds = JSON.parseArray(joinUser, Integer.class);
         Integer paperPolicyId = scene.getPaperPolicyId();
-        if(paperPolicyId == null){
+        if (paperPolicyId == null) {
             throw new Exception("该场次没有选择试卷生成策略");
         }
         PaperPolicy paperPolicy = baseDao.selectOne("tes.paperPolicy.selectById", paperPolicyId);
         String content = paperPolicy.getContent();
-        if(StringUtils.isEmpty(content)){
+        if (StringUtils.isEmpty(content)) {
             throw new Exception("该试卷策略内容为空，请联系管理员确认!");
         }
-//抽取出题逻辑
-//        List<Integer> paperQuesIdList = getPaperQuestionIds(scene);
+//        获取paperpolicy，并连带获取关联的questionpolicy
         List<Integer> paperQeustionIdList = new ArrayList<>();
         List<HashMap> infos = JSON.parseArray(content, HashMap.class);
 
-
-        for (Integer userId : userIds) {
-            for(Map map: infos){
-                Integer questionMetaInfoId = Integer.parseInt(map.get("questionMetaInfoId").toString());
+//        策略模式，需要将关联的试题策略查询出来
+        if(paperPolicy.getSelectType() == PaperPolicyType.POLICY.getType()){
+            List<QuestionPolicy> questionPolicyList = new ArrayList<>();
+            for (Map map : infos) {
                 Integer questionPolicyId = Integer.parseInt(map.get("questionPolicyId").toString());
-                Double score = Double.parseDouble(map.get("score").toString());
                 QuestionPolicy questionPolicy = baseDao.selectOne("tes.questionPolicy.selectById", questionPolicyId);
-                if(questionPolicy == null){
-                    throw new Exception("试题策略不能为空。");
-                }
-                String quesContent = questionPolicy.getContent();
-                if(StringUtils.isEmpty(quesContent)){
-                    throw new Exception("试题策略内容不能为空");
-                }
-                List<Integer> propertyIds = JSON.parseArray(quesContent, Integer.class);
-                Integer count = questionPolicy.getCount();
-                Integer existCount = QuestionUtil.getCountByPropItemId(questionMetaInfoId, propertyIds);
-                if(existCount < count){
-                    throw new Exception("试题数量不足");
-                }
-                Set<String> questionIds = QuestionUtil.findQuestionByPropItemId(questionMetaInfoId, propertyIds);
-                List<Integer> quesIdList = new ArrayList<>();
-                for(String id: questionIds){
-                    quesIdList.add(Integer.parseInt(id));
-                }
-
-                paperQeustionIdList.addAll(QuestionUtil.getResult(quesIdList, count));
-                Paper paper = new Paper();
-                paper.setUserId(userId);
-                paper.setAnswerFlag(1);
-                paper.setSceneId(scene.getId());
-                paper.setStatus(0);
-                baseDao.insert("tes.paper.insert", paper);
-                int index = 0;
-                for(Integer questionId: paperQeustionIdList){
-                    Map<String, Integer> param = new HashMap<>();
-                    param.put("paperId", paper.getId());
-                    param.put("questionId", questionId);
-                    param.put("idx", index++);
-                    baseDao.insert("tes.paper.addQues", param);
-                }
+                questionPolicyList.add(questionPolicy);
             }
+            paperPolicy.setQuestionPolicyList(questionPolicyList);
+        }
+
+
+        if (scene.getPaperType() == PaperType.UNIFY.getType()) {
+            //统一试卷，每个人试题一致
+            List<Integer> resQuesIds = getPaperQuestionIds(paperPolicy);
+            for (Integer userId : userIds) {
+                savePaper(userId, scene.getId(), resQuesIds);
+            }
+        } else if (scene.getPaperType() == PaperType.RANDOM.getType()) {
+            //每个人都随机，都不一样
+            for (Integer userId : userIds) {
+                List<Integer> resQuesIds = getPaperQuestionIds(paperPolicy);
+                savePaper(userId, scene.getId(), resQuesIds);
+            }
+        } else if (scene.getPaperType() == PaperType.IMPORT.getType()) {
+            //教师导入试题
+//            暂未开通，后续添加
+        } else if (scene.getPaperType() == PaperType.DEEPRANDOM.getType()) {
+            //深度随机，只设置需要的试题数量，随机生成试卷
+        } else if (scene.getPaperType() == PaperType.DEEPUNIFY.getType()) {
+//            深度统一，只设置需要的试题数量，随机生成试卷，每个用户统一
         }
         return true;
     }
 
     /**
+     * 保存单个用户的试卷
+     *
+     * @param userId
+     * @param sceneId
+     * @param paperQuestionIdList
+     */
+    private void savePaper(Integer userId, Integer sceneId, List<Integer> paperQuestionIdList) {
+        Paper paper = new Paper();
+        paper.setUserId(userId);
+        paper.setAnswerFlag(1);
+        paper.setSceneId(sceneId);
+        paper.setStatus(0);
+        baseDao.insert("tes.paper.insert", paper);
+        int index = 0;
+        for (Integer questionId : paperQuestionIdList) {
+            Map<String, Integer> param = new HashMap<>();
+            param.put("paperId", paper.getId());
+            param.put("questionId", questionId);
+            param.put("idx", index++);
+            baseDao.insert("tes.paper.addQues", param);
+        }
+    }
+
+    /**
      * 获取最终的试卷试题
-     * @param scene
+     *
+     * @param paperPolicy
      * @return
      */
-    private List<Integer> getPaperQuestionIds(Scene scene) {
-        return null;
+    private List<Integer> getPaperQuestionIds(PaperPolicy paperPolicy) throws Exception {
+        List<Integer> res = new ArrayList<>();
+        //策略模式
+        if(paperPolicy.getSelectType() == PaperPolicyType.POLICY.getType()){
+            List<QuestionPolicy> questionPolicyList = paperPolicy.getQuestionPolicyList();
+            if (questionPolicyList == null || questionPolicyList.size() == 0) {
+                throw new Exception("试题策略不能为空");
+            }
+            for (QuestionPolicy questionPolicy : questionPolicyList) {
+                String quesContent = questionPolicy.getContent();
+                if (StringUtils.isEmpty(quesContent)) {
+                    throw new Exception("试题策略内容不能为空");
+                }
+
+//            int数组，最后一个元素是该属性组合的所选试题数量，前面的为试题属性组合
+                List<Integer> propertyIds = JSON.parseArray(quesContent, Integer.class);
+                Integer count = propertyIds.remove(propertyIds.size() - 1);
+                Integer existCount = QuestionUtil.getCountByPropItemId(questionPolicy.getQuestionMetaInfoId(), propertyIds);
+                if (existCount < count) {
+                    throw new Exception("试题数量不足");
+                }
+                Set<String> questionIds = QuestionUtil.findQuestionByPropItemId(questionPolicy.getQuestionMetaInfoId(), propertyIds);
+                List<Integer> quesIdList = new ArrayList<>();
+                for (String id : questionIds) {
+                    quesIdList.add(Integer.parseInt(id));
+                }
+
+                res.addAll(QuestionUtil.getResult(quesIdList, count));
+            }
+        }else{//普通模式
+            String content = paperPolicy.getContent();
+            List<Map> info = JSON.parseArray(content, Map.class);
+            for(Map<String, String> map: info){
+                Integer questionMetaInfoId = Integer.parseInt(map.get("questionMetaInfoId"));
+                Integer count = Integer.parseInt(map.get("count"));
+                Double score = Double.valueOf(map.get("score"));
+                res.addAll(QuestionUtil.getResultByQuesMetaId(questionMetaInfoId, count));
+            }
+        }
+
+        return res;
     }
 
 

@@ -53,23 +53,28 @@ public class QuestionUtil {
     /**
      * 根据数量获取最终的试题id组合
      * @param questionIdList
-     * @param count
+     * @param count  需要选择的数量
      * @return
      */
-    public static Set<Integer> getResult(List<Integer> questionIdList, Integer count) {
-        Integer max = questionIdList.size();
-        Set<Integer> res = new HashSet<>();
-        if(count == questionIdList.size()){
-            Collections.shuffle(questionIdList);
-            for(Integer id: questionIdList){
-                res.add(id);
-            }
-            return res;
+    public static Set<Integer> getResult(List<Integer> questionIdList, Integer count) throws Exception {
+        if(count > questionIdList.size()){
+            throw new Exception("需要选择的数量大于试题集合的数量");
         }
-        Random random = new Random();
-        while(res.size() < count){
-            res.add(questionIdList.get(random.nextInt(max)));
+        Set<Integer> res = new HashSet<>();
+        Collections.shuffle(questionIdList);
+        for(int i = 0; i < count; i++){
+            res.add(questionIdList.get(i));
         }
         return res;
+    }
+
+    /**
+     * 根据试题类型随机获取一定数量的试题
+     * @param questionMetaInfoId  试题类型id
+     * @param count 需要的数量
+     * @return
+     */
+    public static List<Integer> getResultByQuesMetaId(Integer questionMetaInfoId, Integer count) {
+        return null;
     }
 }

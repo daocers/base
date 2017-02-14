@@ -1,9 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="../template/header.jsp" %>
 <html>
 <head>
     <meta charset="utf-8">
     <title>生成试卷</title>
+    <%@ include file="../template/header.jsp" %>
 </head>
 <body>
 <div class="container">
@@ -19,7 +19,15 @@
         <div class="col-md-8">
             <form class="form-horizontal" method="post" action="savePolicy.do" data-toggle="validator" role="form">
                 <input id="id" type="hidden" name="id" value="${scene.id}">
-
+                <div class="form-group form-inline">
+                    <label class="control-label" style="margin-right: 15px;">选择题库</label>
+                    <select class="form-control" name="bankId">
+                        <option value="">不限</option>
+                        <c:forEach items="${bankList}" var="bank">
+                            <option value="${bank.id}" <c:if test="${scene.bankId == bank.id}">selected</c:if>>${bank.name}</option>
+                        </c:forEach>
+                    </select>
+                </div>
                 <div class="form-group form-inline">
                     <label class="control-label">部门</label>
                     <select class="form-control" id="departmentId">
@@ -43,7 +51,8 @@
                         </c:forEach>
                     </select>
                     <button class="btn btn-info" type="button" onclick="javascript:search();">查询</button>
-                    <span style="margin-left: 30px; padding-bottom: 5px; margin-bottom: 5px;">没有合适策略？<a href="/paperpolicy/edit.do">去添加</a> </span>
+                    <span style="margin-left: 30px; padding-bottom: 5px; margin-bottom: 5px;">没有合适策略？<a
+                            href="/paperpolicy/edit.do">去添加</a> </span>
                 </div>
 
                 <div class="" style="min-height: 300px;">
@@ -84,10 +93,11 @@
             <div class="input-group">
                 <div class="input-group-addon">已选策略</div>
                 <input id="paperPolicyId" value="${scene.paperPolicyId}" type="hidden"/>
-                <input id="policy" class="form-control" readonly value="${scene.paperPolicyId}" type="text">
+                <input id="policy" class="form-control" readonly value="${policyName}" type="text">
             </div>
             <div class="form-group">
-                <textarea id="content" class="form-control" rows="10" readonly style="background-color: beige"> </textarea>
+                <textarea id="content" class="form-control" rows="10" readonly
+                          style="background-color: beige"> </textarea>
             </div>
         </div>
 
@@ -142,10 +152,10 @@
             }
         })
     }
-    
+
     $(function () {
         $("table").on("click", "input[type='checkbox']", function () {
-            if($(this).is(":checked")){
+            if ($(this).is(":checked")) {
                 $("#policy").val($(this).parentsUntil("tr").next().text());
                 var paperPolicyId = $(this).val();
                 $.ajax({
@@ -168,7 +178,7 @@
          * @type {*}
          */
         var paperPolicyId = $("#paperPolicyId").val();
-        if(paperPolicyId){
+        if (paperPolicyId) {
             $.ajax({
                 url: "/paperpolicy/getPolicyInfo.do",
                 data: {id: paperPolicyId},
