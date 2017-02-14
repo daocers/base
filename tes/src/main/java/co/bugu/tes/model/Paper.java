@@ -19,6 +19,16 @@ public class Paper {
 
     private Integer userId;
 
+    private String questionIds;
+
+    public String getQuestionIds() {
+        return questionIds;
+    }
+
+    public void setQuestionIds(String questionIds) {
+        this.questionIds = questionIds;
+    }
+
     public Integer getId() {
         return id;
     }

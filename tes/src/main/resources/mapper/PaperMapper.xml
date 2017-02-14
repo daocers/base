@@ -2,19 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="tes.paper">
     <resultMap id="PaperMap" type="co.bugu.tes.model.Paper">
-        <id column="paper_id" property="id" jdbcType="INTEGER"/>
-        <result column="paper_answer_flag" property="answerFlag" jdbcType="INTEGER"/>
-        <result column="paper_begin_time" property="beginTime" jdbcType="TIMESTAMP"/>
-        <result column="paper_end_time" property="endTime" jdbcType="TIMESTAMP"/>
-        <result column="paper_mark" property="mark" jdbcType="VARCHAR"/>
-        <result column="paper_scene_id" property="sceneId" jdbcType="INTEGER"/>
-        <result column="paper_status" property="status" jdbcType="INTEGER"/>
-        <result column="paper_user_id" property="userId" jdbcType="INTEGER"/>
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="answer_flag" property="answerFlag" jdbcType="INTEGER"/>
+        <result column="begin_time" property="beginTime" jdbcType="TIMESTAMP"/>
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP"/>
+        <result column="mark" property="mark" jdbcType="VARCHAR"/>
+        <result column="scene_id" property="sceneId" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="question_ids" property="questionIds" jdbcType="CLOB"/>
     </resultMap>
     <sql id="paper_list">
-    paper.id as paper_id, paper.answer_flag as paper_answer_flag, paper.begin_time as paper_begin_time, 
-    paper.end_time as paper_end_time, paper.mark as paper_mark, paper.scene_id as paper_scene_id, 
-    paper.status as paper_status, paper.user_id as paper_user_id
+    id, answer_flag, begin_time, end_time, mark, scene_id, status, user_id, question_ids
   </sql>
     <select id="selectById" resultMap="PaperMap" parameterType="java.lang.Integer">
         select
@@ -54,6 +53,9 @@
             <if test="userId != null">
                 user_id,
             </if>
+            <if test="questionIds != null">
+                question_ids,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -79,6 +81,9 @@
             </if>
             <if test="userId != null">
                 #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="questionIds != null">
+                #{questionIds},
             </if>
         </trim>
     </insert>
@@ -106,6 +111,9 @@
             <if test="userId != null">
                 user_id = #{userId,jdbcType=INTEGER},
             </if>
+            <if test="questionIds != null">
+                question_ids = #{questionIds},
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
@@ -116,9 +124,13 @@
         <include refid="paper_list"/>
         from paper paper
     </select>
-    
+
     <insert id="addQues" parameterType="map">
         insert into paper_question_x (paper_id, question_id, questions_idx)
         values (#{paperId}, #{questionId}, #{idx})
     </insert>
+
+    <update id="addAnswer" parameterMap="map">
+        update paper_question_x set answer = #{answer} where paper_id = #{paperId} and question_id = #{questionId}
+    </update>
 </mapper>

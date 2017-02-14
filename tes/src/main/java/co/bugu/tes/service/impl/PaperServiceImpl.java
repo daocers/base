@@ -59,14 +59,14 @@ public class PaperServiceImpl extends BaseServiceImpl<Paper> implements IPaperSe
 
         if (scene.getPaperType() == PaperType.UNIFY.getType()) {
             //统一试卷，每个人试题一致
-            List<Integer> resQuesIds = getPaperQuestionIds(paperPolicy);
+            List<Integer> resQuesIds = getPaperQuestionIds(scene.getBankId(), paperPolicy);
             for (Integer userId : userIds) {
                 savePaper(userId, scene.getId(), resQuesIds);
             }
         } else if (scene.getPaperType() == PaperType.RANDOM.getType()) {
             //每个人都随机，都不一样
             for (Integer userId : userIds) {
-                List<Integer> resQuesIds = getPaperQuestionIds(paperPolicy);
+                List<Integer> resQuesIds = getPaperQuestionIds(scene.getBankId(), paperPolicy);
                 savePaper(userId, scene.getId(), resQuesIds);
             }
         } else if (scene.getPaperType() == PaperType.IMPORT.getType()) {
@@ -93,6 +93,7 @@ public class PaperServiceImpl extends BaseServiceImpl<Paper> implements IPaperSe
         paper.setAnswerFlag(1);
         paper.setSceneId(sceneId);
         paper.setStatus(0);
+        paper.setQuestionIds(JSON.toJSONString(paperQuestionIdList));
         baseDao.insert("tes.paper.insert", paper);
         int index = 0;
         for (Integer questionId : paperQuestionIdList) {
@@ -107,10 +108,11 @@ public class PaperServiceImpl extends BaseServiceImpl<Paper> implements IPaperSe
     /**
      * 获取最终的试卷试题
      *
+     * @param  bankId  题库，如果为空，表示从所有题库中随机选择
      * @param paperPolicy
      * @return
      */
-    private List<Integer> getPaperQuestionIds(PaperPolicy paperPolicy) throws Exception {
+    private List<Integer> getPaperQuestionIds(Integer bankId, PaperPolicy paperPolicy) throws Exception {
         List<Integer> res = new ArrayList<>();
         //策略模式
         if(paperPolicy.getSelectType() == PaperPolicyType.POLICY.getType()){

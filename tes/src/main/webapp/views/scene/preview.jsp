@@ -5,19 +5,19 @@
     <meta charset="utf-8">
     <title>场次信息预览</title>
     <style type="text/css">
-        /*.preview tbody.table tr th{*/
-            /*width: 60px;*/
-            /*min-width: 60px;*/
+        /*.preview tbody.table tr td{*/
+        /*widtd: 60px;*/
+        /*min-widtd: 60px;*/
         /*}*/
         /*.preview tbody.table tr td{*/
-            /*width: 120px;*/
-            /*min-width: 120px;*/
+        /*widtd: 120px;*/
+        /*min-widtd: 120px;*/
         /*}*/
     </style>
 </head>
 <body>
 <div class="container">
-    <div class="row nav-path">
+    <div class="row nav-patd">
         <ol class="breadcrumb">
             <li><a href="#">首页</a></li>
             <li><a href="#">场次管理</a></li>
@@ -27,84 +27,71 @@
     <input type="hidden" value="${type}" id="type">
     <div class="row">
         <div class="col-md-8">
-            <form action="confirm.do" method="post">
+            <form action="confirm.do" metdod="post">
                 <input type="hidden" id="id" name="id" value="${scene.id}">
                 <table class="table table-responsive table-bordered preview">
-                    <thead>
-                    场次信息预览
-                    </thead>
+                    <thead>基本信息</thead>
                     <tbody>
                     <tr>
-                        <th class="col-md-2">名称</th>
+                        <td class="col-md-2">名称</td>
                         <td class="col-md-4">${scene.name}</td>
-                        <th class="col-md-2">编号</th>
+                        <td class="col-md-2">编号</td>
                         <td class="col-md-4">${scene.code}</td>
                     </tr>
                     <tr>
-                        <th>授权码</th>
-                        <td>${scene.authCode}</td>
-                        <th></th>
-                        <td></td>
+                        <td>开始时间</td>
+                        <td><fmt:formatDate value="${scene.beginTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+                        <td>结束时间</td>
+                        <td><fmt:formatDate value="${scene.endTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
                     </tr>
                     <tr>
-                        <th>开始时间</th>
-                        <td><fmt:formatDate value="${scene.beginTime}" pattern="yyyy-MM-dd HH:mm:ss"/> </td>
-                        <th>结束时间</th>
-                        <td><fmt:formatDate value="${scene.endTime}" pattern="yyyy-MM-dd HH:mm:ss"/> </td>
-                    </tr>
-                    <tr>
-                        <th>顺延时间（分）</th>
+                        <td>顺延时间（分）</td>
                         <td>${scene.delay}</td>
-                        <th>考试时长（分）</th>
+                        <td>考试时长（分）</td>
                         <td>${scene.duration}</td>
                     </tr>
                     <tr>
-                        <th>开场用户</th>
-                        <td>${scene.createUserId}</td>
-                        <th>创建时间</th>
-                        <td><fmt:formatDate value="${scene.createTime}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate> </td>
+                        <td>授权码</td>
+                        <td>${scene.authCode}</td>
+                        <td>是否允许换卷</td>
+                        <td>${scene.changePaper == 0 ? "是" : "否"}</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <table class="table table-responsive table-bordered preview">
+                    <thead>
+                    试卷策略信息
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="col-md-2">策略名称</td>
+                        <td colspan="3">${scene.paperPolicyId}</td>
                     </tr>
                     <tr>
-                        <th>更新用户</th>
-                        <td>${scene.updateUserId}</td>
-                        <th>更新时间</th>
-                        <td><fmt:formatDate value="${scene.updateTime}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate> </td>
+                        <td class="col-md-2">题量</td>
+                        <td class="col-md-4">${paperPolicy.count}</td>
+                        <td class="col-md-2">总分</td>
+                        <td class="col-md-4">${paperPolicy.score}</td>
                     </tr>
                     <tr>
-                        <th>试卷类型</th>
-                        <td>${scene.paperType}</td>
-                        <th>试卷策略</th>
-                        <td>${scene.paperPolicyId}</td>
-                    </tr>
-                    <tr>
-                        <th>策略详情</th>
+                        <td class="col-md-2">策略明细</td>
                         <td colspan="3">${policyInfo}</td>
-                    </tr>
-                    <tr>
-                        <th>所属机构</th>
-                        <td>${scene.branchId}</td>
-                        <th>所属部门</th>
-                        <td>${scene.departmentId}</td>
-                    </tr>
-                    <tr>
-                        <th>岗位</th>
-                        <td>${scene.stationId}</td>
-                        <th></th>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <th>参考人员</th>
-                        <td colspan="3">${scene.joinUser}</td>
-                        <!--<th></th>-->
-                        <!--<td></td>-->
-                    </tr>
-                    <tr>
-                        <td></td>
                     </tr>
                     </tbody>
 
+                </table>
+
+                <table class="table table-responsive table-bordered preview">
+                    <thead>参考人员</thead>
+                    <tbody>
+                    <tr>
+                        <td colspan="4">${scene.joinUser == null ? "尚未选择参考人员" : scene.joinUser}</td>
+                    </tr>
+                    </tbody>
 
                 </table>
+
                 <div class="row">
                     <button type="button" class="btn btn-warning">取消</button>
                     <button type="submit" class="btn btn-success">确定,开场</button>
