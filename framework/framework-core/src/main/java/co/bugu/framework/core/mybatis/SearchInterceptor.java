@@ -193,16 +193,20 @@ public class SearchInterceptor implements Interceptor {
                 res = "!=";
             }
             if("LT".equals(relation)){
-                res = "<![CDATA[<]]>";
+//                res = "<![CDATA[<]]>";
+                res = "<";
             }
             if("LTE".equals(relation)){
-                res = "<![CDATA[<=]]>";
+//                res = "<![CDATA[<=]]>";
+                res = "<=";
             }
             if("GT".equals(relation)){
-                res = "<![CDATA[>]]>";
+//                res = "<![CDATA[>]]>";
+                res = ">";
             }
             if("GTE".equals(relation)){
-                res = "<![CDATA[>=]]>";
+//                res = "<![CDATA[>=]]>";
+                res = ">=";
             }
             if("IN".equals(relation)){
                 res = "in";

@@ -1,5 +1,6 @@
 package co.bugu.framework.core.util;
 
+import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -232,6 +233,7 @@ public class ReflectUtil {
             throw new Exception("字段名称不能为空");
         }
         Field field = object.getClass().getDeclaredField(fieldName);
+//        Object finalVal = ConvertUtils.convert(value, field.getType());
         field.setAccessible(true);
         field.set(object, value);
     }
