@@ -22,6 +22,16 @@
         </div>
     </div>
 
+    <div class="row param-search">
+        <form class="form form-inline" action="list.do">
+            <label class="control-label">名称</label>
+            <input name="LK_name" value="${param.LK_name}" class="form-control">
+            <label class="control-label">编码</label>
+            <input name="EQ_code" value="${param.EQ_code}" class="form-control">
+            <button class="btn btn-info">查询</button>
+        </form>
+    </div>
+
     <div class="row pre-table">
         <div class="pull-right">
             <jsp:include page="../template/page-nav.jsp"/>

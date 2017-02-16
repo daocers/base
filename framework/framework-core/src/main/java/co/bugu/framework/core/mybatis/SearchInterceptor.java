@@ -32,6 +32,7 @@ public class SearchInterceptor implements Interceptor {
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
+        Long begin = System.currentTimeMillis();
         Map<String, Object> searchParameter = ThreadLocalUtil.get();
 //        没有额外的查询参数
         if (searchParameter == null) {
@@ -132,6 +133,10 @@ public class SearchInterceptor implements Interceptor {
             }else{
 //                不需要处理sql语句
             }
+
+            long end = System.currentTimeMillis();
+
+            logger.debug("执行时长：{}毫秒", end - begin);
             // 将执行权交给下一个拦截器
             return invocation.proceed();
         } else if (invocation.getTarget() instanceof ResultSetHandler) {

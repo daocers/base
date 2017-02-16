@@ -130,7 +130,7 @@
         values (#{paperId}, #{questionId}, #{idx})
     </insert>
 
-    <update id="addAnswer" parameterMap="map">
+    <update id="addAnswer" parameterType="map">
         update paper_question_x set answer = #{answer} where paper_id = #{paperId} and question_id = #{questionId}
     </update>
 </mapper>
