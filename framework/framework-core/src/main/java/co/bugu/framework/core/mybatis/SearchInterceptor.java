@@ -134,6 +134,10 @@ public class SearchInterceptor implements Interceptor {
 //                不需要处理sql语句
             }
 
+            /**
+             * 清除掉查询参数，防止对后续请求造成干扰
+             */
+            ThreadLocalUtil.remove();
             long end = System.currentTimeMillis();
 
             logger.debug("执行时长：{}毫秒", end - begin);
