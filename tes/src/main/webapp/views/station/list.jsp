@@ -29,9 +29,9 @@
             <label class="control-label">编码</label>
             <input name="EQ_code" value="${param.EQ_code}" class="form-control">
             <label class="control-label">id</label>
-            <input name="EQ_id" value="${param.EQ_id}" class="form-control">
+            <input name="EQ_id_desc_0" value="${param.EQ_id_desc_0}" class="form-control">
             <label class="control-label">创建时间</label>
-            <input name="GT_createTime" value="${param.GT_createTime}" class="form-control time">
+            <input name="GT_createTime_asc_1" value="${param.GT_createTime_asc_1}" class="form-control time">
 
             <button class="btn btn-info">查询</button>
         </form>

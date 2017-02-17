@@ -48,3 +48,11 @@ Paper getPaper(Scene scene, User user);
 
 
 
+查询参数：
+格式：EQ_name_(desc, asc)_(sortOrder)  圆括号内的数据为可选，需要排序时候，在查询前调用
+SearchParamUtil.processSearchParam(station, request);处理查询参数，如果页面传来的
+查询数据无法满足要求，可以按照以上规则添加。
+目前可查询的关系有：EQ(=), NEQ(!=), LT(<), GT(>), LTE(<=), GTE(>=),IN(包含)
+
+
+

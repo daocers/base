@@ -79,21 +79,46 @@ public class SearchInterceptor implements Interceptor {
                     newSql = sql;
                 }
 
+                Map<String, String> sortTypeMap = new HashMap<>();
+                Map<Integer, String> sortIndexMap = new TreeMap<>();
                 List<SqlNode> ifNodes = new ArrayList<>();
                 Iterator<String> iterator = searchParameter.keySet().iterator();
                 while(iterator.hasNext()){
                     String key = iterator.next();
-//                添加where子句
-                    if(key.contains("_")){
-                        String relation = key.split("_")[0];
-                        String property = key.split("_")[1];
+                    Object value = searchParameter.get(key);
 
+                    if(key.contains("_")){//需要进行筛选的参数，处理where子句
+                        String[] keyInfo = key.split("_");
+                        String relation = keyInfo[0];
+                        String property = keyInfo[1];
                         String column = resultMappingInfo.get(type).get(property);
-//                        whereNodes.add(new TextSqlNode(processRelation(relation, column, property)));
+                        String orderType = null;
+                        Integer orderIndex = null;
+                        if(keyInfo.length > 2){
+                            orderType = keyInfo[2].toUpperCase();
+                        }
+                        if(keyInfo.length > 3){
+                            try{
+                                orderIndex = Integer.parseInt(keyInfo[3]);
+                            }catch (NumberFormatException e){
+                                logger.error("查询参数有误，错误查询参数名为：{}", key);
+                            }
+                        }
+                        if(StringUtils.isNotEmpty(orderType)){
+                            sortTypeMap.put(column, orderType);
+                        }
+                        if(orderIndex != null){
+                            sortIndexMap.put(orderIndex, column);
+                        }
 
-                        StaticTextSqlNode staticTextSqlNode = new StaticTextSqlNode(processRelation(relation, column, property));
-                        IfSqlNode ifSqlNode = new IfSqlNode(staticTextSqlNode, property + " != null");
-                        ifNodes.add(ifSqlNode);
+                        // 参数不为空，处理筛选
+                        if(value != null){
+                            StaticTextSqlNode staticTextSqlNode = new StaticTextSqlNode(processRelation(relation, column, property));
+                            IfSqlNode ifSqlNode = new IfSqlNode(staticTextSqlNode, property + " != null");
+                            ifNodes.add(ifSqlNode);
+                        }else{
+//                            参数为空，只处理排序，不作筛选
+                        }
                     }else{
 //                    不添加where子句，直接修改sql语句
                         if("SQL".equals(key)){
@@ -106,18 +131,20 @@ public class SearchInterceptor implements Interceptor {
                     }
                 }
 
-
                 DynamicContext dynamicContext = new DynamicContext(mappedStatement.getConfiguration(), parameterObject);
 
                 List<SqlNode> content = new ArrayList<>();
-
                 if(sqlMode){//直接修改sql语句模式
                     content.add(new StaticTextSqlNode(sql));
                 }else{//添加查询参数模式
                     content.add(new StaticTextSqlNode(newSql));
                     content.add(new WhereSqlNode(mappedStatement.getConfiguration(), new MixedSqlNode(ifNodes)));
                 }
-
+//              计算排序sql
+                String orderSQL = getOrderSQL(sortTypeMap, sortIndexMap);
+                if(StringUtils.isNotEmpty(orderSQL)){
+                    content.add(new StaticTextSqlNode(orderSQL));
+                }
 //                content.add(new StaticTextSqlNode(ifNodes.size() > 0 ? " and " + whereFrag: whereFrag));
                 MixedSqlNode mixedSqlNode = new MixedSqlNode(content);
                 mixedSqlNode.apply(dynamicContext);
@@ -126,9 +153,6 @@ public class SearchInterceptor implements Interceptor {
 
                 //动态修改
                 DynamicSqlSource dynamicSqlSource = new DynamicSqlSource(mappedStatement.getConfiguration(), mixedSqlNode);
-//                Field sqlSource = mappedStatement.getClass().getDeclaredField("sqlSource");
-//                sqlSource.setAccessible(true);
-//                sqlSource.set(mappedStatement, dynamicSqlSource);
                 ReflectUtil.setValue(mappedStatement, "sqlSource", dynamicSqlSource);
             }else{
 //                不需要处理sql语句
@@ -148,6 +172,44 @@ public class SearchInterceptor implements Interceptor {
             return result;
         }
         return invocation.proceed();
+    }
+
+    /**
+     * 获取排序sql语句段
+     * @param sortTypeMap
+     * @param sortIndexMap
+     * @return
+     */
+    private String getOrderSQL(Map<String, String> sortTypeMap, Map<Integer, String> sortIndexMap) {
+        String resSQL = "";
+        if(sortIndexMap == null || sortIndexMap.size() == 0){
+            return "";
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+//        先遍历有排序先后信息的
+        for(Map.Entry<Integer, String> entry: sortIndexMap.entrySet()){
+            Integer index = entry.getKey();
+            String column = entry.getValue();
+            String orderType = sortTypeMap.get(column);
+            stringBuilder.append(column)
+                    .append(" ")
+                    .append(orderType)
+                    .append(",");
+            sortTypeMap.remove(column);
+        }
+//        没有指定排序先后顺序的，不处理
+        for(Map.Entry<String, String> entry: sortTypeMap.entrySet()){
+            String column = entry.getKey();
+            String orderType = entry.getValue();
+            stringBuilder.append(column)
+                    .append(" ")
+                    .append(orderType)
+                    .append(",");
+        }
+        if(stringBuilder.length() > 0){
+            resSQL = " order by " + stringBuilder.substring(0, stringBuilder.length() - 1);
+        }
+        return resSQL;
     }
 
     /**

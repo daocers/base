@@ -23,14 +23,14 @@ public class SearchParamUtil {
 
     private static Map<String, ThreadLocal<SimpleDateFormat>> formatMap = new HashMap<>();
 
-    private static SimpleDateFormat getSimpleDateFormat(final String pattern){
+    private static SimpleDateFormat getSimpleDateFormat(final String pattern) {
         ThreadLocal<SimpleDateFormat> threadLocal = formatMap.get(pattern);
 
 //        此处使用双重判断和同步是为了防止formatMap这个单例被多次put重复的sdf
-        if(threadLocal == null){
-            synchronized (lockObj){
+        if (threadLocal == null) {
+            synchronized (lockObj) {
                 threadLocal = formatMap.get(pattern);
-                if(threadLocal == null){
+                if (threadLocal == null) {
 //                    只有map中没有这个pattern的sdf才会放入map
                     threadLocal = new ThreadLocal<>();
                     threadLocal.set(new SimpleDateFormat(pattern));
@@ -99,45 +99,50 @@ public class SearchParamUtil {
      * 处理查询参数，用于mybatis拦截处理
      * 1 获取查询参数，处理成map类型，将map放在threadlocal中
      * 2 将查询参数的值赋值到查询参数实体中。
+     *
      * @param obj
      * @param request
      */
-    public static void processSearchParam(Object obj, HttpServletRequest request) throws Exception {
-        if(obj == null){
+    public static Map<String, Object> processSearchParam(Object obj, HttpServletRequest request) throws Exception {
+        if (obj == null) {
             throw new Exception("参数类型不能为空");
         }
         Map<String, Object> searchParam = new HashMap<>();
         Map<String, String[]> param = request.getParameterMap();
         Iterator<Map.Entry<String, String[]>> iterator = param.entrySet().iterator();
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             Map.Entry<String, String[]> entry = iterator.next();
             String key = entry.getKey();
             String[] val = entry.getValue();
-            if(val.length == 1 && val[0].equals("")){
+            //没有传值，会传来一个空字符串
+            if (val.length == 1 && val[0].equals("")) {
+                searchParam.put(key, null);
                 continue;
             }
-            if(key.contains("_")){
+            if (key.contains("_")) {
                 String value = null;
                 String fieldName = key.split("_")[1];
-                if(val.length == 0){
+
+                if (val.length == 0) {
                     continue;
-                }else if(val.length == 1){
+                } else if (val.length == 1) {
                     value = val[0];
                     searchParam.put(key, value);
-                }else{
+                } else {
                     //多个参数，暂时不作处理
                 }
                 Class type = obj.getClass().getDeclaredField(fieldName).getType();
                 Object finalVal = null;
-                if(type == Date.class){
+                if (type == Date.class) {
                     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                     finalVal = format.parse(value);
-                }else{
+                } else {
                     finalVal = ConvertUtils.convert(value, type);
                 }
                 ReflectUtil.setValue(obj, fieldName, finalVal);
             }
         }
         ThreadLocalUtil.set(searchParam);
+        return searchParam;
     }
 }
