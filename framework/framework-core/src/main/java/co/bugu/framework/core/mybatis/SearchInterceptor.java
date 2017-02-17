@@ -79,6 +79,10 @@ public class SearchInterceptor implements Interceptor {
                     newSql = sql;
                 }
 
+                if(newSql.toLowerCase().contains("order by")){
+                    newSql = newSql.substring(0, newSql.toLowerCase().indexOf("order by"));
+                }
+
                 Map<String, String> sortTypeMap = new HashMap<>();
                 Map<Integer, String> sortIndexMap = new TreeMap<>();
                 List<SqlNode> ifNodes = new ArrayList<>();
