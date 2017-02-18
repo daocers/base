@@ -1,14 +1,17 @@
 package co.bugu.tes.controller;
 
 import co.bugu.framework.core.dao.PageInfo;
+import co.bugu.framework.core.mybatis.SearchParamUtil;
 import co.bugu.framework.core.mybatis.ThreadLocalUtil;
 import co.bugu.framework.util.JsonUtil;
 import co.bugu.tes.model.Branch;
 import co.bugu.tes.model.Department;
+import co.bugu.tes.model.Page;
 import co.bugu.tes.model.Station;
 import co.bugu.tes.service.IBranchService;
 import co.bugu.tes.service.IDepartmentService;
 import co.bugu.tes.service.IStationService;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -44,12 +48,17 @@ public class StationController {
     * @return
     */
     @RequestMapping(value = "/list")
-    public String list(Station station, Integer curPage, Integer showCount, ModelMap model){
+    public String list(Station station, Integer curPage, Integer showCount, ModelMap model, HttpServletRequest request){
         try{
-            Map<String, Object> map = new HashMap<>();
-            map.put("EQ_code", "al");
-            ThreadLocalUtil.set(map);
-            station.setCode("pay");
+            SearchParamUtil.processSearchParam(station, request);
+//            String code = request.getParameter("EQ_code");
+//            if(StringUtils.isNotEmpty(code)){
+//                Map<String, Object> map = new HashMap<>();
+//                map.put("EQ_code", request.getParameter("EQ_code"));
+//                ThreadLocalUtil.set(map);
+//                station.setCode(code);
+//            }
+
             PageInfo<Station> pageInfo = new PageInfo<>(showCount, curPage);
             pageInfo = stationService.findByObject(station, pageInfo);
             model.put("pi", pageInfo);

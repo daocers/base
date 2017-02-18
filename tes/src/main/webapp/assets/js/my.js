@@ -14,10 +14,6 @@ $(function () {
     });
 })
 
-$(function () {
-
-})
-
 /**
  * 如果查看详情，禁用掉所有的 按钮和输入框
  */
@@ -30,7 +26,8 @@ $(function () {
     });
 
     $(".time").flatpickr({
-        dataFormat: 'yyyy-mm-dd HH:ii:SS',
+        // dataFormat: 'yyyy-mm-dd HH:ii:SS',
+        dataFormat: 'yyyy-mm-dd HH:ii',
         enableTime: true,
         enableSeconds: true,
         minuteIncrement: 1,
@@ -81,7 +78,8 @@ jQuery.fn.extend({
     },
     setTime: function (time) {
         $(this).flatpickr({
-            dataFormat: 'yyyy-mm-dd HH:ii:SS',
+            // dataFormat: 'yyyy-mm-dd HH:ii:SS',
+            dataFormat: 'yyyy-mm-dd HH:ii',
             enableTime: true,
             enableSeconds: true,
             defaultDate: time

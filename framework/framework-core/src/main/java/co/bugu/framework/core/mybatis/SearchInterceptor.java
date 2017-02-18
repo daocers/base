@@ -32,6 +32,7 @@ public class SearchInterceptor implements Interceptor {
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
+        Long begin = System.currentTimeMillis();
         Map<String, Object> searchParameter = ThreadLocalUtil.get();
 //        没有额外的查询参数
         if (searchParameter == null) {
@@ -132,6 +133,14 @@ public class SearchInterceptor implements Interceptor {
             }else{
 //                不需要处理sql语句
             }
+
+            /**
+             * 清除掉查询参数，防止对后续请求造成干扰
+             */
+            ThreadLocalUtil.remove();
+            long end = System.currentTimeMillis();
+
+            logger.debug("执行时长：{}毫秒", end - begin);
             // 将执行权交给下一个拦截器
             return invocation.proceed();
         } else if (invocation.getTarget() instanceof ResultSetHandler) {
@@ -188,16 +197,20 @@ public class SearchInterceptor implements Interceptor {
                 res = "!=";
             }
             if("LT".equals(relation)){
-                res = "<![CDATA[<]]>";
+//                res = "<![CDATA[<]]>";
+                res = "<";
             }
             if("LTE".equals(relation)){
-                res = "<![CDATA[<=]]>";
+//                res = "<![CDATA[<=]]>";
+                res = "<=";
             }
             if("GT".equals(relation)){
-                res = "<![CDATA[>]]>";
+//                res = "<![CDATA[>]]>";
+                res = ">";
             }
             if("GTE".equals(relation)){
-                res = "<![CDATA[>=]]>";
+//                res = "<![CDATA[>=]]>";
+                res = ">=";
             }
             if("IN".equals(relation)){
                 res = "in";
