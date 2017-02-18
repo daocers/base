@@ -30,9 +30,9 @@
 
     <script src="../assets/js/eModal.js"></script>
     
-    <script src="../assets/js/bootstrap-datetimepicker.min.js"></script>
+    <%--<script src="../assets/js/bootstrap-datetimepicker.min.js"></script>--%>
     <%--<script src="../assets/js/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>--%>
-    <link href="../assets/css/bootstrap-datetimepicker.min.css" rel="stylesheet" >
+    <%--<link href="../assets/css/bootstrap-datetimepicker.min.css" rel="stylesheet" >--%>
 
     <%--<link href="../assets/css/kacha.css" rel="stylesheet">--%>
 
