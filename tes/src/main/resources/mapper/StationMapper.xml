@@ -12,9 +12,8 @@
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="station_list" >
-    station.id as id, station.branch_id as branch_id, station.code as code,
-    station.create_time as create_time, station.department_id as department_id,
-    station.description as description, station.name as name, station.update_time as update_time
+    id, branch_id, code, create_time, department_id,
+    description, name, update_time
   </sql>
   <select id="selectById" resultMap="StationMap" parameterType="java.lang.Integer" >
     select 
@@ -111,7 +110,7 @@
   </update>
   
 
-<select id="findByObject" resultMap="StationMap" parameterType="co.bugu.tes.model.Station" >
+<select id="findByObject" resultMap="StationMap" parameterType="co.bugu.tes.model.Station" useCache="false" flushCache="true">
     select 
     <include refid="station_list" />
     from station station

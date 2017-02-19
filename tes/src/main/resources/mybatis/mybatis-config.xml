@@ -10,7 +10,7 @@
     </typeAliases>
 
     <plugins>
-        <plugin interceptor="co.bugu.framework.core.mybatis.SearchInterceptor">
+        <plugin interceptor="co.bugu.framework.core.mybatis.SqlParamInterceptor">
             <property name="method" value="find*"/>
         </plugin>
     </plugins>
