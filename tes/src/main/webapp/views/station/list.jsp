@@ -23,7 +23,7 @@
     </div>
 
     <div class="row param-search">
-        <form class="form form-inline" action="list.do">
+        <form class="form form-inline" action="list.do" method="post">
             <label class="control-label">名称</label>
             <input name="LK_name" value="${param.LK_name}" class="form-control">
             <label class="control-label">编码</label>

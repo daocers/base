@@ -50,6 +50,9 @@ public class SqlParamInterceptor implements Interceptor {
             ReflectUtil.setValue(parameterHandler, "boundSql", targetSqlSource.getBoundSql(paramObj));
 
             ThreadLocalUtil.remove();
+            long end = System.currentTimeMillis();
+            logger.debug("ParameterHandler 执行时长：{}毫秒", end - begin);
+
 
         }
         if (target instanceof ResultSetHandler) {
@@ -92,8 +95,7 @@ public class SqlParamInterceptor implements Interceptor {
              */
             long end = System.currentTimeMillis();
 
-            logger.debug("执行时长：{}毫秒", end - begin);
-
+            logger.debug("StatementHandler 执行时长：{}毫秒", end - begin);
         }
         logger.debug("intercept 拦截： {}", invocation);
         return invocation.proceed();
