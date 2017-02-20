@@ -42,13 +42,17 @@
 
 
     <!--拦截所有请求-->
-    <!--<mvc:interceptors>-->
-        <!--<mvc:interceptor>-->
-            <!--<mvc:mapping path="/*/*.do"/>-->
-            <!--<mvc:exclude-mapping path="/auth/**"/>-->
-            <!--<bean class="co.bugu.sso.interceptor.AuthInterceptor"/>-->
-        <!--</mvc:interceptor>-->
-    <!--</mvc:interceptors>-->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/"/>
+            <mvc:mapping path="/*/*.do"/>
+            <mvc:exclude-mapping path="/index/login.do"/>
+            <mvc:exclude-mapping path="/index/logout.do"/>
+            <mvc:exclude-mapping path="/index/toRegister.do"/>
+            <mvc:exclude-mapping path="/index/register.do"/>
+            <bean class="co.bugu.tes.interceptor.AuthInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
 
     <!--<mvc:interceptors>-->
         <!--<mvc:interceptor>-->
