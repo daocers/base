@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="tes.questionMetaInfo">
     <resultMap id="QuestionMetaInfoMap" type="co.bugu.tes.model.QuestionMetaInfo">
-        <id column="ques_meta_id" property="id" jdbcType="INTEGER"/>
-        <result column="ques_meta_code" property="code" jdbcType="VARCHAR"/>
-        <result column="ques_meta_description" property="description" jdbcType="VARCHAR"/>
-        <result column="ques_meta_name" property="name" jdbcType="VARCHAR"/>
-        <result column="ques_meta_status" property="status" jdbcType="INTEGER"/>
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
         <collection property="propertyList" ofType="co.bugu.tes.model.Property" resultMap="PropertyMap"/>
     </resultMap>
 
@@ -31,8 +31,7 @@
     </resultMap>
 
     <sql id="questionMetaInfo_list">
-    ques_meta.id as ques_meta_id, ques_meta.code as ques_meta_code, ques_meta.description as ques_meta_description,
-    ques_meta.name as ques_meta_name, ques_meta.status as ques_meta_status
+    id, code, description, name, status
   </sql>
 
 

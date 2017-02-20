@@ -2,23 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="tes.trade" >
   <resultMap id="TradeMap" type="co.bugu.tes.model.Trade" >
-    <id column="trade_id" property="id" jdbcType="INTEGER" />
-    <result column="trade_branch_id" property="branchId" jdbcType="INTEGER" />
-    <result column="trade_code" property="code" jdbcType="VARCHAR" />
-    <result column="trade_create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="trade_create_user_id" property="createUserId" jdbcType="INTEGER" />
-    <result column="trade_department_id" property="departmentId" jdbcType="INTEGER" />
-    <result column="trade_name" property="name" jdbcType="VARCHAR" />
-    <result column="trade_station_id" property="stationId" jdbcType="INTEGER" />
-    <result column="trade_status" property="status" jdbcType="INTEGER" />
-    <result column="trade_update_time" property="updateTime" jdbcType="TIMESTAMP" />
-    <result column="trade_update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="branch_id" property="branchId" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="department_id" property="departmentId" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="station_id" property="stationId" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
   </resultMap>
   <sql id="trade_list" >
-    trade.id as trade_id, trade.branch_id as trade_branch_id, trade.code as trade_code, 
-    trade.create_time as trade_create_time, trade.create_user_id as trade_create_user_id, 
-    trade.department_id as trade_department_id, trade.name as trade_name, trade.station_id as trade_station_id, 
-    trade.status as trade_status, trade.update_time as trade_update_time, trade.update_user_id as trade_update_user_id
+    id, branch_id, code, create_time, create_user_id, department_id, name, station_id,
+    status, update_time, update_user_id
   </sql>
   <select id="selectById" resultMap="TradeMap" parameterType="java.lang.Integer" >
     select 

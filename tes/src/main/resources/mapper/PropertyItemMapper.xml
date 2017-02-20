@@ -2,18 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="tes.propertyItem" >
   <resultMap id="PropertyItemMap" type="co.bugu.tes.model.PropertyItem" >
-    <id column="prop_item_id" property="id" jdbcType="INTEGER" />
-    <result column="prop_item_code" property="code" jdbcType="VARCHAR" />
-    <result column="prop_item_idx" property="idx" jdbcType="INTEGER" />
-    <result column="prop_item_name" property="name" jdbcType="VARCHAR" />
-    <result column="prop_item_property_id" property="propertyId" jdbcType="INTEGER" />
-    <result column="prop_item_value" property="value" jdbcType="VARCHAR" />
-    <result column="prop_item_items_idx" property="itemsIdx" jdbcType="INTEGER" />
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="idx" property="idx" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="property_id" property="propertyId" jdbcType="INTEGER" />
+    <result column="value" property="value" jdbcType="VARCHAR" />
+    <result column="items_idx" property="itemsIdx" jdbcType="INTEGER" />
   </resultMap>
   <sql id="propertyItem_list" >
-    prop_item.id as prop_item_id, prop_item.code as prop_item_code, prop_item.idx as prop_item_idx, 
-    prop_item.name as prop_item_name, prop_item.property_id as prop_item_property_id,
-    prop_item.value as prop_item_value, prop_item.items_idx as prop_item_items_idx
+    id, code, idx,  name, property_id, value, items_idx
   </sql>
   <select id="selectById" resultMap="PropertyItemMap" parameterType="java.lang.Integer" >
     select 

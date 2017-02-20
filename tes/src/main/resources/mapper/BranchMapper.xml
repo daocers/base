@@ -2,20 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="tes.branch">
     <resultMap id="BranchMap" type="co.bugu.tes.model.Branch">
-        <id column="branch_id" property="id" jdbcType="INTEGER"/>
-        <result column="branch_address" property="address" jdbcType="VARCHAR"/>
-        <result column="branch_code" property="code" jdbcType="VARCHAR"/>
-        <result column="branch_create_time" property="createTime" jdbcType="TIMESTAMP"/>
-        <result column="branch_level" property="level" jdbcType="INTEGER"/>
-        <result column="branch_name" property="name" jdbcType="VARCHAR"/>
-        <result column="branch_status" property="status" jdbcType="INTEGER"/>
-        <result column="branch_superior_id" property="superiorId" jdbcType="INTEGER"/>
-        <result column="branch_update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="level" property="level" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="superior_id" property="superiorId" jdbcType="INTEGER"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
     </resultMap>
     <sql id="branch_list">
-    branch.id as branch_id, branch.address as branch_address, branch.code as branch_code, 
-    branch.create_time as branch_create_time, branch.level as branch_level, branch.name as branch_name, 
-    branch.status as branch_status, branch.superior_id as branch_superior_id, branch.update_time as branch_update_time
+    id, address, code, create_time, level, name, status, superior_id, update_time
     </sql>
     <select id="selectById" resultMap="BranchMap" parameterType="java.lang.Integer">
         select

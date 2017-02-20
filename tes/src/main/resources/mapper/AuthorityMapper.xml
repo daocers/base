@@ -2,26 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="tes.authority">
     <resultMap id="AuthorityMap" type="co.bugu.tes.model.Authority">
-        <id column="auth_id" property="id" jdbcType="INTEGER"/>
-        <result column="auth_action" property="action" jdbcType="VARCHAR"/>
-        <result column="auth_controller" property="controller" jdbcType="VARCHAR"/>
-        <result column="auth_description" property="description" jdbcType="VARCHAR"/>
-        <result column="auth_name" property="name" jdbcType="VARCHAR"/>
-        <result column="auth_param" property="param" jdbcType="VARCHAR"/>
-        <result column="auth_status" property="status" jdbcType="INTEGER"/>
-        <result column="auth_superior_id" property="superiorId" jdbcType="INTEGER"/>
-        <result column="auth_type" property="type" jdbcType="INTEGER"/>
-        <result column="auth_url" property="url" jdbcType="VARCHAR"/>
-        <result column="auth_accept_method" property="acceptMethod" jdbcType="VARCHAR"/>
-        <result column="auth_is_api" property="isApi" jdbcType="INTEGER"/>
-        <result column="auth_idx" property="idx" jdbcType="INTEGER"/>
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="action" property="action" jdbcType="VARCHAR"/>
+        <result column="controller" property="controller" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="param" property="param" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="superior_id" property="superiorId" jdbcType="INTEGER"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="url" property="url" jdbcType="VARCHAR"/>
+        <result column="accept_method" property="acceptMethod" jdbcType="VARCHAR"/>
+        <result column="is_api" property="isApi" jdbcType="INTEGER"/>
+        <result column="idx" property="idx" jdbcType="INTEGER"/>
     </resultMap>
     <sql id="authority_list">
-    auth.id as auth_id, auth.action as auth_action, auth.controller as auth_controller, 
-    auth.description as auth_description, auth.name as auth_name, auth.param as auth_param, 
-    auth.status as auth_status, auth.superior_id as auth_superior_id, auth.type as auth_type, 
-    auth.url as auth_url, auth.accept_method as auth_accept_method, auth.is_api as auth_is_api,
-    auth.idx as auth_idx
+    id, action, controller, description, name, param, status, superior_id, type,
+    url, accept_method, is_api, idx
   </sql>
     <select id="selectById" resultMap="AuthorityMap" parameterType="java.lang.Integer">
         select

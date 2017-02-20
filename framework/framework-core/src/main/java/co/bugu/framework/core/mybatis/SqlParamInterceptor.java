@@ -89,7 +89,6 @@ public class SqlParamInterceptor implements Interceptor {
 
             SqlSource dynamicSqlSource = getTargetDynamicSqlSource(mappedStatement, boundSql, searchParameter);
             ReflectUtil.setValue(boundSql, "sql", dynamicSqlSource.getBoundSql(paramObj).getSql());
-
             /**
              * 清除掉查询参数，防止对后续请求造成干扰
              */

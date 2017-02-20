@@ -2,12 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="tes.property">
     <resultMap id="PropertyMap" type="co.bugu.tes.model.Property">
-        <id column="property_id" property="id" jdbcType="INTEGER"/>
-        <result column="property_code" property="code" jdbcType="VARCHAR"/>
-        <result column="property_description" property="description" jdbcType="VARCHAR"/>
-        <result column="property_idx" property="idx" jdbcType="INTEGER"/>
-        <result column="property_name" property="name" jdbcType="VARCHAR"/>
-        <result column="property_status" property="status" jdbcType="INTEGER"/>
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="idx" property="idx" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
         <collection property="propertyItemList" ofType="co.bugu.tes.model.PropertyItem" resultMap="PropertyItemMap"/>
     </resultMap>
 
@@ -26,8 +26,7 @@
     prop_item.value as prop_item_value, prop_item.items_idx as prop_item_items_idx
   </sql>
     <sql id="property_list">
-    property.id as property_id, property.code as property_code, property.description as property_description, 
-    property.idx as property_idx, property.name as property_name, property.status as property_status
+    id, code, description, idx, name, status
   </sql>
     <select id="selectById" resultMap="PropertyMap" parameterType="java.lang.Integer">
         select

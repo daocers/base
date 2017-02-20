@@ -2,18 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="tes.record" >
   <resultMap id="RecordMap" type="co.bugu.tes.model.Record" >
-    <id column="record_id" property="id" jdbcType="INTEGER" />
-    <result column="record_answer" property="answer" jdbcType="VARCHAR" />
-    <result column="record_paper_id" property="paperId" jdbcType="INTEGER" />
-    <result column="record_question_id" property="questionId" jdbcType="INTEGER" />
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="answer" property="answer" jdbcType="VARCHAR" />
+    <result column="paper_id" property="paperId" jdbcType="INTEGER" />
+    <result column="question_id" property="questionId" jdbcType="INTEGER" />
   </resultMap>
   <sql id="record_list" >
-    record.id as record_id, record.answer as record_answer, record.paper_id as record_paper_id, 
-    record.question_id as record_question_id
+    id, answer, paper_id, question_id
   </sql>
   <select id="selectById" resultMap="RecordMap" parameterType="java.lang.Integer" >
     select 
-    <include refid="record_list" />
+    <include refid="list" />
     from record record
     where record.id = #{id,jdbcType=INTEGER}
   </select>

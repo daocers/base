@@ -2,14 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="tes.question">
     <resultMap id="QuestionMap" type="co.bugu.tes.model.Question">
-        <id column="question_id" property="id" jdbcType="INTEGER"/>
-        <result column="question_answer" property="answer" jdbcType="VARCHAR"/>
-        <result column="question_content" property="content" jdbcType="VARCHAR"/>
-        <result column="question_extra_info" property="extraInfo" jdbcType="VARCHAR"/>
-        <result column="question_meta_info_id" property="metaInfoId" jdbcType="INTEGER"/>
-        <result column="question_question_bank_id" property="questionBankId" jdbcType="INTEGER"/>
-        <result column="question_title" property="title" jdbcType="VARCHAR"/>
-        <result column="question_prop_item_id_info" property="propItemIdInfo" jdbcType="VARCHAR"/>
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="answer" property="answer" jdbcType="VARCHAR"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="extra_info" property="extraInfo" jdbcType="VARCHAR"/>
+        <result column="meta_info_id" property="metaInfoId" jdbcType="INTEGER"/>
+        <result column="question_bank_id" property="questionBankId" jdbcType="INTEGER"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="prop_item_id_info" property="propItemIdInfo" jdbcType="VARCHAR"/>
         <association property="questionMetaInfo" javaType="co.bugu.tes.model.QuestionMetaInfo"
                      resultMap="QuestionMetaInfoMap"/>
         <collection property="propertyItemList" ofType="co.bugu.tes.model.PropertyItem"
@@ -37,10 +37,7 @@
         prop_item.value as prop_item_value, prop_item.items_idx as prop_item_items_idx
     </sql>
     <sql id="question_list">
-    question.id as question_id, question.answer as question_answer, question.content as question_content, 
-    question.extra_info as question_extra_info, question.meta_info_id as question_meta_info_id, 
-    question.question_bank_id as question_question_bank_id, question.title as question_title,
-    question.prop_item_id_info as question_prop_item_id_info
+    id, answer, content, extra_info, meta_info_id, bank_id, title, prop_item_id_info
   </sql>
     <sql id="questionMetaInfo_list">
         ques_meta.id as ques_meta_id, ques_meta.code as ques_meta_code, ques_meta.description as ques_meta_description,

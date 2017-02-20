@@ -2,27 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="tes.questionPolicy">
     <resultMap id="QuestionPolicyMap" type="co.bugu.tes.model.QuestionPolicy">
-        <id column="ques_policy_id" property="id" jdbcType="INTEGER"/>
-        <result column="ques_policy_code" property="code" jdbcType="VARCHAR"/>
-        <result column="ques_policy_content" property="content" jdbcType="VARCHAR"/>
-        <result column="ques_policy_create_time" property="createTime" jdbcType="TIMESTAMP"/>
-        <result column="ques_policy_create_user_id" property="createUserId" jdbcType="INTEGER"/>
-        <result column="ques_policy_name" property="name" jdbcType="VARCHAR"/>
-        <result column="ques_policy_question_meta_info_id" property="questionMetaInfoId" jdbcType="INTEGER"/>
-        <result column="ques_policy_update_time" property="updateTime" jdbcType="TIMESTAMP"/>
-        <result column="ques_policy_update_user_id" property="updateUserId" jdbcType="INTEGER"/>
-        <result column="ques_policy_count" property="count" jdbcType="VARCHAR"/>
-        <result column="ques_policy_department_id" property="departmentId" jdbcType="VARCHAR"/>
-        <result column="ques_policy_branch_id" property="branchId" jdbcType="VARCHAR"/>
-        <result column="ques_policy_privary_type" property="privaryType" jdbcType="VARCHAR"/>
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="create_user_id" property="createUserId" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="question_meta_info_id" property="questionMetaInfoId" jdbcType="INTEGER"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="update_user_id" property="updateUserId" jdbcType="INTEGER"/>
+        <result column="count" property="count" jdbcType="VARCHAR"/>
+        <result column="department_id" property="departmentId" jdbcType="VARCHAR"/>
+        <result column="branch_id" property="branchId" jdbcType="VARCHAR"/>
+        <result column="privary_type" property="privaryType" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="questionPolicy_list">
-    ques_policy.id as ques_policy_id, ques_policy.code as ques_policy_code, ques_policy.content as ques_policy_content, 
-    ques_policy.create_time as ques_policy_create_time, ques_policy.create_user_id as ques_policy_create_user_id, 
-    ques_policy.name as ques_policy_name, ques_policy.question_meta_info_id as ques_policy_question_meta_info_id, 
-    ques_policy.update_time as ques_policy_update_time, ques_policy.update_user_id as ques_policy_update_user_id,
-    ques_policy.count as ques_policy_count, ques_policy.department_id as ques_policy_department_id,
-    ques_policy.branch_id as ques_policy_branch_id, ques_policy.privary_type as ques_policy_privary_type
+    id, code, content, create_time, create_user_id, name, question_meta_info_id,
+    update_time, update_user_id, count, department_id, branch_id, privary_type
   </sql>
     <select id="selectById" resultMap="QuestionPolicyMap" parameterType="java.lang.Integer">
         select

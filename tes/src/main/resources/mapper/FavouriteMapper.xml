@@ -2,12 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="tes.favourite" >
   <resultMap id="FavouriteMap" type="co.bugu.tes.model.Favourite" >
-    <id column="favt_id" property="id" jdbcType="INTEGER" />
-    <result column="favt_question_id" property="questionId" jdbcType="INTEGER" />
-    <result column="favt_user_id" property="userId" jdbcType="INTEGER" />
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="question_id" property="questionId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
   </resultMap>
   <sql id="favourite_list" >
-    favt.id as favt_id, favt.question_id as favt_question_id, favt.user_id as favt_user_id
+    id, question_id, user_id
   </sql>
   <select id="selectById" resultMap="FavouriteMap" parameterType="java.lang.Integer" >
     select 
