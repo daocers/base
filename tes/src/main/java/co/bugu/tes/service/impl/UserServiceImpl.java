@@ -1,8 +1,10 @@
 package co.bugu.tes.service.impl;
 
 
+import co.bugu.framework.core.mybatis.ThreadLocalUtil;
 import co.bugu.framework.core.service.impl.BaseServiceImpl;
 import co.bugu.tes.model.Profile;
+import co.bugu.tes.model.Role;
 import co.bugu.tes.model.User;
 import co.bugu.tes.service.IUserService;
 import co.bugu.framework.core.dao.BaseDao;
@@ -10,32 +12,35 @@ import co.bugu.framework.core.dao.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserServiceImpl extends BaseServiceImpl<User> implements IUserService {
-//    @Autowired
+    //    @Autowired
 //    BaseDao baseDao;
 //
     @Override
     public int save(User user) {
         baseDao.insert("tes.user.insert", user);
-        if(user.getProfile() != null){
+        if (user.getProfile() != null) {
             user.getProfile().setUserId(user.getId());
             baseDao.insert("tes.profile.insert", user.getProfile());
         }
         return 1;
     }
-//
+
+    //
     @Override
     public int updateById(User user) {
         baseDao.update("tes.user.updateById", user);
-        if(user.getProfile() != null){
+        if (user.getProfile() != null) {
             Profile profile = user.getProfile();
             profile.setUserId(user.getId());
-            if(profile.getId() == null){
+            if (profile.getId() == null) {
                 baseDao.insert("tes.profile.insert", profile);
-            }else{
+            } else {
                 baseDao.update("tes.profile.updateById", profile);
             }
         }
@@ -46,7 +51,8 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
     public void batchAdd(List<User> userList) {
 
     }
-//
+
+    //
 //    @Override
 //    public int saveOrUpdate(User user) {
 //        if(user.getId() == null){
@@ -61,10 +67,16 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
 //        return baseDao.delete("tes.user.deleteById", user);
 //    }
 //
-//    @Override
-//    public User findById(Integer id) {
-//        return baseDao.selectOne("tes.user.selectById", id);
-//    }
+    @Override
+    public User findById(Integer id) {
+        return baseDao.selectOne("tes.user.selectSimpleById", id);
+    }
+
+    @Override
+    public User findFullById(Integer id) {
+        User user = baseDao.selectOne("tes.user.selectById", id);
+        return user;
+    }
 //
 //    @Override
 //    public List<User> findAllByObject(User user) {

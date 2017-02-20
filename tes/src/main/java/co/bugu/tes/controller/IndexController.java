@@ -1,5 +1,6 @@
 package co.bugu.tes.controller;
 
+import co.bugu.framework.util.EncryptUtil;
 import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.User;
 import co.bugu.tes.service.IUserService;
@@ -28,6 +29,12 @@ public class IndexController {
 
     private static Logger logger = LoggerFactory.getLogger(IndexController.class);
 
+    /**
+     * 跳转到登陆页面
+     * 如果已经登陆，跳转到首页
+     * @param request
+     * @return
+     */
     @RequestMapping("/login")
     public String toLogin(HttpServletRequest request){
         if(BuguWebUtil.hasSingin(request)){
@@ -36,6 +43,13 @@ public class IndexController {
         return "/index/login";
     }
 
+    /**
+     * 登陆，传入用户名，密码
+     * @param username
+     * @param password
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/signIn", method = RequestMethod.POST)
     public String signIn(String username, String password, HttpServletRequest request){
         try{
@@ -47,8 +61,12 @@ public class IndexController {
             }else if(userList.size() > 1){
                 return "2";//数据紊乱，应该只有一个匹配，结果有多个
             }else{
-                if(password.equals(userList.get(0).getPassword())){
-                    user = userService.findById(userList.get(0).getId());
+                user = userList.get(0);
+                String finalPass = EncryptUtil.md5(password + user.getSalt());
+
+                //登陆成功，缓存用户权限，角色信息等
+                if(finalPass.equals(user.getPassword())){
+                    user = userService.findFullById(user.getId());
                     JedisUtil.setJson(Constant.USER_INFO_PREFIX + user.getId(), user);
                     WebUtils.setSessionAttribute(request, Constant.SESSION_USER_ID, user.getId());
 

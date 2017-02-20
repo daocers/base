@@ -1,6 +1,7 @@
 package co.bugu.tes.controller;
 
 import co.bugu.framework.core.mybatis.ThreadLocalUtil;
+import co.bugu.framework.util.EncryptUtil;
 import co.bugu.framework.util.ExcelUtilNew;
 import co.bugu.tes.enums.ExamStatus;
 import co.bugu.tes.enums.UserStatus;
@@ -187,6 +188,10 @@ public class UserController {
         profile.setExamStatusUpdate(new Date());
         profile.setRegistTime(new Date());
         user.setStatus(UserStatus.NEEDINFO.getStatus());
+        String salt = EncryptUtil.getSalt(6);
+        user.setSalt(salt);
+        String finalPass = EncryptUtil.md5(user.getPassword() + salt);
+        user.setPassword(finalPass);
         userService.save(user);
         redirectAttributes.addAttribute("id", user.getId());
         return "redirect:edit.do";

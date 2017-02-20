@@ -206,15 +206,32 @@ public class EncryptUtil {
 
 
 	public static void main(String[] args) {
-		try {
-			String data = "allen";
-			System.out.println(md5(data));
-			String key = "^&%$#####$%$%$%$%$##@@#+/";
-			System.out.println(encrypt(data, key));
-			System.err.println(decrypt(encrypt(data, key), key));
-		} catch (Exception e) {
-			e.printStackTrace();
+		for(int i = 65; i < 123; i++){
+			System.out.println((char)i);
 		}
+//		try {
+//			String data = "allen";
+//			System.out.println(md5(data));
+//			String key = "^&%$#####$%$%$%$%$##@@#+/";
+//			System.out.println(encrypt(data, key));
+//			System.err.println(decrypt(encrypt(data, key), key));
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 
+	}
+
+	public static String getSalt(Integer length){
+		StringBuffer stringBuffer = new StringBuffer();
+		int[] chars = new int[60];
+		for(int i = 0; i < 60; i++){
+			chars[i] = 65 + i;
+		}
+		Random random = new Random();
+		for(int i = 0; i < length; i++){
+			int index = random.nextInt(chars.length);
+			stringBuffer.append((char)chars[index]);
+		}
+		return stringBuffer.toString();
 	}
 }

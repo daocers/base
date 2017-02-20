@@ -1,7 +1,6 @@
 package co.bugu.tes.model;
 
 import java.util.List;
-import java.util.Set;
 
 public class User {
     private Integer id;
@@ -18,11 +17,21 @@ public class User {
 
     private String username;
 
+    private String salt;
+
     private List<Role> roleList;
 
     private List<Authority> authorityList;
 
     private Profile profile;
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
 
     public Profile getProfile() {
         return profile;
@@ -103,4 +112,5 @@ public class User {
     public void setUsername(String username) {
         this.username = username;
     }
+
 }

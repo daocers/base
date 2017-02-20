@@ -12,7 +12,7 @@
   </sql>
   <select id="selectById" resultMap="RecordMap" parameterType="java.lang.Integer" >
     select 
-    <include refid="list" />
+    <include refid="record_list" />
     from record record
     where record.id = #{id,jdbcType=INTEGER}
   </select>

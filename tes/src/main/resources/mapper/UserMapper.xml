@@ -6,6 +6,7 @@
         <result column="branch_id" property="branchId" jdbcType="INTEGER"/>
         <result column="department_id" property="departmentId" jdbcType="INTEGER"/>
         <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="salt" property="salt" jdbcType="VARCHAR"/>
         <result column="station_id" property="stationId" jdbcType="INTEGER"/>
         <result column="status" property="status" jdbcType="INTEGER"/>
         <result column="username" property="username" jdbcType="VARCHAR"/>
@@ -36,14 +37,14 @@
         <result column="auth_is_api" property="isApi" jdbcType="INTEGER"/>
     </resultMap>
     <sql id="user_list">
-    id, branch_id, department_id, password, station_id, status, username
-  </sql>
+    id, branch_id, department_id, password, station_id, status, username, salt
+    </sql>
     <sql id="authority_list">
     auth.id as auth_id, auth.action as auth_action, auth.controller as auth_controller,
     auth.description as auth_description, auth.name as auth_name, auth.param as auth_param,
     auth.status as auth_status, auth.superior_id as auth_superior_id, auth.type as auth_type,
     auth.url as auth_url, auth.accept_method as auth_accept_method, auth.is_api as auth_is_api
-  </sql>
+    </sql>
     <sql id="role_list">
     role.id as role_id, role.description as role_description, role.name as role_name,
     role.status as role_status
@@ -60,6 +61,13 @@
         LEFT JOIN authority auth on auth.id = ra.authority_id
         where user.id = #{id,jdbcType=INTEGER}
     </select>
+    <select id="selectSimpleById" resultMap="UserMap" parameterType="int">
+        select
+        <include refid="user_list"/>
+        from user user
+        WHERE  user.id = ${id}
+    </select>
+
     <delete id="deleteById" parameterType="java.lang.Integer">
     delete from user
     where id = #{id,jdbcType=INTEGER}
@@ -145,24 +153,24 @@
         <include refid="user_list"/>
         from user user
         <where>
-            <if test="id != null">
-                id = #{id,jdbcType=INTEGER}
-            </if>
-            <if test="branchId != null">
-                and branch_id = #{branchId,jdbcType=INTEGER}
-            </if>
-            <if test="departmentId != null">
-                and department_id = #{departmentId,jdbcType=INTEGER}
-            </if>
-            <if test="stationId != null">
-                and station_id = #{stationId,jdbcType=INTEGER}
-            </if>
-            <if test="status != null">
-                and status = #{status,jdbcType=INTEGER}
-            </if>
-            <if test="username != null">
-                and username = #{username,jdbcType=VARCHAR}
-            </if>
+        --    <if test="id != null">
+        --        id = #{id,jdbcType=INTEGER}
+        --    </if>
+        --    <if test="branchId != null">
+        --        and branch_id = #{branchId,jdbcType=INTEGER}
+        --    </if>
+        --    <if test="departmentId != null">
+        --        and department_id = #{departmentId,jdbcType=INTEGER}
+        --    </if>
+        --    <if test="stationId != null">
+        --        and station_id = #{stationId,jdbcType=INTEGER}
+        --    </if>
+        --    <if test="status != null">
+        --       and status = #{status,jdbcType=INTEGER}
+        --    </if>
+        --    <if test="username != null">
+        --        and username = #{username,jdbcType=VARCHAR}
+        --    </if>
         </where>
     </select>
 </mapper>

@@ -18,6 +18,8 @@ import org.apache.ibatis.scripting.xmltags.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -137,6 +139,12 @@ public class SqlParamInterceptor implements Interceptor {
             Map<String, String> sortTypeMap = new HashMap<>();
             Map<Integer, String> sortIndexMap = new TreeMap<>();
             List<SqlNode> ifNodes = new ArrayList<>();
+
+            //如果搜索参数map为空，根据查询对象来初始化搜索参数
+            if (searchParam == null) {
+                searchParam = processSearchParam(paramObject);
+            }
+
             Iterator<String> iterator = searchParam.keySet().iterator();
             while (iterator.hasNext()) {
                 String key = iterator.next();
@@ -206,6 +214,37 @@ public class SqlParamInterceptor implements Interceptor {
             return dynamicSqlSource;
         }
         return null;
+    }
+
+    /**
+     * 直接传查询参数，进行等值查询
+     *
+     * @param paramObject
+     * @return
+     */
+    private Map<String, Object> processSearchParam(Object paramObject) throws IllegalAccessException {
+        Map<String, Object> searchParam = new HashMap<>();
+        Field[] fields = paramObject.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            field.setAccessible(true);
+            String name = field.getName();
+            Object value = field.get(paramObject);
+            Class type = field.getType();
+//          不处理基本类型，建议在domain中都使用包装类型
+            if (type != int.class
+                    && type != byte.class
+                    && type != char.class
+                    && type != int.class
+                    && type != double.class
+                    && type != float.class
+                    && type != long.class) {
+                if (value == null || (type == String.class && StringUtils.isEmpty((String) value))) {
+                    continue;
+                }
+                searchParam.put("EQ_" + name, value);
+            }
+        }
+        return searchParam;
     }
 
 
