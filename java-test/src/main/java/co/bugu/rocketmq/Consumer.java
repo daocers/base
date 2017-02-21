@@ -15,10 +15,12 @@ public class Consumer {
     public static void main(String[] args){
         DefaultMQPushConsumer consumer = new
                 DefaultMQPushConsumer("consumerGroup");
-        consumer.setNamesrvAddr("192.168.58.163.9876");
+//        consumer.setNamesrvAddr("114.215.142.252:9876");
+        consumer.setNamesrvAddr("127.0.0.1:9876");
+
         try{
 //           订阅topic tes下tag 为tag tec的消息
-            consumer.subscribe("topic tec", "tag tec");
+            consumer.subscribe("topic-tec", "tag-tec");
 //            程序第一次启动从消息队列投获取数据
             consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
 
@@ -43,6 +45,7 @@ public class Consumer {
             });
 
             consumer.start();
+            System.out.print("goods");
         }catch (Exception e){
             e.printStackTrace();
         }
