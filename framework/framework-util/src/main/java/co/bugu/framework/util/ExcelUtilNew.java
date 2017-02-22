@@ -1,6 +1,7 @@
 package co.bugu.framework.util;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
@@ -252,6 +253,7 @@ public class ExcelUtilNew {
      * @return
      */
     private static List<List<String>> getData(Workbook workbook, Integer sheetIndex){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         if(sheetIndex == null){
             sheetIndex = 0;
         }
@@ -267,10 +269,21 @@ public class ExcelUtilNew {
                         data = cell.getRichStringCellValue().getString();
                         break;
                     case Cell.CELL_TYPE_NUMERIC:
-                        data = cell.getNumericCellValue() + "";
+                        if(HSSFDateUtil.isCellDateFormatted(cell)){
+                            Date date = HSSFDateUtil.getJavaDate(cell.getNumericCellValue());
+                            data = format.format(date);
+                        }else{
+                            data = cell.getNumericCellValue() + "";
+                        }
                         break;
                     case Cell.CELL_TYPE_BLANK:
                         data = "";
+                        break;
+                    case Cell.CELL_TYPE_FORMULA:
+                        data = cell.getCellFormula();
+                        break;
+                    case Cell.CELL_TYPE_BOOLEAN:
+                        data = cell.getBooleanCellValue() + "";
                         break;
                     default:
                         cell.getStringCellValue();
