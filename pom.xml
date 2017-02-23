@@ -30,7 +30,7 @@
         <module>logback-test</module>
         <module>java-test</module>
         <module>mq-test</module>
-        <module>coder-gen</module>
+        <module>data_import</module>
 
     </modules>
     <dependencies>

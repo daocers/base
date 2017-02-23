@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="data.factoringAsset" >
+  <resultMap id="FactoringAssetMap" type="co.bugu.data.model.FactoringAsset" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="assets_code" property="assetsCode" jdbcType="VARCHAR" />
+    <result column="assets_type" property="assetsType" jdbcType="INTEGER" />
+    <result column="asset_ctype" property="assetCtype" jdbcType="INTEGER" />
+    <result column="value_date" property="valueDate" jdbcType="TIMESTAMP" />
+    <result column="expiring_date" property="expiringDate" jdbcType="TIMESTAMP" />
+    <result column="new_deadline" property="newDeadline" jdbcType="INTEGER" />
+    <result column="deadline" property="deadline" jdbcType="INTEGER" />
+    <result column="rate" property="rate" jdbcType="DECIMAL" />
+    <result column="re_pricing_mode" property="rePricingMode" jdbcType="VARCHAR" />
+    <result column="asset_amount" property="assetAmount" jdbcType="DECIMAL" />
+    <result column="interest_calculation" property="interestCalculation" jdbcType="TINYINT" />
+    <result column="guarantee_mode" property="guaranteeMode" jdbcType="VARCHAR" />
+    <result column="creditor" property="creditor" jdbcType="VARCHAR" />
+    <result column="debtor" property="debtor" jdbcType="VARCHAR" />
+    <result column="original_debtor" property="originalDebtor" jdbcType="VARCHAR" />
+    <result column="secured_party" property="securedParty" jdbcType="VARCHAR" />
+    <result column="debtor_cus_num" property="debtorCusNum" jdbcType="VARCHAR" />
+    <result column="contract_num" property="contractNum" jdbcType="VARCHAR" />
+    <result column="push_party" property="pushParty" jdbcType="BIGINT" />
+    <result column="push_party_ogr_name" property="pushPartyOgrName" jdbcType="VARCHAR" />
+    <result column="push_date" property="pushDate" jdbcType="TIMESTAMP" />
+    <result column="use_date" property="useDate" jdbcType="TIMESTAMP" />
+    <result column="asset_expire_date" property="assetExpireDate" jdbcType="TIMESTAMP" />
+    <result column="pushing_residual_maturity" property="pushingResidualMaturity" jdbcType="INTEGER" />
+    <result column="creditor_rights_transfer_cost" property="creditorRightsTransferCost" jdbcType="DECIMAL" />
+    <result column="slotting_allowance" property="slottingAllowance" jdbcType="DECIMAL" />
+    <result column="asset_balance_repeat" property="assetBalanceRepeat" jdbcType="DECIMAL" />
+    <result column="asset_balance" property="assetBalance" jdbcType="DECIMAL" />
+    <result column="residual_maturity" property="residualMaturity" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="base_creditor_rights_contract" property="baseCreditorRightsContract" jdbcType="BIT" />
+    <result column="creditor_rights_transfer_application" property="creditorRightsTransferApplication" jdbcType="BIT" />
+    <result column="receivable_credit_transfer_application" property="receivableCreditTransferApplication" jdbcType="BIT" />
+    <result column="credit_asset_transfer_contract" property="creditAssetTransferContract" jdbcType="BIT" />
+    <result column="transfer_money_certificate" property="transferMoneyCertificate" jdbcType="BIT" />
+    <result column="creditor_rights_transfer_protocol" property="creditorRightsTransferProtocol" jdbcType="BIT" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="useable_balance" property="useableBalance" jdbcType="DECIMAL" />
+    <result column="freeze_amount" property="freezeAmount" jdbcType="DECIMAL" />
+    <result column="pause_amount" property="pauseAmount" jdbcType="DECIMAL" />
+    <result column="del_flag" property="delFlag" jdbcType="BIT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="reject_reason" property="rejectReason" jdbcType="VARCHAR" />
+    <result column="pause_reason" property="pauseReason" jdbcType="VARCHAR" />
+    <result column="asset_gtype" property="assetGtype" jdbcType="INTEGER" />
+    <result column="original_rate" property="originalRate" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="tblFactoringAsset_list" >
+    id, assets_code, assets_type, asset_ctype, value_date, expiring_date, new_deadline, 
+    deadline, rate, re_pricing_mode, asset_amount, interest_calculation, guarantee_mode, 
+    creditor, debtor, original_debtor, secured_party, debtor_cus_num, contract_num, push_party, 
+    push_party_ogr_name, push_date, use_date, asset_expire_date, pushing_residual_maturity, 
+    creditor_rights_transfer_cost, slotting_allowance, asset_balance_repeat, asset_balance, 
+    residual_maturity, status, base_creditor_rights_contract, creditor_rights_transfer_application, 
+    receivable_credit_transfer_application, credit_asset_transfer_contract, transfer_money_certificate, 
+    creditor_rights_transfer_protocol, remark, useable_balance, freeze_amount, pause_amount, 
+    del_flag, create_time, modify_time, reject_reason, pause_reason, asset_gtype, original_rate
+  </sql>
+  <select id="selectById" resultMap="FactoringAssetMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="tblFactoringAsset_list" />
+    from tbl_factoring_asset
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteById" parameterType="java.lang.Long" >
+    delete from tbl_factoring_asset
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  
+  <insert id="insert"  useGeneratedKeys="true" keyProperty="id"  parameterType="co.bugu.data.model.FactoringAsset" >
+    insert into tbl_factoring_asset
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="assetsCode != null" >
+        assets_code,
+      </if>
+      <if test="assetsType != null" >
+        assets_type,
+      </if>
+      <if test="assetCtype != null" >
+        asset_ctype,
+      </if>
+      <if test="valueDate != null" >
+        value_date,
+      </if>
+      <if test="expiringDate != null" >
+        expiring_date,
+      </if>
+      <if test="newDeadline != null" >
+        new_deadline,
+      </if>
+      <if test="deadline != null" >
+        deadline,
+      </if>
+      <if test="rate != null" >
+        rate,
+      </if>
+      <if test="rePricingMode != null" >
+        re_pricing_mode,
+      </if>
+      <if test="assetAmount != null" >
+        asset_amount,
+      </if>
+      <if test="interestCalculation != null" >
+        interest_calculation,
+      </if>
+      <if test="guaranteeMode != null" >
+        guarantee_mode,
+      </if>
+      <if test="creditor != null" >
+        creditor,
+      </if>
+      <if test="debtor != null" >
+        debtor,
+      </if>
+      <if test="originalDebtor != null" >
+        original_debtor,
+      </if>
+      <if test="securedParty != null" >
+        secured_party,
+      </if>
+      <if test="debtorCusNum != null" >
+        debtor_cus_num,
+      </if>
+      <if test="contractNum != null" >
+        contract_num,
+      </if>
+      <if test="pushParty != null" >
+        push_party,
+      </if>
+      <if test="pushPartyOgrName != null" >
+        push_party_ogr_name,
+      </if>
+      <if test="pushDate != null" >
+        push_date,
+      </if>
+      <if test="useDate != null" >
+        use_date,
+      </if>
+      <if test="assetExpireDate != null" >
+        asset_expire_date,
+      </if>
+      <if test="pushingResidualMaturity != null" >
+        pushing_residual_maturity,
+      </if>
+      <if test="creditorRightsTransferCost != null" >
+        creditor_rights_transfer_cost,
+      </if>
+      <if test="slottingAllowance != null" >
+        slotting_allowance,
+      </if>
+      <if test="assetBalanceRepeat != null" >
+        asset_balance_repeat,
+      </if>
+      <if test="assetBalance != null" >
+        asset_balance,
+      </if>
+      <if test="residualMaturity != null" >
+        residual_maturity,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="baseCreditorRightsContract != null" >
+        base_creditor_rights_contract,
+      </if>
+      <if test="creditorRightsTransferApplication != null" >
+        creditor_rights_transfer_application,
+      </if>
+      <if test="receivableCreditTransferApplication != null" >
+        receivable_credit_transfer_application,
+      </if>
+      <if test="creditAssetTransferContract != null" >
+        credit_asset_transfer_contract,
+      </if>
+      <if test="transferMoneyCertificate != null" >
+        transfer_money_certificate,
+      </if>
+      <if test="creditorRightsTransferProtocol != null" >
+        creditor_rights_transfer_protocol,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="useableBalance != null" >
+        useable_balance,
+      </if>
+      <if test="freezeAmount != null" >
+        freeze_amount,
+      </if>
+      <if test="pauseAmount != null" >
+        pause_amount,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="modifyTime != null" >
+        modify_time,
+      </if>
+      <if test="rejectReason != null" >
+        reject_reason,
+      </if>
+      <if test="pauseReason != null" >
+        pause_reason,
+      </if>
+      <if test="assetGtype != null" >
+        asset_gtype,
+      </if>
+      <if test="originalRate != null" >
+        original_rate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="assetsCode != null" >
+        #{assetsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="assetsType != null" >
+        #{assetsType,jdbcType=INTEGER},
+      </if>
+      <if test="assetCtype != null" >
+        #{assetCtype,jdbcType=INTEGER},
+      </if>
+      <if test="valueDate != null" >
+        #{valueDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expiringDate != null" >
+        #{expiringDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="newDeadline != null" >
+        #{newDeadline,jdbcType=INTEGER},
+      </if>
+      <if test="deadline != null" >
+        #{deadline,jdbcType=INTEGER},
+      </if>
+      <if test="rate != null" >
+        #{rate,jdbcType=DECIMAL},
+      </if>
+      <if test="rePricingMode != null" >
+        #{rePricingMode,jdbcType=VARCHAR},
+      </if>
+      <if test="assetAmount != null" >
+        #{assetAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="interestCalculation != null" >
+        #{interestCalculation,jdbcType=TINYINT},
+      </if>
+      <if test="guaranteeMode != null" >
+        #{guaranteeMode,jdbcType=VARCHAR},
+      </if>
+      <if test="creditor != null" >
+        #{creditor,jdbcType=VARCHAR},
+      </if>
+      <if test="debtor != null" >
+        #{debtor,jdbcType=VARCHAR},
+      </if>
+      <if test="originalDebtor != null" >
+        #{originalDebtor,jdbcType=VARCHAR},
+      </if>
+      <if test="securedParty != null" >
+        #{securedParty,jdbcType=VARCHAR},
+      </if>
+      <if test="debtorCusNum != null" >
+        #{debtorCusNum,jdbcType=VARCHAR},
+      </if>
+      <if test="contractNum != null" >
+        #{contractNum,jdbcType=VARCHAR},
+      </if>
+      <if test="pushParty != null" >
+        #{pushParty,jdbcType=BIGINT},
+      </if>
+      <if test="pushPartyOgrName != null" >
+        #{pushPartyOgrName,jdbcType=VARCHAR},
+      </if>
+      <if test="pushDate != null" >
+        #{pushDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="useDate != null" >
+        #{useDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="assetExpireDate != null" >
+        #{assetExpireDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pushingResidualMaturity != null" >
+        #{pushingResidualMaturity,jdbcType=INTEGER},
+      </if>
+      <if test="creditorRightsTransferCost != null" >
+        #{creditorRightsTransferCost,jdbcType=DECIMAL},
+      </if>
+      <if test="slottingAllowance != null" >
+        #{slottingAllowance,jdbcType=DECIMAL},
+      </if>
+      <if test="assetBalanceRepeat != null" >
+        #{assetBalanceRepeat,jdbcType=DECIMAL},
+      </if>
+      <if test="assetBalance != null" >
+        #{assetBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="residualMaturity != null" >
+        #{residualMaturity,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="baseCreditorRightsContract != null" >
+        #{baseCreditorRightsContract,jdbcType=BIT},
+      </if>
+      <if test="creditorRightsTransferApplication != null" >
+        #{creditorRightsTransferApplication,jdbcType=BIT},
+      </if>
+      <if test="receivableCreditTransferApplication != null" >
+        #{receivableCreditTransferApplication,jdbcType=BIT},
+      </if>
+      <if test="creditAssetTransferContract != null" >
+        #{creditAssetTransferContract,jdbcType=BIT},
+      </if>
+      <if test="transferMoneyCertificate != null" >
+        #{transferMoneyCertificate,jdbcType=BIT},
+      </if>
+      <if test="creditorRightsTransferProtocol != null" >
+        #{creditorRightsTransferProtocol,jdbcType=BIT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="useableBalance != null" >
+        #{useableBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="freezeAmount != null" >
+        #{freezeAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="pauseAmount != null" >
+        #{pauseAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rejectReason != null" >
+        #{rejectReason,jdbcType=VARCHAR},
+      </if>
+      <if test="pauseReason != null" >
+        #{pauseReason,jdbcType=VARCHAR},
+      </if>
+      <if test="assetGtype != null" >
+        #{assetGtype,jdbcType=INTEGER},
+      </if>
+      <if test="originalRate != null" >
+        #{originalRate,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateById" parameterType="co.bugu.data.model.FactoringAsset" >
+    update tbl_factoring_asset
+    <set >
+      <if test="assetsCode != null" >
+        assets_code = #{assetsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="assetsType != null" >
+        assets_type = #{assetsType,jdbcType=INTEGER},
+      </if>
+      <if test="assetCtype != null" >
+        asset_ctype = #{assetCtype,jdbcType=INTEGER},
+      </if>
+      <if test="valueDate != null" >
+        value_date = #{valueDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expiringDate != null" >
+        expiring_date = #{expiringDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="newDeadline != null" >
+        new_deadline = #{newDeadline,jdbcType=INTEGER},
+      </if>
+      <if test="deadline != null" >
+        deadline = #{deadline,jdbcType=INTEGER},
+      </if>
+      <if test="rate != null" >
+        rate = #{rate,jdbcType=DECIMAL},
+      </if>
+      <if test="rePricingMode != null" >
+        re_pricing_mode = #{rePricingMode,jdbcType=VARCHAR},
+      </if>
+      <if test="assetAmount != null" >
+        asset_amount = #{assetAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="interestCalculation != null" >
+        interest_calculation = #{interestCalculation,jdbcType=TINYINT},
+      </if>
+      <if test="guaranteeMode != null" >
+        guarantee_mode = #{guaranteeMode,jdbcType=VARCHAR},
+      </if>
+      <if test="creditor != null" >
+        creditor = #{creditor,jdbcType=VARCHAR},
+      </if>
+      <if test="debtor != null" >
+        debtor = #{debtor,jdbcType=VARCHAR},
+      </if>
+      <if test="originalDebtor != null" >
+        original_debtor = #{originalDebtor,jdbcType=VARCHAR},
+      </if>
+      <if test="securedParty != null" >
+        secured_party = #{securedParty,jdbcType=VARCHAR},
+      </if>
+      <if test="debtorCusNum != null" >
+        debtor_cus_num = #{debtorCusNum,jdbcType=VARCHAR},
+      </if>
+      <if test="contractNum != null" >
+        contract_num = #{contractNum,jdbcType=VARCHAR},
+      </if>
+      <if test="pushParty != null" >
+        push_party = #{pushParty,jdbcType=BIGINT},
+      </if>
+      <if test="pushPartyOgrName != null" >
+        push_party_ogr_name = #{pushPartyOgrName,jdbcType=VARCHAR},
+      </if>
+      <if test="pushDate != null" >
+        push_date = #{pushDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="useDate != null" >
+        use_date = #{useDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="assetExpireDate != null" >
+        asset_expire_date = #{assetExpireDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pushingResidualMaturity != null" >
+        pushing_residual_maturity = #{pushingResidualMaturity,jdbcType=INTEGER},
+      </if>
+      <if test="creditorRightsTransferCost != null" >
+        creditor_rights_transfer_cost = #{creditorRightsTransferCost,jdbcType=DECIMAL},
+      </if>
+      <if test="slottingAllowance != null" >
+        slotting_allowance = #{slottingAllowance,jdbcType=DECIMAL},
+      </if>
+      <if test="assetBalanceRepeat != null" >
+        asset_balance_repeat = #{assetBalanceRepeat,jdbcType=DECIMAL},
+      </if>
+      <if test="assetBalance != null" >
+        asset_balance = #{assetBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="residualMaturity != null" >
+        residual_maturity = #{residualMaturity,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="baseCreditorRightsContract != null" >
+        base_creditor_rights_contract = #{baseCreditorRightsContract,jdbcType=BIT},
+      </if>
+      <if test="creditorRightsTransferApplication != null" >
+        creditor_rights_transfer_application = #{creditorRightsTransferApplication,jdbcType=BIT},
+      </if>
+      <if test="receivableCreditTransferApplication != null" >
+        receivable_credit_transfer_application = #{receivableCreditTransferApplication,jdbcType=BIT},
+      </if>
+      <if test="creditAssetTransferContract != null" >
+        credit_asset_transfer_contract = #{creditAssetTransferContract,jdbcType=BIT},
+      </if>
+      <if test="transferMoneyCertificate != null" >
+        transfer_money_certificate = #{transferMoneyCertificate,jdbcType=BIT},
+      </if>
+      <if test="creditorRightsTransferProtocol != null" >
+        creditor_rights_transfer_protocol = #{creditorRightsTransferProtocol,jdbcType=BIT},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="useableBalance != null" >
+        useable_balance = #{useableBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="freezeAmount != null" >
+        freeze_amount = #{freezeAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="pauseAmount != null" >
+        pause_amount = #{pauseAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rejectReason != null" >
+        reject_reason = #{rejectReason,jdbcType=VARCHAR},
+      </if>
+      <if test="pauseReason != null" >
+        pause_reason = #{pauseReason,jdbcType=VARCHAR},
+      </if>
+      <if test="assetGtype != null" >
+        asset_gtype = #{assetGtype,jdbcType=INTEGER},
+      </if>
+      <if test="originalRate != null" >
+        original_rate = #{originalRate,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+
+	<select id="findByObject" resultMap="FactoringAssetMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="tblFactoringAsset_list" />
+    from tbl_factoring_asset
+    </select>
+</mapper>

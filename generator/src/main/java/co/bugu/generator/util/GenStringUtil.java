@@ -20,12 +20,11 @@ public class GenStringUtil {
     /**
      * AbcDef ->abcDef
      *
-     * @param str
+     * @param className
      * @return
      */
-    public static String toVariableName(String str) {
-        String propertie = toLowerCase(str);
-        return propertie.substring(0, 1).toLowerCase() + propertie.substring(1);
+    public static String toVariableName(String className) {
+        return className.substring(0, 1).toLowerCase() + className.substring(1);
     }
 
     /**

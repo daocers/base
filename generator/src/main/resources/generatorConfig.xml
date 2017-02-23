@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 
 <generatorConfiguration>
-    <classPathEntry location="D:\CODE\daocers\bugu\generator\\src\main\resources\templates\mysql-connector-java-5.1.13.jar"/>
+    <classPathEntry location="D:\code\daocers\java\base\generator\\src\main\resources\templates\mysql-connector-java-5.1.13.jar"/>
 
     <context id="mysqlTables" targetRuntime="MyBatis3">
 
@@ -17,7 +17,7 @@
 
         <!-- jdbc连接信息 -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://localhost:3306/test"
+                        connectionURL="jdbc:mysql://localhost:3306/asset_web"
                         userId="root" password="root"/>
 
         <!-- java类型解析器 可选配置 -->
@@ -25,19 +25,19 @@
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
 
-        <javaModelGenerator targetPackage="co.bugu.mq.model" targetProject="D:\CODE\daocers\bugu/generator//generate/src/main/java/">
+        <javaModelGenerator targetPackage="co.bugu.data.model" targetProject="D:\code\daocers\java\base/generator//generate/src/main/java/">
             <property name="enableSubPackages" value="true"/>
         </javaModelGenerator>
 
-        <sqlMapGenerator targetPackage="co.bugu.mq.dao" targetProject="D:\CODE\daocers\bugu/generator//generate/src/main/java/">
-        <!--<sqlMapGenerator targetPackage="mq.order" targetProject="D:\CODE\daocers\bugu/generator//generate/src/main/java/">-->
+        <sqlMapGenerator targetPackage="co.bugu.data.dao" targetProject="D:\code\daocers\java\base/generator//generate/src/main/java/">
+        <!--<sqlMapGenerator targetPackage="data.dic" targetProject="D:\code\daocers\java\base/generator//generate/src/main/java/">-->
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
 
 
 
 
-        <table tableName="mall_order" domainObjectName="Order" alias="order"
+        <table tableName="tbl_dic" domainObjectName="Dic" alias=""
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">

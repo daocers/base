@@ -1,24 +1,37 @@
+##package ${mainPkg}.service;
+##
+##
+##import ${mainPkg}.model.${className};
+##import ${rootPkg}.framework.core.dao.PageInfo;
+##
+##import java.util.List;
+##
+##public interface I${className}Service {
+##    int save(${className} ${variableName});
+##
+##    int updateById(${className} ${variableName});
+##
+##    int saveOrUpdate(${className} ${variableName});
+##
+##    int delete(${className} ${variableName});
+##
+##    ${className} findById(Integer id);
+##
+##    List<${className}> findAllByObject(${className} ${variableName});
+##
+##    PageInfo listByObject(${className} ${variableName}, PageInfo<${className}> pageInfo) throws Exception;
+##
+##}
+
+
 package ${mainPkg}.service;
 
-
 import ${mainPkg}.model.${className};
-import ${rootPkg}.framework.core.dao.PageInfo;
+import ${rootPkg}.framework.core.service.IBaseService;
 
-import java.util.List;
-
-public interface I${className}Service {
-    int save(${className} ${variableName});
-
-    int updateById(${className} ${variableName});
-
-    int saveOrUpdate(${className} ${variableName});
-
-    int delete(${className} ${variableName});
-
-    ${className} findById(Integer id);
-
-    List<${className}> findAllByObject(${className} ${variableName});
-
-    PageInfo listByObject(${className} ${variableName}, PageInfo<${className}> pageInfo) throws Exception;
+/**
+*
+*/
+public interface I${className}Service extends IBaseService<${className}> {
 
 }

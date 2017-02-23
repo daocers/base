@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="data.factoringProductRelation" >
+  <resultMap id="FactoringProductRelationMap" type="co.bugu.data.model.FactoringProductRelation" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="product_id" property="productId" jdbcType="BIGINT" />
+    <result column="asset_id" property="assetId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="tblFactoringProductRelation_list" >
+    id, product_id, asset_id
+  </sql>
+  <select id="selectById" resultMap="FactoringProductRelationMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="tblFactoringProductRelation_list" />
+    from tbl_factoring_product_relation
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteById" parameterType="java.lang.Long" >
+    delete from tbl_factoring_product_relation
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  
+  <insert id="insert"  useGeneratedKeys="true" keyProperty="id"  parameterType="co.bugu.data.model.FactoringProductRelation" >
+    insert into tbl_factoring_product_relation
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="productId != null" >
+        product_id,
+      </if>
+      <if test="assetId != null" >
+        asset_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="productId != null" >
+        #{productId,jdbcType=BIGINT},
+      </if>
+      <if test="assetId != null" >
+        #{assetId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateById" parameterType="co.bugu.data.model.FactoringProductRelation" >
+    update tbl_factoring_product_relation
+    <set >
+      <if test="productId != null" >
+        product_id = #{productId,jdbcType=BIGINT},
+      </if>
+      <if test="assetId != null" >
+        asset_id = #{assetId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+
+	<select id="findByObject" resultMap="FactoringProductRelationMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="tblFactoringProductRelation_list" />
+    from tbl_factoring_product_relation
+    </select>
+</mapper>

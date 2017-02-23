@@ -6,10 +6,7 @@ import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.resultset.ResultSetHandler;
 import org.apache.ibatis.executor.statement.RoutingStatementHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
-import org.apache.ibatis.mapping.BoundSql;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.ResultMapping;
-import org.apache.ibatis.mapping.SqlSource;
+import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.plugin.*;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
@@ -46,6 +43,9 @@ public class SqlParamInterceptor implements Interceptor {
         if (target instanceof ParameterHandler) {
             DefaultParameterHandler parameterHandler = (DefaultParameterHandler) target;
             MappedStatement mappedStatement = (MappedStatement) ReflectUtil.get(parameterHandler, "mappedStatement");
+            if(SqlCommandType.SELECT != mappedStatement.getSqlCommandType()){
+                return invocation.proceed();
+            }
             BoundSql boundSql = (BoundSql) ReflectUtil.get(parameterHandler, "boundSql");
             Object paramObj = boundSql.getParameterObject();
             SqlSource targetSqlSource = getTargetDynamicSqlSource(mappedStatement, boundSql, searchParam);
@@ -78,6 +78,9 @@ public class SqlParamInterceptor implements Interceptor {
 //            MappedStatement mappedStatement = (MappedStatement) invocation.getArgs()[0];
             MappedStatement mappedStatement = (MappedStatement) metaStatementHandler.getValue("delegate.mappedStatement");
 
+            if(SqlCommandType.SELECT != mappedStatement.getSqlCommandType()){
+                return invocation.proceed();
+            }
             RoutingStatementHandler handler = (RoutingStatementHandler) target;
             ParameterHandler parameterHandler = handler.getParameterHandler();
             BoundSql boundSql = statementHandler.getBoundSql();

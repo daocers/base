@@ -23,8 +23,16 @@ public class BaseServiceImpl<T> implements IBaseService<T> {
         ParameterizedType type = (ParameterizedType) clazz.getGenericSuperclass();
         Type[] types = type.getActualTypeArguments();
         String simpleName = ((Class)types[0]).getSimpleName();
-        nameSpace = "tes." + simpleName.substring(0,1).toLowerCase() + simpleName.substring(1) + ".";
+        nameSpace = getProjectName() + "." + simpleName.substring(0,1).toLowerCase() + simpleName.substring(1) + ".";
         
+    }
+
+    /**
+     * 子类建议重写该方法，以获取指定的工程名称，用于查找对应的mapper中的命名空间
+     * @return
+     */
+    protected String getProjectName(){
+        return "tes";
     }
 
     @Override

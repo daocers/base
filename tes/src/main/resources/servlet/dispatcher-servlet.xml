@@ -50,6 +50,8 @@
             <mvc:exclude-mapping path="/index/logout.do"/>
             <mvc:exclude-mapping path="/index/toRegister.do"/>
             <mvc:exclude-mapping path="/index/register.do"/>
+            <mvc:exclude-mapping path="/question/toImport.do"/>
+            <mvc:exclude-mapping path="/question/import.do"/>
             <bean class="co.bugu.tes.interceptor.AuthInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>

@@ -1,5 +1,6 @@
 package co.bugu.framework.util;
 
+import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -222,14 +223,22 @@ public class ExcelUtilNew {
     /**
      * 从文件中读取excel数据
      * @param file
+     * @param index 可变参数，表示获取到的sheet的index， 可为空或者一个integer数值，如果传入多个Integer，以第一个为准
      * @return
      * @throws IOException
      * @throws InvalidFormatException
      */
-    public static List<List<String>> getData(File file) throws IOException, InvalidFormatException {
+    public static List<List<String>> getData(File file, Integer... index) throws IOException, InvalidFormatException {
         Workbook workbook = WorkbookFactory.create(file);
-
-        return getData(workbook, 0);
+        Integer idx = 0;
+        if(index != null && index.length > 0){
+            idx = index[0];
+        }
+        try{
+            return getData(workbook, idx);
+        }finally {
+            workbook.close();
+        }
     }
 
     /**
@@ -239,9 +248,17 @@ public class ExcelUtilNew {
      * @throws IOException
      * @throws InvalidFormatException
      */
-    public static List<List<String>> getData(InputStream inputStream) throws IOException, InvalidFormatException {
+    public static List<List<String>> getData(InputStream inputStream, Integer... index) throws IOException, InvalidFormatException {
         Workbook workbook = WorkbookFactory.create(inputStream);
-        return getData(workbook, 0);
+        Integer idx = 0;
+        if(index != null && index.length > 0){
+            idx = index[0];
+        }
+        try{
+            return getData(workbook, idx);
+        }finally {
+            workbook.close();
+        }
     }
 
     /**
@@ -260,8 +277,12 @@ public class ExcelUtilNew {
         List<List<String>> res = new ArrayList<>();
         Sheet sheet = workbook.getSheetAt(sheetIndex);
         for(Row row: sheet){
+            Integer rowIndex = row.getRowNum();
             List<String> rowData = new ArrayList<>();
             for(Cell cell: row){
+                Integer colIndex = cell.getColumnIndex();
+                logger.debug("当前 sheet: " + sheetIndex + ", row: " + rowIndex + ", column: " + colIndex);
+                logger.debug("当前cell: {}", cell.getCellType());
                 CellReference cellRef = new CellReference(row.getRowNum(), cell.getColumnIndex());
                 String data = "";
                 switch (cell.getCellType()){
@@ -286,7 +307,7 @@ public class ExcelUtilNew {
                         data = cell.getBooleanCellValue() + "";
                         break;
                     default:
-                        cell.getStringCellValue();
+                        data = cell.getStringCellValue();
                 }
                 rowData.add(data);
             }
