@@ -22,7 +22,6 @@
         <module>WeChat</module>
         <module>tes</module>
         <!--<module>lucene</module>-->
-        <module>data-transfer</module>
         <module>payment</module>
         <module>wapdemo</module>
         <module>database-gen</module>
