@@ -30,14 +30,14 @@
         </javaModelGenerator>
 
         <sqlMapGenerator targetPackage="co.bugu.data.dao" targetProject="D:\code\daocers\java\base/generator//generate/src/main/java/">
-        <!--<sqlMapGenerator targetPackage="data.dic" targetProject="D:\code\daocers\java\base/generator//generate/src/main/java/">-->
+        <!--<sqlMapGenerator targetPackage="data.pushParty" targetProject="D:\code\daocers\java\base/generator//generate/src/main/java/">-->
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
 
 
 
 
-        <table tableName="tbl_dic" domainObjectName="Dic" alias=""
+        <table tableName="tbl_push_party" domainObjectName="PushParty" alias=""
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">

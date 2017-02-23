@@ -8,7 +8,7 @@ public class Product {
 
     private String productCode;
 
-    private Boolean productType;
+    private Integer productType;
 
     private String productName;
 
@@ -34,9 +34,9 @@ public class Product {
 
     private Date extendExpiringDate;
 
-    private Boolean nterestMode;
+    private Integer nterestMode;
 
-    private Boolean contractTemplate;
+    private Integer contractTemplate;
 
     private Date planCashDay;
 
@@ -50,7 +50,7 @@ public class Product {
 
     private String projectDetail;
 
-    private Boolean refundSource;
+    private Integer refundSource;
 
     private BigDecimal repaymentAmount;
 
@@ -64,11 +64,11 @@ public class Product {
 
     private Date modifyTime;
 
-    private Boolean delFlag;
+    private Integer delFlag;
 
     private String ext;
 
-    private Boolean newOrOldType;
+    private Integer newOrOldType;
 
     private String contractUrl;
 
@@ -78,7 +78,7 @@ public class Product {
 
     private Long pushPartyId;
 
-    private Boolean billType;
+    private Integer billType;
 
     private String billTypeName;
 
@@ -87,6 +87,7 @@ public class Product {
     private BigDecimal maxInvestTotalAmount;
 
     private Integer maxInvestNum;
+
 
     public Long getId() {
         return id;
@@ -104,11 +105,11 @@ public class Product {
         this.productCode = productCode;
     }
 
-    public Boolean getProductType() {
+    public Integer getProductType() {
         return productType;
     }
 
-    public void setProductType(Boolean productType) {
+    public void setProductType(Integer productType) {
         this.productType = productType;
     }
 
@@ -208,19 +209,19 @@ public class Product {
         this.extendExpiringDate = extendExpiringDate;
     }
 
-    public Boolean getNterestMode() {
+    public Integer getNterestMode() {
         return nterestMode;
     }
 
-    public void setNterestMode(Boolean nterestMode) {
+    public void setNterestMode(Integer nterestMode) {
         this.nterestMode = nterestMode;
     }
 
-    public Boolean getContractTemplate() {
+    public Integer getContractTemplate() {
         return contractTemplate;
     }
 
-    public void setContractTemplate(Boolean contractTemplate) {
+    public void setContractTemplate(Integer contractTemplate) {
         this.contractTemplate = contractTemplate;
     }
 
@@ -272,11 +273,11 @@ public class Product {
         this.projectDetail = projectDetail;
     }
 
-    public Boolean getRefundSource() {
+    public Integer getRefundSource() {
         return refundSource;
     }
 
-    public void setRefundSource(Boolean refundSource) {
+    public void setRefundSource(Integer refundSource) {
         this.refundSource = refundSource;
     }
 
@@ -328,11 +329,11 @@ public class Product {
         this.modifyTime = modifyTime;
     }
 
-    public Boolean getDelFlag() {
+    public Integer getDelFlag() {
         return delFlag;
     }
 
-    public void setDelFlag(Boolean delFlag) {
+    public void setDelFlag(Integer delFlag) {
         this.delFlag = delFlag;
     }
 
@@ -344,11 +345,11 @@ public class Product {
         this.ext = ext;
     }
 
-    public Boolean getNewOrOldType() {
+    public Integer getNewOrOldType() {
         return newOrOldType;
     }
 
-    public void setNewOrOldType(Boolean newOrOldType) {
+    public void setNewOrOldType(Integer newOrOldType) {
         this.newOrOldType = newOrOldType;
     }
 
@@ -384,11 +385,11 @@ public class Product {
         this.pushPartyId = pushPartyId;
     }
 
-    public Boolean getBillType() {
+    public Integer getBillType() {
         return billType;
     }
 
-    public void setBillType(Boolean billType) {
+    public void setBillType(Integer billType) {
         this.billType = billType;
     }
 

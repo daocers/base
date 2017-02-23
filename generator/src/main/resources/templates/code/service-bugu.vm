@@ -22,8 +22,6 @@
 ##    PageInfo listByObject(${className} ${variableName}, PageInfo<${className}> pageInfo) throws Exception;
 ##
 ##}
-
-
 package ${mainPkg}.service;
 
 import ${mainPkg}.model.${className};

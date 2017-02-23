@@ -62,7 +62,12 @@
 ##import ${mainPkg}.service.I${className}Service;
 ##import ${rootPkg}.framework.core.service.impl.BaseServiceImpl;
 ##import org.springframework.stereotype.Service;
+package ${mainPkg}.service.impl;
 
+import ${mainPkg}.model.PushParty;
+import ${mainPkg}.service.IPushPartyService;
+import ${rootPkg}.framework.core.service.impl.BaseServiceImpl;
+import org.springframework.stereotype.Service;
 /**
 * .
 */

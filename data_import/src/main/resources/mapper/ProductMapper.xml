@@ -45,7 +45,7 @@
     <result column="max_invest_total_amount" property="maxInvestTotalAmount" jdbcType="DECIMAL" />
     <result column="max_invest_num" property="maxInvestNum" jdbcType="INTEGER" />
   </resultMap>
-  <sql id="tblProduct_list" >
+  <sql id="tbl_product_list" >
     id, product_code, product_type, product_name, issue_amount, product_deadline, plan_annual_yield, 
     raise_start_date, raise_end_date, start_bid_amount, increment_amount, extend_deadline, 
     value_date, expiring_date, extend_expiring_date, nterest_mode, contract_template, 
@@ -57,7 +57,7 @@
   </sql>
   <select id="selectById" resultMap="ProductMap" parameterType="java.lang.Long" >
     select 
-    <include refid="tblProduct_list" />
+    <include refid="tbl_product_list" />
     from tbl_product
     where id = #{id,jdbcType=BIGINT}
   </select>
@@ -458,7 +458,7 @@
 
 	<select id="findByObject" resultMap="ProductMap" parameterType="java.lang.Long" >
     select 
-    <include refid="tblProduct_list" />
+    <include refid="tbl_product_list" />
     from tbl_product
     </select>
 </mapper>

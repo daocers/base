@@ -2,10 +2,9 @@ package co.bugu.data.service.impl;
 
 import co.bugu.data.model.Dic;
 import co.bugu.data.model.FactoringAsset;
-import co.bugu.data.service.IDataService;
-import co.bugu.data.service.IDicService;
-import co.bugu.data.service.IFactoringAssetService;
-import co.bugu.data.service.IProductService;
+import co.bugu.data.model.Product;
+import co.bugu.data.model.PushParty;
+import co.bugu.data.service.*;
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -29,15 +27,18 @@ public class DataServiceImpl implements IDataService{
     IDicService dicService;
     @Autowired
     IProductService productService;
+    @Autowired
+    IPushPartyService pushPartyService;
 
     private static Logger logger = LoggerFactory.getLogger(IDataService.class);
 
     @Override
-    public void add(List<List<String>> assetData, List<List<String>> productData) throws ParseException {
+    public void add(List<List<String>> assetData, List<List<String>> productData) throws Exception {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Map<String, Integer> type = new HashMap<>();
         Map<String, Integer> cType = new HashMap<>();
         Map<String, Long> assetNoIdMap = new HashMap<>();
+        Map<String, Long> pushPartyMap = initPushPartyInfo();
 
         Dic dic = new Dic();
         dic.setName("内部资产");
@@ -99,7 +100,7 @@ public class DataServiceImpl implements IDataService{
             if(asset.getResidualMaturity() < 0){
                 asset.setResidualMaturity(0);
             }
-            asset.setStatus(getStatus(line.get(25)));
+            asset.setStatus(getAssetStatus(line.get(25)));
             asset.setBaseCreditorRightsContract(getBoolean(line.get(26)));
             asset.setCreditorRightsTransferApplication(getBoolean(line.get(27)));
             asset.setReceivableCreditTransferApplication(getBoolean(line.get(28)));
@@ -116,9 +117,79 @@ public class DataServiceImpl implements IDataService{
 
             factoringAssetService.save(asset);
             assetNoIdMap.put(assetNo, asset.getId());
-
-
         }
+
+        for(List<String> line: productData){
+            Product product = new Product();
+            product.setProductType(1);
+            product.setDelFlag(0);
+            String shoukuanren = line.get(1);
+
+//            处理还款来源
+            String refundSource = line.get(3);
+            if("其他".equals(refundSource)){
+                product.setRefundSource(1);
+            }else{
+                product.setRefundSource(2);//债务人还款
+            }
+            product.setProductName(line.get(4));
+            product.setStatus(getProductStatus(line.get(5)));//状态
+            String assetCode = line.get(6);
+            product.setProductCode(line.get(7));
+            product.setIssueAmount(BigDecimal.valueOf(Double.valueOf(line.get(8))));//发标金额
+            product.setSettleAmount(BigDecimal.valueOf(Double.valueOf(line.get(9))));//结标金额
+            product.setRaiseStartDate(format.parse(line.get(10)));//募集起始日
+            product.setRaiseEndDate(format.parse(line.get(11)));//募集结束日
+
+            product.setValueDate(format.parse(line.get(12)));//起息日
+            product.setProductDeadline(Integer.valueOf(line.get(13)));//产品期限
+            product.setExpiringDate(format.parse(line.get(14)));//产品到期日
+            product.setPlanAnnualYield(BigDecimal.valueOf(Double.valueOf(line.get(20)) * 100)); //预计年化收益率
+
+            product.setPlanCashDay(StringUtils.isEmpty(line.get(23)) ? null : format.parse(line.get(23)));//计划兑付日
+            product.setExtendDeadline(StringUtils.isEmpty(line.get(24)) ? null : Integer.valueOf(line.get(24)));//宽限期
+            product.setInterestPenaltyRate(StringUtils.isEmpty(line.get(25)) ? null :
+                BigDecimal.valueOf(Double.valueOf(line.get(25)) * 100));//罚息利率
+
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(product.getExpiringDate());
+            calendar.add(Calendar.DAY_OF_YEAR, product.getExtendDeadline());
+            product.setExpiringDate(calendar.getTime());//宽限期到期日
+            product.setMaxInvestTotalAmount(null);//最大投资总额
+            product.setStartBidAmount(null);//起投金额
+            product.setIncrementAmount(null);//递增金额
+            product.setMaxInvestAmount(null);//最大投资额
+            product.setMaxInvestNum(null);//最大投资次数
+            product.setNterestMode(78);//计息方式（到期一次性支付，在系统dic表中的数据id，谨慎起见应该先查询）
+            product.setContractTemplate(1);//合同模板
+            product.setRepaymentAmount(BigDecimal.valueOf(Double.valueOf(line.get(22))));//还款金额
+            product.setFactraiseTime(null);//实际募集时间
+            product.setFactknotTime(null);//实际结标时间
+            product.setRepaymentTime(null);//实际还款时间
+            product.setCreateTime(new Date());//创建时间
+            product.setModifyTime(new Date());//更新时间
+            product.setNewOrOldType(0);//产品新旧标志 0 新， 1 再
+            product.setContinueStatus(null);//接续标志
+            product.setContinueAmount(null);//已接续金额
+            product.setPushPartyId(pushPartyMap.get(line.get(2)));//推送方id
+
+            productService.save(product);
+        }
+
+
+
+        logger.info("执行插入资产信息成功,准备抛出异常，回滚数据");
+        throw new Exception("抛出异常，保持数据不入库");
+    }
+
+    private Map<String, Long> initPushPartyInfo() {
+        Map<String, Long> map = new HashMap<>();
+        List<PushParty> list = pushPartyService.findByObject(null);
+        for(PushParty party: list){
+            map.put(party.getPushPartyOrgCode(), party.getId());
+        }
+        return map;
     }
 
     private void processType(String name, FactoringAsset asset){
@@ -173,11 +244,11 @@ public class DataServiceImpl implements IDataService{
     }
 
     /**
-     * 根据状态查询状态码
+     * 根据状态查询资产状态码
      * @param s
      * @return
      */
-    private Byte getStatus(String s) {
+    private Byte getAssetStatus(String s) {
         Map<String, Integer> map = new HashMap<>();
         map.put("初始登记", 1);
         map.put("待审核", 3);
@@ -192,6 +263,24 @@ public class DataServiceImpl implements IDataService{
             return null;
         }
         return map.get(s).byteValue();
+    }
+
+    private Integer getProductStatus(String name){
+        Map<String, Integer> map = new HashMap<>();
+        map.put("编辑中", -1);
+        map.put("未推送(资管初始)", 0);
+        map.put("已推送", 1);
+        map.put("已安排", 2);
+        map.put("产品投放", 3);
+        map.put("满标", 4);
+        map.put("流标", 5);
+        map.put("已结算", 6);
+        map.put("还款中", 7);
+        map.put("已还清", 8);
+        map.put("已存档", 9);
+        map.put("撤回中", 10);
+        map.put("已取消", 11);
+        return map.get(name);
     }
 
     /**
