@@ -306,7 +306,7 @@
   </update>
   
 
-	<select id="findByObject" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+	<select id="findByObject" resultMap="ResultMapWithBLOBs" parameterType="co.bugu.data.model.PushParty" >
     select 
     <include refid="tbl_push_party_list" />
     ,

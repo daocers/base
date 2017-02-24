@@ -28,7 +28,7 @@ import java.util.*;
 @Intercepts({
 //        @Signature(type = Executor.class, method = "", args = null ),
         @Signature(type = ParameterHandler.class, method = "setParameters", args = {PreparedStatement.class}),
-        @Signature(type = ResultSetHandler.class, method = "handleResultSets", args = {Statement.class}),
+//        @Signature(type = ResultSetHandler.class, method = "handleResultSets", args = {Statement.class}),
         @Signature(type = StatementHandler.class, method = "prepare", args = {Connection.class})
 })
 public class SqlParamInterceptor implements Interceptor {
@@ -57,9 +57,7 @@ public class SqlParamInterceptor implements Interceptor {
 
 
         }
-        if (target instanceof ResultSetHandler) {
 
-        }
         if (target instanceof StatementHandler) {
 
             StatementHandler statementHandler = (StatementHandler) invocation.getTarget();
@@ -82,7 +80,6 @@ public class SqlParamInterceptor implements Interceptor {
                 return invocation.proceed();
             }
             RoutingStatementHandler handler = (RoutingStatementHandler) target;
-            ParameterHandler parameterHandler = handler.getParameterHandler();
             BoundSql boundSql = statementHandler.getBoundSql();
             Object paramObj = boundSql.getParameterObject();
             Map<String, Object> searchParameter = ThreadLocalUtil.get();
@@ -227,6 +224,9 @@ public class SqlParamInterceptor implements Interceptor {
      */
     private Map<String, Object> processSearchParam(Object paramObject) throws IllegalAccessException {
         Map<String, Object> searchParam = new HashMap<>();
+        if(paramObject == null){
+            return searchParam;
+        }
         Field[] fields = paramObject.getClass().getDeclaredFields();
         for (Field field : fields) {
             field.setAccessible(true);
@@ -247,6 +247,7 @@ public class SqlParamInterceptor implements Interceptor {
                 searchParam.put("EQ_" + name, value);
             }
         }
+        ThreadLocalUtil.set(searchParam);
         return searchParam;
     }
 

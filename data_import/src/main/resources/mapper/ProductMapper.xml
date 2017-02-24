@@ -456,7 +456,7 @@
   </update>
   
 
-	<select id="findByObject" resultMap="ProductMap" parameterType="java.lang.Long" >
+	<select id="findByObject" resultMap="ProductMap" parameterType="co.bugu.data.model.Product" >
     select 
     <include refid="tbl_product_list" />
     from tbl_product

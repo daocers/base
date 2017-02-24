@@ -517,7 +517,7 @@
   </update>
   
 
-	<select id="findByObject" resultMap="FactoringAssetMap" parameterType="java.lang.Long" >
+	<select id="findByObject" resultMap="FactoringAssetMap" parameterType="co.bugu.data.model.FactoringAsset" >
     select 
     <include refid="tblFactoringAsset_list" />
     from tbl_factoring_asset

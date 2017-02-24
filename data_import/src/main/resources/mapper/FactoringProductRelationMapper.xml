@@ -59,7 +59,7 @@
   </update>
   
 
-	<select id="findByObject" resultMap="FactoringProductRelationMap" parameterType="java.lang.Long" >
+	<select id="findByObject" resultMap="FactoringProductRelationMap" parameterType="co.bugu.data.model.FactoringProductRelation" >
     select 
     <include refid="tblFactoringProductRelation_list" />
     from tbl_factoring_product_relation
