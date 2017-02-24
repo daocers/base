@@ -129,6 +129,7 @@ public class XmlUtil {
             }
 
             pageSql = pageSql.replace("java.lang.Integer", resultMapText);
+            pageSql = pageSql.replace("java.lang.Long", resultMapText);
 
 
             String regex = "namespace=\"\\S+\"";
