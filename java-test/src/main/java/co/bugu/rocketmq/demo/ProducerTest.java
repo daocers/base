@@ -21,6 +21,7 @@ public class ProducerTest extends Config {
     static {
         producer = new DefaultMQProducer(producerGroup);
         producer.setNamesrvAddr(nameServer);
+        producer.setClientIP("192.168.0.3");
         try {
             producer.start();
         } catch (MQClientException e) {

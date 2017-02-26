@@ -20,6 +20,7 @@ public class ConsumerTest extends Config {
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(consumerGroup);
         consumer.setNamesrvAddr(nameServer);
         consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
+        consumer.setClientIP("192.168.0.3");
         try {
             consumer.subscribe("topic1", "tag1 || tag2");
         } catch (MQClientException e) {
@@ -35,6 +36,11 @@ public class ConsumerTest extends Config {
                 return ConsumeOrderlyStatus.SUCCESS;
             }
         });
+        try {
+            consumer.start();
+        } catch (MQClientException e) {
+            e.printStackTrace();
+        }
     }
 
 
