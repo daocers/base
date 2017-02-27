@@ -3,7 +3,6 @@ package co.bugu.data.service.impl;
 import co.bugu.data.model.*;
 import co.bugu.data.service.*;
 import co.bugu.framework.core.dao.BaseDao;
-import co.bugu.framework.core.service.IBaseService;
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -36,10 +35,9 @@ public class DataServiceImpl implements IDataService {
     private static Logger logger = LoggerFactory.getLogger(IDataService.class);
 
     @Override
-    public void add(List<List<String>> assetData, List<List<String>> productData) throws Exception {
+    public void add(List<List<String>> assetData, List<List<String>> productData, Map<String, Integer> cType, Map<String, Integer> gType) throws Exception {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Map<String, Integer> type = new HashMap<>();
-        Map<String, Integer> cType = new HashMap<>();
+
         Map<String, Long> assetNoIdMap = new HashMap<>();
         Map<String, Long> assetNoProdIdMap = new HashMap<>();
         Map<Long, String> pushPartyIdNameMap = new HashMap<>();
@@ -47,25 +45,18 @@ public class DataServiceImpl implements IDataService {
         Map<String, Long> pushPartyMap = new HashMap<>();
         initPushPartyInfo(pushPartyIdNameMap, pushPartyMap);
 
-        Dic dic = new Dic();
-        dic.setName("内部资产");
-        dic = (Dic) baseDao.selectOne("data.dic.findByObject", dic);
-        Long id = dic.getId();
-        dic = new Dic();
-        dic.setPid(id);
-        List<Dic> dics = baseDao.selectList("data.dic.findByObject", dic);
-        for (Dic dic1 : dics) {
-            type.put(dic1.getName(), dic1.getId().intValue());
-            dic = new Dic();
-            dic.setPid(dic1.getId());
-            List<Dic> dics1 = baseDao.selectList("data.dic.findByObject", dic);
-            for (Dic dic2 : dics1) {
-                cType.put(dic2.getName(), dic2.getId().intValue());
-            }
-        }
+
 
         if (assetData != null && assetData.size() > 0) {
             assetData.remove(0);
+        }
+
+        Integer assetType = null;
+        Dic dic = new Dic();
+        dic.setName("内部资产");
+        List<Dic> list = dicService.findByObject(dic);
+        if(list.size() > 0){
+            dic = list.get(0);
         }
         for (List<String> line : assetData) {
             String assetNo = line.get(1);
@@ -75,13 +66,14 @@ public class DataServiceImpl implements IDataService {
             }
             FactoringAsset asset = new FactoringAsset();
             asset.setAssetsCode(assetNo);
-            asset.setAssetsType(type.get(getType(line.get(2))));//资产类型
-            asset.setAssetCtype(cType.get(getCtype(line.get(2))));//子类型
+            asset.setAssetsType(dic.getId().intValue());
+            asset.setAssetCtype(cType.get(getCtype(line.get(2))));//资产类型
+            asset.setAssetGtype(gType.get(getGtype(line.get(2))));//子类型
             asset.setValueDate(StringUtils.isEmpty(line.get(3)) ? null : format.parse(line.get(3)));
             asset.setExpiringDate(StringUtils.isEmpty(line.get(4)) ? null : format.parse(line.get(4)));
             asset.setNewDeadline(0);//资产到期日 - 第一个新产品的起息日
             asset.setDeadline(StringUtils.isEmpty(line.get(5)) ? null : Double.valueOf(line.get(5)).intValue());//资产原始期限
-            asset.setRate(StringUtils.isEmpty(line.get(6)) ? null : BigDecimal.valueOf(Double.valueOf(line.get(6)) * 100));
+            asset.setOriginalRate(StringUtils.isEmpty(line.get(6)) ? null : BigDecimal.valueOf(Double.valueOf(line.get(21)) * 100));
             asset.setRePricingMode(line.get(7));//重定价方式
             asset.setAssetAmount(BigDecimal.valueOf(Double.valueOf(line.get(8))));
             asset.setInterestCalculation(getInterestCalculation(line.get(9)));//计息方式
@@ -102,7 +94,7 @@ public class DataServiceImpl implements IDataService {
             asset.setPushingResidualMaturity(StringUtils.isEmpty(line.get(20)) ? null : Double.valueOf(line.get(20)).intValue());//推送时候剩余期限
 //
 //            资本采购成本
-            asset.setOriginalRate(StringUtils.isEmpty(line.get(21)) ? null : BigDecimal.valueOf(Double.valueOf(line.get(21)) * 100));
+            asset.setRate(StringUtils.isEmpty(line.get(21)) ? null : BigDecimal.valueOf(Double.valueOf(line.get(21)) * 100));
             asset.setSlottingAllowance(StringUtils.isEmpty(line.get(22)) ? null : BigDecimal.valueOf(Double.valueOf(line.get(22)) * 100));//通道费
             asset.setAssetBalanceRepeat(null);//资产剩余金额，再发布
             asset.setAssetBalance(StringUtils.isEmpty(line.get(23)) || "-".equals(line.get(23)) ? null : BigDecimal.valueOf(Double.valueOf(line.get(23))));//资产剩余金额，原始
@@ -133,7 +125,7 @@ public class DataServiceImpl implements IDataService {
         }
         for (List<String> line : productData) {
             Product product = new Product();
-            product.setProductType(1);
+            product.setProductType(2);
             product.setDelFlag(0);
             String shoukuanren = line.get(1);
 
@@ -224,7 +216,7 @@ public class DataServiceImpl implements IDataService {
         }
     }
 
-    private String getType(String name) {
+    private String getCtype(String name) {
         if (StringUtils.isEmpty(name)) {
             return null;
         }
@@ -234,7 +226,7 @@ public class DataServiceImpl implements IDataService {
         return name;
     }
 
-    private String getCtype(String name) {
+    private String getGtype(String name) {
         if (StringUtils.isEmpty(name)) {
             return null;
         }
@@ -273,7 +265,7 @@ public class DataServiceImpl implements IDataService {
         map.put("已入库", 7);
         map.put("已分配", 8);
         map.put("分配完成", 9);
-        map.put("已过期", 10);
+        map.put("已到期", 10);
         map.put("暂停使用", 11);
         map.put("已还款", 12);
         if (!map.containsKey(s)) {
@@ -309,7 +301,7 @@ public class DataServiceImpl implements IDataService {
      * @return
      */
     private Byte getInterestCalculation(String s) {
-        if ("到期一次性支付".equals(s)) {
+        if ("到期一次性支付".equals(s) || "到期一次还本付息".equals(s)) {
             return 78;
         }
         return 0;
