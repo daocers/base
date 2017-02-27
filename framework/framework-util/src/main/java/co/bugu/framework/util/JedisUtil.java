@@ -509,6 +509,9 @@ public class JedisUtil {
     public static Set<String> keysLike(String key) throws TesException {
         Jedis jedis = null;
         try{
+            if(!key.endsWith("*")){
+                key = key + "*";
+            }
             jedis = pool.getResource();
             Set<String> keys = jedis.keys(key);
             return keys;

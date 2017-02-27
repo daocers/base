@@ -11,7 +11,6 @@ import co.bugu.tes.service.IQuestionService;
 import co.bugu.tes.util.QuestionUtil;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -42,7 +41,7 @@ public class QuestionServiceImpl extends BaseServiceImpl<Question> implements IQ
 
 
     @Override
-    public int saveOrUpdate(Question question, List<Map<String, Integer>> xList) {
+    public int saveOrUpdate(Question question, List<Map<String, Integer>> xList) throws TesException {
         int num;
         if (question.getId() == null) {
             num = baseDao.insert("tes.question.insert", question);
@@ -54,48 +53,45 @@ public class QuestionServiceImpl extends BaseServiceImpl<Question> implements IQ
         for (Map<String, Integer> map : xList) {
             map.put("questionId", question.getId());
             baseDao.insert("tes.question.addToPropItem", map);
-
-//            将属性信息添加到redis中的set上
-//            QUESTION_PROPITEM_ID_ + 题型id + 属性id
-            Integer propItemId = map.get("propItemId");
-            JedisUtil.sadd(Constant.QUESTION_PROPITEM_ID + question.getMetaInfoId() + "_" + propItemId, question.getId() + "");
         }
+        QuestionUtil.updateCacheAfterUpdate(question);
         return num;
     }
 
-    @Override
-    public List<Map<String, Object>> selectCountOfPropInfo(Integer metaInfoId) {
-        return baseDao.selectList("tes.question.selectCountOfPropInfo", metaInfoId);
-    }
+//    @Override
+//    public List<Map<String, Object>> selectCountOfPropInfo(Integer metaInfoId) {
+//        return baseDao.selectList("tes.question.selectCountOfPropInfo", metaInfoId);
+//    }
 
     @Override
-    public int batchAdd(List<Question> questionList) {
+    public int batchAdd(List<Question> questionList) throws TesException {
         int num = 0;
         for(Question question: questionList){
             baseDao.insert("tes.question.insert", question);
             num++;
+            QuestionUtil.updateCacheAfterUpdate(question);
         }
         return num;
     }
 
     @Override
-    public Set<String> findQuestionByPropItemId(Integer questionMetaInfoId, List<Integer> ids) throws TesException{
+    public Set<String> findQuestionByPropItemId(Integer questionMetaInfoId, Integer questionBankId, List<Integer> ids) throws TesException{
 //        String[] keys = new String[ids.length];
 //        for(int i = 0; i < ids.length; i++){
 //            keys[i] = Constant.QUESTION_PROPITEM_ID + questionMetaInfoId + "_"+ ids[i];
 //        }
 //        return JedisUtil.sinterForObj(keys);
-        return QuestionUtil.findQuestionByPropItemId(questionMetaInfoId, ids);
+        return QuestionUtil.findQuestionByPropItemId(questionMetaInfoId, questionBankId, ids);
     }
 
     @Override
-    public int getCountByPropItemId(Integer questionMetaInfoId, List<Integer> ids) throws TesException {
+    public int getCountByPropItemId(Integer questionMetaInfoId, Integer questionBankId, List<Integer> ids) throws TesException {
 //        String[] keys = new String[ids.length];
 //        for(int i = 0; i < ids.length; i++){
 //            keys[i] = Constant.QUESTION_PROPITEM_ID +questionMetaInfoId + "_" + ids[i];
 //        }
 //        return JedisUtil.sinterForSize(keys);
-        return QuestionUtil.getCountByPropItemId(questionMetaInfoId, ids);
+        return QuestionUtil.getCountByPropItemId(questionMetaInfoId, questionBankId, ids);
     }
 
 

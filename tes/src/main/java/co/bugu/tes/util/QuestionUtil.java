@@ -3,6 +3,10 @@ package co.bugu.tes.util;
 import co.bugu.framework.util.JedisUtil;
 import co.bugu.framework.util.exception.TesException;
 import co.bugu.tes.global.Constant;
+import co.bugu.tes.model.Question;
+import com.alibaba.fastjson.JSON;
+import org.omg.PortableInterceptor.INACTIVE;
+import redis.clients.jedis.Jedis;
 
 import java.util.*;
 
@@ -13,20 +17,54 @@ import java.util.*;
  */
 public class QuestionUtil {
     /**
+     * 更新试题后更新缓存
+     * @param question
+     * @throws TesException
+     */
+    public static void updateCacheAfterUpdate(Question question) throws TesException {
+        String questionId = question.getId().toString();
+
+        Set<String> keys =  JedisUtil.keysLike(Constant.QUESTION_PROPITEM_ID);
+        for(String key: keys){
+            //先删除缓存中所有关于该列的缓存
+            JedisUtil.srem(key, questionId);
+        }
+
+
+        //添加更新后的缓存数量
+        Integer questionMetaInfoId = question.getMetaInfoId();
+        Integer bankId = question.getQuestionBankId();
+        List<Integer> propItemIdList = JSON.parseArray(question.getPropItemIdInfo(), Integer.class);
+        for (Integer id : propItemIdList) {
+            JedisUtil.sadd(Constant.QUESTION_PROPITEM_ID + questionMetaInfoId + "_" +
+                    Constant.QUESTION_BANK_ID + bankId + "_" + id, questionId);
+            JedisUtil.sadd(Constant.QUESTION_PROPITEM_ID + questionMetaInfoId
+                    + "_" + id, questionId);
+        }
+    }
+
+    /**
      * 根据题型id，属性id组合获取符合条件的试题的id
      *
      * @param questionMetaInfoId
+     * @param questionBankId     题库id
      * @param ids                属性组合
      * @return
      * @throws TesException
      */
-    public static Set<String> findQuestionByPropItemId(Integer questionMetaInfoId, List<Integer> ids) throws TesException {
+    public static Set<String> findQuestionByPropItemId(Integer questionMetaInfoId, Integer questionBankId, List<Integer> ids) throws TesException {
         String[] keys = new String[ids.size()];
 //        for(int i = 0; i < ids.length; i++){
 //            keys[i] = Constant.QUESTION_PROPITEM_ID + questionMetaInfoId + "_"+ ids[i];
 //        }
         for (int i = 0; i < ids.size(); i++) {
-            keys[i] = Constant.QUESTION_PROPITEM_ID + questionMetaInfoId + "_" + ids.get(i);
+//            keys[i] = Constant.QUESTION_PROPITEM_ID + questionMetaInfoId + "_" + ids.get(i);
+            if (questionBankId != null && questionBankId != 0) {
+                keys[i] = Constant.QUESTION_PROPITEM_ID + questionMetaInfoId + Constant.QUESTION_BANK_ID+ "_" +
+                        + questionBankId + "_" + ids.get(i);
+            } else {
+                keys[i] = Constant.QUESTION_PROPITEM_ID + questionMetaInfoId + "_" + ids.get(i);
+            }
         }
         return JedisUtil.sinterForObj(keys);
     }
@@ -35,43 +73,49 @@ public class QuestionUtil {
      * 根据题型id，属性id组合获取符合条件的试题的数量
      *
      * @param questionMetaInfoId
+     * @param questionBankId     题库id
      * @param ids
      * @return
      * @throws TesException
      */
-    public static int getCountByPropItemId(Integer questionMetaInfoId, List<Integer> ids) throws TesException {
+    public static int getCountByPropItemId(Integer questionMetaInfoId, Integer questionBankId, List<Integer> ids) throws TesException {
         String[] keys = new String[ids.size()];
         for (int i = 0; i < ids.size(); i++) {
-            keys[i] = Constant.QUESTION_PROPITEM_ID + questionMetaInfoId + "_" + ids.get(i);
+            if (questionBankId != null && questionBankId != 0) {//指定题库
+                keys[i] = Constant.QUESTION_PROPITEM_ID + questionMetaInfoId + Constant.QUESTION_BANK_ID+ "_" +
+                        + questionBankId + "_" + ids.get(i);
+            } else {//不分题库，在所有的题目信息中获取
+                keys[i] = Constant.QUESTION_PROPITEM_ID + questionMetaInfoId + "_" + ids.get(i);
+            }
         }
-//        for(int i = 0; i < ids.length; i++){
-//            keys[i] = Constant.QUESTION_PROPITEM_ID +questionMetaInfoId + "_" + ids[i];
-//        }
         return JedisUtil.sinterForSize(keys);
     }
 
     /**
      * 根据数量获取最终的试题id组合
+     *
      * @param questionIdList
-     * @param count  需要选择的数量
+     * @param count          需要选择的数量
      * @return
      */
     public static Set<Integer> getResult(List<Integer> questionIdList, Integer count) throws Exception {
-        if(count > questionIdList.size()){
+        if (count > questionIdList.size()) {
             throw new Exception("需要选择的数量大于试题集合的数量");
         }
         Set<Integer> res = new HashSet<>();
         Collections.shuffle(questionIdList);
-        for(int i = 0; i < count; i++){
+        for (int i = 0; i < count; i++) {
             res.add(questionIdList.get(i));
         }
         return res;
     }
 
+
     /**
      * 根据试题类型随机获取一定数量的试题
-     * @param questionMetaInfoId  试题类型id
-     * @param count 需要的数量
+     *
+     * @param questionMetaInfoId 试题类型id
+     * @param count              需要的数量
      * @return
      */
     public static List<Integer> getResultByQuesMetaId(Integer questionMetaInfoId, Integer count) {

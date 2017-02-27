@@ -38,4 +38,6 @@ public interface Constant {
     String SESSION_USER_ID = "user_id";
 
     String QUESTION_PROPITEM_ID = "QUESTION_PROPITEM_ID_";
+
+    String QUESTION_BANK_ID = "BANK_";
 }

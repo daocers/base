@@ -13,6 +13,7 @@ import co.bugu.tes.model.QuestionMetaInfo;
 import co.bugu.tes.service.IQuestionBankService;
 import co.bugu.tes.service.IQuestionMetaInfoService;
 import co.bugu.tes.service.IQuestionService;
+import co.bugu.tes.util.QuestionUtil;
 import com.alibaba.fastjson.JSON;
 import co.bugu.framework.core.dao.PageInfo;
 import org.apache.commons.lang.StringUtils;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import sun.security.krb5.internal.PAData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -386,7 +388,7 @@ public class QuestionController {
 //            for(int i = 0; i < ids.size(); i++){
 //                keys[i] = ids.get(i);
 //            }
-            return questionService.getCountByPropItemId(metaId, ids) + "";
+            return questionService.getCountByPropItemId(metaId, null, ids) + "";
         }catch (Exception e){
             logger.error("获取指定属性的试题数量失败", e);
             return "-1";
@@ -399,30 +401,20 @@ public class QuestionController {
      * 缓存在redis上
      */
     private void initQuestion() throws TesException {
-        JedisUtil.delKeysLike(Constant.METAINFO_PROP_COUNT + "*");
-
-//        该放发还需要优化，处理之前要删除所有的 关于题型的缓存
-        List<QuestionMetaInfo> questionMetaInfoList = questionMetaInfoService.findByObject(null);
-        for(QuestionMetaInfo metaInfo: questionMetaInfoList){
-            Integer metaInfoId = metaInfo.getId();
-
-            List<Map<String, Object>> list = questionService.selectCountOfPropInfo(metaInfoId);
-            for(Map<String, Object> data : list){
-                Long cnt = (Long) data.get("cnt");
-                String propInfo = (String) data.get("propInfo");
-                String[] ids = propInfo.split(",");
-                int[] itemIds = new int[ids.length];
-                for(int i = 0; i < ids.length; i++){
-                    itemIds[i] = Integer.valueOf(ids[i]);
+        try{
+            PageInfo<Question> pageInfo = new PageInfo<>(100, 1);
+            questionService.findByObject(null, pageInfo);
+            while (pageInfo.getData().size() == 100){
+                List<Question> questions = pageInfo.getData();
+                for(Question question: questions){
+                    QuestionUtil.updateCacheAfterUpdate(question);
                 }
-
-                List<List<Integer>> itemList = processItemId(itemIds, false);
-                for(List<Integer> item: itemList){
-                    String itemInfo = arrToString(item);
-                    String key = Constant.METAINFO_PROP_COUNT + metaInfoId + "_" + itemInfo;
-                    JedisUtil.incrby(key, cnt);
-                }
+                pageInfo.setCurPage(pageInfo.getCurPage() + 1);
+                questionService.findByObject(null, pageInfo);
             }
+            logger.info("试题初始化完成, 当前时间： {}", new Date());
+        }catch (Exception e){
+            logger.error("初始化试题缓存信息失败", e);
         }
     }
 

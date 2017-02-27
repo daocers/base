@@ -129,11 +129,11 @@ public class PaperServiceImpl extends BaseServiceImpl<Paper> implements IPaperSe
 //            int数组，最后一个元素是该属性组合的所选试题数量，前面的为试题属性组合
                 List<Integer> propertyIds = JSON.parseArray(quesContent, Integer.class);
                 Integer count = propertyIds.remove(propertyIds.size() - 1);
-                Integer existCount = QuestionUtil.getCountByPropItemId(questionPolicy.getQuestionMetaInfoId(), propertyIds);
+                Integer existCount = QuestionUtil.getCountByPropItemId(questionPolicy.getQuestionMetaInfoId(), bankId, propertyIds);
                 if (existCount < count) {
                     throw new Exception("试题数量不足");
                 }
-                Set<String> questionIds = QuestionUtil.findQuestionByPropItemId(questionPolicy.getQuestionMetaInfoId(), propertyIds);
+                Set<String> questionIds = QuestionUtil.findQuestionByPropItemId(questionPolicy.getQuestionMetaInfoId(), bankId, propertyIds);
                 List<Integer> quesIdList = new ArrayList<>();
                 for (String id : questionIds) {
                     quesIdList.add(Integer.parseInt(id));

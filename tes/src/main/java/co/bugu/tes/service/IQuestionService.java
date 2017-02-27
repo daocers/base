@@ -15,7 +15,7 @@ public interface IQuestionService extends IBaseService<Question>{
 
 //    int updateById(Question question);
 
-    int saveOrUpdate(Question question, List<Map<String, Integer>> xList);
+    int saveOrUpdate(Question question, List<Map<String, Integer>> xList) throws TesException;
 
 //    int delete(Question question);
 
@@ -25,11 +25,13 @@ public interface IQuestionService extends IBaseService<Question>{
 
 //    PageInfo listByObject(Question question, PageInfo<Question> pageInfo) throws Exception;
 
-    List<Map<String, Object>> selectCountOfPropInfo(Integer metaInfoId);
+//    List<Map<String, Object>> selectCountOfPropInfo(Integer metaInfoId);
 
-    int batchAdd(List<Question> questionList);
+    int batchAdd(List<Question> questionList) throws TesException;
 
-    Set<String> findQuestionByPropItemId(Integer questionMetaInfoId, List<Integer> ids) throws TesException;
 
-    int getCountByPropItemId(Integer questionMetaInfoId, List<Integer> ids) throws TesException;
+    Set<String> findQuestionByPropItemId(Integer questionMetaInfoId, Integer questionBankId, List<Integer> ids) throws TesException;
+
+
+    int getCountByPropItemId(Integer questionMetaInfoId, Integer questionBankId, List<Integer> ids) throws TesException;
 }
