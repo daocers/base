@@ -27,6 +27,7 @@
         <module>database-gen</module>
         <module>kacha-payment-web</module>
         <module>logback-test</module>
+        <module>lucene</module>
         <module>java-test</module>
         <module>mq-test</module>
         <module>data_import</module>

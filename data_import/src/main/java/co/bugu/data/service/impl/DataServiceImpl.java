@@ -127,7 +127,6 @@ public class DataServiceImpl implements IDataService {
             Product product = new Product();
             product.setProductType(2);
             product.setDelFlag(0);
-            String shoukuanren = line.get(1);
 
 //            处理还款来源
             String refundSource = line.get(3);
@@ -139,24 +138,24 @@ public class DataServiceImpl implements IDataService {
             product.setProductName(line.get(4));
             product.setStatus(getProductStatus(line.get(5)));//状态
             String assetCode = line.get(6);
-            product.setProductCode(line.get(7));
+            product.setProductCode(line.get(8));//产品编号
             if (StringUtils.isEmpty(product.getProductCode())) {
                 continue;
             }
-            product.setIssueAmount(BigDecimal.valueOf(Double.valueOf(line.get(8))));//发标金额
-            product.setSettleAmount(BigDecimal.valueOf(Double.valueOf(line.get(9))));//结标金额
-            product.setRaiseStartDate(format.parse(line.get(10)));//募集起始日
-            product.setRaiseEndDate(format.parse(line.get(11)));//募集结束日
+            product.setIssueAmount(BigDecimal.valueOf(Double.valueOf(line.get(9))));//发标金额
+            product.setSettleAmount(BigDecimal.valueOf(Double.valueOf(line.get(10))));//结标金额
+            product.setRaiseStartDate(format.parse(line.get(11)));//募集起始日
+            product.setRaiseEndDate(format.parse(line.get(12)));//募集结束日
 
-            product.setValueDate(format.parse(line.get(12)));//起息日
-            product.setProductDeadline(Double.valueOf(line.get(13)).intValue());//产品期限
-            product.setExpiringDate(format.parse(line.get(14)));//产品到期日
-            product.setPlanAnnualYield(BigDecimal.valueOf(Double.valueOf(line.get(21)) * 100)); //预计年化收益率
+            product.setValueDate(format.parse(line.get(13)));//起息日
+            product.setProductDeadline(Double.valueOf(line.get(14)).intValue());//产品期限
+            product.setExpiringDate(format.parse(line.get(15)));//产品到期日
+            product.setPlanAnnualYield(BigDecimal.valueOf(Double.valueOf(line.get(22)) * 100)); //预计年化收益率
 
-            product.setPlanCashDay(StringUtils.isEmpty(line.get(24)) ? null : format.parse(line.get(24)));//计划兑付日
-            product.setExtendDeadline(StringUtils.isEmpty(line.get(26)) ? null : Integer.valueOf(line.get(26)));//宽限期
-            product.setInterestPenaltyRate(StringUtils.isEmpty(line.get(27)) ? null :
-                    BigDecimal.valueOf(Double.valueOf(line.get(27)) * 100));//罚息利率
+            product.setPlanCashDay(StringUtils.isEmpty(line.get(27)) ? null : format.parse(line.get(27)));//计划兑付日
+            product.setExtendDeadline(StringUtils.isEmpty(line.get(30)) ? null : Integer.valueOf(line.get(30)));//宽限期
+            product.setInterestPenaltyRate(StringUtils.isEmpty(line.get(31)) ? null :
+                    BigDecimal.valueOf(Double.valueOf(line.get(31)) * 100));//罚息利率
 
             if (product.getExpiringDate() != null && product.getExtendDeadline() != null) {
                 Calendar calendar = Calendar.getInstance();
@@ -173,7 +172,7 @@ public class DataServiceImpl implements IDataService {
             product.setMaxInvestNum(null);//最大投资次数
             product.setNterestMode(78);//计息方式（到期一次性支付，在系统dic表中的数据id，谨慎起见应该先查询）
             product.setContractTemplate(1);//合同模板
-            product.setRepaymentAmount(BigDecimal.valueOf(Double.valueOf(line.get(22))));//还款金额
+            product.setRepaymentAmount(BigDecimal.valueOf(Double.valueOf(line.get(26))));//还款金额（资产方还本息）
             product.setFactraiseTime(null);//实际募集时间
             product.setFactknotTime(null);//实际结标时间
             product.setRepaymentTime(null);//实际还款时间
