@@ -45,7 +45,7 @@ public class DataController {
     public String processImport(MultipartFile file){
 
 
-        File tarFile = new File(file.getOriginalFilename());
+        File tarFile = new File(System.currentTimeMillis() + file.getOriginalFilename());
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try{
             file.transferTo(tarFile);
@@ -75,10 +75,10 @@ public class DataController {
             List<List<String>> assetData = ExcelUtilNew.getData(tarFile);
 
             List<List<String>> productData = ExcelUtilNew.getData(tarFile, 1);
-            logger.debug("type信息： {}", JSON.toJSONString(type, true));
-            logger.debug("ctype信息： {}", JSON.toJSONString(cType, true));
-            logger.debug("资产信息：{}", JSON.toJSONString(assetData, true));
-            logger.debug("产品信息：{}", JSON.toJSONString(productData, true));
+//            logger.debug("type信息： {}", JSON.toJSONString(type, true));
+//            logger.debug("ctype信息： {}", JSON.toJSONString(cType, true));
+//            logger.debug("资产信息：{}", JSON.toJSONString(assetData, true));
+//            logger.debug("产品信息：{}", JSON.toJSONString(productData, true));
             dataService.add(assetData, productData, type, cType);
 //            dataService.add(null, null);
         }catch (Exception e){

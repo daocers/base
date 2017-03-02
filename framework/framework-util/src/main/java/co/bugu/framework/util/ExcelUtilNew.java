@@ -276,13 +276,16 @@ public class ExcelUtilNew {
         }
         List<List<String>> res = new ArrayList<>();
         Sheet sheet = workbook.getSheetAt(sheetIndex);
+        logger.debug("当前sheet： {}， 有 {} 行", new Integer[]{sheetIndex, sheet.getLastRowNum()});
         for(Row row: sheet){
             Integer rowIndex = row.getRowNum();
             List<String> rowData = new ArrayList<>();
             for(Cell cell: row){
+                Integer rowNum = row.getRowNum();
+                logger.debug("当前row： {}， 有 {} 列", new Object[]{rowNum, row.getLastCellNum()});
                 Integer colIndex = cell.getColumnIndex();
-                logger.debug("当前 sheet: " + sheetIndex + ", row: " + rowIndex + ", column: " + colIndex);
-                logger.debug("当前cell: {}", cell.getCellType());
+//                logger.debug("当前 sheet: " + sheetIndex + ", row: " + rowIndex + ", column: " + colIndex);
+//                logger.debug("当前cell: {}", cell.getCellType());
                 CellReference cellRef = new CellReference(row.getRowNum(), cell.getColumnIndex());
                 String data = "";
                 switch (cell.getCellType()){

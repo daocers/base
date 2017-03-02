@@ -31,7 +31,7 @@ public class SearchFiles {
         int hitsPerPage = 10;
 
         IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get(index)));
-        IndexSearcher searcher = new IndexSearcher(reader)；
+        IndexSearcher searcher = new IndexSearcher(reader);
         Analyzer analyzer = new StandardAnalyzer();
         BufferedReader in = null;
         if(queries != null){

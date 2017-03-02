@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -19,6 +20,10 @@ import java.util.*;
  */
 @Service
 public class DataServiceImpl implements IDataService {
+    volatile Integer seqNo = 100;
+    volatile Integer prodNo = 0;
+    String dateInfo;
+    String productDate;
     @Autowired
     IFactoringAssetService factoringAssetService;
     @Autowired
@@ -58,12 +63,27 @@ public class DataServiceImpl implements IDataService {
         if(list.size() > 0){
             dic = list.get(0);
         }
+        int row = 1;
+
+//       添加一个虚拟的资产信息，用于级联处理产品excel中没有对应资产信息的数据
+        FactoringAsset factoringAsset = new FactoringAsset();
+        factoringAsset.setAssetsCode("中间数据0000001");
+        factoringAsset.setNewDeadline(0);
+        factoringAssetService.save(factoringAsset);
+        assetNoIdMap.put(factoringAsset.getAssetsCode(), factoringAsset.getId());
+
+
         for (List<String> line : assetData) {
+            row++;
+            logger.debug("当前第 {} 行 ******************", row);
             String assetNo = line.get(1);
-            if (StringUtils.isEmpty(assetNo)) {
-                logger.warn("资产编号为空，数据行为： {}", JSON.toJSONString(line, true));
-                continue;
-            }
+//            StringBuffer buffer = new StringBuffer();
+//            buffer.append()
+//                    .append(asset.getc)
+//            if (StringUtils.isEmpty(assetNo)) {
+//                logger.warn("资产编号为空，数据行为： {}", JSON.toJSONString(line, true));
+//                continue;
+//            }
             FactoringAsset asset = new FactoringAsset();
             asset.setAssetsCode(assetNo);
             asset.setAssetsType(dic.getId().intValue());
@@ -98,7 +118,7 @@ public class DataServiceImpl implements IDataService {
             asset.setSlottingAllowance(StringUtils.isEmpty(line.get(22)) ? null : BigDecimal.valueOf(Double.valueOf(line.get(22)) * 100));//通道费
             asset.setAssetBalanceRepeat(null);//资产剩余金额，再发布
             asset.setAssetBalance(StringUtils.isEmpty(line.get(23)) || "-".equals(line.get(23)) ? null : BigDecimal.valueOf(Double.valueOf(line.get(23))));//资产剩余金额，原始
-            asset.setResidualMaturity(StringUtils.isEmpty(line.get(24)) ? null : Double.valueOf(line.get(24)).intValue());//资产剩余期限
+            asset.setResidualMaturity(StringUtils.isEmpty(line.get(24)) ? 0 : Double.valueOf(line.get(24)).intValue());//资产剩余期限
             if (asset.getResidualMaturity() < 0) {
                 asset.setResidualMaturity(0);
             }
@@ -111,10 +131,24 @@ public class DataServiceImpl implements IDataService {
             asset.setCreditorRightsTransferProtocol(getBoolean(line.get(31)));//债权转让协议
 
             asset.setRemark(line.get(32));
+            String pushCode = line.get(33);
             asset.setDelFlag(false);
             asset.setCreateTime(new Date());
             asset.setModifyTime(new Date());
+            StringBuffer buffer = new StringBuffer();
+            if(StringUtils.isEmpty(assetNo)){
+                buffer.append(pushCode)
+                        .append(asset.getAssetCtype())
+                        .append(asset.getAssetGtype())
+                        .append(generateAssetCode())
+                        .append(++seqNo);
+            }else{
+                buffer.append(pushCode)
+                        .append(assetNo);
+            }
 
+
+            asset.setAssetsCode(buffer.toString());
             baseDao.insert("data.factoringAsset.insert", asset);
 //            factoringAssetService.save(asset);
             assetNoIdMap.put(assetNo, asset.getId());
@@ -140,7 +174,7 @@ public class DataServiceImpl implements IDataService {
             String assetCode = line.get(6);
             product.setProductCode(line.get(8));//产品编号
             if (StringUtils.isEmpty(product.getProductCode())) {
-                continue;
+                product.setProductCode(generateProductCode());
             }
             product.setIssueAmount(BigDecimal.valueOf(Double.valueOf(line.get(9))));//发标金额
             product.setSettleAmount(BigDecimal.valueOf(Double.valueOf(line.get(10))));//结标金额
@@ -172,7 +206,7 @@ public class DataServiceImpl implements IDataService {
             product.setMaxInvestNum(null);//最大投资次数
             product.setNterestMode(78);//计息方式（到期一次性支付，在系统dic表中的数据id，谨慎起见应该先查询）
             product.setContractTemplate(1);//合同模板
-            product.setRepaymentAmount(BigDecimal.valueOf(Double.valueOf(line.get(26))));//还款金额（资产方还本息）
+            product.setRepaymentAmount(StringUtils.isEmpty(line.get(26))? null : BigDecimal.valueOf(Double.valueOf(line.get(26))));//还款金额（资产方还本息）
             product.setFactraiseTime(null);//实际募集时间
             product.setFactknotTime(null);//实际结标时间
             product.setRepaymentTime(null);//实际还款时间
@@ -185,6 +219,9 @@ public class DataServiceImpl implements IDataService {
 
 //            productService.save(product);
             baseDao.insert("data.product.insert", product);
+            if(StringUtils.isEmpty(assetCode)){
+                assetCode = "中间数据0000001";
+            }
             assetNoProdIdMap.put(assetCode, product.getId());
         }
 
@@ -306,4 +343,24 @@ public class DataServiceImpl implements IDataService {
         return 0;
     }
 
+
+    private String generateAssetCode(){
+
+        if(StringUtils.isEmpty(dateInfo)){
+            SimpleDateFormat format = new SimpleDateFormat("yyMMdd");
+            Date date = new Date();
+            dateInfo = format.format(date);
+        }
+        return dateInfo;
+    }
+
+    private String generateProductCode(){
+        if(StringUtils.isEmpty(productDate)){
+            SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+            productDate = format.format(new Date());
+        }
+        prodNo++;
+        DecimalFormat decimalFormat = new DecimalFormat("0000");
+        return productDate + decimalFormat.format(prodNo);
+    }
 }
