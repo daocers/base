@@ -66,9 +66,55 @@ public class DataServiceImpl implements IDataService {
         int row = 1;
 
 //       添加一个虚拟的资产信息，用于级联处理产品excel中没有对应资产信息的数据
+        BigDecimal zero = new BigDecimal(0);
         FactoringAsset factoringAsset = new FactoringAsset();
         factoringAsset.setAssetsCode("中间数据0000001");
-        factoringAsset.setNewDeadline(0);
+        factoringAsset.setAssetsType(dic.getId().intValue());
+        factoringAsset.setAssetCtype(null);//资产类型
+        factoringAsset.setAssetGtype(null);//子类型
+        factoringAsset.setValueDate(null);
+        factoringAsset.setExpiringDate(new Date());
+        factoringAsset.setNewDeadline(0);//资产到期日 - 第一个新产品的起息日
+        factoringAsset.setDeadline(0);//资产原始期限
+        factoringAsset.setOriginalRate(zero);
+        factoringAsset.setRePricingMode(null);//重定价方式
+        factoringAsset.setAssetAmount(zero);
+        factoringAsset.setInterestCalculation((byte)78);//计息方式
+        factoringAsset.setGuaranteeMode("");//担保方式
+        factoringAsset.setCreditor("");//债权人
+        factoringAsset.setDebtor("");//债务人
+        factoringAsset.setOriginalDebtor("");//原始债务人
+        factoringAsset.setSecuredParty("");//担保方
+        factoringAsset.setDebtorCusNum("");//债务人客户编号
+        factoringAsset.setContractNum("");//合同编号
+        factoringAsset.setPushParty(1l);//供应商编号
+        factoringAsset.setPushPartyOgrName("test");
+        factoringAsset.setPushDate(null);//资产推送日期
+        factoringAsset.setUseDate(null);
+        factoringAsset.setAssetExpireDate(new Date());//资产到欺日
+        factoringAsset.setPushingResidualMaturity(0);//推送时候剩余期限
+//
+//            资本采购成本
+        factoringAsset.setRate(zero);
+        factoringAsset.setSlottingAllowance(zero);//通道费
+        factoringAsset.setAssetBalanceRepeat(zero);//资产剩余金额，再发布
+        factoringAsset.setAssetBalance(zero);//资产剩余金额，原始
+        factoringAsset.setResidualMaturity(0);//资产剩余期限
+        if (factoringAsset.getResidualMaturity() < 0) {
+            factoringAsset.setResidualMaturity(0);
+        }
+        factoringAsset.setStatus((byte)10);
+        factoringAsset.setBaseCreditorRightsContract(false);
+        factoringAsset.setCreditorRightsTransferApplication(false);
+        factoringAsset.setReceivableCreditTransferApplication(false);
+        factoringAsset.setCreditAssetTransferContract(false);
+        factoringAsset.setTransferMoneyCertificate(false);
+        factoringAsset.setCreditorRightsTransferProtocol(false);//债权转让协议
+
+        factoringAsset.setRemark("");
+        factoringAsset.setDelFlag(false);
+        factoringAsset.setCreateTime(new Date());
+        factoringAsset.setModifyTime(new Date());
         factoringAssetService.save(factoringAsset);
         assetNoIdMap.put(factoringAsset.getAssetsCode(), factoringAsset.getId());
 
@@ -151,12 +197,14 @@ public class DataServiceImpl implements IDataService {
             asset.setAssetsCode(buffer.toString());
             baseDao.insert("data.factoringAsset.insert", asset);
 //            factoringAssetService.save(asset);
-            assetNoIdMap.put(assetNo, asset.getId());
+            assetNoIdMap.put(asset.getAssetsCode(), asset.getId());
         }
 
         if (productData != null && productData.size() > 0) {
             productData.remove(0);
         }
+
+        Map<Long, String> productIdAssetCodeMap = new HashMap<>();
         for (List<String> line : productData) {
             Product product = new Product();
             product.setProductType(2);
@@ -219,24 +267,45 @@ public class DataServiceImpl implements IDataService {
 
 //            productService.save(product);
             baseDao.insert("data.product.insert", product);
+            String pushCode = line.get(2);
+
             if(StringUtils.isEmpty(assetCode)){
                 assetCode = "中间数据0000001";
+            }else{
+                assetCode = pushCode + assetCode;
             }
             assetNoProdIdMap.put(assetCode, product.getId());
+            productIdAssetCodeMap.put(product.getId(), assetCode);
         }
 
-        Iterator<Map.Entry<String, Long>> iterator = assetNoProdIdMap.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<String, Long> entry = iterator.next();
-            String assetCode = entry.getKey();
-            Long productId = entry.getValue();
+        Iterator<Map.Entry<Long, String>> iterator = productIdAssetCodeMap.entrySet().iterator();
+        while(iterator.hasNext()){
+            Map.Entry<Long, String> entry = iterator.next();
+            Long productId = entry.getKey();
+            String assetCode = entry.getValue();
             Long assetId = assetNoIdMap.get(assetCode);
+
             FactoringProductRelation relation = new FactoringProductRelation();
             relation.setAssetId(assetId);
             relation.setProductId(productId);
 //            relationService.save(relation);
             baseDao.insert("data.factoringProductRelation.insert", relation);
         }
+
+
+
+//        Iterator<Map.Entry<String, Long>> iterator = assetNoProdIdMap.entrySet().iterator();
+//        while (iterator.hasNext()) {
+//            Map.Entry<String, Long> entry = iterator.next();
+//            String assetCode = entry.getKey();
+//            Long productId = entry.getValue();
+//            Long assetId = assetNoIdMap.get(assetCode);
+//            FactoringProductRelation relation = new FactoringProductRelation();
+//            relation.setAssetId(assetId);
+//            relation.setProductId(productId);
+////            relationService.save(relation);
+//            baseDao.insert("data.factoringProductRelation.insert", relation);
+//        }
 
 
 //        logger.info("执行插入资产信息成功,准备抛出异常，回滚数据");
@@ -311,6 +380,9 @@ public class DataServiceImpl implements IDataService {
     }
 
     private Integer getProductStatus(String name) {
+        if(StringUtils.isEmpty(name)){
+            return 9;
+        }
         Map<String, Integer> map = new HashMap<>();
         map.put("编辑中", -1);
         map.put("未推送(资管初始)", 0);
