@@ -32,6 +32,8 @@
             <artifactId>amqp-client</artifactId>
             <version>3.6.5</version>
         </dependency>
+
+
     </dependencies>
 
 
