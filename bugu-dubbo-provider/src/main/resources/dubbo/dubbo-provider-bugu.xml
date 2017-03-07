@@ -2,6 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
     <dubbo:service interface="co.bugu.dubbo.service.IUserService" ref="userService"/>
@@ -9,4 +10,57 @@
 
     <dubbo:service interface="co.bugu.dubbo.service.ISystemParamService" ref="paramService"/>
     <bean id="paramService" class="co.bugu.dubbo.service.impl.SystemParamServiceImpl"/>
+
+
+
+    <dubbo:reference interface="co.bugu.dubbo.service.IUserService">
+        <dubbo:method name="getName" timeout="1000"/>
+    </dubbo:reference>
+
+    <dubbo:service interface="co.bugu.dubbo.service.IUserService">
+        <dubbo:method name="getName" timeout="1000"/>
+    </dubbo:service>
+
+    <dubbo:reference interface="co.bugu.dubbo.service.IUserService" timeout="3000"/>
+    <dubbo:service interface="co.bugu.dubbo.service.IUserService" timeout="2000"/>
+    <dubbo:consumer timeout="5000"/>
+
+    <dubbo:registry address="zookeeper://127.0.0.1:2181"/>
+    <dubbo:annotation package="co.bugu.dubbo.service.impl"/>
+
+    <dubbo:application name="anntion-consumer"/>
+    <dubbo:registry address="zookeeper://127.0.0.1:2181"/>
+    <dubbo:annotation/>
+    <context:component-scan base-package="co.bugu.dubbo.service">
+        <!--<context:include-filter type="annotation" expression="co.bugu.dubbo.service.impl.UserService"/>-->
+    </context:component-scan>
+
+    <bean id="userService1" class="co.bugu.dubbo.service.impl.UserService"/>
+
+    <dubbo:reference interface="co.bugu.dubbo.service.IUserService" check="false" retries="2"/>
+    <dubbo:consumer check="false"/>
+    <dubbo:registry check="false"/>
+
+    <dubbo:reference interface="co.bugu.dubbo.service.IUserService" init="true"/>
+
+
+
+    <dubbo:service interface="co.bugu.dubbo.service.IUserService" cluster="failsafe"/>
+    <dubbo:service interface="co.bugu.dubbo.service.IUserService" class="failover"/>
+
+    <dubbo:service interface="co.bugu.dubbo.service.IUserService" loadbalance="roundrobin"/>
+    <dubbo:service interface="co.bugu.dubbo.service.IUserService" loadbalance="leastactive"/>
+
+
+    <dubbo:protocol name="dubbo" dispatcher="all" threadpool="fixed" threads="300"/>
+
+    <dubbo:reference interface="co.bugu.dubbo.service.IUserService" url="dubbo://localhost:20880"/>
+
+
+    <dubbo:registry address="zookeeper://127.0.0.1:2181" register="false"/>
+    <dubbo:registry address="zookeeper://127.0.0.1:2181" dynamic="false"/>
+
+    <dubbo:service interface="co.bugu.dubbo.service.IUserService" executes="50"/>
+    <dubbo:service interface="co.bugu.dubbo.service.IUserService">
+    </dubbo:service>
 </beans>

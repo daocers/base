@@ -1,6 +1,5 @@
-package co.bugu.netty.chapter7;
+package co.bugu.netty.userguaid;
 
-import com.rabbitmq.client.impl.ChannelN;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -9,37 +8,29 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.serialization.ClassResolvers;
-import io.netty.handler.codec.serialization.ObjectDecoder;
-import io.netty.handler.codec.serialization.ObjectEncoder;
-import io.netty.handler.logging.LogLevel;
-import io.netty.handler.logging.LoggingHandler;
-
-
 
 /**
- * Created by daocers on 2017/3/7.
+ * Created by user on 2017/3/7.
  */
-public class SubReqServer {
-    public void bind(int port){
+public class DiscardServer {
+    private int port;
+    public DiscardServer(int port){
+        this.port = port;
+    }
+
+    public void run(){
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try{
             ServerBootstrap bootstrap = new ServerBootstrap();
             bootstrap.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
-                    .option(ChannelOption.SO_BACKLOG, 100)
-                    .handler(new LoggingHandler(LogLevel.DEBUG))
+                    .option(ChannelOption.SO_BACKLOG, 128)
+                    .childOption(ChannelOption.SO_KEEPALIVE, true)
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel channel) throws Exception {
-                            channel.pipeline().addLast(
-                                    new ObjectDecoder(1024 * 1024,
-                                            ClassResolvers.weakCachingConcurrentResolver(this.getClass()
-                                            .getClassLoader()))
-                            );
-                            channel.pipeline().addLast(new ObjectEncoder());
-//                            channel.pipeline().addLast(new SubReqServerHandler());
+                            channel.pipeline().addLast(new DiscardServerHandler());
                         }
                     });
             ChannelFuture future = bootstrap.bind(port).sync();
@@ -53,13 +44,6 @@ public class SubReqServer {
     }
 
     public static void main(String[] args){
-        new SubReqServer().bind(8000);
+        new DiscardServer(8000).run();
     }
-
-
-
-
-
-
-
 }
