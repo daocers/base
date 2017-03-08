@@ -63,4 +63,8 @@
     <dubbo:service interface="co.bugu.dubbo.service.IUserService" executes="50"/>
     <dubbo:service interface="co.bugu.dubbo.service.IUserService">
     </dubbo:service>
+
+
+    <dubbo:application logger="slf4j"/>
+    <dubbo:protocol accesslog="true"/>
 </beans>
