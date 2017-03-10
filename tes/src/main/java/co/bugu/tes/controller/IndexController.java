@@ -1,11 +1,11 @@
 package co.bugu.tes.controller;
 
+import co.bugu.framework.core.util.VerifyCodeUtil;
 import co.bugu.framework.util.EncryptUtil;
+import co.bugu.framework.util.JedisUtil;
 import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.User;
 import co.bugu.tes.service.IUserService;
-import co.bugu.framework.util.JedisUtil;
-import co.bugu.framework.core.util.BuguWebUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,33 +15,31 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.util.WebUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
- * Created by daocers on 2016/8/16.
+ * Created by daocers on 2017/1/11.
  */
-@RequestMapping("/index")
 @Controller
 public class IndexController {
+    private static Logger logger = LoggerFactory.getLogger(IndexController.class);
+
     @Autowired
     IUserService userService;
 
-
-    private static Logger logger = LoggerFactory.getLogger(IndexController.class);
-
     /**
-     * 跳转到登陆页面
-     * 如果已经登陆，跳转到首页
+     * 跳转到对应的登录页面
      * @param request
+     * @param response
      * @return
      */
     @RequestMapping("/login")
-    public String toLogin(HttpServletRequest request){
-        if(BuguWebUtil.hasSingin(request)){
-            return "redirect:/";
-        }
-        return "/index/login";
+    public String toLogin(HttpServletRequest request, HttpServletResponse response){
+        return "index/login";
     }
+
 
     /**
      * 登陆，传入用户名，密码
@@ -79,5 +77,51 @@ public class IndexController {
             logger.error("登录失败", e);
             return "-1";
         }
+    }
+
+    /**
+     * 退出登录
+     * @param request
+     * @return
+     */
+    @RequestMapping("/signOut")
+    public String signOut(HttpServletRequest request){
+        try{
+            request.getSession().removeAttribute("username");
+        }catch (Exception e){
+
+        }
+        return null;
+    }
+
+
+    /**
+     * 获取验证码
+     * @param request
+     * @param response
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("/verifyCode")
+    public String getVerifyCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String code = VerifyCodeUtil.generateVerifyCode(4);
+        request.getSession().setAttribute("verifyCode", code);
+        VerifyCodeUtil.outputImage(80, 35, response.getOutputStream(), code);
+        return null;
+    }
+
+    /**
+     * 获取在线信息
+     * 有对应的页面信息
+     * 管理员，考试教师可用
+     * @return
+     */
+    public String getOnlineInfo(){
+        try{
+
+        }catch (Exception e){
+            logger.error("获取在线信息失败", e);
+        }
+        return null;
     }
 }
