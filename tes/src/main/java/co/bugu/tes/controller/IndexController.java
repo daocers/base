@@ -124,4 +124,10 @@ public class IndexController {
         }
         return null;
     }
+
+    public static void main(String[] args){
+        String str = "*.findObject";
+        str = str.replaceAll("\\*", "\\\\S*");
+        System.out.println(str);
+    }
 }

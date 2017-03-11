@@ -208,4 +208,14 @@
     <update id="batchUpdate" parameterType="co.bugu.tes.model.Authority">
         update authority set superior_id = #{superiorId} where controller = #{controller}
     </update>
+
+
+    <select id="selectAuthorityByRole" resultMap="AuthorityMap" parameterType="int">
+        SELECT
+        <include refid="authority_list"/>
+        FROM authority auth
+        LEFT JOIN role_authority_x ru
+        on ru.authority_id = auth.id
+        where ru.role_id = #{role_id}
+    </select>
 </mapper>

@@ -1,8 +1,6 @@
 package co.bugu.tes.interceptor;
 
 import co.bugu.framework.core.util.BuguWebUtil;
-import co.bugu.tes.model.Authority;
-import co.bugu.tes.model.User;
 import co.bugu.tes.service.IAuthorityService;
 import co.bugu.tes.service.IUserService;
 import org.slf4j.Logger;
@@ -13,7 +11,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 /**
  * Created by daocers on 2016/8/25.
@@ -28,32 +25,33 @@ public class AuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
         //先判断是否已经登录
         if(!BuguWebUtil.hasSingin(request)){
-            request.getRequestDispatcher("/index/login.do").forward(request, response);
+//            request.getRequestDispatcher("/login.do").forward(request, response);
+            response.sendRedirect("/login.do");
             return false;
         }
 
-        //判断是否有权限
-        String url = request.getRequestURI();
-        String method = request.getMethod();
-        String fd = request.getQueryString();
-
-        User user = userService.findById((Integer) BuguWebUtil.get(request, "userId"));
-        Authority authority = new Authority();
-        authority.setUrl(url);
-        authority.setAcceptMethod(method.toUpperCase());
-        List<Authority> authorityList = authorityService.findByObject(authority);
-        if(authorityList == null || authorityList.size() == 0){
-            logger.error("权限体现没有数据");
-            return false;
-        }
-        if(authorityList != null && authorityList.size() > 0){
-            authority = authorityList.get(0);
-            logger.error("权限体系异常 url: {} 在系统中存在多个", url);
-            return false;
-        }
-        if(!user.getAuthorityList().contains(authority)){
-            return false;
-        }
+        //判断是否有权限 暂时不做处理
+//        String url = request.getRequestURI();
+//        String method = request.getMethod();
+//        String fd = request.getQueryString();
+//
+//        User user = userService.findById((Integer) BuguWebUtil.get(request, Constant.SESSION_USER_ID));
+//        Authority authority = new Authority();
+//        authority.setUrl(url);
+//        authority.setAcceptMethod(method.toUpperCase());
+//        List<Authority> authorityList = authorityService.findByObject(authority);
+//        if(authorityList == null || authorityList.size() == 0){
+//            logger.error("权限体系没有数据");
+//            return false;
+//        }
+//        if(authorityList != null && authorityList.size() > 0){
+//            authority = authorityList.get(0);
+//            logger.error("权限体系异常 url: {} 在系统中存在多个", url);
+//            return false;
+//        }
+//        if(!user.getAuthorityList().contains(authority)){
+//            return false;
+//        }
         return true;
     }
 

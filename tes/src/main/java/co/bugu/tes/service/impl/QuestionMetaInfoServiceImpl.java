@@ -4,9 +4,6 @@ package co.bugu.tes.service.impl;
 import co.bugu.framework.core.service.impl.BaseServiceImpl;
 import co.bugu.tes.model.QuestionMetaInfo;
 import co.bugu.tes.service.IQuestionMetaInfoService;
-import co.bugu.framework.core.dao.BaseDao;
-import co.bugu.framework.core.dao.PageInfo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -38,6 +35,11 @@ public class QuestionMetaInfoServiceImpl extends BaseServiceImpl<QuestionMetaInf
 //    }
 
     @Override
+    public QuestionMetaInfo selectSimpleById(Integer id) {
+        return baseDao.selectOne("tes.questionMetaInfo.selectById", id);
+    }
+
+    @Override
     public int saveOrUpdate(QuestionMetaInfo questionmetainfo, List<Map<String, Integer>> list) {
         if(questionmetainfo.getId() == null){
             baseDao.insert("tes.questionmetainfo.insert", questionmetainfo);
@@ -63,24 +65,17 @@ public class QuestionMetaInfoServiceImpl extends BaseServiceImpl<QuestionMetaInf
 //        return baseDao.delete("tes.questionmetainfo.deleteById", questionmetainfo);
 //    }
 //
-//    @Override
-//    public QuestionMetaInfo findById(Integer id) {
-//        return baseDao.selectOne("tes.questionmetainfo.selectById", id);
-//    }
-//
-//    @Override
-//    public List<QuestionMetaInfo> findAllByObject(QuestionMetaInfo questionmetainfo) {
-//        return baseDao.selectList("tes.questionmetainfo.listByObject", questionmetainfo);
-//    }
-//
-//    @Override
-//    public PageInfo listByObject(QuestionMetaInfo questionmetainfo, PageInfo<QuestionMetaInfo> pageInfo) throws Exception {
-//        return baseDao.listByObject("tes.questionmetainfo.listByObject", questionmetainfo, pageInfo);
-//    }
+    @Override
+    public QuestionMetaInfo findById(Integer id) {
+        return baseDao.selectOne("tes.questionMetaInfo.selectFullById", id);
+    }
+
+
+
 
     @Override
     public void addProperty(Map<String, String> map) {
-        baseDao.insert("tes.questionmetainfo.addProperty", map);
+        baseDao.insert("tes.questionMetaInfo.addProperty", map);
     }
 
     @Override

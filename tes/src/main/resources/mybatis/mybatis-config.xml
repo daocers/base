@@ -11,7 +11,7 @@
 
     <plugins>
         <plugin interceptor="co.bugu.framework.core.mybatis.SqlParamInterceptor">
-            <property name="method" value="find*"/>
+            <property name="method" value="*findByObject"/>
         </plugin>
     </plugins>
 </configuration>

@@ -9,9 +9,9 @@
     <!--<link href="https://js.51job.com/in/css/2017/public/base.css" rel="stylesheet" type="text/css" />-->
     <!--<link href="https://js.51job.com/in/css/2017/public/form.css" rel="stylesheet" type="text/css" />-->
     <!--<link href="https://js.51job.com/in/css/2017/member/login-register.css" rel="stylesheet" type="text/css" />-->
-    <link href="../../assets/css/base.css" rel="stylesheet" type="text/css"/>
-    <link href="../../assets/css/form.css" rel="stylesheet" type="text/css"/>
-    <link href="../../assets/css/login-register.css" rel="stylesheet" type="text/css"/>
+    <link href="../../assets/css/login/base.css" rel="stylesheet" type="text/css"/>
+    <link href="../../assets/css/login/form.css" rel="stylesheet" type="text/css"/>
+    <link href="../../assets/css/login/login-register.css" rel="stylesheet" type="text/css"/>
     <script language="javascript">
         var _tkd = _tkd || []; //点击量统计用
         var lang = [];
@@ -36,7 +36,7 @@
     </script>
 
 
-    <!--<script type="text/javascript" src="../asset/js/jquery-2.2.0.min.js"></script>-->
+    <script type="text/javascript" src="../../assets/js/jquery-2.2.0.min.js"></script>
 
 
     <!--<script language="javascript" src="https://js.51job.com/in/js/2016/jquery.js"></script>-->
@@ -53,8 +53,8 @@
 <div class="header">
     <div class="nag">
         <div class="in">
-            <a href="http://www.51job.com"><img class="logo" width="40" height="40" src="logo.png" alt="布谷培训"></a>
-            <img class="slogen" width="180" height="25" src="slogen.png" alt="在线考试就到布谷培训">
+            <a href="http://www.51job.com"><img class="logo" width="40" height="40" src="../../assets/img/login/logo.png" alt="布谷培训"></a>
+            <img class="slogen" width="180" height="25" src="../../assets/img/login/slogen.png" alt="在线考试就到布谷培训">
 
             <span class="gp" style="display:"></span>
             <span class="tl" style="display:">欢迎登录</span>
@@ -193,22 +193,22 @@
                 return false;
             }
             $.ajax({
-                url: "signIn.do",
+                url: "/signIn.do",
                 type: "post",
                 data: {username: username, password: password},
                 success: function (data) {
                     //登陆成功，跳转页面
-                    window.href.location = "/";
+                    window.href.location = "/scene/list.do";
                 },
                 error: function (data) {
                     //如果有验证码就修改验证码
-                    swal("", "登陆失败", "error");
+                    console.log("登录失败")
                 }
                 
             })
         })
 
-        var input_arr = ['loginname', 'password', 'verifycode', 'useremail', 'userpwd', 'cfmpwd', 'phone', 'phonecode', 'name', 'newpwd', 'newpwd_cfm', 'oldpwd', 'newpwdcfm', 'useraccount', 'emailverifycode', 'messagecode'];
+        var input_arr = ['username', 'password', 'verifycode', 'useremail', 'userpwd', 'cfmpwd', 'phone', 'phonecode', 'name', 'newpwd', 'newpwd_cfm', 'oldpwd', 'newpwdcfm', 'useraccount', 'emailverifycode', 'messagecode'];
         $.each(input_arr, function (i, item) {
             $("#" + item).focus(function () {
                 $("#" + item).parent().addClass("focusinput");

@@ -3,7 +3,6 @@ package co.bugu.framework.core.mybatis;
 import co.bugu.framework.core.util.ReflectUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
-import org.apache.ibatis.executor.resultset.ResultSetHandler;
 import org.apache.ibatis.executor.statement.RoutingStatementHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.*;
@@ -16,11 +15,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Created by daocers on 2017/2/19.
@@ -34,6 +32,7 @@ import java.util.*;
 public class SqlParamInterceptor implements Interceptor {
     private static Logger logger = LoggerFactory.getLogger(SqlParamInterceptor.class);
     private static Map<Class, Map<String, String>> resultMappingInfo = new HashMap<>();
+    private static String method;
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
@@ -43,6 +42,9 @@ public class SqlParamInterceptor implements Interceptor {
         if (target instanceof ParameterHandler) {
             DefaultParameterHandler parameterHandler = (DefaultParameterHandler) target;
             MappedStatement mappedStatement = (MappedStatement) ReflectUtil.get(parameterHandler, "mappedStatement");
+            if(!needIntercept(mappedStatement)){
+                return invocation.proceed();
+            }
             if(SqlCommandType.SELECT != mappedStatement.getSqlCommandType()){
                 return invocation.proceed();
             }
@@ -76,6 +78,10 @@ public class SqlParamInterceptor implements Interceptor {
 //            MappedStatement mappedStatement = (MappedStatement) invocation.getArgs()[0];
             MappedStatement mappedStatement = (MappedStatement) metaStatementHandler.getValue("delegate.mappedStatement");
 
+            if(!needIntercept(mappedStatement)){
+                return invocation.proceed();
+            }
+
             if(SqlCommandType.SELECT != mappedStatement.getSqlCommandType()){
                 return invocation.proceed();
             }
@@ -102,6 +108,16 @@ public class SqlParamInterceptor implements Interceptor {
         return invocation.proceed();
     }
 
+    /**
+     * 确定是否需要拦截
+     * @param mappedStatement
+     * @return
+     */
+    private boolean needIntercept(MappedStatement mappedStatement) {
+        String id = mappedStatement.getId();
+        return Pattern.matches(method, id);
+    }
+
     @Override
     public Object plugin(Object target) {
         logger.debug("plugin： {}", target);
@@ -110,7 +126,14 @@ public class SqlParamInterceptor implements Interceptor {
 
     @Override
     public void setProperties(Properties properties) {
+        String m = (String) properties.get("method");
+        if(StringUtils.isNotEmpty(m)){
+            if(m.contains("*")){
+                m = m.replaceAll("\\*", "\\\\S*");
+            }
+            method = m;
 
+        }
     }
 
 

@@ -1,20 +1,15 @@
 package co.bugu.tes.service.impl;
 
 
-import co.bugu.framework.core.mybatis.ThreadLocalUtil;
 import co.bugu.framework.core.service.impl.BaseServiceImpl;
+import co.bugu.tes.model.Authority;
 import co.bugu.tes.model.Profile;
 import co.bugu.tes.model.Role;
 import co.bugu.tes.model.User;
 import co.bugu.tes.service.IUserService;
-import co.bugu.framework.core.dao.BaseDao;
-import co.bugu.framework.core.dao.PageInfo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class UserServiceImpl extends BaseServiceImpl<User> implements IUserService {
@@ -69,12 +64,24 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
 //
     @Override
     public User findById(Integer id) {
-        return baseDao.selectOne("tes.user.selectSimpleById", id);
+        return baseDao.selectOne("tes.user.selectById", id);
     }
 
     @Override
     public User findFullById(Integer id) {
         User user = baseDao.selectOne("tes.user.selectById", id);
+        if(user != null){
+            List<Role> roles = baseDao.selectList("tes.role.selectRoleByUser", user.getId());
+            if(roles != null && roles.size() > 0){
+                user.setRoleList(roles);
+                for(Role role: roles){
+                    List<Authority> authorities = baseDao.selectList("tes.authority.selectAuthorityByRole", role.getId());
+                    if(authorities != null){
+                        role.setAuthorityList(authorities);
+                    }
+                }
+            }
+        }
         return user;
     }
 //

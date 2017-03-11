@@ -46,8 +46,9 @@
         <mvc:interceptor>
             <mvc:mapping path="/"/>
             <mvc:mapping path="/*/*.do"/>
-            <mvc:exclude-mapping path="/index/login.do"/>
-            <mvc:exclude-mapping path="/index/logout.do"/>
+            <mvc:exclude-mapping path="/login.do"/>
+            <mvc:exclude-mapping path="/logout.do"/>
+            <mvc:exclude-mapping path="/signIn.do"/>
             <mvc:exclude-mapping path="/index/toRegister.do"/>
             <mvc:exclude-mapping path="/index/register.do"/>
             <mvc:exclude-mapping path="/question/toImport.do"/>

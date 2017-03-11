@@ -7,6 +7,14 @@
         <result column="description" property="description" jdbcType="VARCHAR"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
         <result column="status" property="status" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap id="QuestionMetaInfoFullMap" type="co.bugu.tes.model.QuestionMetaInfo">
+        <id column="info_id" property="id" jdbcType="INTEGER"/>
+        <result column="info_code" property="code" jdbcType="VARCHAR"/>
+        <result column="info_description" property="description" jdbcType="VARCHAR"/>
+        <result column="info_name" property="name" jdbcType="VARCHAR"/>
+        <result column="info_status" property="status" jdbcType="INTEGER"/>
         <collection property="propertyList" ofType="co.bugu.tes.model.Property" resultMap="PropertyMap"/>
     </resultMap>
 
@@ -34,6 +42,9 @@
     id, code, description, name, status
   </sql>
 
+    <sql id="full_list">
+        info.id as info_id, info.code as info_code, info.description as info_description, info.name as info_name, info.status as info_status
+    </sql>
 
     <sql id="propertyItem_list">
     prop_item.id as prop_item_id, prop_item.code as prop_item_code, prop_item.idx as prop_item_idx,
@@ -45,16 +56,22 @@
     property.idx as property_idx, property.name as property_name, property.status as property_status
   </sql>
 
-    <select id="selectById" resultMap="QuestionMetaInfoMap" parameterType="java.lang.Integer">
+    <select id="selectById" resultMap="QuestionMetaInfoMap" parameterType="int">
+        SELECT
+        <include refid="questionMetaInfo_list"/>
+        FROM question_meta_info
+        where id = #{id}
+    </select>
+    <select id="selectFullById" resultMap="QuestionMetaInfoFullMap" parameterType="java.lang.Integer">
         select
-        <include refid="questionMetaInfo_list"/>,
+        <include refid="full_list"/>,
         <include refid="propertyItem_list"/>,
         <include refid="property_list"/>
-        from question_meta_info ques_meta
-        LEFT join question_metaInfo_property_x mp on mp.question_meta_info_id = ques_meta.id
+        from question_meta_info info
+        LEFT join question_metaInfo_property_x mp on mp.question_meta_info_id = info.id
         LEFT join property property on property.id = mp.property_id
         left join property_item prop_item on prop_item.property_id = property.id
-        where ques_meta.id = #{id,jdbcType=INTEGER}
+        where info.id = #{id,jdbcType=INTEGER}
         order by mp.idx, prop_item.idx
     </select>
     <delete id="deleteById" parameterType="java.lang.Integer">
@@ -119,7 +136,7 @@
     </update>
 
 
-    <select id="findByObject" resultMap="QuestionMetaInfoMap" parameterType="co.bugu.tes.model.QuestionMetaInfo">
+    <select id="findByObject" resultMap="QuestionMetaInfoFullMap" parameterType="co.bugu.tes.model.QuestionMetaInfo">
         select
         <include refid="questionMetaInfo_list"/>,
         <include refid="propertyItem_list"/>,

@@ -3,7 +3,6 @@ package co.bugu.tes.service;
 
 import co.bugu.framework.core.service.IBaseService;
 import co.bugu.tes.model.QuestionMetaInfo;
-import co.bugu.framework.core.dao.PageInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -14,6 +13,7 @@ public interface IQuestionMetaInfoService extends IBaseService<QuestionMetaInfo>
 //    int updateById(QuestionMetaInfo questionmetainfo);
 //
 //    int saveOrUpdate(QuestionMetaInfo questionmetainfo);
+    QuestionMetaInfo selectSimpleById(Integer id);
 
     int saveOrUpdate(QuestionMetaInfo questionmetainfo, List<Map<String, Integer>> list);
 

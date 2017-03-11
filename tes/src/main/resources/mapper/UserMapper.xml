@@ -10,62 +10,16 @@
         <result column="station_id" property="stationId" jdbcType="INTEGER"/>
         <result column="status" property="status" jdbcType="INTEGER"/>
         <result column="username" property="username" jdbcType="VARCHAR"/>
-        <collection property="roleList" ofType="co.bugu.tes.model.Role" resultMap="RoleMap"/>
-        <collection property="authorityList" ofType="co.bugu.tes.model.Authority" resultMap="AuthorityMap"/>
     </resultMap>
 
-    <resultMap id="RoleMap" type="co.bugu.tes.model.Role">
-        <id column="role_id" property="id" jdbcType="INTEGER"/>
-        <result column="role_description" property="description" jdbcType="VARCHAR"/>
-        <result column="role_name" property="name" jdbcType="VARCHAR"/>
-        <result column="role_status" property="status" jdbcType="INTEGER"/>
-        <collection property="authorityList" ofType="co.bugu.tes.model.Authority"/>
-    </resultMap>
-
-    <resultMap id="AuthorityMap" type="co.bugu.tes.model.Authority">
-        <id column="auth_id" property="id" jdbcType="INTEGER"/>
-        <result column="auth_action" property="action" jdbcType="VARCHAR"/>
-        <result column="auth_controller" property="controller" jdbcType="VARCHAR"/>
-        <result column="auth_description" property="description" jdbcType="VARCHAR"/>
-        <result column="auth_name" property="name" jdbcType="VARCHAR"/>
-        <result column="auth_param" property="param" jdbcType="VARCHAR"/>
-        <result column="auth_status" property="status" jdbcType="INTEGER"/>
-        <result column="auth_superior_id" property="superiorId" jdbcType="INTEGER"/>
-        <result column="auth_type" property="type" jdbcType="INTEGER"/>
-        <result column="auth_url" property="url" jdbcType="VARCHAR"/>
-        <result column="auth_accept_method" property="acceptMethod" jdbcType="VARCHAR"/>
-        <result column="auth_is_api" property="isApi" jdbcType="INTEGER"/>
-    </resultMap>
     <sql id="user_list">
     id, branch_id, department_id, password, station_id, status, username, salt
     </sql>
-    <sql id="authority_list">
-    auth.id as auth_id, auth.action as auth_action, auth.controller as auth_controller,
-    auth.description as auth_description, auth.name as auth_name, auth.param as auth_param,
-    auth.status as auth_status, auth.superior_id as auth_superior_id, auth.type as auth_type,
-    auth.url as auth_url, auth.accept_method as auth_accept_method, auth.is_api as auth_is_api
-    </sql>
-    <sql id="role_list">
-    role.id as role_id, role.description as role_description, role.name as role_name,
-    role.status as role_status
-  </sql>
-    <select id="selectById" resultMap="UserMap" parameterType="java.lang.Integer">
-        select
-        <include refid="user_list"/>,
-        <include refid="role_list"/>,
-        <include refid="authority_list"/>
-        from user user
-        left join user_role_x ur on ur.user_id = user.id
-        LEFT JOIN role role on role.id = ur.role_id
-        LEFT JOIN role_authority_x ra on ra.role_id = role.id
-        LEFT JOIN authority auth on auth.id = ra.authority_id
-        where user.id = #{id,jdbcType=INTEGER}
-    </select>
-    <select id="selectSimpleById" resultMap="UserMap" parameterType="int">
+    <select id="selectById" resultMap="UserMap" parameterType="int">
         select
         <include refid="user_list"/>
         from user user
-        WHERE  user.id = ${id}
+        WHERE  user.id = #{id}
     </select>
 
     <delete id="deleteById" parameterType="java.lang.Integer">

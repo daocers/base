@@ -6,39 +6,15 @@
         <result column="description" property="description" jdbcType="VARCHAR"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
         <result column="status" property="status" jdbcType="INTEGER"/>
-        <collection property="authorityList" ofType="co.bugu.tes.model.Authority" resultMap="AuthorityMap"/>
     </resultMap>
 
-    <resultMap id="AuthorityMap" type="co.bugu.tes.model.Authority">
-        <id column="auth_id" property="id" jdbcType="INTEGER"/>
-        <result column="auth_action" property="action" jdbcType="VARCHAR"/>
-        <result column="auth_controller" property="controller" jdbcType="VARCHAR"/>
-        <result column="auth_description" property="description" jdbcType="VARCHAR"/>
-        <result column="auth_name" property="name" jdbcType="VARCHAR"/>
-        <result column="auth_param" property="param" jdbcType="VARCHAR"/>
-        <result column="auth_status" property="status" jdbcType="INTEGER"/>
-        <result column="auth_superior_id" property="superiorId" jdbcType="INTEGER"/>
-        <result column="auth_type" property="type" jdbcType="INTEGER"/>
-        <result column="auth_url" property="url" jdbcType="VARCHAR"/>
-        <result column="auth_accept_method" property="acceptMethod" jdbcType="VARCHAR"/>
-        <result column="auth_is_api" property="isApi" jdbcType="INTEGER"/>
-
-    </resultMap>
-    <sql id="authority_list">
-    auth.id as auth_id, auth.action as auth_action, auth.controller as auth_controller,
-    auth.description as auth_description, auth.name as auth_name, auth.param as auth_param,
-    auth.status as auth_status, auth.superior_id as auth_superior_id, auth.type as auth_type,
-    auth.url as auth_url, auth.accept_method as auth_accept_method, auth.is_api as auth_is_api
-  </sql>
     <sql id="role_list">
     id, description, name, status
   </sql>
     <select id="selectById" resultMap="RoleMap" parameterType="java.lang.Integer">
         select
         <include refid="role_list"/>,
-        <include refid="authority_list"/>
-        from role role left join role_authority_x ra on role.id = ra.role_id
-        left join authority auth on auth.id = ra.authority_id
+        from role role
         where role.id = #{id,jdbcType=INTEGER}
     </select>
     <delete id="deleteById" parameterType="java.lang.Integer">
@@ -112,7 +88,7 @@
     </select>
 
     <delete id="deleteRoleAuthX" parameterType="map">
-        DELETE  from role_authority_x
+        DELETE from role_authority_x
         <where>
             <if test="roleId != null">
                 role_id = #{roleId}
@@ -126,4 +102,13 @@
     <insert id="addRoleAuthX" parameterType="map">
         insert into role_authority_x (role_id, authority_id) values (#{roleId}, #{authorityId})
     </insert>
+
+    <select id="selectRoleByUser" resultMap="RoleMap" parameterType="int">
+        SELECT
+        <include refid="role_list"/>
+        from role role
+        LEFT JOIN user_role_x ur
+        ON ur.role_id = role.id
+        where ur.user_id = #{userId}
+    </select>
 </mapper>
