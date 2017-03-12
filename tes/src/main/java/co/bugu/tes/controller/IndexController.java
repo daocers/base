@@ -1,5 +1,6 @@
 package co.bugu.tes.controller;
 
+import co.bugu.framework.core.util.BuguWebUtil;
 import co.bugu.framework.core.util.VerifyCodeUtil;
 import co.bugu.framework.util.EncryptUtil;
 import co.bugu.framework.util.JedisUtil;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.WebUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,6 +43,10 @@ public class IndexController {
     }
 
 
+    @RequestMapping("/index")
+    public String index(HttpServletRequest request,  HttpServletResponse response){
+        return "index";
+    }
     /**
      * 登陆，传入用户名，密码
      * @param username
@@ -49,6 +55,7 @@ public class IndexController {
      * @return
      */
     @RequestMapping(value = "/signIn", method = RequestMethod.POST)
+    @ResponseBody
     public String signIn(String username, String password, HttpServletRequest request){
         try{
             User user = new User();
@@ -87,11 +94,11 @@ public class IndexController {
     @RequestMapping("/signOut")
     public String signOut(HttpServletRequest request){
         try{
-            request.getSession().removeAttribute("username");
+            BuguWebUtil.remove(request, Constant.SESSION_USER_ID);
         }catch (Exception e){
-
+            logger.error("注销失败", e);
         }
-        return null;
+        return "redirect:/login.do";
     }
 
 

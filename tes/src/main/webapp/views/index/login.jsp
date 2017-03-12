@@ -109,10 +109,7 @@
             </div>
 
 
-            <form action="" method="post" name="signIn" id="signIn"
-                  onkeydown="if(event.keyCode==13)submitByType('login');">
-                <input type="hidden" id="lang" name='lang' value="c">
-                <input type="hidden" id="action" name='action' value="save">
+            <form name="signIn" id="signIn">
                 <input type="hidden" id="from_domain" name="from_domain" value="i"/>
                 <div class="lr_e">
                     <label><span class="err" style="display:none" id="username_err">请输入布谷科技帐号</span>帐号</label>
@@ -151,7 +148,7 @@
                     <label for="isread">自动登录</label>
                 </div>
                 <div class="btnbox">
-                    <button type='button' class="p_but" id="login_btn">登 录</button>
+                    <button type='button' class="p_but" id="login_btn" tabindex="10">登 录</button>
                 </div>
             </form>
             <div class="lr_p">
@@ -197,8 +194,13 @@
                 type: "post",
                 data: {username: username, password: password},
                 success: function (data) {
-                    //登陆成功，跳转页面
-                    window.href.location = "/scene/list.do";
+                    if(data == 0){
+                        //登陆成功，跳转页面
+                        window.location.href = "/index.do";
+                    }else{
+                        $(".errbox").show();
+                    }
+
                 },
                 error: function (data) {
                     //如果有验证码就修改验证码
@@ -216,7 +218,7 @@
         });
 
 
-        var input_arr = ['password', 'verifycode', 'userpwd', 'cfmpwd', 'phone', 'phonecode', 'name', 'newpwd', 'newpwd_cfm', 'oldpwd', 'newpwdcfm', 'emailverifycode', 'messagecode'];
+        var input_arr = ['username', 'password', 'verifycode', 'userpwd', 'cfmpwd', 'phone', 'phonecode', 'name', 'newpwd', 'newpwd_cfm', 'oldpwd', 'newpwdcfm', 'emailverifycode', 'messagecode'];
         $.each(input_arr, function (i, item) {
             $("#" + item).blur(function () {
                 $("#" + item).parent().removeClass("focusinput");

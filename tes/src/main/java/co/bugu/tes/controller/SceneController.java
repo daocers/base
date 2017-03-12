@@ -1,30 +1,26 @@
 package co.bugu.tes.controller;
 
+import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.core.util.BuguWebUtil;
-import co.bugu.framework.util.exception.TesException;
+import co.bugu.framework.util.JsonUtil;
 import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.*;
 import co.bugu.tes.service.*;
-import co.bugu.framework.core.dao.PageInfo;
-import co.bugu.framework.util.JsonUtil;
-import com.alibaba.dubbo.common.json.JSONArray;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.sun.beans.editors.DoubleEditor;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.util.WebUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
@@ -213,14 +209,7 @@ public class SceneController {
     @RequestMapping(value = "/savePolicy", method = RequestMethod.POST)
     public String savePolicyThenPriview(Scene scene, RedirectAttributes redirectAttributes){
         Integer paperPolicyId = scene.getPaperPolicyId();
-
-
-
-
-
         scene = sceneService.findById(scene.getId());
-
-
         if(scene.getPaperPolicyId() != null){
             PaperPolicy policy = paperPolicyService.findById(scene.getPaperPolicyId());
             String content = policy.getContent();
