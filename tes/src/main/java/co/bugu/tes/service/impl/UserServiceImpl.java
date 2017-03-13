@@ -2,17 +2,24 @@ package co.bugu.tes.service.impl;
 
 
 import co.bugu.framework.core.service.impl.BaseServiceImpl;
+import co.bugu.framework.util.JedisUtil;
+import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.Authority;
 import co.bugu.tes.model.Profile;
 import co.bugu.tes.model.Role;
 import co.bugu.tes.model.User;
 import co.bugu.tes.service.IUserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import sun.rmi.runtime.Log;
 
+import java.security.Key;
 import java.util.List;
 
 @Service
 public class UserServiceImpl extends BaseServiceImpl<User> implements IUserService {
+    private static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     //    @Autowired
 //    BaseDao baseDao;
 //
@@ -23,6 +30,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
             user.getProfile().setUserId(user.getId());
             baseDao.insert("tes.profile.insert", user.getProfile());
         }
+        JedisUtil.setJson(Constant.USER_INFO_PREFIX + user.getId(), user);
         return 1;
     }
 
@@ -39,6 +47,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
                 baseDao.update("tes.profile.updateById", profile);
             }
         }
+        JedisUtil.setJson(Constant.USER_INFO_PREFIX + user.getId(), user);
         return 1;
     }
 
@@ -63,12 +72,24 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
 //    }
 //
     @Override
-    public User findById(Integer id) {
+    public User findById(Integer id) {;
+        try{
+            User user = JedisUtil.getJson(Constant.USER_INFO_PREFIX + id, User.class);
+            return user;
+        }catch (Exception e){
+            logger.error("查询redis失败", e);
+        }
         return baseDao.selectOne("tes.user.selectById", id);
     }
 
     @Override
     public User findFullById(Integer id) {
+        try{
+            User user = JedisUtil.getJson(Constant.USER_INFO_PREFIX + id, User.class);
+            return user;
+        }catch (Exception e){
+            logger.error("查询redis失败",e);
+        }
         User user = baseDao.selectOne("tes.user.selectById", id);
         if(user != null){
             List<Role> roles = baseDao.selectList("tes.role.selectRoleByUser", user.getId());
@@ -84,14 +105,4 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
         }
         return user;
     }
-//
-//    @Override
-//    public List<User> findAllByObject(User user) {
-//        return baseDao.selectList("tes.user.listByObject", user);
-//    }
-//
-//    @Override
-//    public PageInfo listByObject(User user, PageInfo<User> pageInfo) throws Exception {
-//        return baseDao.listByObject("tes.user.listByObject", user, pageInfo);
-//    }
 }

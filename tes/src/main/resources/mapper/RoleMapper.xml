@@ -6,10 +6,11 @@
         <result column="description" property="description" jdbcType="VARCHAR"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
         <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="role_list">
-    id, description, name, status
+    id, description, name, status, code
   </sql>
     <select id="selectById" resultMap="RoleMap" parameterType="java.lang.Integer">
         select
@@ -37,6 +38,9 @@
             <if test="status != null">
                 status,
             </if>
+            <if test="code != null">
+                code,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -51,6 +55,9 @@
             <if test="status != null">
                 #{status,jdbcType=INTEGER},
             </if>
+            <if test="code != null">
+                #{code, jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <update id="updateById" parameterType="co.bugu.tes.model.Role">
@@ -64,6 +71,9 @@
             </if>
             <if test="status != null">
                 status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="code != null">
+                code = #{code},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
@@ -84,6 +94,7 @@
             <if test="status != null">
                 and status = #{status,jdbcType=INTEGER},
             </if>
+
         </where>
     </select>
 
