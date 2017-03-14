@@ -1,20 +1,15 @@
 package co.bugu.tes.controller;
 
 import co.bugu.framework.core.dao.PageInfo;
-import co.bugu.framework.util.ExcelUtil;
 import co.bugu.framework.util.ExcelUtilNew;
 import co.bugu.framework.util.JsonUtil;
-import co.bugu.framework.util.exception.TesException;
 import co.bugu.tes.enums.BranchLevel;
-import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.Branch;
 import co.bugu.tes.model.User;
 import co.bugu.tes.service.IBranchService;
 import co.bugu.tes.service.IUserService;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +24,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.IOException;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 @Controller("/branchController/v1")
 @RequestMapping("/branch")
@@ -108,22 +103,19 @@ public class BranchController {
     */
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-    public String save(String info, ModelMap model){
+    public String save(Branch branch, ModelMap model){
         JSONObject json = new JSONObject();
         try{
-            if(StringUtils.isEmpty(info)){
-                json.put("code", -1);
-                json.put("msg", "参数错误");
+            Date now = new Date();
+            branch.setUpdateTime(now);
+            if(branch.getId() == null){
+                branch.setCreateTime(now);
+                branchService.save(branch);
             }else{
-                Branch branch = JSON.parseObject(info, Branch.class);
-                if(branch.getId() == null){
-                    branchService.save(branch);
-                }else{
-                    branchService.updateById(branch);
-                }
-                json.put("code", 0);
+                branchService.updateById(branch);
             }
-
+            json.put("code", 0);
+            json.put("id", branch.getId());
 
         }catch (Exception e){
             logger.error("保存失败", e);
@@ -224,6 +216,7 @@ public class BranchController {
         for(Branch branch: branchList){
             JSONObject json = new JSONObject();
             json.put("id", branch.getId());
+            json.put("cId", branch.getId());
             json.put("name", branch.getName());
             json.put("pId", branch.getSuperiorId());
             array.add(json);

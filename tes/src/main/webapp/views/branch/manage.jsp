@@ -45,6 +45,7 @@
                 beforeDragOpen: beforeDragOpen,
                 onDrag: onDrag,
                 onDrop: onDrop,
+                onClick: onClick,
                 onExpand: onExpand,
                 beforeEditName: beforeEditName,
                 beforeRemove: beforeRemove,
@@ -63,6 +64,7 @@
 
         var zNodes = eval(${data});
 
+        console.log("znode: ", zNodes)
 
         console.log("ori: ", zNodes);
         function dropPrev(treeId, nodes, targetNode) {
@@ -256,31 +258,43 @@
          * @param treeNode
          */
         function onClick(e, treeId, treeNode) {
-            zeroModal.loading(4);
-            var id = treeNode.tId;
-            $.ajax({
-                url: 'edit.do',
-                type: "get",
-                data: {id: id},
-                success: function (data) {
-                    if(data.code == 0){
-                        var info = eval(data.data);
-                        $("input[name='id']").val(info.id);
-                        $("input[name='name']").val(info.name);
-                        $("input[name='level']").val(info.level);
-                        $("input[name='code']").val(info.code);
-                        $("input[name='superiorId']").val(info.superiorId);
-                        $("input[name='superiorName']").val(info.superiorName);
-                    }else{
-                        swal("", "获取机构详情失败", "error");
+            zeroModal.loading(3);
+            console.log(treeNode)
+            var id = treeNode.cId;
+            $("input[name='superiorId']").val(treeNode.pId);
+            $("#id").val(treeNode.id);
+            if(!id){//新建的
+                $("input[name='id']").val("");
+                $("input[name='name']").val(treeNode.name);
+                $("input[name='address']").val("");
+                $("input[name='code']").val("");
+            }else{//修改原有的
+                $.ajax({
+                    url: 'edit.do',
+                    type: "get",
+                    data: {id: id},
+                    success: function (data) {
+                        console.log("data: ", data);
+                        var res = JSON.parse(data);
+                        if(res.code == 0){
+                            var info = res.data;
+                            $("input[name='id']").val(info.id);
+                            $("input[name='name']").val(info.name);
+                            $("input[name='address']").val(info.address);
+                            $("input[name='code']").val(info.code);
+                            $("select[name='status']").val(info.status);
+                        }else{
+                            swal("", "获取机构详情失败", "error");
+                        }
+                        return false;
+                    },
+                    error: function (data) {
+                        swal("", "服务错误", data.msg);
+                        return false;
                     }
-                    return false;
-                },
-                error: function (data) {
-                    swal("", "服务错误", data.msg);
-                    return false;
-                }
-            })
+                });
+            }
+
             zeroModal.closeAll();
         };
 
@@ -324,24 +338,27 @@
             <ul id="tree" class="ztree"></ul>
         </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
+
         <form class="form-horizontal" method="post" action="save.do" data-toggle="validator" role="form">
-            <input id="id" type="hidden" name="id" value="${branch.id}">
-            <div class="form-group">
+            <input type="hidden" name="id" value="${branch.id}">
+            <input type="hidden" id="id">
+            <input id="superiorId" type="hidden" name="superiorId">
+            <div class="form-group form-group-sm">
                 <label class="control-label col-md-2">机构名称</label>
                 <div class="col-md-10">
                     <input class="form-control" type="text" name="name" value="${branch.name}" required>
                     <span class="help-block">分行、支行、网点或者分理处的具体名称</span>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group  form-group-sm">
                 <label class="control-label col-md-2">机构编码</label>
                 <div class="col-md-10">
                     <input class="form-control" type="text" name="code" value="${branch.code}" required>
                     <span class="help-block with-errors">如果已经赋值，请谨慎修改</span>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group  form-group-sm">
                 <label class="control-label col-md-2">机构地址</label>
                 <div class="col-md-10">
                     <input class="form-control" type="text" name="address" value="${branch.address}"
@@ -349,31 +366,10 @@
                     <span class="help-block with-errors"></span>
                 </div>
             </div>
-
-            <div class="form-group">
-                <label class="control-label col-md-2">创建时间</label>
-                <div class="col-md-10">
-                    <input class="form-control time" type="text" name="createTime"
-                           value="<fmt:formatDate value="${branch.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-                           required>
-                    <span class="help-block">机构信息入库时间</span>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="control-label col-md-2">更新时间</label>
-                <div class="col-md-10">
-                    <input class="form-control time" type="text" name="updateTime"
-                           value="<fmt:formatDate value="${branch.updateTime}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-                           required disabled>
-                    <span class="help-block">机构信息最后更新时间</span>
-                </div>
-            </div>
-            <div class="form-group">
+            <div class="form-group  form-group-sm">
                 <label class="control-label col-md-2">状态</label>
                 <div class="col-md-10">
                     <select class="form-control" name="status">
-                        <option value="">请选择</option>
                         <option value="0"
                                 <c:if test="${branch.status == 0}">selected</c:if> >正常
                         </option>
@@ -404,21 +400,32 @@
 <script>
     $(function () {
         $(".btn-commit").on("click", function () {
-            $("form").validator();
+            zeroModal.loading(3);
+            $("form").validator('validate');
             $.ajax({
                 url: 'save.do',
                 type: 'post',
                 data: $("form").serialize(),
                 success: function (data) {
-                    if(data.code == 0){
+                    var res = JSON.parse(data);
+                    if(res.code == 0){
+                        var zTree = $.fn.zTree.getZTreeObj("tree");
+                        var node = zTree.getNodeByParam("id", $("#id").val());
+                        if(node){
+                            node.id = res.data;
+                            node.cId = res.data;
+                        }
                         swal("", "保存成功", "info");
                     }
                 },
                 error: function (data) {
-                    swal("", data.msg, "error");
+                    var res = JSON.parse(data);
+                    swal("", res.msg, "error");
                 }
-            })
-        })
-    })
+            });
+            zeroModal.closeAll();
+            return false;
+        });
+    });
 </script>
 </html>
