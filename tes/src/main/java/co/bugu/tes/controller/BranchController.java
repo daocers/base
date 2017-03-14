@@ -8,7 +8,13 @@ import co.bugu.framework.util.exception.TesException;
 import co.bugu.tes.enums.BranchLevel;
 import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.Branch;
+import co.bugu.tes.model.User;
 import co.bugu.tes.service.IBranchService;
+import co.bugu.tes.service.IUserService;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +37,8 @@ import java.util.*;
 public class BranchController {
     @Autowired
     IBranchService branchService;
+    @Autowired
+    IUserService userService;
 
     private static Logger logger = LoggerFactory.getLogger(BranchController.class);
 
@@ -64,7 +72,9 @@ public class BranchController {
     * @return
     */
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
+    @ResponseBody
     public String toEdit(Integer id, ModelMap model){
+        JSONObject json = new JSONObject();
         try{
             Branch record = new Branch();
             record.setLevel(BranchLevel.ZONGHANG.getLevel());
@@ -79,12 +89,15 @@ public class BranchController {
                     }
                 }
             }
-            model.put("branch", branch);
+            json.put("code", 0);
+            json.put("data", branch);
         }catch (Exception e){
             logger.error("获取信息失败", e);
             model.put("errMsg", "获取信息失败");
+            json.put("code", -1);
+            json.put("msg", "服务错误");
         }
-        return "branch/edit";
+        return json.toString();
     }
 
     /**
@@ -94,20 +107,30 @@ public class BranchController {
     * @return
     */
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public String save(Branch branch, ModelMap model){
+    @ResponseBody
+    public String save(String info, ModelMap model){
+        JSONObject json = new JSONObject();
         try{
-            if(branch.getId() == null){
-                branchService.save(branch);
+            if(StringUtils.isEmpty(info)){
+                json.put("code", -1);
+                json.put("msg", "参数错误");
             }else{
-                branchService.updateById(branch);
+                Branch branch = JSON.parseObject(info, Branch.class);
+                if(branch.getId() == null){
+                    branchService.save(branch);
+                }else{
+                    branchService.updateById(branch);
+                }
+                json.put("code", 0);
             }
+
+
         }catch (Exception e){
             logger.error("保存失败", e);
-            model.put("branch", branch);
-            model.put("errMsg", "保存失败");
-            return "branch/edit";
+            json.put("code", -2);
+            json.put("msg", "服务错误");
         }
-        return "redirect:list.do";
+        return json.toString();
     }
 
     /**
@@ -123,23 +146,6 @@ public class BranchController {
             return JsonUtil.toJsonString(list);
         }catch (Exception e){
             logger.error("获取全部列表失败", e);
-            return "-1";
-        }
-    }
-
-    /**
-    * 异步请求 删除
-    * @param branch id
-    * @return
-    */
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    @ResponseBody
-    public String delete(Branch branch){
-        try{
-            branchService.delete(branch);
-            return "0";
-        }catch (Exception e){
-            logger.error("删除失败", e);
             return "-1";
         }
     }
@@ -209,4 +215,54 @@ public class BranchController {
             logger.error("下载机构信息模板失败", e);
         }
     }
+
+
+    @RequestMapping("/manage")
+    public String toManage(ModelMap model){
+        List<Branch> branchList = branchService.findByObject(null);
+        JSONArray array = new JSONArray();
+        for(Branch branch: branchList){
+            JSONObject json = new JSONObject();
+            json.put("id", branch.getId());
+            json.put("name", branch.getName());
+            json.put("pId", branch.getSuperiorId());
+            array.add(json);
+        }
+        model.put("data", array.toString());
+        return "branch/manage";
+    }
+
+
+    /**
+     * 异步请求 删除
+     * @param branch id
+     * @return
+     */
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public String delete(Branch branch){
+        JSONObject json = new JSONObject();
+
+        try{
+            //如果有关联用户，禁止删除
+            User user = new User();
+            user.setBranchId(branch.getId());
+            List<User> users = userService.findByObject(user);
+            if(users != null && users.size() > 0){
+                json.put("code", -1);
+                json.put("msg", "该机构下有用户，不能删除，请先处理用户信息。");
+            }else{
+                json.put("code", 0);
+                json.put("msg", "");
+            }
+            branchService.delete(branch);
+        }catch (Exception e){
+            logger.error("删除失败", e);
+            json.put("code", -2);
+            json.put("msg", "服务器错误");
+        }finally {
+            return json.toString();
+        }
+    }
+
 }

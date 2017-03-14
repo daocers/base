@@ -7,6 +7,7 @@ import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.*;
 import co.bugu.tes.service.*;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -143,7 +144,7 @@ public class SceneController {
             logger.error("保存信息失败", e);
             model.put("errMsg", "保存信息失败");
         }
-        return "redirect:selectUser.do";
+        return "redirect:setUser.do";
     }
 
     @RequestMapping(value = "/selectUser")
@@ -158,6 +159,22 @@ public class SceneController {
         String selectedUser = scene.getJoinUser();
         model.put("joinUser", selectedUser);
         return "scene/selectUser";
+    }
+
+
+    @RequestMapping(value = "/setUser")
+    public String toSetUser(ModelMap model, RedirectAttributes redirectAttributes){
+        List<Branch> branchList = branchService.findByObject(null);
+        JSONArray array = new JSONArray();
+        for(Branch branch: branchList){
+            JSONObject json = new JSONObject();
+            json.put("id", branch.getId());
+            json.put("pId", branch.getSuperiorId());
+            json.put("name", branch.getName());
+            array.add(json);
+        }
+        model.put("data", array.toString());
+        return "scene/setUser";
     }
 
     @RequestMapping(value = "/saveUser", method = RequestMethod.POST)

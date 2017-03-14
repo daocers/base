@@ -44,7 +44,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 
             List<Annotation> annotations = getAllWorkAnnotation(controller, method);
             boolean checkRes = true;
-            User user = userService.findFullById(Integer.valueOf((String) BuguWebUtil.get(request, Constant.SESSION_USER_ID)));
+            User user = userService.findFullById(((Integer) BuguWebUtil.get(request, Constant.SESSION_USER_ID)));
             for (Annotation annotation : annotations) {
                 if (annotation.annotationType().equals(requiresLogin.class)) {
                     checkRes = BuguWebUtil.hasSingin(request);
@@ -73,6 +73,9 @@ public class AuthInterceptor implements HandlerInterceptor {
      */
     private boolean checkAuth(User user, Annotation annotation) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Class clazz = annotation.annotationType();
+        if(!clazz.getTypeName().startsWith("co.bugu.tes.annotation.")){
+            return true;
+        }
         Method val = clazz.getDeclaredMethod("value");
         val.setAccessible(true);
         Object param = val.invoke(annotation, null);

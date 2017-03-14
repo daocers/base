@@ -14,7 +14,7 @@ website:	http://code.google.com/p/jquerytree/
 ul.ztree {
 	padding:5px;
 	border: 1px solid lightskyblue;
-	border-radius: 5px;
+	border-radius: 1px;
 	margin: 3px 5px 5px 0px;
 	height: 400px;
 	overflow-y: scroll;
@@ -154,12 +154,13 @@ ul.ztree {
 .ztree li span.button.chk.radio_true_disable {background-position:-42px -56px}
 
 .ztree li span.button.switch {
-	width:10px; height:10px;
+	width:15px; height:15px;
 	border: 1px dotted powderblue;
-	margin: 3px 5px 3px 2px;
+	margin: 1px 5px 1px 2px;
 	background-size: cover;
 }
 .ztree li span.button.root_open{
+	background-image: url("./img/minus.png");
 }
 .ztree li span.button.root_close{
 	background-image: url("./img/add.png");

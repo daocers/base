@@ -1,6 +1,5 @@
 package co.bugu.tes.controller;
 
-import co.bugu.framework.core.mybatis.ThreadLocalUtil;
 import co.bugu.framework.util.EncryptUtil;
 import co.bugu.framework.util.ExcelUtilNew;
 import co.bugu.tes.enums.ExamStatus;
@@ -9,7 +8,7 @@ import co.bugu.tes.model.*;
 import co.bugu.tes.service.*;
 import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.util.JsonUtil;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,16 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
@@ -221,5 +215,25 @@ public class UserController {
         } catch (Exception e) {
             logger.error("下载用户模板失败", e);
         }
+    }
+
+
+    /**
+     * 根据结构id选择考试人员
+     * @param branchInfo
+     * @return
+     */
+    @RequestMapping("/getUsers")
+    @ResponseBody
+    public String getUserForScene(String branchInfo){
+        List<User> res = new ArrayList<>();
+        List<Integer> branchIds = JSON.parseArray(branchInfo, Integer.class);
+        for(Integer id: branchIds){
+            User user = new User();
+            user.setBranchId(id);
+            List<User> users = userService.findByObject(user);
+            res.addAll(users);
+        }
+        return JSON.toJSONString(res);
     }
 }

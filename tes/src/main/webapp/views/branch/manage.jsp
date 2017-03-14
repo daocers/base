@@ -1,0 +1,424 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: user
+  Date: 2017/3/14
+  Time: 17:05
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html>
+<head>
+    <title>机构管理</title>
+    <%@ include file="../template/header.jsp" %>
+
+    <link rel="stylesheet" href="../assets/css/ztree/zTreeStyle.css" type="text/css">
+    <script type="text/javascript" src="../assets/js/jquery.ztree.core.js"></script>
+    <script type="text/javascript" src="../assets/js/jquery.ztree.excheck.js"></script>
+    <script type="text/javascript" src="../assets/js/jquery.ztree.exedit.js"></script>
+    <SCRIPT type="text/javascript">
+        <!--
+        var setting = {
+            edit: {
+                enable: true,
+                editNameSelectAll: true,
+                showRemoveBtn: showRemoveBtn,
+                showRenameBtn: showRenameBtn,
+                drag: {
+                    autoExpandTrigger: true,
+                    prev: dropPrev,
+                    inner: dropInner,
+                    next: dropNext
+                },
+                showRemoveBtn: true,
+                showRenameBtn: true,
+                removeTitle: "删除节点",
+                renameTitle: "修改名称",
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            },
+            callback: {
+                beforeDrag: beforeDrag,
+                beforeDrop: beforeDrop,
+                beforeDragOpen: beforeDragOpen,
+                onDrag: onDrag,
+                onDrop: onDrop,
+                onExpand: onExpand,
+                beforeEditName: beforeEditName,
+                beforeRemove: beforeRemove,
+                beforeRename: beforeRename,
+                onRemove: onRemove,
+                onRename: onRename,
+                onNodeCreated: onNodeCreated
+            },
+            view: {
+                showLine: true,
+                addHoverDom: addHoverDom,
+                removeHoverDom: removeHoverDom,
+                selectedMulti: false
+            }
+        };
+
+        var zNodes = eval(${data});
+
+
+        console.log("ori: ", zNodes);
+        function dropPrev(treeId, nodes, targetNode) {
+            var pNode = targetNode.getParentNode();
+            if (pNode && pNode.dropInner === false) {
+                return false;
+            } else {
+                for (var i=0,l=curDragNodes.length; i<l; i++) {
+                    var curPNode = curDragNodes[i].getParentNode();
+                    if (curPNode && curPNode !== targetNode.getParentNode() && curPNode.childOuter === false) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        function onNodeCreated(event, treeId, treeNode) {
+            console.log("treeNode", treeNode);
+            if(treeNode.name.indexOf("新节点") > -1){
+                var treeObj = $.fn.zTree.getZTreeObj("tree");
+                console.log("新节点创建了");
+                treeObj.editName(treeNode);
+            }
+
+        }
+        function dropInner(treeId, nodes, targetNode) {
+            if (targetNode && targetNode.dropInner === false) {
+                return false;
+            } else {
+                for (var i=0,l=curDragNodes.length; i<l; i++) {
+                    if (!targetNode && curDragNodes[i].dropRoot === false) {
+                        return false;
+                    } else if (curDragNodes[i].parentTId && curDragNodes[i].getParentNode() !== targetNode && curDragNodes[i].getParentNode().childOuter === false) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        function dropNext(treeId, nodes, targetNode) {
+            var pNode = targetNode.getParentNode();
+            if (pNode && pNode.dropInner === false) {
+                return false;
+            } else {
+                for (var i=0,l=curDragNodes.length; i<l; i++) {
+                    var curPNode = curDragNodes[i].getParentNode();
+                    if (curPNode && curPNode !== targetNode.getParentNode() && curPNode.childOuter === false) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        var log, className = "dark", curDragNodes, autoExpandNode;
+        function beforeDrag(treeId, treeNodes) {
+            className = (className === "dark" ? "":"dark");
+            showLog("[ "+getTime()+" beforeDrag ]&nbsp;&nbsp;&nbsp;&nbsp; drag: " + treeNodes.length + " nodes." );
+            for (var i=0,l=treeNodes.length; i<l; i++) {
+                if (treeNodes[i].drag === false) {
+                    curDragNodes = null;
+                    return false;
+                } else if (treeNodes[i].parentTId && treeNodes[i].getParentNode().childDrag === false) {
+                    curDragNodes = null;
+                    return false;
+                }
+            }
+            curDragNodes = treeNodes;
+            return true;
+        }
+        function beforeDragOpen(treeId, treeNode) {
+            autoExpandNode = treeNode;
+            return true;
+        }
+        function beforeDrop(treeId, treeNodes, targetNode, moveType, isCopy) {
+            className = (className === "dark" ? "":"dark");
+            showLog("[ "+getTime()+" beforeDrop ]&nbsp;&nbsp;&nbsp;&nbsp; moveType:" + moveType);
+            showLog("target: " + (targetNode ? targetNode.name : "root") + "  -- is "+ (isCopy==null? "cancel" : isCopy ? "copy" : "move"));
+            return true;
+        }
+        function onDrag(event, treeId, treeNodes) {
+            className = (className === "dark" ? "":"dark");
+            showLog("[ "+getTime()+" onDrag ]&nbsp;&nbsp;&nbsp;&nbsp; drag: " + treeNodes.length + " nodes." );
+        }
+        function onDrop(event, treeId, treeNodes, targetNode, moveType, isCopy) {
+            className = (className === "dark" ? "":"dark");
+            showLog("[ "+getTime()+" onDrop ]&nbsp;&nbsp;&nbsp;&nbsp; moveType:" + moveType);
+            showLog("target: " + (targetNode ? targetNode.name : "root") + "  -- is "+ (isCopy==null? "cancel" : isCopy ? "copy" : "move"))
+        }
+        function onExpand(event, treeId, treeNode) {
+            if (treeNode === autoExpandNode) {
+                className = (className === "dark" ? "":"dark");
+                showLog("[ "+getTime()+" onExpand ]&nbsp;&nbsp;&nbsp;&nbsp;" + treeNode.name);
+            }
+        }
+
+        function showLog(str) {
+            if (!log) log = $("#log");
+            log.append("<li class='"+className+"'>"+str+"</li>");
+            if(log.children("li").length > 8) {
+                log.get(0).removeChild(log.children("li")[0]);
+            }
+        }
+        function getTime() {
+            var now= new Date(),
+                h=now.getHours(),
+                m=now.getMinutes(),
+                s=now.getSeconds(),
+                ms=now.getMilliseconds();
+            return (h+":"+m+":"+s+ " " +ms);
+        }
+
+        function showRemoveBtn(treeId, treeNode) {
+            return !treeNode.isFirstNode;
+        }
+        function showRenameBtn(treeId, treeNode) {
+            return !treeNode.isLastNode;
+        }
+
+        function setTrigger() {
+            var zTree = $.fn.zTree.getZTreeObj("tree");
+            zTree.setting.edit.drag.autoExpandTrigger = $("#callbackTrigger").attr("checked");
+        }
+
+        function beforeEditName(treeId, treeNode) {
+            className = (className === "dark" ? "":"dark");
+            showLog("[ "+getTime()+" beforeEditName ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name);
+            var zTree = $.fn.zTree.getZTreeObj("tree");
+            zTree.selectNode(treeNode);
+//            return confirm("进入节点 -- " + treeNode.name + " 的编辑状态吗？");
+        }
+
+        /**
+         * 用于捕获节点被删除之前的事件毁掉函数，并且根据返回值确定是否允许删除
+         * @param treeId
+         * @param treeNode
+         */
+        function beforeRemove(treeId, treeNode) {
+            className = (className === "dark" ? "":"dark");
+            showLog("[ "+getTime()+" beforeRemove ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name);
+            var zTree = $.fn.zTree.getZTreeObj("tree");
+            zTree.selectNode(treeNode);
+            return confirm("确认删除 节点 -- " + treeNode.name + " 吗？");
+        }
+        /**
+         * 捕获删除节点之后的事件回调函数
+         * @param e
+         * @param treeId
+         * @param treeNode
+         */
+        function onRemove(e, treeId, treeNode) {
+            showLog("[ "+getTime()+" onRemove ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name);
+        }
+
+        /**
+         * 用于捕获节点编辑名称结束（Input 失去焦点 或 按下 Enter 键）之后，更新节点名称数据之前的事件回调函数，并且根据返回值确定是否允许更改名称的操作
+         节点进入编辑名称状态后，按 ESC 键可以放弃当前修改，恢复原名称，取消编辑名称状态
+         从 v3.5.13 开始，取消编辑状态也会触发此回调，根据 isCancel 参数判断
+         * @param treeId
+         * @param treeNode
+         * @param newName
+         * @param isCancel
+         * @returns {boolean}
+         */
+        function beforeRename(treeId, treeNode, newName, isCancel) {
+            className = (className === "dark" ? "":"dark");
+//            showLog((isCancel ? "<span style='color:red'>":"") + "[ "+getTime()+" beforeRename ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name + (isCancel ? "</span>":""));
+            if (newName.length == 0) {
+                alert("节点名称不能为空.");
+                var zTree = $.fn.zTree.getZTreeObj("tree");
+                setTimeout(function(){zTree.editName(treeNode)}, 10);
+                return false;
+            }
+            return true;
+        }
+        /**
+         * 用于捕获节点编辑名称结束之后的事件回调函数。
+         * @param e
+         * @param treeId
+         * @param treeNode
+         * @param isCancel
+         */
+        function onRename(e, treeId, treeNode, isCancel) {
+//            showLog((isCancel ? "<span style='color:red'>":"") + "[ "+getTime()+" onRename ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name + (isCancel ? "</span>":""));
+        }
+
+        /**
+         * 节点被点击时候触发操作
+         * @param e
+         * @param treeId
+         * @param treeNode
+         */
+        function onClick(e, treeId, treeNode) {
+            zeroModal.loading(4);
+            var id = treeNode.tId;
+            $.ajax({
+                url: 'edit.do',
+                type: "get",
+                data: {id: id},
+                success: function (data) {
+                    if(data.code == 0){
+                        var info = eval(data.data);
+                        $("input[name='id']").val(info.id);
+                        $("input[name='name']").val(info.name);
+                        $("input[name='level']").val(info.level);
+                        $("input[name='code']").val(info.code);
+                        $("input[name='superiorId']").val(info.superiorId);
+                        $("input[name='superiorName']").val(info.superiorName);
+                    }else{
+                        swal("", "获取机构详情失败", "error");
+                    }
+                    return false;
+                },
+                error: function (data) {
+                    swal("", "服务错误", data.msg);
+                    return false;
+                }
+            })
+            zeroModal.closeAll();
+        };
+
+        var newCount = 1;
+        function addHoverDom(treeId, treeNode) {
+            var sObj = $("#" + treeNode.tId + "_span");
+            if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
+            var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
+                + "' title='添加新节点' onfocus='this.blur();'></span>";
+            sObj.after(addStr);
+            var btn = $("#addBtn_"+treeNode.tId);
+            if (btn) btn.bind("click", function(){
+                var zTree = $.fn.zTree.getZTreeObj("tree");
+                zTree.addNodes(treeNode, {id:(100 + newCount), pId:treeNode.id, name:"添加新节点" + (newCount++)});
+                return false;
+            });
+        };
+        function removeHoverDom(treeId, treeNode) {
+            $("#addBtn_"+treeNode.tId).unbind().remove();
+        };
+
+        $(document).ready(function(){
+            $.fn.zTree.init($("#tree"), setting, zNodes);
+            $("#callbackTrigger").bind("change", {}, setTrigger);
+        });
+        //-->
+    </SCRIPT>
+</head>
+<body>
+<div class="container">
+    <div class="row nav-path">
+        <ol class="breadcrumb">
+            <li><a href="#">首页</a></li>
+            <li><a href="#">机构管理</a></li>
+        </ol>
+    </div>
+    <input type="hidden" value="${param.type}" id="type">
+
+    <div class="col-md-4">
+        <div class="zTree left">
+            <ul id="tree" class="ztree"></ul>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <form class="form-horizontal" method="post" action="save.do" data-toggle="validator" role="form">
+            <input id="id" type="hidden" name="id" value="${branch.id}">
+            <div class="form-group">
+                <label class="control-label col-md-2">机构名称</label>
+                <div class="col-md-10">
+                    <input class="form-control" type="text" name="name" value="${branch.name}" required>
+                    <span class="help-block">分行、支行、网点或者分理处的具体名称</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">机构编码</label>
+                <div class="col-md-10">
+                    <input class="form-control" type="text" name="code" value="${branch.code}" required>
+                    <span class="help-block with-errors">如果已经赋值，请谨慎修改</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">机构地址</label>
+                <div class="col-md-10">
+                    <input class="form-control" type="text" name="address" value="${branch.address}"
+                           maxlength="100">
+                    <span class="help-block with-errors"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">创建时间</label>
+                <div class="col-md-10">
+                    <input class="form-control time" type="text" name="createTime"
+                           value="<fmt:formatDate value="${branch.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/>"
+                           required>
+                    <span class="help-block">机构信息入库时间</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">更新时间</label>
+                <div class="col-md-10">
+                    <input class="form-control time" type="text" name="updateTime"
+                           value="<fmt:formatDate value="${branch.updateTime}" pattern="yyyy-MM-dd HH:mm:ss"/>"
+                           required disabled>
+                    <span class="help-block">机构信息最后更新时间</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">状态</label>
+                <div class="col-md-10">
+                    <select class="form-control" name="status">
+                        <option value="">请选择</option>
+                        <option value="0"
+                                <c:if test="${branch.status == 0}">selected</c:if> >正常
+                        </option>
+                        <option value="1"
+                                <c:if test="${branch.status == 1}">selected</c:if> >禁用
+                        </option>
+                    </select>
+                    <%--<input class="form-control" type="text" name="status" value="${branch.status}" required>--%>
+                    <span class="help-block"></span>
+                </div>
+            </div>
+
+            <div class="button pull-right">
+                <button class="btn btn-primary btn-commit">保存</button>
+                <div class="space">
+
+                </div>
+                <button class="btn btn-warning btn-cancel" onclick="return false;">取消</button>
+            </div>
+        </form>
+    </div>
+
+
+</div>
+
+</body>
+
+<script>
+    $(function () {
+        $(".btn-commit").on("click", function () {
+            $("form").validator();
+            $.ajax({
+                url: 'save.do',
+                type: 'post',
+                data: $("form").serialize(),
+                success: function (data) {
+                    if(data.code == 0){
+                        swal("", "保存成功", "info");
+                    }
+                },
+                error: function (data) {
+                    swal("", data.msg, "error");
+                }
+            })
+        })
+    })
+</script>
+</html>
