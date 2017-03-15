@@ -12,7 +12,7 @@
         <result column="prop_item_id_info" property="propItemIdInfo" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="question_list">
-    id, answer, content, extra_info, meta_info_id, bank_id, title, prop_item_id_info
+    id, answer, content, extra_info, meta_info_id, question_bank_id, title, prop_item_id_info
   </sql>
     <select id="selectById" resultMap="QuestionMap" parameterType="java.lang.Integer">
         select
@@ -116,13 +116,7 @@
         order by question.id
     </select>
 
-    <select id="findPropItemByQuestionId" resultMap="PropertyItemMap" parameterType="co.bugu.tes.model.Question">
-        SELECT
-        <include refid="propertyItem_list"/>
-        from property_item prop_item
-        LEFT JOIN question_propItem_x qp on qp.property_item_id = prop_item.id
-        WHERE qp.question_id = #{id}
-    </select>
+
 
 
     <select id="selectCountOfPropInfo" resultType="map" parameterType="int">

@@ -52,7 +52,10 @@
                 <div class="form-group">
                     <label class="control-label col-md-2">状态</label>
                     <div class="col-md-10">
-                        <input class="form-control" type="text" name="status" value="${property.status}" required>
+                        <select class="form-control" name="status" required>
+                            <option value="0" <c:if test="${property.status == 0}"> selected</c:if>>启用</option>
+                            <option value="1" <c:if test="${property.status == 1}"> selected</c:if>>禁用</option>
+                        </select>
                         <span class="help-block with-errors">可用/禁用  </span>
                     </div>
                 </div>
@@ -67,6 +70,7 @@
                                     <th>编号</th>
                                     <th class="cell-edit">前缀</th>
                                     <th class="cell-edit">属性值</th>
+                                    <th class="cell-edit">操作</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -75,6 +79,7 @@
                                         <td>1</td>
                                         <td></td>
                                         <td></td>
+                                        <td class="opr-td"><a href="" class="del-row">删除</a></td>
                                     </tr>
                                 </c:if>
                                 <c:forEach items="${property.propertyItemList}" var="item" varStatus="line">
@@ -82,6 +87,7 @@
                                         <td itemId="${item.id}">${line.count}</td>
                                         <td>${item.code}</td>
                                         <td>${item.name}</td>
+                                        <td class="opr-td"><a href="" class="del-row">删除</a></td>
                                     </tr>
 
                                 </c:forEach>
@@ -104,6 +110,11 @@
     </div>
 </div>
 <script>
+
+    $("body").on("click", ".del-row", function () {
+        $(this).parentsUntil("tr").parent().remove();
+        return false;
+    })
     /**
      * 动态添加行，并绑定事件
      */
@@ -112,10 +123,12 @@
         console.log(rowNum);
         var index = parseInt(rowNum) + 1;
         console.log("<tr><td>" + index + "</td><td></td><td></td></tr>");
-        $("table").find("tbody").append("<tr><td>" + index + "</td><td></td><td></td></tr>");
+        $("table").find("tbody").append("<tr><td>" + index +
+            "</td><td></td><td></td><td class='opr-td'><a href='' class='del-row'>删除</a></td></tr>");
         $("table").editable();//刷新表格，给刚添加的行绑定事件
         return false;
-    })
+    });
+
 
     $(".btn-commit").on("click", function () {
         var res = new Array();

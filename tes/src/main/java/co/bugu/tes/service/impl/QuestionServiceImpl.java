@@ -3,9 +3,7 @@ package co.bugu.tes.service.impl;
 
 import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.core.service.impl.BaseServiceImpl;
-import co.bugu.framework.util.JedisUtil;
 import co.bugu.framework.util.exception.TesException;
-import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.Question;
 import co.bugu.tes.service.IQuestionService;
 import co.bugu.tes.util.QuestionUtil;
@@ -101,7 +99,7 @@ public class QuestionServiceImpl extends BaseServiceImpl<Question> implements IQ
         baseDao.listByObject("tes.question.findByObject", record, pageInfo);
         if(pageInfo.getData().size() > 0){
             for(Question question: pageInfo.getData()){
-                question.setPropertyItemList(baseDao.selectList("tes.question.findPropItemByQuestionId", question));
+                question.setPropertyItemList(baseDao.selectList("tes.propertyItem.findPropItemByQuestionId", question));
                 question.setQuestionMetaInfo(baseDao.selectOne("tes.questionMetaInfo.selectById", question.getMetaInfoId()));
             }
         }

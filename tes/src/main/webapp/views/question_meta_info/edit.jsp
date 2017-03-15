@@ -1,9 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="../template/header.jsp" %>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>品类编辑</title>
+    <title>题型修改</title>
+    <%@ include file="../template/header.jsp" %>
+
     <style>
         .prop{
             display: inline-block;
@@ -50,8 +51,10 @@
                 <div class="form-group">
                     <label class="control-label col-md-2">状态</label>
                     <div class="col-md-10">
-                        <input class="form-control" type="text" name="status" value="${questionmetainfo.status}"
-                               required>
+                        <select name="status" class="form-control" required>
+                            <option value="0">启用</option>
+                            <option value="1">禁用</option>
+                        </select>
                         <span class="help-block with-errors">设置禁用/启用</span>
                     </div>
                 </div>
@@ -92,7 +95,24 @@
     </div>
 </div>
 <script>
+    $(function () {
+        $(".btn-commit").bind("click", function () {
+            var checked = $("input[name='propertyId']:checked");
+            if(checked.length == 0){
+                swal("", "没有选择该题型的属性，是否继续？", "warning").then(function(isConfirmed){
+                    if(isConfirmed){
+                        $("form").submit();
+                        $(this).attr("disabled", true);
+                    }
+                });
+            }else{
+                $(this).attr("disabled", true);
+                $("form").submit();
+            }
+            return false;
+        })
 
+    })
 </script>
 </body>
 </html>

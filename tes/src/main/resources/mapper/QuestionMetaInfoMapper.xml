@@ -92,7 +92,7 @@
     </select>
 
     <insert id="addProperty" parameterType="map">
-        insert into question_metaInfo_property_x (question_meta_info_id, property_id, idx)
+        insert into question_metaInfo_property_x (question_meta_info_id, property_id, property_idx)
         values (#{metaInfoId}, #{propertyId}, #{idx})
     </insert>
     <delete id="deleteProperty" parameterType="map">

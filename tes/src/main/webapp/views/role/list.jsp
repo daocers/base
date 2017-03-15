@@ -7,22 +7,19 @@
     <%@ include file="../template/header.jsp" %>
 
     <style>
-        .cell-edit{
-
-        }
     </style>
     <script>
         $(function () {
-            $("th.cell-edit").each(function (idx, e) {
-                console.log("e", e);
-
-                var index = $(e).parents("tr").find("th").index($(e));
-                console.log("index", index);
-                $("tr td:eq(" + index + ")").each(function (idx1, e1) {
-                    var value = $(e1).text();
-                    $(e1).html("<input type='text' value='" + value + "' class='form-control form-control-intable'>");
-                });
-            });
+//            $("th.cell-edit").each(function (idx, e) {
+//                console.log("e", e);
+//
+//                var index = $(e).parents("tr").find("th").index($(e));
+//                console.log("index", index);
+//                $("tr td:eq(" + index + ")").each(function (idx1, e1) {
+//                    var value = $(e1).text();
+//                    $(e1).html("<input type='text' value='" + value + "' class='form-control form-control-intable'>");
+//                });
+//            });
 //            $("td.cell-edit").each(html("<input class='form-control' value='" + $(this).val() + "'>");
 
         })
@@ -50,11 +47,12 @@
         </div>
     </div>
     <div class="row table-responsive">
-        <table class="table table-bordered  table-editable">
+        <table class="table table-bordered">
             <thead>
             <tr>
                 <th><input type="checkbox" class="selectAll"></th>
-                <th class="cell-edit">角色名称</th>
+                <th>角色名称</th>
+                <th>编码</th>
                 <th>描述</th>
                 <th>操作</th>
             </tr>
@@ -63,7 +61,8 @@
             <c:forEach items="${pi.data}" var="role" varStatus="line">
                 <tr>
                     <td><input type="checkbox" objId="${role.id}"></td>
-                    <td class="cell-edit">${role.name}</td>
+                    <td >${role.name}</td>
+                    <td>${role.code}</td>
                     <td>${role.description}</td>
                     <td>
                         <a href="edit.do?id=${role.id}&type=detail" class="opr">详情</a>

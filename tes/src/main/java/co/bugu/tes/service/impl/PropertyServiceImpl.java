@@ -5,9 +5,6 @@ import co.bugu.framework.core.service.impl.BaseServiceImpl;
 import co.bugu.tes.model.Property;
 import co.bugu.tes.model.PropertyItem;
 import co.bugu.tes.service.IPropertyService;
-import co.bugu.framework.core.dao.BaseDao;
-import co.bugu.framework.core.dao.PageInfo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,9 +43,9 @@ public class PropertyServiceImpl extends BaseServiceImpl<Property> implements IP
         for(PropertyItem item: itemList){
             item.setPropertyId(property.getId());
             if(item.getId() == null){
-                baseDao.insert("tes.propertyitem.insert", item);
+                baseDao.insert("tes.propertyItem.insert", item);
             }else{
-                baseDao.update("tes.propertyitem.updateById", item);
+                baseDao.update("tes.propertyItem.updateById", item);
             }
         }
         return 0;

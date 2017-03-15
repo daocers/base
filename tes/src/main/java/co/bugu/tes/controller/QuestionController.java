@@ -1,11 +1,9 @@
 package co.bugu.tes.controller;
 
+import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.util.ExcelUtil;
-import co.bugu.framework.util.ExcelUtilNew;
-import co.bugu.framework.util.JedisUtil;
 import co.bugu.framework.util.JsonUtil;
 import co.bugu.framework.util.exception.TesException;
-import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.Property;
 import co.bugu.tes.model.Question;
 import co.bugu.tes.model.QuestionBank;
@@ -15,7 +13,6 @@ import co.bugu.tes.service.IQuestionMetaInfoService;
 import co.bugu.tes.service.IQuestionService;
 import co.bugu.tes.util.QuestionUtil;
 import com.alibaba.fastjson.JSON;
-import co.bugu.framework.core.dao.PageInfo;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +21,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import sun.security.krb5.internal.PAData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -82,7 +78,12 @@ public class QuestionController {
         try{
             if(id != null){
                 Question question = questionService.findById(id);
-                String code = question.getQuestionMetaInfo().getCode();
+                QuestionMetaInfo metaInfo = questionMetaInfoService.findById(question.getMetaInfoId());
+                if(metaInfo == null){
+                    model.put("err", "没有对应的题型");
+                    return "redirect:list.do";
+                }
+                String code = metaInfo.getCode();
                 if("single".equals(code) || "multi".equals(code)){
                     List<String> itemList = JSON.parseArray(question.getContent(), String.class);
                     StringBuilder builder = new StringBuilder();
@@ -102,8 +103,7 @@ public class QuestionController {
                 }
                 model.put("question", question);
                 model.put("propItemIdList", JSON.parseArray(question.getPropItemIdInfo(), Integer.class));
-                QuestionMetaInfo metaInfo = questionMetaInfoService.findById(question.getMetaInfoId());
-                model.put("propertyList", metaInfo == null ? null: metaInfo.getPropertyList());
+                model.put("propertyList", metaInfo.getPropertyList());
             }
             List<QuestionMetaInfo> metaInfoList = questionMetaInfoService.findByObject(null);
             model.put("metaInfoList", metaInfoList);

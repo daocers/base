@@ -111,4 +111,13 @@
         from property_item
         where property_id = #{propertyId}
     </select>
+
+
+    <select id="findPropItemByQuestionId" resultMap="PropertyItemMap" parameterType="co.bugu.tes.model.Question">
+        SELECT
+        <include refid="propertyItem_list"/>
+        from property_item prop_item
+        LEFT JOIN question_propItem_x qp on qp.property_item_id = prop_item.id
+        WHERE qp.question_id = #{id}
+    </select>
 </mapper>

@@ -2,6 +2,7 @@ package co.bugu.tes.controller;
 
 import co.bugu.tes.model.Property;
 import co.bugu.tes.model.PropertyItem;
+import co.bugu.tes.service.IPropertyItemService;
 import co.bugu.tes.service.IPropertyService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -25,6 +26,9 @@ import java.util.List;
 public class PropertyController {
     @Autowired
     IPropertyService propertyService;
+
+    @Autowired
+    IPropertyItemService propertyItemService;
 
     private static Logger logger = LoggerFactory.getLogger(PropertyController.class);
 
@@ -61,6 +65,12 @@ public class PropertyController {
     public String toEdit(Integer id, ModelMap model){
         try{
             Property property = propertyService.findById(id);
+            if(property != null){
+                PropertyItem item = new PropertyItem();
+                item.setPropertyId(property.getId());
+                List<PropertyItem> itemList = propertyItemService.findByObject(item);
+                property.setPropertyItemList(itemList);
+            }
             model.put("property", property);
             model.put("itemInfo", JSON.toJSONString(property.getPropertyItemList(), true));
         }catch (Exception e){

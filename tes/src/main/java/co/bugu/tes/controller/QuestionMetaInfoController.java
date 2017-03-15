@@ -73,8 +73,10 @@ public class QuestionMetaInfoController {
                 model.put("questionmetainfo", questionmetainfo);
 
                 List<Integer> propertyIdList = new ArrayList<>();
-                for(Property property : questionmetainfo.getPropertyList()){
-                    propertyIdList.add(property.getId());
+                if(questionmetainfo.getPropertyList() != null){
+                    for(Property property : questionmetainfo.getPropertyList()){
+                        propertyIdList.add(property.getId());
+                    }
                 }
                 model.put("propertyIdList", propertyIdList);
             }
@@ -108,12 +110,14 @@ public class QuestionMetaInfoController {
     public String save(QuestionMetaInfo questionmetainfo, int[] propertyId, ModelMap model){
         try{
             List<Map<String, Integer>> list = new ArrayList<>();
-            for(int i = 0; i < propertyId.length; i++){
-                Integer id = propertyId[i];
-                Map<String, Integer> map = new HashMap<>();
-                map.put("propertyId", id);
-                map.put("idx", i);
-                list.add(map);
+            if(propertyId != null){
+                for(int i = 0; i < propertyId.length; i++){
+                    Integer id = propertyId[i];
+                    Map<String, Integer> map = new HashMap<>();
+                    map.put("propertyId", id);
+                    map.put("idx", i);
+                    list.add(map);
+                }
             }
             questionMetaInfoService.saveOrUpdate(questionmetainfo, list);
         }catch (Exception e){

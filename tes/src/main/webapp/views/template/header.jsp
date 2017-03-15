@@ -25,8 +25,8 @@
     <link href="../assets/css/jquery.filer-dragdropbox-theme.css" type="text/css" rel="stylesheet"/>
     <script src="../assets/js/jquery.filer.js"></script>
     
-    <%--<link href="../assets/css/kacha-table-editable.css" rel="stylesheet"/>--%>
-    <%--<script src="../assets/js/bugu.editable-table.js"></script>--%>
+    <link href="../assets/css/kacha-table-editable.css" rel="stylesheet"/>
+    <script src="../assets/js/bugu.editable-table.js"></script>
 
     <script src="../assets/js/eModal.js"></script>
     
