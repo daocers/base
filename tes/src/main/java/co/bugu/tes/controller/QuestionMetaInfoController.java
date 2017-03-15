@@ -1,7 +1,9 @@
 package co.bugu.tes.controller;
 
 import co.bugu.tes.model.Property;
+import co.bugu.tes.model.PropertyItem;
 import co.bugu.tes.model.QuestionMetaInfo;
+import co.bugu.tes.service.IPropertyItemService;
 import co.bugu.tes.service.IPropertyService;
 import co.bugu.tes.service.IQuestionMetaInfoService;
 import co.bugu.framework.core.dao.PageInfo;
@@ -21,13 +23,16 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/questionmetainfo")
+@RequestMapping("/questionMetaInfo")
 public class QuestionMetaInfoController {
     @Autowired
-    IQuestionMetaInfoService questionmetainfoService;
+    IQuestionMetaInfoService questionMetaInfoService;
 
     @Autowired
     IPropertyService propertyService;
+
+    @Autowired
+    IPropertyItemService propertyItemService;
 
     private static Logger logger = LoggerFactory.getLogger(QuestionMetaInfoController.class);
 
@@ -43,7 +48,7 @@ public class QuestionMetaInfoController {
     public String list(QuestionMetaInfo questionmetainfo, Integer curPage, Integer showCount, ModelMap model){
         try{
             PageInfo<QuestionMetaInfo> pageInfo = new PageInfo<>(showCount, curPage);
-            pageInfo = questionmetainfoService.findByObject(questionmetainfo, pageInfo);
+            pageInfo = questionMetaInfoService.findByObject(questionmetainfo, pageInfo);
             model.put("pi", pageInfo);
             model.put("questionmetainfo", questionmetainfo);
         }catch (Exception e){
@@ -64,7 +69,7 @@ public class QuestionMetaInfoController {
     public String toEdit(Integer id,  ModelMap model){
         try{
             if(id != null){
-                QuestionMetaInfo questionmetainfo = questionmetainfoService.findById(id);
+                QuestionMetaInfo questionmetainfo = questionMetaInfoService.findById(id);
                 model.put("questionmetainfo", questionmetainfo);
 
                 List<Integer> propertyIdList = new ArrayList<>();
@@ -75,6 +80,14 @@ public class QuestionMetaInfoController {
             }
 
             List<Property> propertyList = propertyService.findByObject(null);
+            if(propertyList != null){
+                for(Property property: propertyList){
+                    PropertyItem item = new PropertyItem();
+                    item.setPropertyId(property.getId());
+                    List<PropertyItem> itemList = propertyItemService.findByObject(item);
+                    property.setPropertyItemList(itemList);
+                }
+            }
             model.put("propertyList", propertyList);
         }catch (Exception e){
             logger.error("获取信息失败", e);
@@ -102,7 +115,7 @@ public class QuestionMetaInfoController {
                 map.put("idx", i);
                 list.add(map);
             }
-            questionmetainfoService.saveOrUpdate(questionmetainfo, list);
+            questionMetaInfoService.saveOrUpdate(questionmetainfo, list);
         }catch (Exception e){
             logger.error("保存失败", e);
             model.put("questionmetainfo", questionmetainfo);
@@ -121,7 +134,7 @@ public class QuestionMetaInfoController {
     @ResponseBody
     public String listAll(QuestionMetaInfo questionmetainfo){
         try{
-            List<QuestionMetaInfo> list = questionmetainfoService.findByObject(questionmetainfo);
+            List<QuestionMetaInfo> list = questionMetaInfoService.findByObject(questionmetainfo);
             return JsonUtil.toJsonString(list);
         }catch (Exception e){
             logger.error("获取全部列表失败", e);
@@ -138,7 +151,7 @@ public class QuestionMetaInfoController {
     @ResponseBody
     public String delete(QuestionMetaInfo questionmetainfo){
         try{
-            questionmetainfoService.delete(questionmetainfo);
+            questionMetaInfoService.delete(questionmetainfo);
             return "0";
         }catch (Exception e){
             logger.error("删除失败", e);

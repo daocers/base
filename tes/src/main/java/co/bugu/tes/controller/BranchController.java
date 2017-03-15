@@ -217,6 +217,7 @@ public class BranchController {
             JSONObject json = new JSONObject();
             json.put("id", branch.getId());
             json.put("cId", branch.getId());
+            json.put("level", branch.getLevel());
             json.put("name", branch.getName());
             json.put("pId", branch.getSuperiorId());
             array.add(json);

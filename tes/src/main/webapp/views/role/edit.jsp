@@ -86,6 +86,14 @@
                 </div>
 
                 <div class="form-group">
+                    <label class="control-label col-md-2">编码</label>
+                    <div class="col-md-10">
+                        <input class="form-control" type="text" name="code" value="${role.code}" required>
+                        <span class="help-block with-errors">建议使用英文</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <label class="control-label col-md-2">描述</label>
                     <div class="col-md-10">
                         <input class="form-control" type="text" name="description" value="${role.description}" required>
@@ -121,10 +129,15 @@
     $(function () {
         $(".btn-commit").on("click", function () {
             var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
-            var data = treeObj.transformToArray(treeObj.getCheckedNodes(true));
-            $("[name='nodeInfo']").val(data);
+            var nodes = treeObj.getCheckedNodes(true);
+            var arr = new Array();
+            $.each(nodes, function (index, obj) {
+                arr.push(obj.id);
+            })
+            $("[name='nodeInfo']").val(JSON.stringify(arr));
+            console.log("data: ", JSON.stringify(arr));
 
-            $("form").submit();
+            $("form").validator("validate")
         })
     })
 </script>

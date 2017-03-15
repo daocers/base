@@ -14,7 +14,7 @@
   </sql>
     <select id="selectById" resultMap="RoleMap" parameterType="java.lang.Integer">
         select
-        <include refid="role_list"/>,
+        <include refid="role_list"/>
         from role role
         where role.id = #{id,jdbcType=INTEGER}
     </select>

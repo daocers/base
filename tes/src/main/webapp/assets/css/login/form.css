@@ -73,9 +73,9 @@
 .ttag em{position:absolute;width:20px;top:0;right:0;height:26px;background:url(http://img01.51jobcdn.com/im/2016/form/close2.png) center no-repeat}
 
 /*按钮*/
-.p_but{display:inline-block;min-width:80px;height:28px;line-height:28px;font-size:14px;font-family:"Microsoft YaHei";color:#fff;text-align:center;cursor:pointer;margin:0 10px;background-color: #339bff;border:1px solid #339bff;
+.p_but{display:inline-block;min-width:80px;height:28px;line-height:28px;font-size:14px;font-family:"Microsoft YaHei";color:#fff;text-align:center;cursor:pointer;margin:0 10px;background-color: #56b4ff;border:1px solid #339bff;
 	-webkit-border-radius:2px;-moz-border-radius:2px;-ms-border-radius:2px;border-radius:2px}
-.p_but:hover{background-color: #20a7ff;border-color: #1393ff
+.p_but:hover, .p_but:focus{background-color: #4a87ff;border-color: #1393ff
 }
 .p_but.gray{color:#999;background-color:#fff;border-color:#bbb}
 .p_but.gray:hover{background-color:#eee;border-color:#bbb}

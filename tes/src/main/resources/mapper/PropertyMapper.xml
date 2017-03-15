@@ -8,33 +8,16 @@
         <result column="idx" property="idx" jdbcType="INTEGER"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
         <result column="status" property="status" jdbcType="INTEGER"/>
-        <collection property="propertyItemList" ofType="co.bugu.tes.model.PropertyItem" resultMap="PropertyItemMap"/>
     </resultMap>
 
-    <resultMap id="PropertyItemMap" type="co.bugu.tes.model.PropertyItem">
-        <id column="prop_item_id" property="id" jdbcType="INTEGER"/>
-        <result column="prop_item_code" property="code" jdbcType="VARCHAR"/>
-        <result column="prop_item_idx" property="idx" jdbcType="INTEGER"/>
-        <result column="prop_item_name" property="name" jdbcType="VARCHAR"/>
-        <result column="prop_item_property_id" property="propertyId" jdbcType="INTEGER"/>
-        <result column="prop_item_value" property="value" jdbcType="VARCHAR"/>
-        <result column="prop_item_items_idx" property="itemsIdx" jdbcType="INTEGER"/>
-    </resultMap>
-    <sql id="propertyItem_list">
-    prop_item.id as prop_item_id, prop_item.code as prop_item_code, prop_item.idx as prop_item_idx,
-    prop_item.name as prop_item_name, prop_item.property_id as prop_item_property_id,
-    prop_item.value as prop_item_value, prop_item.items_idx as prop_item_items_idx
-  </sql>
     <sql id="property_list">
     id, code, description, idx, name, status
   </sql>
     <select id="selectById" resultMap="PropertyMap" parameterType="java.lang.Integer">
         select
-        <include refid="property_list"/>,
-        <include refid="propertyItem_list"/>
+        <include refid="property_list"/>
         from property property
-        left join property_item as prop_item on prop_item.property_id = property.id
-        where property.id = #{id,jdbcType=INTEGER}
+        where id = #{id}
     </select>
     <delete id="deleteById" parameterType="java.lang.Integer">
     delete from property
@@ -109,9 +92,19 @@
 
     <select id="findByObject" resultMap="PropertyMap" parameterType="co.bugu.tes.model.Property">
         select
-        <include refid="property_list"/>,
-        <include refid="propertyItem_list"/>
+        <include refid="property_list"/>
         from property property
-        left join property_item as prop_item on prop_item.property_id = property.id
     </select>
+
+    <select id="selectPropertyByQuestionMetaInfo" resultMap="PropertyMap" parameterType="int">
+        SELECT
+        <include refid="property_list"/>
+        from property p
+        LEFT JOIN question_metaInfo_property_x mp
+        on mp.property_id = p.id
+        where mp.question_meta_info_id = #{id}
+        order by mp.property_idx
+    </select>
+
+
 </mapper>

@@ -16,8 +16,8 @@
     <select id="selectById" resultMap="PropertyItemMap" parameterType="java.lang.Integer">
         select
         <include refid="propertyItem_list"/>
-        from property_item prop_item
-        where prop_item.id = #{id,jdbcType=INTEGER}
+        from property_item
+        where id = #{id,jdbcType=INTEGER}
     </select>
     <delete id="deleteById" parameterType="java.lang.Integer">
     delete from property_item
@@ -102,6 +102,13 @@
     <select id="findByObject" resultMap="PropertyItemMap" parameterType="co.bugu.tes.model.PropertyItem">
         select
         <include refid="propertyItem_list"/>
-        from property_item prop_item
+        from property_item
+    </select>
+
+    <select id="selectPropertyItemByProperty" resultMap="PropertyItemMap" parameterType="int">
+        SELECT
+        <include refid="propertyItem_list"/>
+        from property_item
+        where property_id = #{propertyId}
     </select>
 </mapper>

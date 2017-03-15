@@ -10,48 +10,14 @@
         <result column="question_bank_id" property="questionBankId" jdbcType="INTEGER"/>
         <result column="title" property="title" jdbcType="VARCHAR"/>
         <result column="prop_item_id_info" property="propItemIdInfo" jdbcType="VARCHAR"/>
-        <association property="questionMetaInfo" javaType="co.bugu.tes.model.QuestionMetaInfo"
-                     resultMap="QuestionMetaInfoMap"/>
-        <collection property="propertyItemList" ofType="co.bugu.tes.model.PropertyItem"
-                    resultMap="PropertyItemMap"/>
     </resultMap>
-    <resultMap id="PropertyItemMap" type="co.bugu.tes.model.PropertyItem">
-        <id column="prop_item_id" property="id" jdbcType="INTEGER"/>
-        <result column="prop_item_code" property="code" jdbcType="VARCHAR"/>
-        <result column="prop_item_idx" property="idx" jdbcType="INTEGER"/>
-        <result column="prop_item_name" property="name" jdbcType="VARCHAR"/>
-        <result column="prop_item_property_id" property="propertyId" jdbcType="INTEGER"/>
-        <result column="prop_item_value" property="value" jdbcType="VARCHAR"/>
-        <result column="prop_item_items_idx" property="itemsIdx" jdbcType="INTEGER"/>
-    </resultMap>
-    <resultMap id="QuestionMetaInfoMap" type="co.bugu.tes.model.QuestionMetaInfo">
-        <id column="ques_meta_id" property="id" jdbcType="INTEGER"/>
-        <result column="ques_meta_code" property="code" jdbcType="VARCHAR"/>
-        <result column="ques_meta_description" property="description" jdbcType="VARCHAR"/>
-        <result column="ques_meta_name" property="name" jdbcType="VARCHAR"/>
-        <result column="ques_meta_status" property="status" jdbcType="INTEGER"/>
-    </resultMap>
-    <sql id="propertyItem_list">
-        prop_item.id as prop_item_id, prop_item.code as prop_item_code, prop_item.idx as prop_item_idx,
-        prop_item.name as prop_item_name, prop_item.property_id as prop_item_property_id,
-        prop_item.value as prop_item_value, prop_item.items_idx as prop_item_items_idx
-    </sql>
     <sql id="question_list">
     id, answer, content, extra_info, meta_info_id, bank_id, title, prop_item_id_info
   </sql>
-    <sql id="questionMetaInfo_list">
-        ques_meta.id as ques_meta_id, ques_meta.code as ques_meta_code, ques_meta.description as ques_meta_description,
-        ques_meta.name as ques_meta_name, ques_meta.status as ques_meta_status
-    </sql>
     <select id="selectById" resultMap="QuestionMap" parameterType="java.lang.Integer">
         select
-        <include refid="question_list"/>,
-        <include refid="propertyItem_list"/>,
-        <include refid="questionMetaInfo_list"/>
+        <include refid="question_list"/>
         from question question
-        LEFT JOIN question_propItem_x qp on qp.question_id = question.id
-        LEFT JOIN property_item prop_item on prop_item.id = qp.property_item_id
-        LEFT JOIN question_meta_info ques_meta on question.meta_info_id = ques_meta.id
         where question.id = #{id,jdbcType=INTEGER}
     </select>
     <delete id="deleteById" parameterType="java.lang.Integer">

@@ -2515,7 +2515,8 @@ label {
   display: inline-block;
   max-width: 100%;
   margin-bottom: 5px;
-  font-weight: bold;
+  font-weight: normal;
+  font-size: 15px;
 }
 input[type="search"] {
   -webkit-box-sizing: border-box;
@@ -3002,8 +3003,8 @@ select[multiple].input-lg {
 }
 @media (min-width: 768px) {
   .form-horizontal .form-group-sm .control-label {
-    padding-top: 6px;
-    font-size: 12px;
+    padding-top: 3px;
+    font-size: 14px;
   }
 }
 .btn {
@@ -4852,7 +4853,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   display: inline;
   padding: .2em .6em .3em;
   font-size: 75%;
-  font-weight: bold;
+  font-weight: 500;
   line-height: 1;
   color: #ffffff;
   text-align: center;

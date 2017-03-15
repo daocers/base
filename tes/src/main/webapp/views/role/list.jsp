@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="../template/header.jsp" %>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>管理</title>
+    <%@ include file="../template/header.jsp" %>
+
     <style>
         .cell-edit{
 

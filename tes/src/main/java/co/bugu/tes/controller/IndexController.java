@@ -11,13 +11,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.WebUtils;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
@@ -38,7 +41,17 @@ public class IndexController {
      * @return
      */
     @RequestMapping("/login")
-    public String toLogin(HttpServletRequest request, HttpServletResponse response){
+    public String toLogin(ModelMap model, HttpServletRequest request, HttpServletResponse response){
+        Cookie[]  cookies = request.getCookies();
+        if(cookies != null){
+            for(Cookie cookie: cookies){
+                String name = cookie.getName();
+                if("username".equals(name)){
+                    model.put("username", cookie.getValue());
+                    model.put("rememberMe", true);
+                }
+            }
+        }
         return "index/login";
     }
 
@@ -56,7 +69,7 @@ public class IndexController {
      */
     @RequestMapping(value = "/signIn", method = RequestMethod.POST)
     @ResponseBody
-    public String signIn(String username, String password, HttpServletRequest request){
+    public String signIn(String username, String password, boolean rememberMe, HttpServletRequest request, HttpServletResponse response){
         try{
             User user = new User();
             user.setUsername(username);
@@ -74,6 +87,14 @@ public class IndexController {
                     user = userService.findFullById(user.getId());
                     JedisUtil.setJson(Constant.USER_INFO_PREFIX + user.getId(), user);
                     WebUtils.setSessionAttribute(request, Constant.SESSION_USER_ID, user.getId());
+                    Cookie cookie = new Cookie("username", username);
+
+                    if(rememberMe){
+                        cookie.setMaxAge(60* 60 * 24 * 7);//一周不过期
+                    }else{
+                        cookie.setMaxAge(-1);
+                    }
+                    response.addCookie(cookie);
 
                     return "0";
                 }else{

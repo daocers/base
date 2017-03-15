@@ -64,15 +64,21 @@ public class AuthorityController {
      * @return
      */
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
+    @ResponseBody
     public String toEdit(Integer id, ModelMap model) {
+        JSONObject json = new JSONObject();
         try {
             Authority authority = authorityService.findById(id);
-            model.put("authority", authority);
+            json.put("code", 0);
+            json.put("data", authority);
         } catch (Exception e) {
             logger.error("获取信息失败", e);
-            model.put("errMsg", "获取信息失败");
+            json.put("code", -1);
+            json.put("msg", "服务错误");
+        } finally {
+            return json.toString();
         }
-        return "authority/edit";
+
     }
 
     /**

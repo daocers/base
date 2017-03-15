@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="../template/header.jsp" %>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>管理</title>
+    <%@ include file="../template/header.jsp" %>
+
     <%--<link rel="stylesheet" href="../assets/css/demo.css" type="text/css">--%>
     <link rel="stylesheet" href="../assets/css/ztree/zTreeStyle.css" type="text/css">
     <script type="text/javascript" src="../assets/js/jquery.ztree.core.js"></script>
@@ -40,6 +41,7 @@
                 beforeDragOpen: beforeDragOpen,
                 onDrag: onDrag,
                 onDrop: onDrop,
+                onClick: onClick,
                 onExpand: onExpand,
                 beforeEditName: beforeEditName,
                 beforeRemove: beforeRemove,
@@ -65,7 +67,7 @@
             if (pNode && pNode.dropInner === false) {
                 return false;
             } else {
-                for (var i=0,l=curDragNodes.length; i<l; i++) {
+                for (var i = 0, l = curDragNodes.length; i < l; i++) {
                     var curPNode = curDragNodes[i].getParentNode();
                     if (curPNode && curPNode !== targetNode.getParentNode() && curPNode.childOuter === false) {
                         return false;
@@ -76,7 +78,7 @@
         }
         function onNodeCreated(event, treeId, treeNode) {
             console.log("treeNode", treeNode);
-            if(treeNode.name.indexOf("新节点") > -1){
+            if (treeNode.name.indexOf("新节点") > -1) {
                 var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
                 console.log("新节点创建了");
                 treeObj.editName(treeNode);
@@ -87,7 +89,7 @@
             if (targetNode && targetNode.dropInner === false) {
                 return false;
             } else {
-                for (var i=0,l=curDragNodes.length; i<l; i++) {
+                for (var i = 0, l = curDragNodes.length; i < l; i++) {
                     if (!targetNode && curDragNodes[i].dropRoot === false) {
                         return false;
                     } else if (curDragNodes[i].parentTId && curDragNodes[i].getParentNode() !== targetNode && curDragNodes[i].getParentNode().childOuter === false) {
@@ -102,7 +104,7 @@
             if (pNode && pNode.dropInner === false) {
                 return false;
             } else {
-                for (var i=0,l=curDragNodes.length; i<l; i++) {
+                for (var i = 0, l = curDragNodes.length; i < l; i++) {
                     var curPNode = curDragNodes[i].getParentNode();
                     if (curPNode && curPNode !== targetNode.getParentNode() && curPNode.childOuter === false) {
                         return false;
@@ -114,9 +116,9 @@
 
         var log, className = "dark", curDragNodes, autoExpandNode;
         function beforeDrag(treeId, treeNodes) {
-            className = (className === "dark" ? "":"dark");
-            showLog("[ "+getTime()+" beforeDrag ]&nbsp;&nbsp;&nbsp;&nbsp; drag: " + treeNodes.length + " nodes." );
-            for (var i=0,l=treeNodes.length; i<l; i++) {
+            className = (className === "dark" ? "" : "dark");
+            showLog("[ " + getTime() + " beforeDrag ]&nbsp;&nbsp;&nbsp;&nbsp; drag: " + treeNodes.length + " nodes.");
+            for (var i = 0, l = treeNodes.length; i < l; i++) {
                 if (treeNodes[i].drag === false) {
                     curDragNodes = null;
                     return false;
@@ -133,41 +135,41 @@
             return true;
         }
         function beforeDrop(treeId, treeNodes, targetNode, moveType, isCopy) {
-            className = (className === "dark" ? "":"dark");
-            showLog("[ "+getTime()+" beforeDrop ]&nbsp;&nbsp;&nbsp;&nbsp; moveType:" + moveType);
-            showLog("target: " + (targetNode ? targetNode.name : "root") + "  -- is "+ (isCopy==null? "cancel" : isCopy ? "copy" : "move"));
+            className = (className === "dark" ? "" : "dark");
+            showLog("[ " + getTime() + " beforeDrop ]&nbsp;&nbsp;&nbsp;&nbsp; moveType:" + moveType);
+            showLog("target: " + (targetNode ? targetNode.name : "root") + "  -- is " + (isCopy == null ? "cancel" : isCopy ? "copy" : "move"));
             return true;
         }
         function onDrag(event, treeId, treeNodes) {
-            className = (className === "dark" ? "":"dark");
-            showLog("[ "+getTime()+" onDrag ]&nbsp;&nbsp;&nbsp;&nbsp; drag: " + treeNodes.length + " nodes." );
+            className = (className === "dark" ? "" : "dark");
+            showLog("[ " + getTime() + " onDrag ]&nbsp;&nbsp;&nbsp;&nbsp; drag: " + treeNodes.length + " nodes.");
         }
         function onDrop(event, treeId, treeNodes, targetNode, moveType, isCopy) {
-            className = (className === "dark" ? "":"dark");
-            showLog("[ "+getTime()+" onDrop ]&nbsp;&nbsp;&nbsp;&nbsp; moveType:" + moveType);
-            showLog("target: " + (targetNode ? targetNode.name : "root") + "  -- is "+ (isCopy==null? "cancel" : isCopy ? "copy" : "move"))
+            className = (className === "dark" ? "" : "dark");
+            showLog("[ " + getTime() + " onDrop ]&nbsp;&nbsp;&nbsp;&nbsp; moveType:" + moveType);
+            showLog("target: " + (targetNode ? targetNode.name : "root") + "  -- is " + (isCopy == null ? "cancel" : isCopy ? "copy" : "move"))
         }
         function onExpand(event, treeId, treeNode) {
             if (treeNode === autoExpandNode) {
-                className = (className === "dark" ? "":"dark");
-                showLog("[ "+getTime()+" onExpand ]&nbsp;&nbsp;&nbsp;&nbsp;" + treeNode.name);
+                className = (className === "dark" ? "" : "dark");
+                showLog("[ " + getTime() + " onExpand ]&nbsp;&nbsp;&nbsp;&nbsp;" + treeNode.name);
             }
         }
 
         function showLog(str) {
             if (!log) log = $("#log");
-            log.append("<li class='"+className+"'>"+str+"</li>");
-            if(log.children("li").length > 8) {
+            log.append("<li class='" + className + "'>" + str + "</li>");
+            if (log.children("li").length > 8) {
                 log.get(0).removeChild(log.children("li")[0]);
             }
         }
         function getTime() {
-            var now= new Date(),
-                    h=now.getHours(),
-                    m=now.getMinutes(),
-                    s=now.getSeconds(),
-                    ms=now.getMilliseconds();
-            return (h+":"+m+":"+s+ " " +ms);
+            var now = new Date(),
+                h = now.getHours(),
+                m = now.getMinutes(),
+                s = now.getSeconds(),
+                ms = now.getMilliseconds();
+            return (h + ":" + m + ":" + s + " " + ms);
         }
 
         function showRemoveBtn(treeId, treeNode) {
@@ -183,29 +185,31 @@
         }
 
         function beforeEditName(treeId, treeNode) {
-            className = (className === "dark" ? "":"dark");
-            showLog("[ "+getTime()+" beforeEditName ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name);
+            className = (className === "dark" ? "" : "dark");
+            showLog("[ " + getTime() + " beforeEditName ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name);
             var zTree = $.fn.zTree.getZTreeObj("treeDemo");
             zTree.selectNode(treeNode);
 //            return confirm("进入节点 -- " + treeNode.name + " 的编辑状态吗？");
         }
         function beforeRemove(treeId, treeNode) {
-            className = (className === "dark" ? "":"dark");
-            showLog("[ "+getTime()+" beforeRemove ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name);
+            className = (className === "dark" ? "" : "dark");
+            showLog("[ " + getTime() + " beforeRemove ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name);
             var zTree = $.fn.zTree.getZTreeObj("treeDemo");
             zTree.selectNode(treeNode);
             return confirm("确认删除 节点 -- " + treeNode.name + " 吗？");
         }
         function onRemove(e, treeId, treeNode) {
-            showLog("[ "+getTime()+" onRemove ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name);
+            showLog("[ " + getTime() + " onRemove ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name);
         }
         function beforeRename(treeId, treeNode, newName, isCancel) {
-            className = (className === "dark" ? "":"dark");
+            className = (className === "dark" ? "" : "dark");
 //            showLog((isCancel ? "<span style='color:red'>":"") + "[ "+getTime()+" beforeRename ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name + (isCancel ? "</span>":""));
             if (newName.length == 0) {
                 alert("节点名称不能为空.");
                 var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-                setTimeout(function(){zTree.editName(treeNode)}, 10);
+                setTimeout(function () {
+                    zTree.editName(treeNode)
+                }, 10);
                 return false;
             }
             return true;
@@ -216,22 +220,35 @@
         var newCount = 1;
         function addHoverDom(treeId, treeNode) {
             var sObj = $("#" + treeNode.tId + "_span");
-            if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
+            if (treeNode.editNameFlag || $("#addBtn_" + treeNode.tId).length > 0) return;
             var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
-                    + "' title='添加新节点' onfocus='this.blur();'></span>";
+                + "' title='添加新节点' onfocus='this.blur();'></span>";
             sObj.after(addStr);
-            var btn = $("#addBtn_"+treeNode.tId);
-            if (btn) btn.bind("click", function(){
+            var btn = $("#addBtn_" + treeNode.tId);
+            if (btn) btn.bind("click", function () {
                 var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-                zTree.addNodes(treeNode, {id:(100 + newCount), pId:treeNode.id, name:"添加新节点" + (newCount++)});
+                zTree.addNodes(treeNode, {id: (100 + newCount), pId: treeNode.id, name: "添加新节点" + (newCount++)});
                 return false;
             });
-        };
+        }
+        ;
         function removeHoverDom(treeId, treeNode) {
-            $("#addBtn_"+treeNode.tId).unbind().remove();
-        };
+            $("#addBtn_" + treeNode.tId).unbind().remove();
+        }
+        ;
 
-        $(document).ready(function(){
+        /**
+         * 节点被点击时候触发操作
+         * @param e
+         * @param treeId
+         * @param treeNode
+         */
+        function onClick(e, treeId, treeNode) {
+            var id = treeNode.id;
+            getInfo(id);
+        }
+
+        $(document).ready(function () {
             $.fn.zTree.init($("#treeDemo"), setting, zNodes);
             $("#callbackTrigger").bind("change", {}, setTrigger);
         });
@@ -242,21 +259,99 @@
 <div class="container">
     <div class="row nav-path">
         <ol class="breadcrumb">
-            <li><a href="#">首页</a> </li>
-            <li><a href="#" class="active">权限管理</a> </li>
+            <li><a href="#">首页</a></li>
+            <li><a href="#" class="active">权限管理</a></li>
         </ol>
     </div>
 
+    <div class="col-md-4">
+        <div class="zTreeDemoBackground left">
+            <ul id="treeDemo" class="ztree"></ul>
+        </div>
 
-
-    <div class="zTreeDemoBackground left">
-        <ul id="treeDemo" class="ztree"></ul>
+        <button class="btn btn-info commit">确定</button>
+        <button class="btn btn-info cancel">取消</button>
     </div>
 
-    <button class="btn btn-info commit">确定</button>
-    <button class="btn btn-info cancel">取消</button>
+    <div class="col-md-5">
+        <table class="table table-bordered">
+            <tbody>
+            <tr>
+                <td class="col-md-1">名称</td>
+                <td id="name"></td>
+            </tr>
+            <tr>
+                <td class="col-md-1">URL</td>
+                <td id="url"></td>
+            </tr>
+            <tr>
+                <td class="col-md-1">Controller</td>
+                <td id="controller"></td>
+            </tr>
+            <tr>
+                <td class="col-md-1">Method</td>
+                <td id="action"></td>
+            </tr>
+            <tr>
+                <td class="col-md-1">请求方式</td>
+                <td id="acceptMethod"></td>
+            </tr>
+            <tr>
+                <td class="col-md-1">参数</td>
+                <td id="param"></td>
+            </tr>
+            <tr>
+                <td class="col-md-1"> 权限</td>
+                <td id="needAuth"></td>
+            </tr>
+            <tr>
+                <td class="col-md-1">page</td>
+                <td id="isPage"></td>
+            </tr>
+            <tr>
+                <td>API</td>
+                <td id="isApi"></td>
+            </tr>
+            <tr>
+                <td>描述</td>
+                <td id="description"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
 </div>
 <script>
+    function getInfo(id) {
+        zeroModal.loading(3);
+        $.ajax({
+            url: "edit.do",
+            data: {id: id},
+            success: function (data) {
+                var obj = JSON.parse(data);
+                if (obj.code == 0) {
+                    obj = obj.data;
+                    $("#name").text(obj.name);
+                    $("#url").text(obj.url);
+                    $("#param").text(obj.param);
+                    $("#controller").text(obj.controller);
+                    $("#action").text(obj.action);
+                    $("#acceptMethod").text(obj.acceptMethod);
+                    $("#description").text(obj.description);
+                    $("#isApi").text(obj.isApi == 0);
+                    $("#isPage").text(obj.isApi == 1);
+                    $("#needAuth").text("暂无");
+                    zeroModal.closeAll();
+                } else {
+                    zeroModal.closeAll();
+                    swal("", obj.msg, "error");
+                }
+            }
+
+        });
+
+    }
     $(".commit").on("click", function () {
         var zTree = $.fn.zTree.getZTreeObj("treeDemo");
         var data = zTree.transformToArray(zTree.getNodes());
@@ -265,12 +360,12 @@
         $.ajax({
             url: 'update.do',
             type: "post",
-            data: {"info" : JSON.stringify(data)},
+            data: {"info": JSON.stringify(data)},
             success: function (data) {
-                if(data == "0"){
+                if (data == "0") {
                     console.log("提交成功");
                     window.location.href = "list.do";
-                }else{
+                } else {
                     console.log("提交失败");
                 }
             },

@@ -13,7 +13,6 @@ public interface IQuestionMetaInfoService extends IBaseService<QuestionMetaInfo>
 //    int updateById(QuestionMetaInfo questionmetainfo);
 //
 //    int saveOrUpdate(QuestionMetaInfo questionmetainfo);
-    QuestionMetaInfo selectSimpleById(Integer id);
 
     int saveOrUpdate(QuestionMetaInfo questionmetainfo, List<Map<String, Integer>> list);
 

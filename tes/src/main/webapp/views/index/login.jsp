@@ -12,6 +12,11 @@
     <link href="../../assets/css/login/base.css" rel="stylesheet" type="text/css"/>
     <link href="../../assets/css/login/form.css" rel="stylesheet" type="text/css"/>
     <link href="../../assets/css/login/login-register.css" rel="stylesheet" type="text/css"/>
+    <style type="text/css">
+        #rememberMe:focus{
+            border-color: dodgerblue;
+        }
+    </style>
     <script language="javascript">
         var _tkd = _tkd || []; //点击量统计用
         var lang = [];
@@ -114,11 +119,10 @@
                 <div class="lr_e">
                     <label><span class="err" style="display:none" id="username_err">请输入布谷科技帐号</span>帐号</label>
                     <div class="txt" style="z-index:9999;position:relative;">
-                        <input class="ef" maxlength=100 id="username" name="username" type="text" autocomplete='off'
-                               placeholder="请输入员工号" value=""
+                        <input tabindex="1" class="ef" maxlength=100 id="username" name="username" type="text" autocomplete='off'
+                               placeholder="请输入员工号" value="${username}">
                                <%--onkeyup="show_emaillist(this, event)"--%>
                                <%--onkeydown="enterClickGetValue(event);--%>
-                            ">
                         <div class="ul" style="display:none;top:40px" id="email_list">
                         </div>
                     </div>
@@ -126,7 +130,7 @@
                 <div class="lr_e">
                     <label><span class="err" style="display:none" id="pwd_err">请输入密码</span>密码</label>
                     <div class="txt">
-                        <input class="ef" autocomplete='off' id="password" name="password" type="password"
+                        <input tabindex="2" class="ef" autocomplete='off' id="password" name="password" type="password"
                                placeholder="请输入密码" value="">
                     </div>
                 </div>
@@ -142,21 +146,21 @@
                          align="absmiddle" src="" width="100" height="42">
                 </div>
                 <div class="lr_ok">
-                    <a class="a"
+                    <a tabindex="5" class="a"
                        href="https://login.51job.com/forgetpwd.php?lang=c&from_domain=i&source=&url=http%3A%2F%2Fwww.51job.com%2F">忘记密码？</a>
-                    <input type="checkbox" name="isread" id="isread" checked="true">
-                    <label for="isread">自动登录</label>
+                    <input tabIndex="4" type="checkbox" name="rememberMe" id="rememberMe" checked="true">
+                    <label for="rememberMe">自动登录</label>
                 </div>
                 <div class="btnbox">
-                    <button type='button' class="p_but" id="login_btn" tabindex="10">登 录</button>
+                    <button tabIndex="6" type='button' class="p_but" id="login_btn" tabindex="10">登 录</button>
                 </div>
             </form>
             <div class="lr_p">
-                还不是会员？<a class="a2"
+                还不是会员？<a tabindex="7" class="a2"
                          href="https://login.51job.com/register.php?lang=c&from_domain=i&source=&url=http%3A%2F%2Fwww.51job.com%2F">免费注册</a>
             </div>
             <div class="mind">
-                温馨提示：为了避免耽误您的考试，遇到问题请及时联系管理教师。 <a class="a" target="_blank"
+                温馨提示：为了避免耽误您的考试，遇到问题请及时联系管理教师。 <a tabindex="8" class="a" target="_blank"
                                                   href="https://login.51job.com/learnmore.php?lang=c">查看详情</a>
             </div>
 

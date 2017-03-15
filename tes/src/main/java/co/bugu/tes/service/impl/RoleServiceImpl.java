@@ -2,6 +2,7 @@ package co.bugu.tes.service.impl;
 
 
 import co.bugu.framework.core.service.impl.BaseServiceImpl;
+import co.bugu.tes.model.Authority;
 import co.bugu.tes.model.Role;
 import co.bugu.tes.service.IRoleService;
 import co.bugu.framework.core.dao.BaseDao;
@@ -50,10 +51,15 @@ public class RoleServiceImpl extends BaseServiceImpl<Role> implements IRoleServi
 //        return baseDao.delete("tes.role.deleteById", role);
 //    }
 //
-//    @Override
-//    public Role findById(Integer id) {
-//        return baseDao.selectOne("tes.role.selectById", id);
-//    }
+    @Override
+    public Role findById(Integer id) {
+        Role role =  baseDao.selectOne("tes.role.selectById", id);
+        if(role != null){
+            List<Authority> authorities = baseDao.selectList("tes.authority.selectAuthorityByRole", role.getId());
+            role.setAuthorityList(authorities);
+        }
+        return role;
+    }
 //
 //    @Override
 //    public List<Role> findAllByObject(Role role) {

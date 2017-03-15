@@ -248,6 +248,12 @@
          * @param isCancel
          */
         function onRename(e, treeId, treeNode, isCancel) {
+            var parent = treeNode.getParentNode();
+            if(parent){
+                $("#level").val(parseInt(parent.level) + 1);
+            }else{
+                $("#level").val(0);
+            }
 //            showLog((isCancel ? "<span style='color:red'>":"") + "[ "+getTime()+" onRename ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name + (isCancel ? "</span>":""));
         }
 
@@ -283,19 +289,21 @@
                             $("input[name='address']").val(info.address);
                             $("input[name='code']").val(info.code);
                             $("select[name='status']").val(info.status);
+                            zeroModal.closeAll();
                         }else{
+                            zeroModal.closeAll();
                             swal("", "获取机构详情失败", "error");
                         }
                         return false;
                     },
                     error: function (data) {
+                        zeroModal.closeAll();
                         swal("", "服务错误", data.msg);
                         return false;
                     }
                 });
             }
 
-            zeroModal.closeAll();
         };
 
         var newCount = 1;
@@ -344,6 +352,7 @@
             <input type="hidden" name="id" value="${branch.id}">
             <input type="hidden" id="id">
             <input id="superiorId" type="hidden" name="superiorId">
+            <input id="level" type="hidden" name="level">
             <div class="form-group form-group-sm">
                 <label class="control-label col-md-2">机构名称</label>
                 <div class="col-md-10">
@@ -397,9 +406,10 @@
 
 </body>
 
-<script>
+<script type="text/javascript">
     $(function () {
         $(".btn-commit").on("click", function () {
+            $(this).attr("disabled", true);
             zeroModal.loading(3);
             $("form").validator('validate');
             $.ajax({
@@ -416,6 +426,7 @@
                             node.cId = res.data;
                         }
                         swal("", "保存成功", "info");
+                        $("input").val("");
                     }
                 },
                 error: function (data) {
@@ -424,6 +435,7 @@
                 }
             });
             zeroModal.closeAll();
+            $(this).removeAttr("disabled");
             return false;
         });
     });

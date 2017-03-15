@@ -10,6 +10,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.util.JsonUtil;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,13 +114,11 @@ public class RoleController {
         try{
             role.setStatus(Constant.STATUS_ENABLE);
             List<Map<String, Integer>> xList = new ArrayList<>();
-            if(info != null && !info.equals("")){
-                JSONArray arr = JSON.parseArray(info);
-                for(int i = 0; i < arr.size(); i++){
-                    JSONObject obj = (JSONObject) arr.get(i);
-                    Integer id = obj.getInteger("id");
+            if(StringUtils.isNotEmpty(info)){
+                List<Integer> authIds = JSON.parseArray(info, Integer.class);
+                for(Integer id: authIds){
                     Map<String, Integer> map = new HashMap<>();
-                    map.put("authId", id);
+                    map.put("authorityId", id);
                     xList.add(map);
                 }
             }
@@ -129,7 +128,7 @@ public class RoleController {
             model.put("role", role);
             model.put("zNode", info);
             model.put("errMsg", "保存失败");
-            return "role/edit";
+            return "redirect:edit.do?id=" + role.getId();
         }
         return "redirect:list.do";
     }
