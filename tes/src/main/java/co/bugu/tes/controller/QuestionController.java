@@ -2,10 +2,12 @@ package co.bugu.tes.controller;
 
 import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.util.ExcelUtil;
-import co.bugu.framework.util.ExcelUtilNew;
 import co.bugu.framework.util.JsonUtil;
 import co.bugu.framework.util.exception.TesException;
-import co.bugu.tes.model.*;
+import co.bugu.tes.model.Property;
+import co.bugu.tes.model.Question;
+import co.bugu.tes.model.QuestionBank;
+import co.bugu.tes.model.QuestionMetaInfo;
 import co.bugu.tes.service.IQuestionBankService;
 import co.bugu.tes.service.IQuestionMetaInfoService;
 import co.bugu.tes.service.IQuestionService;
@@ -228,12 +230,11 @@ public class QuestionController {
     public String upload(MultipartFile file, Integer metaInfoId,
                          Integer questionBankId, ModelMap model, RedirectAttributes redirectAttributes){
         try {
-            List<Question> questionList = new ArrayList<>();
             List<List<String>> data = ExcelUtil.getData(file);
+            redirectAttributes.addFlashAttribute("questionBankId", questionBankId);
+            redirectAttributes.addFlashAttribute("metaInfoId", metaInfoId);
             if(data == null || data.size() < 2){
                 redirectAttributes.addFlashAttribute("err", "模板无数据");
-                redirectAttributes.addFlashAttribute("questionBankId", questionBankId);
-                redirectAttributes.addFlashAttribute("metaInfoId", metaInfoId);
                 return "redirect:batchAdd.do";
             }
             QuestionMetaInfo metaInfo = questionMetaInfoService.findById(metaInfoId);
@@ -255,16 +256,26 @@ public class QuestionController {
                     indexInfo.put("title", i);
                 }else if(col.startsWith("最佳答案")){
                     indexInfo.put("answer", i);
-                }else if(col.startsWith("选项")){
+                }else if(col.startsWith("选项") && !indexInfo.containsKey("item")){
                     indexInfo.put("item", i);
+                }
+            }
+            List<Integer> propIndexList = new ArrayList<>();
+            for(int i = 0; i < indexInfo.get("item"); i++){
+                if(i != indexInfo.get("title") && i != indexInfo.get("answer")){
+                    propIndexList.add(i);
                 }
             }
 
             data.remove(0);//删除标题
-            Question question = new Question();
+            List<Question> questions = new ArrayList<>();
+            List<List<Integer>> propItemIds = new ArrayList<>();
             String regex = "^([A-Z]|[a-z])([:：])\\s*";
             Pattern pattern = Pattern.compile(regex);
+            int num = 1;
             for(List<String> line: data){
+                num++;
+                Question question = new Question();
                 question.setTitle(line.get(indexInfo.get("title")));
                 question.setAnswer(line.get(indexInfo.get("answer")));
                 int i = indexInfo.get("item");
@@ -273,6 +284,9 @@ public class QuestionController {
 
                 for(; i < line.size(); i++){
                     String col = line.get(i);
+                    if(StringUtils.isEmpty(col)){
+                        continue;
+                    }
                     if(pattern.matcher(col).matches()){
                         list.add(col.toUpperCase());
                     }else{
@@ -280,101 +294,36 @@ public class QuestionController {
                     }
                     pre = (char) (pre + 1);
                 }
+                if(metaInfo.getCode().equals("single") || metaInfo.getCode().equals("multi")) {
+                    question.setAnswer(question.getAnswer().toUpperCase());
+                    char[] arr = question.getAnswer().toCharArray();
+                    for(char c: arr){
+                        if(c < 'A' || c >= pre) {
+                            redirectAttributes.addFlashAttribute("第" + num + "行答案【" + question.getAnswer() + "】有误");
+                            return "redirect:batchAdd.do";
+                        }
+                    }
+                }
+
+
                 question.setContent(JSON.toJSONString(list));
-            }
-            if(!checkModelOK(metaInfo, title)){
-
-            }
-
-            data = processData(data, metaInfo);
-            List<Property> propertyList = metaInfo.getPropertyList();
-            for(Property property : propertyList){
-                String name = property.getName();
-            }
-
-            int i = 0;
-            for(List<String> line : data){
-                if(i == 0){
-                    i++;
-                    continue;
-                }
-                Question question = new Question();
-                String title = line.get(0).trim();
-                String answer = line.get(1).trim();
-                if(StringUtils.isEmpty(title)){
-                    model.put("errMsg", "第" + (i + 1) + "行，题目为空，请修改。");
-                    return null;
-                }
-                if(StringUtils.isEmpty(answer)){
-                    model.put("errMsg", "第" + (i + 1) + "行，答案为空，请修改。");
-                    return null;
-                }
-                question.setTitle(title);
-                String code = metaInfo.getCode();
-                if(code.equals("single") || code.equals("multi")){
-//                    if(answer.length() > 0){
-//                        logger.error("单选试题只能有一个最佳选项");
-//                        return null;
-//                    }
-                    answer = answer.toUpperCase();
-                    int itemLength = 0;
-                    for(String cell: line){
-                        if(StringUtils.isEmpty(cell)){
-                            continue;
-                        }
-                        itemLength++;
-                    }
-                    itemLength = itemLength - 2;
-                    char begin = 'A';
-                    char end = (char) (begin + itemLength - 1);
-                    char[] ansArr = answer.toCharArray();
-                    if(code.equals("single")){
-                        if(ansArr.length > 1){
-                            logger.error("单选试题只能有一个最佳选项");
-                            return null;
-                        }
-                    }
-                    for(char ans : ansArr){
-                        if(ans > end || ans < begin){
-                            logger.error("答案不能超出选项范围 {} - {}", new Object(){});
-                        }
-                    }
-                    if(answer.toCharArray()[0] > end){
-                        logger.error("答案不能超出选项范围");
-                        return null;
-                    }else{
-                        question.setAnswer(answer);
-                    }
-
-                    line.remove(0);
-                    line.remove(0);
-                    List<String> contentList = new ArrayList<>();
-                    for(String item: line){
-                        if(StringUtils.isEmpty(item)){
-                            continue;
-                        }
-                        contentList.add(item);
-                    }
-                    question.setContent(JSON.toJSONString(contentList, true));
-                }else if(metaInfo.getCode().equals("judge")){
-                    if (answer.contains("错")){
-                        answer = "F";
-                    }else{
-                        answer = "T";
-                    }
-                    question.setAnswer(answer);
-                    question.setContent("");
-                }
-                question.setExtraInfo("");
                 question.setMetaInfoId(metaInfoId);
                 question.setQuestionBankId(questionBankId);
-                question.setPropItemIdInfo(propItemIdInfo);
-                questionList.add(question);
-//                questionService.save(question, xList);
+                questions.add(question);
+                List<Integer> propItemId = new ArrayList<>();
+                for(Integer id: propIndexList){
+                    String idStr = line.get(id);
+                    if(StringUtils.isNotEmpty(idStr)){
+                        propItemId.add(Integer.valueOf(idStr));
+                    }
+                }
+                propItemIds.add(propItemId);
+                question.setExtraInfo("");
+                question.setPropItemIdInfo(JSON.toJSONString(propItemId));
             }
             try{
-                int num = questionService.batchAdd(questionList);
-                logger.info("批量添加试题成功，成功添加{}试题。", num);
+                int count = questionService.batchAdd(questions, propItemIds);
+                logger.info("批量添加试题成功，成功添加{}试题。", count);
             }catch (Exception e){
                 logger.error("保存题目失败", e);
                 return null;

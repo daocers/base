@@ -7,6 +7,7 @@ import co.bugu.framework.util.JedisUtil;
 import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.User;
 import co.bugu.tes.service.IUserService;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,9 +47,11 @@ public class IndexController {
         if(cookies != null){
             for(Cookie cookie: cookies){
                 String name = cookie.getName();
+                if(name.equals("rememberMe")){
+                    model.put("rememberMe", 0);
+                }
                 if("username".equals(name)){
                     model.put("username", cookie.getValue());
-                    model.put("rememberMe", true);
                 }
             }
         }
@@ -58,6 +61,18 @@ public class IndexController {
 
     @RequestMapping("/index")
     public String index(HttpServletRequest request,  HttpServletResponse response){
+        HttpSession session = request.getSession();
+        String username = session.getAttribute("username").toString();
+        String rememberMe = session.getAttribute("rememberMe").toString();
+        if(StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(rememberMe)){
+            Cookie cookie = new Cookie("username", session.getAttribute("username").toString());
+            Cookie remCookie = new Cookie("rememberMe", (String) session.getAttribute("rememberMe"));
+            Integer max = 3600 * 24 * 7;
+            remCookie.setMaxAge(max);
+            cookie.setMaxAge(max);
+            response.addCookie(cookie);
+            response.addCookie(remCookie);
+        }
         return "index";
     }
     /**
@@ -69,7 +84,7 @@ public class IndexController {
      */
     @RequestMapping(value = "/signIn", method = RequestMethod.POST)
     @ResponseBody
-    public String signIn(String username, String password, boolean rememberMe, HttpServletRequest request, HttpServletResponse response){
+    public String signIn(String username, String password, Integer rememberMe, HttpServletRequest request, HttpServletResponse response){
         try{
             User user = new User();
             user.setUsername(username);
@@ -87,15 +102,10 @@ public class IndexController {
                     user = userService.findFullById(user.getId());
                     JedisUtil.setJson(Constant.USER_INFO_PREFIX + user.getId(), user);
                     WebUtils.setSessionAttribute(request, Constant.SESSION_USER_ID, user.getId());
-                    Cookie cookie = new Cookie("username", username);
-
-                    if(rememberMe){
-                        cookie.setMaxAge(60* 60 * 24 * 7);//一周不过期
-                    }else{
-                        cookie.setMaxAge(-1);
+                    if(rememberMe == 0){
+                        WebUtils.setSessionAttribute(request, "username", username);
+                        WebUtils.setSessionAttribute(request, "rememberMe", rememberMe);
                     }
-                    response.addCookie(cookie);
-
                     return "0";
                 }else{
                     return "3";//密码不正确

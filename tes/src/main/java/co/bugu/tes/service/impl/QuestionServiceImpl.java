@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -95,6 +96,27 @@ public class QuestionServiceImpl extends BaseServiceImpl<Question> implements IQ
 //        }
 //        return JedisUtil.sinterForSize(keys);
         return QuestionUtil.getCountByPropItemId(questionMetaInfoId, questionBankId, ids);
+    }
+
+    @Override
+    public int batchAdd(List<Question> questionList, List<List<Integer>> propItemIdList) throws TesException {
+        if(questionList.size() != propItemIdList.size()){
+            throw new TesException("批量添加试题失败");
+        }
+        int num = 0;
+        for(int i = 0; i < questionList.size(); i++){
+            Question question = questionList.get(i);
+            baseDao.insert("tes.question.insert", question);
+            for(Integer id: propItemIdList.get(i)){
+                Map<String, Integer> map = new HashMap<>();
+                map.put("questionId", question.getId());
+                map.put("propItemId", id);
+                baseDao.insert("tes.question.addToPropItem", map);
+            }
+            QuestionUtil.updateCacheAfterUpdate(question);
+            num++;
+        }
+        return num  ;
     }
 
 

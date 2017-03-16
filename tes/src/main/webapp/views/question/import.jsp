@@ -27,7 +27,7 @@
 
     <div class="row">
         <div class="col-md-8">
-            <form class="form-horizontal" method="post" action="batchAdd.do"  enctype="multipart/form-data"  data-toggle="validator" role="form">
+            <form class="form-horizontal" method="post" action="import.do"  enctype="multipart/form-data"  data-toggle="validator" role="form">
                 <div class="form-group">
                     <label class="control-label col-md-1">题型</label>
                     <div class="col-md-10">
@@ -47,19 +47,12 @@
                         <select class="form-control" name="questionBankId" required>
                             <option value="">请选择</option>
                             <c:forEach var="bank" items="${questionBankList}">
-                                <option value="${bank.id}" <c:if test="${bank.id = questionBankId}">selected</c:if> >${bank.name}</option>
+                                <option value="${bank.id}" <c:if test="${bank.id == questionBankId}">selected</c:if> >${bank.name}</option>
                             </c:forEach>
                         </select>
+                        <span class="help-block with-errors">选择导入的题库</span>
                     </div>
                 </div>
-
-                <div class="form-group prop-list-container">
-                    <label class="control-label col-md-1">选择属性</label>
-                    <div class="col-md-11 prop-box">
-
-                    </div>
-                </div>
-                <input type="hidden" name="propItemIdInfo">
 
                 <div class="form-group">
                     <div class="col-md-offset-1" style="padding-left: 15px;">
@@ -76,6 +69,13 @@
     </div>
 </div>
 <script>
+    $(function () {
+        $(".btn-commit").on("click", function () {
+            zeroModal.loading(3);
+            $("form").submit();
+            return false;
+        })
+    })
 
     /**
      * 下载提醒对应的模板
@@ -83,7 +83,8 @@
     function download() {
         var id = $("select").val();
         if(!id){
-            alert("请选择题型")
+            swal("", "请选择题型", "warning");
+            return false;
         }else{
             window.location.href = "/questionMetaInfo/downModel.do?metaInfoId=" + id;
         }

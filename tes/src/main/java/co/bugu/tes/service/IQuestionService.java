@@ -4,7 +4,6 @@ package co.bugu.tes.service;
 import co.bugu.framework.core.service.IBaseService;
 import co.bugu.framework.util.exception.TesException;
 import co.bugu.tes.model.Question;
-import co.bugu.framework.core.dao.PageInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -34,4 +33,6 @@ public interface IQuestionService extends IBaseService<Question>{
 
 
     int getCountByPropItemId(Integer questionMetaInfoId, Integer questionBankId, List<Integer> ids) throws TesException;
+
+    int batchAdd(List<Question> questionList, List<List<Integer>> propItemIdList) throws TesException;
 }
