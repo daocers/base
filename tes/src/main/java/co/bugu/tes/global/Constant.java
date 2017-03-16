@@ -40,4 +40,6 @@ public interface Constant {
     String QUESTION_PROPITEM_ID = "QUESTION_PROPITEM_ID_";
 
     String QUESTION_BANK_ID = "BANK_";
+
+    String QUESTION_PERFIX = "QUESTION_PREFIX_";
 }

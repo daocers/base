@@ -211,7 +211,7 @@ public class UserController {
     public void download(HttpServletRequest request, HttpServletResponse response) {
         try {
             String[] arrs = new String[]{"用户名（员工号）", "姓名", "身份证号", "机构", "部门", "岗位"};
-            ExcelUtilNew.downloadModel(request, response, "用户模板", arrs);
+            ExcelUtilNew.downloadModel(request, response, "用户模板", Arrays.asList(arrs));
         } catch (Exception e) {
             logger.error("下载用户模板失败", e);
         }

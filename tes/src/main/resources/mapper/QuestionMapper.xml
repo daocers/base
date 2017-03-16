@@ -113,7 +113,7 @@
         select
         <include refid="question_list"/>
         from question question
-        order by question.id
+        order by question.id desc
     </select>
 
 

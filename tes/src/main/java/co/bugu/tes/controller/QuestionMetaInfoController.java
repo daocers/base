@@ -1,13 +1,18 @@
 package co.bugu.tes.controller;
 
+import co.bugu.framework.util.ExcelUtil;
+import co.bugu.framework.util.ExcelUtilNew;
 import co.bugu.tes.model.Property;
 import co.bugu.tes.model.PropertyItem;
+import co.bugu.tes.model.Question;
 import co.bugu.tes.model.QuestionMetaInfo;
 import co.bugu.tes.service.IPropertyItemService;
 import co.bugu.tes.service.IPropertyService;
 import co.bugu.tes.service.IQuestionMetaInfoService;
 import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.util.JsonUtil;
+import co.bugu.tes.util.QuestionMetaInfoUtil;
+import org.apache.poi.ss.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +20,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -162,4 +172,37 @@ public class QuestionMetaInfoController {
             return "-1";
         }
     }
+
+    @RequestMapping(value = "/downModel")
+    public String downloadTemplate(@RequestParam Integer metaInfoId, ModelMap model,
+                                   RedirectAttributes redirectAttributes,
+                                   HttpServletRequest request, HttpServletResponse response){
+        try{
+            QuestionMetaInfo metaInfo = questionMetaInfoService.findById(metaInfoId);
+            if(metaInfo == null){
+                model.put("err", "没找到该题型信息");
+                return "redirect:/question/batchAdd.do";
+            }
+            String metaName = metaInfo.getName();
+            List<String> title = QuestionMetaInfoUtil.getModelTitle(metaInfo);
+
+            String path = request.getSession().getServletContext().getRealPath("file");
+            ExcelUtilNew.downloadModel(request, response, metaName, title);
+            return null;
+        }catch (Exception e){
+            logger.error("下载模板异常", e);
+            model.put("err", "下载模板失败");
+            redirectAttributes.addFlashAttribute("err", "下载模板失败");
+            return "redirect:download.do";
+        }
+    }
+
+    @RequestMapping("/download")
+    public String toDownloadPage(ModelMap model){
+        List<QuestionMetaInfo> questionMetaInfos = questionMetaInfoService.findByObject(null);
+        model.put("metaInfoList", questionMetaInfos);
+        return "question_meta_info/download";
+    }
+
+
 }

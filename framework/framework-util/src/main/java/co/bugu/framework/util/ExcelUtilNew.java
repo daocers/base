@@ -41,11 +41,11 @@ public class ExcelUtilNew {
 
     /**
      * 将数据写入到excel表格中，并返回对应的文件
-     * @param name
-     * @param type
-     * @param dirPath
-     * @param title
-     * @param content
+     * @param name  文件名称
+     * @param type  文件类型 .xls .xlsx
+     * @param dirPath  文件所在的目录
+     * @param title     文件的标题
+     * @param content  文件的内容
      * @return
      * @throws Exception
      */
@@ -329,9 +329,9 @@ public class ExcelUtilNew {
      * @param title
      * @throws Exception
      */
-    public static  void downloadModel(HttpServletRequest request, HttpServletResponse response, String fileName, String... title) throws Exception {
+    public static  void downloadModel(HttpServletRequest request, HttpServletResponse response, String fileName, List<String> title) throws Exception {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        fileName += format.format(new Date()) + ".xlsx";
+        fileName += "-" + format.format(new Date()) + ".xlsx";
         // 给文件名编码,防止ie下载时文件名乱码
         if (request.getHeader("USER-AGENT").toLowerCase().contains("edge") // Edge-win10新的浏览器内核
                 || request.getHeader("USER-AGENT").toLowerCase().contains("trident")) { // trident-IE浏览器内核
@@ -343,11 +343,9 @@ public class ExcelUtilNew {
         // 设置返回值头
         response.setContentType("application/octet-stream;");
         response.setHeader("Content-disposition", "attachment; filename=" + fileName);
-        List<String> titleList = Arrays.asList(title);
-
         // 写入到文件
         OutputStream out = response.getOutputStream();
-        ExcelUtilNew.writeToOutputStream("xlsx", titleList, null, out);
+        ExcelUtilNew.writeToOutputStream("xlsx", title, null, out);
         out.close();
     }
 

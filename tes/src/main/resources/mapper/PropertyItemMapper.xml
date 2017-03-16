@@ -113,7 +113,7 @@
     </select>
 
 
-    <select id="findPropItemByQuestionId" resultMap="PropertyItemMap" parameterType="co.bugu.tes.model.Question">
+    <select id="findPropItemByQuestionId" resultMap="PropertyItemMap" parameterType="int">
         SELECT
         <include refid="propertyItem_list"/>
         from property_item prop_item

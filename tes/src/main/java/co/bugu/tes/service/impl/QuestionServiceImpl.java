@@ -3,10 +3,14 @@ package co.bugu.tes.service.impl;
 
 import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.core.service.impl.BaseServiceImpl;
+import co.bugu.framework.util.JedisUtil;
 import co.bugu.framework.util.exception.TesException;
+import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.Question;
 import co.bugu.tes.service.IQuestionService;
 import co.bugu.tes.util.QuestionUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +19,7 @@ import java.util.Set;
 
 @Service
 public class QuestionServiceImpl extends BaseServiceImpl<Question> implements IQuestionService {
+    private static Logger logger = LoggerFactory.getLogger(QuestionServiceImpl.class);
 //    @Autowired
 //    BaseDao baseDao;
 
@@ -104,6 +109,25 @@ public class QuestionServiceImpl extends BaseServiceImpl<Question> implements IQ
             }
         }
         return pageInfo;
+    }
+
+    @Override
+    public Question findById(Integer id){
+        Question question = null;
+        try{
+            question = JedisUtil.getJson(Constant.QUESTION_PERFIX + id, Question.class);
+        }catch (Exception e){
+            logger.error("jedis getJson异常", e);
+        }
+        if(question == null){
+            question = baseDao.selectOne("tes.question.selectById", id);
+            if(question != null){
+                question.setPropertyItemList(baseDao.selectList("tes.propertyItem.findPropItemByQuestionId", question.getId()));
+                question.setQuestionMetaInfo(baseDao.selectOne("tes.questionMetaInfo.selectById", question.getMetaInfoId()));
+            }
+            JedisUtil.setJson(Constant.QUESTION_PERFIX + id, question);
+        }
+        return question;
     }
 
 

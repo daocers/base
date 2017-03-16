@@ -24,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -202,7 +203,7 @@ public class BranchController {
     public void download(HttpServletRequest request, HttpServletResponse response) {
         try {
             String[] arrs = new String[]{"机构编码", "机构名称", "上级机构", "地址", "联系电话", "负责人"};
-            ExcelUtilNew.downloadModel(request, response, "机构信息模板", arrs);
+            ExcelUtilNew.downloadModel(request, response, "机构信息模板", Arrays.asList(arrs));
         } catch (Exception e) {
             logger.error("下载机构信息模板失败", e);
         }

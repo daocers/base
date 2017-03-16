@@ -2,15 +2,14 @@ package co.bugu.tes.controller;
 
 import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.util.ExcelUtil;
+import co.bugu.framework.util.ExcelUtilNew;
 import co.bugu.framework.util.JsonUtil;
 import co.bugu.framework.util.exception.TesException;
-import co.bugu.tes.model.Property;
-import co.bugu.tes.model.Question;
-import co.bugu.tes.model.QuestionBank;
-import co.bugu.tes.model.QuestionMetaInfo;
+import co.bugu.tes.model.*;
 import co.bugu.tes.service.IQuestionBankService;
 import co.bugu.tes.service.IQuestionMetaInfoService;
 import co.bugu.tes.service.IQuestionService;
+import co.bugu.tes.util.QuestionMetaInfoUtil;
 import co.bugu.tes.util.QuestionUtil;
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang.StringUtils;
@@ -21,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -88,7 +88,7 @@ public class QuestionController {
                     List<String> itemList = JSON.parseArray(question.getContent(), String.class);
                     StringBuilder builder = new StringBuilder();
                     char begin = 'A';
-                    String regex = "([A-Z]|[a-z])([:：])\\s{0,}";
+                    String regex = "^([A-Z]|[a-z])([:：])\\s{0,}";
                     for(String item: itemList){
                         item = item.replaceAll(regex, "");
                         builder.append(begin)
@@ -213,7 +213,7 @@ public class QuestionController {
             logger.error("批量导入试题，获取题型信息失败", e);
             model.put("errMsg", "获取题型信息失败");
         }
-        return "question/batchAdd";
+        return "question/import";
     }
 
 
@@ -222,18 +222,76 @@ public class QuestionController {
      *
      * 暂时考虑ajax调用
      * @param file
-     * @param propItemIdInfo  这一批题目的属性值，数组的json格式
      *  @param metaInfoId 题型id
      */
-    @RequestMapping(value = "/batchAdd", method = RequestMethod.POST)
-    public String upload(MultipartFile file, String propItemIdInfo, Integer metaInfoId,
-                       Integer questionBankId, ModelMap model){
-        List<Integer> itemIds = JSON.parseArray(propItemIdInfo, Integer.class);
+    @RequestMapping(value = "/import", method = RequestMethod.POST)
+    public String upload(MultipartFile file, Integer metaInfoId,
+                         Integer questionBankId, ModelMap model, RedirectAttributes redirectAttributes){
         try {
             List<Question> questionList = new ArrayList<>();
             List<List<String>> data = ExcelUtil.getData(file);
+            if(data == null || data.size() < 2){
+                redirectAttributes.addFlashAttribute("err", "模板无数据");
+                redirectAttributes.addFlashAttribute("questionBankId", questionBankId);
+                redirectAttributes.addFlashAttribute("metaInfoId", metaInfoId);
+                return "redirect:batchAdd.do";
+            }
             QuestionMetaInfo metaInfo = questionMetaInfoService.findById(metaInfoId);
-           
+            List<String> title = data.get(0);
+            boolean modelOk = QuestionMetaInfoUtil.checkModelTitle(title, metaInfo);
+            if(!modelOk){
+                redirectAttributes.addFlashAttribute("err", "模板信息有误，请下载最新模板");
+                return "redirect:batchAdd.do";
+            }
+            String info = QuestionMetaInfoUtil.checkData(data, metaInfo);
+            if(StringUtils.isNotEmpty(info)){
+                redirectAttributes.addFlashAttribute("err", info);
+                return "redirect:batchAdd.do";
+            }
+            Map<String, Integer> indexInfo = new HashMap<>();
+            for(int i = 0;i < title.size(); i++){
+                String col = title.get(i);
+                if("题目".equals(col)){
+                    indexInfo.put("title", i);
+                }else if(col.startsWith("最佳答案")){
+                    indexInfo.put("answer", i);
+                }else if(col.startsWith("选项")){
+                    indexInfo.put("item", i);
+                }
+            }
+
+            data.remove(0);//删除标题
+            Question question = new Question();
+            String regex = "^([A-Z]|[a-z])([:：])\\s*";
+            Pattern pattern = Pattern.compile(regex);
+            for(List<String> line: data){
+                question.setTitle(line.get(indexInfo.get("title")));
+                question.setAnswer(line.get(indexInfo.get("answer")));
+                int i = indexInfo.get("item");
+                List<String> list = new ArrayList<>();
+                char pre = 'A';
+
+                for(; i < line.size(); i++){
+                    String col = line.get(i);
+                    if(pattern.matcher(col).matches()){
+                        list.add(col.toUpperCase());
+                    }else{
+                        list.add(pre + ":" + col);
+                    }
+                    pre = (char) (pre + 1);
+                }
+                question.setContent(JSON.toJSONString(list));
+            }
+            if(!checkModelOK(metaInfo, title)){
+
+            }
+
+            data = processData(data, metaInfo);
+            List<Property> propertyList = metaInfo.getPropertyList();
+            for(Property property : propertyList){
+                String name = property.getName();
+            }
+
             int i = 0;
             for(List<String> line : data){
                 if(i == 0){
@@ -327,6 +385,8 @@ public class QuestionController {
         }
         return "redirect:list.do";
     }
+
+
 
     /**
      * 根据题型id获取
