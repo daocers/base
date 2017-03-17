@@ -61,6 +61,19 @@ public class QuestionController {
             pageInfo = questionService.findByObject(question, pageInfo);
             model.put("pi", pageInfo);
             model.put("question", question);
+            List<QuestionMetaInfo> metaInfoList = questionMetaInfoService.findByObject(null);
+            Map<Integer, String> metaInfoMap = new HashMap<>();
+            for(QuestionMetaInfo metaInfo: metaInfoList){
+                metaInfoMap.put(metaInfo.getId(), metaInfo.getName());
+            }
+            model.put("metaInfoMap", metaInfoMap);
+            List<QuestionBank> questionBankList = questionBankService.findByObject(null);
+            Map<Integer, String> bankMap = new HashMap<>();
+            for(QuestionBank bank: questionBankList){
+                bankMap.put(bank.getId(), bank.getName());
+            }
+            model.put("bankMap", bankMap);
+
         }catch (Exception e){
             logger.error("获取列表失败", e);
             model.put("errMsg", "获取列表失败");
@@ -259,6 +272,9 @@ public class QuestionController {
                 }else if(col.startsWith("选项") && !indexInfo.containsKey("item")){
                     indexInfo.put("item", i);
                 }
+            }
+            if(!indexInfo.containsKey("item")){
+                indexInfo.put("item", title.size());
             }
             List<Integer> propIndexList = new ArrayList<>();
             for(int i = 0; i < indexInfo.get("item"); i++){

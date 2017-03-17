@@ -33,15 +33,13 @@
             <thead>
             <tr>
                 <th><input type="checkbox" class="selectAll"></th>
-                <th>题目</th>
-
-                <th>题干</th>
-                <th>答案</th>
-
-                <th>额外信息</th>
-                <th>题型</th>
-                <th>题库</th>
-                <th>操作</th>
+                <th class="col-md-2">题目</th>
+                <th class="col-md-3">题干</th>
+                <th class="col-md-1">答案</th>
+                <th class="col-md-2">额外信息</th>
+                <th class="col-md-1">题型</th>
+                <th class="col-md-1">题库</th>
+                <th class="col-md-2">操作</th>
             </tr>
             </thead>
             <tbody>
@@ -51,10 +49,9 @@
                     <td>${question.title}</td>
                     <td>${question.content}</td>
                     <td>${question.answer}</td>
-
                     <td>${question.extraInfo}</td>
-                    <td>${question.metaInfoId}</td>
-                    <td>${question.questionBankId}</td>
+                    <td>${metaInfoMap.get(question.metaInfoId)}</td>
+                    <td>${bankMap.get(question.questionBankId)}</td>
                     <td>
                         <a href="edit.do?id=${question.id}&type=detail" class="opr">详情</a>
                         <a href="edit.do?id=${question.id}" class="opr">修改</a>

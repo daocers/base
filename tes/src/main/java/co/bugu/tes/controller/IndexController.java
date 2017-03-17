@@ -66,7 +66,7 @@ public class IndexController {
         String rememberMe = session.getAttribute("rememberMe").toString();
         if(StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(rememberMe)){
             Cookie cookie = new Cookie("username", session.getAttribute("username").toString());
-            Cookie remCookie = new Cookie("rememberMe", (String) session.getAttribute("rememberMe"));
+            Cookie remCookie = new Cookie("rememberMe", session.getAttribute("rememberMe").toString());
             Integer max = 3600 * 24 * 7;
             remCookie.setMaxAge(max);
             cookie.setMaxAge(max);

@@ -1,9 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="../template/header.jsp" %>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>品类编辑</title>
+    <title>试题编辑</title>
+    <%@ include file="../template/header.jsp" %>
 </head>
 <body>
 <div class="container">
@@ -114,6 +114,27 @@
     </div>
 </div>
 <script>
+    var changeMetaInfo = false;
+
+    $("[name='metaInfoId']").on("click", function () {
+        if(!changeMetaInfo){
+            swal({
+                text: "不建议修改题型，是否继续:",
+                type: "warning",
+                showCancelButton: true,
+
+            }).then(function (isConfirm) {
+                if(isConfirm){
+                    changeMetaInfo = true;
+//                $this.trigger("click");
+                }else{
+                    return false;
+                }
+            })
+        }
+
+    });
+
     //提交前处理信息
     $(".btn-commit").on("click", function () {
         var res = new Array();

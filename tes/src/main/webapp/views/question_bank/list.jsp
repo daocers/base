@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="../template/header.jsp" %>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>管理</title>
+    <title>题库管理</title>
+    <%@ include file="../template/header.jsp" %>
 </head>
 <body>
 <div class="container">
     <div class="row nav-path">
         <ol class="breadcrumb">
-            <li><a href="#">首页</a> </li>
-            <li><a href="#" class="active">商品管理</a> </li>
+            <li><a href="#">首页</a></li>
+            <li><a href="#" class="active">题库管理</a></li>
         </ol>
     </div>
     <div class="row info-search">
@@ -31,29 +31,30 @@
         <table class="table table-bordered">
             <thead>
             <tr>
-                <th><input type="checkbox" class="selectAll"> </th>
-				                    <th >createTime</th>
-				                    <th >createUserId</th>
-				                    <th >description</th>
-				                    <th >name</th>
-				                    <th >status</th>
-				                    <th >updateTime</th>
-				                    <th >updateUserId</th>
-				                <th>操作</th>
+                <th class="col-md-1"><input type="checkbox" class="selectAll"></th>
+                <%--<th>创建用户</th>--%>
+                <th class="col-md-2">题库名称</th>
+                <th class="col-md-3">描述</th>
+                <th class="col-md-2">创建时间</th>
+                <th class="col-md-1">状态</th>
+                <%--<th>更新时间</th>--%>
+                <%--<th>更新用户</th>--%>
+                <th class="col-md-3">操作</th>
             </tr>
             </thead>
             <tbody>
             <c:forEach items="${pi.data}" var="questionbank" varStatus="line">
                 <tr>
                     <td><input type="checkbox" objId="${questionbank.id}"></td>
-					                        <td>${questionbank.createTime}</td>
-					                        <td>${questionbank.createUserId}</td>
-					                        <td>${questionbank.description}</td>
-					                        <td>${questionbank.name}</td>
-					                        <td>${questionbank.status}</td>
-					                        <td>${questionbank.updateTime}</td>
-					                        <td>${questionbank.updateUserId}</td>
-					                    <td>
+                        <%--<td>${questionbank.createUserId}</td>--%>
+                    <td>${questionbank.name}</td>
+                    <td>${questionbank.description}</td>
+                    <td><fmt:formatDate value="${questionbank.createTime}"
+                                        pattern="yyyy-MM-dd HH:mm"></fmt:formatDate></td>
+                    <td>${questionbank.status == 0 ? "启用":"禁用"}</td>
+                        <%--<td><fmt:formatDate value="${questionbank.updateTime}" pattern="yyyy-MM-dd HH:mm"></fmt:formatDate> </td>--%>
+                        <%--<td>${questionbank.updateUserId}</td>--%>
+                    <td>
                         <a href="edit.do?id=${questionbank.id}&type=detail" class="opr">详情</a>
                         <a href="edit.do?id=${questionbank.id}" class="opr">修改</a>
                         <a href="javascript:del(${questionbank.id})" class="opr">删除</a>
@@ -67,7 +68,7 @@
 
     <div class="row after-table">
         <div class="pull-left form-inline">
-                        <select class="form-control show-count" >
+            <select class="form-control show-count">
                 <option value="10" <c:if test="${ pi.showCount == 10 }">selected</c:if>>10</option>
                 <option value="25" <c:if test="${ pi.showCount == 25}">selected</c:if>>25</option>
                 <option value="50" <c:if test="${ pi.showCount == 50}">selected</c:if>>50</option>

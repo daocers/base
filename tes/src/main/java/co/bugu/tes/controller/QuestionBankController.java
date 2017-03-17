@@ -2,9 +2,11 @@ package co.bugu.tes.controller;
 
 import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.QuestionBank;
+import co.bugu.tes.model.User;
 import co.bugu.tes.service.IQuestionBankService;
 import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.util.JsonUtil;
+import co.bugu.tes.service.IUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +26,12 @@ import java.util.Date;
 import java.util.List;
 
 @Controller
-@RequestMapping("/questionbank")
+@RequestMapping("/questionBank")
 public class QuestionBankController {
     @Autowired
     IQuestionBankService questionbankService;
+    @Autowired
+    IUserService userService;
 
     private static Logger logger = LoggerFactory.getLogger(QuestionBankController.class);
 
@@ -63,8 +67,12 @@ public class QuestionBankController {
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String toEdit(Integer id, ModelMap model){
         try{
-            QuestionBank questionbank = questionbankService.findById(id);
-            model.put("questionbank", questionbank);
+            QuestionBank questionBank = questionbankService.findById(id);
+            if(questionBank.getCreateUserId() != null){
+                User user = userService.findFullById(questionBank.getCreateUserId());
+                model.put("username", user.getProfile().getName());
+            }
+            model.put("questionBank", questionBank);
         }catch (Exception e){
             logger.error("获取信息失败", e);
             model.put("errMsg", "获取信息失败");
@@ -98,7 +106,7 @@ public class QuestionBankController {
             }
         }catch (Exception e){
             logger.error("保存失败", e);
-            model.put("questionbank", questionbank);
+            model.put("questionBank", questionbank);
             model.put("errMsg", "保存失败");
             return "question_bank/edit";
         }
@@ -107,14 +115,14 @@ public class QuestionBankController {
 
     /**
     * 异步请求 获取全部
-    * @param questionbank 查询条件
+    * @param questionBank 查询条件
     * @return
     */
     @RequestMapping(value = "/listAll")
     @ResponseBody
-    public String listAll(QuestionBank questionbank){
+    public String listAll(QuestionBank questionBank){
         try{
-            List<QuestionBank> list = questionbankService.findByObject(questionbank);
+            List<QuestionBank> list = questionbankService.findByObject(questionBank);
             return JsonUtil.toJsonString(list);
         }catch (Exception e){
             logger.error("获取全部列表失败", e);
@@ -124,14 +132,14 @@ public class QuestionBankController {
 
     /**
     * 异步请求 删除
-    * @param questionbank id
+    * @param questionBank id
     * @return
     */
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
-    public String delete(QuestionBank questionbank){
+    public String delete(QuestionBank questionBank){
         try{
-            questionbankService.delete(questionbank);
+            questionbankService.delete(questionBank);
             return "0";
         }catch (Exception e){
             logger.error("删除失败", e);

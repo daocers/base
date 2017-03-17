@@ -23,7 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
-@RequestMapping("/questionpolicy")
+@RequestMapping("/questionPolicy")
 public class QuestionPolicyController {
     @Autowired
     IQuestionPolicyService questionpolicyService;
@@ -48,7 +48,6 @@ public class QuestionPolicyController {
             PageInfo<QuestionPolicy> pageInfo = new PageInfo<>(showCount, curPage);
             pageInfo = questionpolicyService.findByObject(questionpolicy, pageInfo);
             model.put("pi", pageInfo);
-            model.put("questionpolicy", questionpolicy);
         }catch (Exception e){
             logger.error("获取列表失败", e);
             model.put("errMsg", "获取列表失败");

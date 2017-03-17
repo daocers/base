@@ -196,7 +196,7 @@
             $.ajax({
                 url: "/signIn.do",
                 type: "post",
-                data: {username: username, password: password, rememberMe: $("#rememberMe").checked() ? 0 : 1},
+                data: {username: username, password: password, rememberMe: $("#rememberMe").attr("checked") ? 0 : 1},
                 success: function (data) {
                     if(data == 0){
                         //登陆成功，跳转页面

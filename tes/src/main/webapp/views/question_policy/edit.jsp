@@ -77,7 +77,7 @@
                             <tbody>
                             <c:if test="${propertyList == null || propertyList.size() == 0}">
                                 <tr>
-                                    <td>请选择题型</td>
+                                    <td style="height: 30px;vertical-align: middle;">&nbsp;&nbsp;请选择题型</td>
                                 </tr>
                             </c:if>
                             <c:if test="${propertyList.size() > 0}">

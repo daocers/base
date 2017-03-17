@@ -1,9 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="../template/header.jsp" %>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>品类编辑</title>
+    <title>题库编辑</title>
+    <%@ include file="../template/header.jsp" %>
+
 </head>
 <body>
 <div class="container">
@@ -18,57 +19,41 @@
     <div class="row">
         <div class="col-md-8">
             <form class="form-horizontal" method="post" action="save.do" data-toggle="validator" role="form">
-                <input id="id" type="hidden" name="id" value="${questionbank.id}">
+                <input id="id" type="hidden" name="id" value="${questionBank.id}">
 
 
 
                 <div class="form-group">
                     <label class="control-label col-md-2">题库名称</label>
                     <div class="col-md-10">
-                        <input class="form-control" type="text" name="name" value="${questionbank.name}" required>
+                        <input class="form-control" type="text" name="name" value="${questionBank.name}" required maxlength="30">
                         <span class="help-block with-errors">提示信息</span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-md-2">描述</label>
                     <div class="col-md-10">
-                        <input class="form-control" type="text" name="description" value="${questionbank.description}"
-                        >
+                        <input class="form-control" type="text" name="description" value="${questionBank.description}"
+                        maxlength="100">
                         <span class="help-block with-errors">对该题库的使用场景，题目信息和出题部门简要说明</span>
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" <c:if test="${param.type != 'detail'}">hidden</c:if>>
                     <label class="control-label col-md-2">创建时间</label>
                     <div class="col-md-10">
-                        <p class="form-control-static">${questionbank.createTime}</p>
+                        <p class="form-control-static"><fmt:formatDate value="${questionBank.createTime}" pattern="yyyy-MM-dd HH:mm"></fmt:formatDate> </p>
                         <span class="help-block with-errors"></span>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" <c:if test="${param.type != 'detail'}">hidden</c:if>>
                     <label class="control-label col-md-2">创建用户</label>
                     <div class="col-md-10">
-                        <p class="form-control-static">${questionbank.createUserId}</p>
+                        <p class="form-control-static">${username}</p>
                         <span class="help-block with-errors"></span>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="control-label col-md-2">更新时间</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" name="updateTime" value="${questionbank.updateTime}"
-                        >
-                        <span class="help-block with-errors"></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-md-2">更新用户</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" name="updateUserId" value="${questionbank.updateUserId}"
-                        >
-                        <span class="help-block with-errors"></span>
-                    </div>
-                </div>
                 <div class="button pull-right">
                     <button class="btn btn-primary btn-commit">保存</button>
                     <div class="space">
