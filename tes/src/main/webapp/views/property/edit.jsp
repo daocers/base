@@ -112,6 +112,10 @@
 <script>
 
     $("body").on("click", ".del-row", function () {
+        if ($("tbody").find("tr").length == 1) {
+            swal("", "错误操作，请勿删除！", "warning");
+            return false;
+        }
         $(this).parentsUntil("tr").parent().remove();
         return false;
     });
@@ -120,7 +124,7 @@
      */
     $(".add-row").bind("click", function () {
         var rowNum = $("tbody").find("tr:last > td:first").text();
-        if(!rowNum){
+        if (!rowNum) {
             rowNum = 0;
         }
         console.log(rowNum);
@@ -144,7 +148,7 @@
                 }
                 if (idx1 == 1) {
                     code = $(e1).text();
-                    if(code == ''){
+                    if (code == '') {
                         flag = false;
                         swal("", "第" + (idx + 1) + "行， 第" + (idx1 + 1) + "列不能为空", "warning");
                         return false;
@@ -156,7 +160,7 @@
             });
             res.push({"id": id, "name": name, "code": code});
         });
-        if(!flag){
+        if (!flag) {
             return false;
         }
         $("input[name='itemInfo']").val(JSON.stringify(res));

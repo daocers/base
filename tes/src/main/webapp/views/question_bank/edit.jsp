@@ -4,15 +4,14 @@
     <meta charset="utf-8">
     <title>题库编辑</title>
     <%@ include file="../template/header.jsp" %>
-
 </head>
 <body>
 <div class="container">
     <div class="row nav-path">
         <ol class="breadcrumb">
             <li><a href="#">首页</a></li>
-            <li><a href="#">品类管理</a></li>
-            <li><a href="#" class="active">品类编辑</a></li>
+            <li><a href="#">题库管理</a></li>
+            <li><a href="#" class="active">题库编辑</a></li>
         </ol>
     </div>
     <input type="hidden" value="${param.type}" id="type">
@@ -20,14 +19,11 @@
         <div class="col-md-8">
             <form class="form-horizontal" method="post" action="save.do" data-toggle="validator" role="form">
                 <input id="id" type="hidden" name="id" value="${questionBank.id}">
-
-
-
                 <div class="form-group">
                     <label class="control-label col-md-2">题库名称</label>
                     <div class="col-md-10">
                         <input class="form-control" type="text" name="name" value="${questionBank.name}" required maxlength="30">
-                        <span class="help-block with-errors">提示信息</span>
+                        <span class="help-block with-errors"></span>
                     </div>
                 </div>
                 <div class="form-group">
