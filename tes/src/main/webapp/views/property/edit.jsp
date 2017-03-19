@@ -1,9 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="../template/header.jsp" %>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>品类编辑</title>
+    <title>属性编辑</title>
+    <%@ include file="../template/header.jsp" %>
 </head>
 <body>
 <div class="container">
@@ -11,7 +11,7 @@
         <ol class="breadcrumb">
             <li><a href="#">首页</a></li>
             <li><a href="#">品类管理</a></li>
-            <li><a href="#" class="active">品类编辑</a></li>
+            <li><a href="#" class="active">属性编辑</a></li>
         </ol>
     </div>
     <input type="hidden" value="${param.type}" id="type">
@@ -66,31 +66,31 @@
                     <div class="col-md-10">
                         <table class="table table-bordered editable-table">
                             <thead>
-                                <tr>
-                                    <th>编号</th>
-                                    <th class="cell-edit">前缀</th>
-                                    <th class="cell-edit">属性值</th>
-                                    <th class="cell-edit">操作</th>
-                                </tr>
+                            <tr>
+                                <th>编号</th>
+                                <th class="cell-edit">前缀</th>
+                                <th class="cell-edit">属性值</th>
+                                <th class="cell-edit">操作</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                <c:if test="${property.propertyItemList.size() == 0 || property == null}">
-                                    <tr>
-                                        <td>1</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td class="opr-td"><a href="" class="del-row">删除</a></td>
-                                    </tr>
-                                </c:if>
-                                <c:forEach items="${property.propertyItemList}" var="item" varStatus="line">
-                                    <tr>
-                                        <td itemId="${item.id}">${line.count}</td>
-                                        <td>${item.code}</td>
-                                        <td>${item.name}</td>
-                                        <td class="opr-td"><a href="" class="del-row">删除</a></td>
-                                    </tr>
+                            <c:if test="${property.propertyItemList.size() == 0 || property == null}">
+                                <tr>
+                                    <td>1</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="opr-td"><a href="" class="del-row">删除</a></td>
+                                </tr>
+                            </c:if>
+                            <c:forEach items="${property.propertyItemList}" var="item" varStatus="line">
+                                <tr>
+                                    <td itemId="${item.id}">${line.count}</td>
+                                    <td>${item.code}</td>
+                                    <td>${item.name}</td>
+                                    <td class="opr-td"><a href="" class="del-row">删除</a></td>
+                                </tr>
 
-                                </c:forEach>
+                            </c:forEach>
                             </tbody>
                         </table>
                         <button class="btn btn-small btn-primary add-row">+</button>
@@ -114,12 +114,15 @@
     $("body").on("click", ".del-row", function () {
         $(this).parentsUntil("tr").parent().remove();
         return false;
-    })
+    });
     /**
      * 动态添加行，并绑定事件
      */
     $(".add-row").bind("click", function () {
         var rowNum = $("tbody").find("tr:last > td:first").text();
+        if(!rowNum){
+            rowNum = 0;
+        }
         console.log(rowNum);
         var index = parseInt(rowNum) + 1;
         console.log("<tr><td>" + index + "</td><td></td><td></td></tr>");
@@ -131,22 +134,31 @@
 
 
     $(".btn-commit").on("click", function () {
+        var flag = true;
         var res = new Array();
         $("tbody").find("tr").each(function (idx, e) {
             var id, name, code;
             $(e).find("td").each(function (idx1, e1) {
-                if(idx1 == 0){
+                if (idx1 == 0) {
                     id = $(e1).attr("itemId");
                 }
-                if(idx1 == 1){
+                if (idx1 == 1) {
                     code = $(e1).text();
+                    if(code == ''){
+                        flag = false;
+                        swal("", "第" + (idx + 1) + "行， 第" + (idx1 + 1) + "列不能为空", "warning");
+                        return false;
+                    }
                 }
-                if(idx1 == 2){
+                if (idx1 == 2) {
                     name = $(e1).text();
                 }
-            })
+            });
             res.push({"id": id, "name": name, "code": code});
-        })
+        });
+        if(!flag){
+            return false;
+        }
         $("input[name='itemInfo']").val(JSON.stringify(res));
         $("form").submit();
     })

@@ -10,6 +10,7 @@ import co.bugu.tes.service.IQuestionPolicyService;
 import com.alibaba.fastjson.JSON;
 import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.util.JsonUtil;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +46,33 @@ public class QuestionPolicyController {
     @RequestMapping(value = "/list")
     public String list(QuestionPolicy questionpolicy, Integer curPage, Integer showCount, ModelMap model){
         try{
+            List<QuestionMetaInfo> questionMetaInfoList = questionMetaInfoService.findByObject(null);
+            model.put("questionMetaInfoList", questionMetaInfoList);
+            List<PropertyItem> propertyItemList = propertyItemService.findByObject(null);
+            Map<Integer, String> map = new HashMap<>();
+            for(PropertyItem item: propertyItemList){
+                map.put(item.getId(), item.getName());
+            }
             PageInfo<QuestionPolicy> pageInfo = new PageInfo<>(showCount, curPage);
             pageInfo = questionpolicyService.findByObject(questionpolicy, pageInfo);
+            if(pageInfo.getData() != null){
+                for(QuestionPolicy policy : pageInfo.getData()){
+                    String content = policy.getContent();
+                    if(StringUtils.isNotEmpty(content)){
+                        StringBuffer buffer = new StringBuffer();
+                        List<String> lines = JSON.parseArray(content, String.class);
+                        for(String line: lines){
+                            List<Integer> ids = JSON.parseArray(line, Integer.class);
+                            for(int i = 0;i < ids.size() - 1; i++){
+                                buffer.append(map.get(ids.get(i)))
+                                        .append(", ");
+                            }
+                            buffer.append(ids.get(ids.size() - 1) + "题;  <br/>");
+                        }
+                        policy.setContent(buffer.toString());
+                    }
+                }
+            }
             model.put("pi", pageInfo);
         }catch (Exception e){
             logger.error("获取列表失败", e);

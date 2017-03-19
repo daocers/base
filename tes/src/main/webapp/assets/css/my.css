@@ -149,7 +149,8 @@ select.show-count.form-control{
 
 
 table.table > thead > tr > th{
-    border-bottom-color: #56b4ff;
+    /*border-bottom-color: #56b4ff;*/
+    border-bottom-color: #83c5ff;
 }
 
 .pre-table{

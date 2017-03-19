@@ -29,13 +29,13 @@
     <div class="row">
         <div class="col-md-8">
             <form class="form-horizontal" method="post" action="save.do" data-toggle="validator" role="form">
-                <input id="id" type="hidden" name="id" value="${paperpolicy.id}">
+                <input id="id" type="hidden" name="id" value="${paperPolicy.id}">
 
-                <input type="hidden" name="content" value='${paperpolicy.content}'>
+                <input type="hidden" name="content" value='${paperPolicy.content}'>
                 <div class="form-group">
                     <label class="control-label col-md-2">策略名称</label>
                     <div class="col-md-10">
-                        <input class="form-control" type="text" name="name" value="${paperpolicy.name}" required>
+                        <input class="form-control" type="text" name="name" value="${paperPolicy.name}" required>
                         <span class="help-block with-errors"></span>
                     </div>
                 </div>
@@ -43,7 +43,7 @@
                 <div class="form-group">
                     <label class="control-label col-md-2">试卷策略编码</label>
                     <div class="col-md-10">
-                        <input class="form-control" type="text" name="code" value="${paperpolicy.code}" required>
+                        <input class="form-control" type="text" name="code" value="${paperPolicy.code}" required>
                         <span class="help-block with-errors">策略编码，便于识别和记忆</span>
                     </div>
                 </div>
@@ -52,8 +52,8 @@
                     <label class="control-label col-md-2">出题方式</label>
                     <div class="col-md-10">
                         <select class="form-control" name="selectType" required>
-                            <option value="0" <c:if test="${paperpolicy.selectType == 0}">selected</c:if>>普通模式</option>
-                            <option value="1" <c:if test="${paperpolicy.selectType == 1}">selected</c:if>>策略模式</option>
+                            <option value="0" <c:if test="${paperPolicy.selectType == 0}">selected</c:if>>普通模式</option>
+                            <option value="1" <c:if test="${paperPolicy.selectType == 1}">selected</c:if>>策略模式</option>
                         </select>
                         <span class="help-block with-errors">使用策略可以精细控制，普通试卷随机选择</span>
                     </div>
@@ -98,7 +98,7 @@
                                             <option value="">请选择</option>
                                             <c:forEach items="${data[index.index]}" var="questionPolicy">
                                                 <option value="${questionPolicy.id}"
-                                                    <%--<c:if test="${paperpolicy.content}">selected</c:if>--%>
+                                                    <%--<c:if test="${paperPolicy.content}">selected</c:if>--%>
                                                         count="${questionPolicy.count}">${questionPolicy.name}</option>
                                             </c:forEach>
                                         </select>
@@ -167,8 +167,8 @@
                             <input class="percentable form-control" data-on-color="info" data-off-color="warning"
                                    type="checkbox" name="percentable"
                                    data-on-text="是" data-off-text="否"
-                                   <c:if test="${paperpolicy.percentable == 0}">checked</c:if>
-                                   value="${paperpolicy.percentable}" onclick="this.checked?0:1"
+                                   <c:if test="${paperPolicy.percentable == 0}">checked</c:if>
+                                   value="${paperPolicy.percentable}" onclick="this.checked?0:1"
                                    style="height: 30px;">
                         </div>
                         <%--<input type="radio" value="" name="percentable">--%>
@@ -411,6 +411,26 @@
 
     $("table input").on("input propertychange", function () {
         console.log("common td changed!")
+        var val = $(this).val();
+        if (val == '0') {
+            console.log("录入为 0 ")
+//                return false;
+        }
+        if (val.substring(val.length - 1) == ".") {
+            console.log("录入为.");
+            return false;
+//                return false;
+        } else {
+            console.log("开始匹配")
+            /*两位小数*/
+//                var reg = /^(([1-9]\d*(\.\d{1,2}){0,1})|0\.\d{1,2})$/g;
+            var reg = /^(([1-9]\d*(\.5){0,1})|0\.5)$/g;
+
+            var right = reg.test(val);
+            if (!right) {
+                $(this).val("0");
+            }
+        }
         getAllCountAndScore();
     });
 

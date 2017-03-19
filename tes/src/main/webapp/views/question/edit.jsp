@@ -49,6 +49,22 @@
                         <span class="help-block with-errors">本试题附加的一些其他信息</span>
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-2">题库</label>
+                    <div class="col-md-10">
+                        <select class="form-control" name="questionBankId" required>
+                            <option value="">请选择</option>
+                            <c:forEach var="bank" items="${questionBankList}">
+                                <option value="${bank.id}"
+                                        <c:if test="${question.questionBankId == bank.id}">selected</c:if>
+                                >${bank.name}</option>
+                            </c:forEach>
+                        </select>
+                        <span class="help-block with-errors">试题归属题库</span>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label class="control-label col-md-2">题型</label>
                     <div class="col-md-10">
@@ -63,21 +79,6 @@
                         <span class="help-block with-errors"></span>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="control-label col-md-2">题库</label>
-                    <div class="col-md-10">
-                        <select class="form-control" name="questionBankId" required>
-                            <option value="">请选择</option>
-                            <c:forEach var="bank" items="${questionBankList}">
-                                <option value="${bank.id}"
-                                    <c:if test="${question.questionBankId == bank.id}">selected</c:if>
-                                >${bank.name}</option>
-                            </c:forEach>
-                        </select>
-                        <span class="help-block with-errors">试题归属题库</span>
-                    </div>
-                </div>
-
 
                 <div class="form-group">
                     <input type="hidden" name="propItemIdInfo" required>
@@ -117,6 +118,9 @@
     var changeMetaInfo = false;
 
     $("[name='metaInfoId']").on("click", function () {
+        if($("#type").val().trim() != 'detail'){
+            return true;
+        }
         if(!changeMetaInfo){
             swal({
                 text: "不建议修改题型，是否继续:",

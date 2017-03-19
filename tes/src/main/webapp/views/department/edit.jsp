@@ -1,9 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="../template/header.jsp" %>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>品类编辑</title>
+    <title>部门编辑</title>
+    <%@ include file="../template/header.jsp" %>
 </head>
 <body>
 <div class="container">
@@ -11,7 +11,7 @@
         <ol class="breadcrumb">
             <li><a href="#">首页</a></li>
             <li><a href="#">品类管理</a></li>
-            <li><a href="#" class="active">品类编辑</a></li>
+            <li><a href="#" class="active">部门编辑</a></li>
         </ol>
     </div>
     <input type="hidden" value="${param.type}" id="type">
@@ -48,7 +48,7 @@
                     <label class="control-label col-md-2">上级部门</label>
                     <div class="col-md-10">
                         <select class="form-control" name="superiorId">
-                            <option value="">请选择</option>
+                            <option value="0">请选择</option>
                             <c:forEach items="${departmentList}" var="dept">
                                 <option value="${dept.id}" <c:if test="${department.superiorId == dept.id}">selected</c:if> >${dept.name}</option>
                             </c:forEach>
@@ -61,7 +61,10 @@
                 <div class="form-group">
                     <label class="control-label col-md-2">状态</label>
                     <div class="col-md-10">
-                        <input class="form-control" type="text" name="status" value="${department.status}" required>
+                        <select class="form-control" name="status" required>
+                            <option value="0" <c:if test="${department.status == 0}">selected</c:if> >启用</option>
+                            <option value="1" <c:if test="${department.status == 1}">selected</c:if> >禁用</option>
+                        </select>
                         <span class="help-block with-errors">可用/禁用等</span>
                     </div>
                 </div>

@@ -1,11 +1,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="../template/header.jsp" %>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>品类编辑</title>
+    <title>试题策略编辑</title>
+    <%@ include file="../template/header.jsp" %>
     <style type="text/css">
-
+        .opr-td{
+            vertical-align: middle;
+            padding-left: 10px;
+            padding-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -14,7 +18,7 @@
         <ol class="breadcrumb">
             <li><a href="#">首页</a></li>
             <li><a href="#">品类管理</a></li>
-            <li><a href="#" class="active">品类编辑</a></li>
+            <li><a href="#" class="active">试题策略编辑</a></li>
         </ol>
     </div>
     <input type="hidden" value="${param.type}" id="type">
@@ -27,7 +31,7 @@
                     <label class="control-label col-md-2">策略名字</label>
                     <div class="col-md-10">
                         <input class="form-control" type="text" name="name" value="${questionPolicy.name}" required>
-                        <span class="help-block with-errors">提示信息</span>
+                        <span class="help-block with-errors">策略名称，便于记忆</span>
                     </div>
                 </div>
 
@@ -58,7 +62,7 @@
                 <div class="form-group">
                     <label class="control-label col-md-2">试题策略</label>
                     <div class="col-md-10">
-                        <table class="table table-bordered table-editable">
+                        <table class="table table-bordered  table-editable">
                             <thead>
                             <tr>
                                 <c:if test="${propertyList == null || propertyList.size() == 0}">
@@ -68,8 +72,9 @@
                                     <c:forEach items="${propertyList}" var="property">
                                         <th>${property.name}</th>
                                     </c:forEach>
-                                    <th>选择数量</th>
-                                    <th>题库存量</th>
+                                    <th  class="cell-edit">选择数量</th>
+                                    <th  class="cell-edit">题库存量</th>
+                                    <th class="cell-edit">操作</th>
                                 </c:if>
 
                             </tr>
@@ -104,6 +109,7 @@
                                                                      min="0"></td>
                                             <td width="90px;"><input class="form-control form-control-intable exist"
                                                                      type="number" min="0" readonly></td>
+                                            <td class='opr-td'><a href='' class='del-row'>删除</a></td>
                                         </tr>
                                     </c:forEach>
                                 </c:if>
@@ -133,8 +139,46 @@
     </div>
 </div>
 <script>
+    $("body").on("click", ".del-row", function () {
+        console.log($("tbody").find("tr").length);
+        if($("tbody").find("tr").length == 1){
+            swal("", "只剩一条基础信息，请勿删除！", "info");
+            return false;
+        }
+        $(this).parentsUntil("tr").parent().remove();
+        return false;
+    });
+
+    var changeMetaInfo = false;
+
+    $("#questionMetaInfoId").on("click", function () {
+        if(!$("#id").val()){
+            console.log("true");
+            return true;
+        }
+        if(!changeMetaInfo){
+            swal({
+                text: "不建议修改题型，是否继续:",
+                type: "warning",
+                showCancelButton: true,
+
+            }).then(function (isConfirm) {
+                if(isConfirm){
+                    changeMetaInfo = true;
+//                $this.trigger("click");
+                }else{
+                    return false;
+                }
+            })
+        }
+
+    });
+
+
     $(function () {
         $("tr").find("select:first").trigger("change");
+
+
     })
     /*
      * 根据输入情况，改变表格中信息
@@ -200,9 +244,11 @@
         $(".table-editable").find("tbody tr").each(function (idx, e) {
             var line = new Array();
             $(e).find("td").each(function (idx1, e1) {
-                if (idx1 == len - 1) {
+                if(idx1 == len - 1){
+
+                }else if (idx1 == len - 2) {
                     data.push(line);
-                } else if (idx1 == len - 2) {
+                } else if (idx1 == len - 3) {
                     line.push($(e1).find("input").val());
                 } else {
                     console.log("children: ", $(e).children())
@@ -225,6 +271,10 @@
     var lineHtml;
     $("#addLine").click(function () {
         lineHtml = $(".table-editable").find("tbody tr:last").html().replace("input-warning", "");
+        if(!lineHtml || lineHtml == ''){
+            swal("", "操作失误，请刷新页面重试!", "info");
+            return false;
+        }
         $(".table-editable").find("tbody").append("<tr>" + lineHtml + "</tr>");
         $(".table-editable").find("tbody tr:last input, tbody tr:last select").each(function (idx, e) {
             $(e).val("");
@@ -238,6 +288,7 @@
     var oriMetaId = $("#questionMetaInfoId").val();
 
     $("#questionMetaInfoId").on("change", function () {
+        zeroModal.loading(3);
         var metaId = $(this).val();
         console.log(metaId)
         if (!metaId) {
@@ -301,6 +352,7 @@
                             "服务异常，请联系管理员",
                             "error"
                     );
+                    zeroModal.closeAll();
                 } else {
                     var builder = "";
                     var json = eval(data);
@@ -312,6 +364,7 @@
                     });
                     builder += "<th width='80px'>数量</th>"
                     builder += "<th width='90px'>现有数量</th>"
+                    builder += "<th width='90px'>操作</th>"
                     builder += "</tr></thead>"
 
                     builder += "<tbody><tr>"
@@ -329,10 +382,12 @@
                     builder += tmp;
                     builder += '<td width="80px;"><input class="form-control form-control-intable want" type="number" min="0"></td>';
                     builder += '<td width="90px;"><input class="form-control form-control-intable exist" readonly type="number" value="0"></td>';
+                    builder += "<td class='opr-td'><a href='' class='del-row'>删除</a></td>";
 
-                    builder += "</tr></tbody>"
+                    builder += "</tr></tbody>";
                     lineHtml = builder.substring(builder.indexOf("<tbody>") + 7, builder.length - 8);
                     $(".table-editable").html(builder);
+                    zeroModal.closeAll();
                 }
             },
             error: function () {
@@ -341,6 +396,7 @@
                         "服务异常，请联系管理员",
                         "error"
                 );
+                zeroModal.closeAll();
             }
         });
 

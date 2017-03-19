@@ -149,6 +149,7 @@ public class QuestionController {
             }
             String[] item = question.getContent().split("\r\n");
             question.setContent(JSON.toJSONString(item));
+            question.setAnswer(question.getAnswer().toUpperCase());
             questionService.saveOrUpdate(question, xList);
         }catch (Exception e){
             logger.error("保存失败", e);

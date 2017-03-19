@@ -70,9 +70,9 @@ public class PropertyController {
                 item.setPropertyId(property.getId());
                 List<PropertyItem> itemList = propertyItemService.findByObject(item);
                 property.setPropertyItemList(itemList);
+                model.put("property", property);
+                model.put("itemInfo", JSON.toJSONString(property.getPropertyItemList(), true));
             }
-            model.put("property", property);
-            model.put("itemInfo", JSON.toJSONString(property.getPropertyItemList(), true));
         }catch (Exception e){
             logger.error("获取信息失败", e);
             model.put("errMsg", "获取信息失败");

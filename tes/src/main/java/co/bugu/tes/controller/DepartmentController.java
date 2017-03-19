@@ -1,10 +1,10 @@
 package co.bugu.tes.controller;
 
-import co.bugu.tes.model.Department;
-import co.bugu.tes.service.IDepartmentService;
 import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.util.ExcelUtil;
 import co.bugu.framework.util.JsonUtil;
+import co.bugu.tes.model.Department;
+import co.bugu.tes.service.IDepartmentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,9 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/department")
@@ -44,10 +46,16 @@ public class DepartmentController {
     @RequestMapping(value = "/list")
     public String list(Department department, Integer curPage, Integer showCount, ModelMap model){
         try{
+            List<Department> departmentList = departmentService.findByObject(null);
+            Map<Integer, String> departmentInfo = new HashMap<>();
+            for(Department dep: departmentList){
+                departmentInfo.put(dep.getId(), dep.getName());
+            }
             PageInfo<Department> pageInfo = new PageInfo<>(showCount, curPage);
             pageInfo = departmentService.findByObject(department, pageInfo);
             model.put("pi", pageInfo);
             model.put("department", department);
+            model.put("departmentInfo", departmentInfo);
         }catch (Exception e){
             logger.error("获取列表失败", e);
             model.put("errMsg", "获取列表失败");

@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="../template/header.jsp" %>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>管理</title>
+    <title>试卷策略管理</title>
+    <%@ include file="../template/header.jsp" %>
+
 </head>
 <body>
 <div class="container">
     <div class="row nav-path">
         <ol class="breadcrumb">
             <li><a href="#">首页</a></li>
-            <li><a href="#" class="active">商品管理</a></li>
+            <li><a href="#" class="active">试卷策略管理</a></li>
         </ol>
     </div>
     <div class="row info-search">
@@ -32,37 +33,37 @@
             <thead>
             <tr>
                 <th><input type="checkbox" class="selectAll"></th>
-                <th>机构</th>
-                <th>试卷策略码</th>
-                <th>创建时间</th>
-                <th>创建用户</th>
-                <th>部门</th>
                 <th>策略名称</th>
+                <th>编码</th>
+                <th>机构</th>
+                <th>部门</th>
                 <th>岗位</th>
                 <th>状态</th>
-                <th>更新时间</th>
-                <th>更新用户</th>
+                <%--<th>创建时间</th>--%>
+                <%--<th>创建用户</th>--%>
+                <%--<th>更新时间</th>--%>
+                <%--<th>更新用户</th>--%>
                 <th>操作</th>
             </tr>
             </thead>
             <tbody>
-            <c:forEach items="${pi.data}" var="paperpolicy" varStatus="line">
+            <c:forEach items="${pi.data}" var="paperPolicy" varStatus="line">
                 <tr>
-                    <td><input type="checkbox" objId="${paperpolicy.id}"></td>
-                    <td>${paperpolicy.branchId}</td>
-                    <td>${paperpolicy.code}</td>
-                    <td><fmt:formatDate value="${paperpolicy.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/> </td>
-                    <td>${paperpolicy.createUserId}</td>
-                    <td>${paperpolicy.departmentId}</td>
-                    <td>${paperpolicy.name}</td>
-                    <td>${paperpolicy.stationId}</td>
-                    <td>${paperpolicy.status}</td>
-                    <td><fmt:formatDate value="${paperpolicy.updateTime}" pattern="yyyy-MM-dd HH:mm:ss"/> </td>
-                    <td>${paperpolicy.updateUserId}</td>
+                    <td><input type="checkbox" objId="${paperPolicy.id}"></td>
+                    <td>${paperPolicy.name}</td>
+                    <td>${paperPolicy.code}</td>
+                    <td>${paperPolicy.branchId}</td>
+                    <td>${paperPolicy.departmentId}</td>
+                    <td>${paperPolicy.stationId}</td>
+                    <td>${paperPolicy.status == 0  ? "启用":"禁用"}</td>
+                        <%--<td><fmt:formatDate value="${paperPolicy.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>--%>
+                        <%--<td>${paperPolicy.createUserId}</td>--%>
+                        <%--<td><fmt:formatDate value="${paperPolicy.updateTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>--%>
+                        <%--<td>${paperPolicy.updateUserId}</td>--%>
                     <td>
-                        <a href="edit.do?id=${paperpolicy.id}&type=detail" class="opr">详情</a>
-                        <a href="edit.do?id=${paperpolicy.id}" class="opr">修改</a>
-                        <a href="javascript:del(${paperpolicy.id})" class="opr">删除</a>
+                        <a href="edit.do?id=${paperPolicy.id}&type=detail" class="opr">详情</a>
+                        <a href="edit.do?id=${paperPolicy.id}" class="opr">修改</a>
+                        <a href="javascript:del(${paperPolicy.id})" class="opr">删除</a>
                     </td>
                 </tr>
             </c:forEach>

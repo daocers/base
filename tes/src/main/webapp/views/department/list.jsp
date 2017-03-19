@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>管理</title>
+    <title>部门管理</title>
     <%@ include file="../template/header.jsp" %>
 
 </head>
@@ -32,15 +32,12 @@
         <table class="table table-bordered">
             <thead>
             <tr>
-                <th><input type="checkbox" class="selectAll"></th>
-
-                <th>名称</th>
-                <th>机构编码</th>
-                <th>添加时间</th>
-                <th>状态</th>
-                <th>上级部门</th>
-                <th>更新时间</th>
-                <th>操作</th>
+                <th class="col-md-1"><input type="checkbox" class="selectAll"></th>
+                <th class="col-md-2">名称</th>
+                <th class="col-md-1">机构编码</th>
+                <th class="col-md-2">上级部门</th>
+                <th class="col-md-1">状态</th>
+                <th class="col-md-2">操作</th>
             </tr>
             </thead>
             <tbody>
@@ -49,11 +46,10 @@
                     <td><input type="checkbox" objId="${department.id}"></td>
                     <td>${department.name}</td>
                     <td>${department.code}</td>
-                    <td><fmt:formatDate value="${department.createTime}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate> </td>
-
-                    <td>${department.status}</td>
-                    <td>${department.superiorId}</td>
-                    <td><fmt:formatDate value="${department.updateTime}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate> </td>
+                    <%--<td><fmt:formatDate value="${department.createTime}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate> </td>--%>
+                    <td>${departmentInfo.get(department.superiorId)}</td>
+                    <td>${department.status == 0? "启用":"禁用"}</td>
+                <%--<td><fmt:formatDate value="${department.updateTime}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate> </td>--%>
                     <td>
                         <a href="edit.do?id=${department.id}&type=detail" class="opr">详情</a>
                         <a href="edit.do?id=${department.id}" class="opr">修改</a>
