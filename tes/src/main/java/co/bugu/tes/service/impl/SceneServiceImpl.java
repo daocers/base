@@ -123,4 +123,26 @@ public class SceneServiceImpl extends BaseServiceImpl<Scene> implements ISceneSe
     public boolean disabledUserOfScene(Scene scene, User user) {
         return false;
     }
+
+    @Override
+    public int addUserToScene(List<Integer> userIds, Scene scene) {
+        baseDao.delete("tes.scene.deleteSceneUserX", scene.getId());
+        Map<String, Integer> map = new HashMap<>();
+        map.put("sceneId", scene.getId());
+        map.put("userStatus", 0);
+        for(Integer id: userIds){
+            map.put("userId", id);
+            baseDao.insert("tes.scene.addSceneUserX", map);
+        }
+        return 0;
+    }
+
+    @Override
+    public int deleteUserOfScene(Integer userId, Integer sceneId) {
+        Map<String, Integer> map = new HashMap<>();
+        map.put("sceneId", sceneId);
+        map.put("userId", userId);
+        baseDao.delete("tes.scene.deleteUserFromSceneUserX", map);
+        return 0;
+    }
 }

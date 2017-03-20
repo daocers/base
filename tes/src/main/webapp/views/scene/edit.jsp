@@ -1,9 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="../template/header.jsp" %>
 <html>
 <head>
     <meta charset="utf-8">
     <title>设置场次参数</title>
+    <%@ include file="../template/header.jsp" %>
     <style>
         .switch-btn {
             position: relative;
@@ -112,6 +112,19 @@
             <li><a href="#" class="active">考试信息录入</a></li>
         </ol>
     </div>
+
+    <div class="progress">
+        <div class="progress-bar progress-bar-striped" style="width: 30%; background-color: #7bc0ff">
+            <span style="height: 30px;">1 设置信息</span>
+        </div>
+        <div class="progress-bar" style="width:35%; background-color: #389fff">
+            <span>2 选择用户</span>
+        </div>
+        <div class="progress-bar" style="width: 35%; background-color: #3076ff">
+            <span>3 生成试卷</span>
+        </div>
+    </div>
+
     <input type="hidden" value="${param.type}" id="type">
     <div class="row">
         <div class="col-md-8">

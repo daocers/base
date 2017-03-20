@@ -56,6 +56,25 @@ public class Scene {
     private User createUser;
     private User updateUser;
 
+    private Integer userType;
+    private String choiceInfo;
+
+    public Integer getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Integer userType) {
+        this.userType = userType;
+    }
+
+    public String getChoiceInfo() {
+        return choiceInfo;
+    }
+
+    public void setChoiceInfo(String choiceInfo) {
+        this.choiceInfo = choiceInfo;
+    }
+
     public Integer getBankId() {
         return bankId;
     }

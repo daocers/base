@@ -17,18 +17,18 @@
                 enable: true
             },
             edit: {
-                enable: true,
+                enable: false,
                 editNameSelectAll: true,
-                showRemoveBtn: showRemoveBtn,
-                showRenameBtn: showRenameBtn,
+//                showRemoveBtn: showRemoveBtn,
+//                showRenameBtn: showRenameBtn,
                 drag: {
-                    autoExpandTrigger: true,
-                    prev: dropPrev,
-                    inner: dropInner,
-                    next: dropNext
+//                    autoExpandTrigger: true,
+//                    prev: dropPrev,
+//                    inner: dropInner,
+//                    next: dropNext
                 },
-                showRemoveBtn: true,
-                showRenameBtn: true,
+                showRemoveBtn: false,
+                showRenameBtn: false,
                 removeTitle: "删除节点",
                 renameTitle: "修改名称",
             },
@@ -38,202 +38,91 @@
                 }
             },
             callback: {
-                beforeDrag: beforeDrag,
-                beforeDrop: beforeDrop,
-                beforeDragOpen: beforeDragOpen,
-                onDrag: onDrag,
-                onDrop: onDrop,
-                onExpand: onExpand,
-                beforeEditName: beforeEditName,
-                beforeRemove: beforeRemove,
-                beforeRename: beforeRename,
-                onRemove: onRemove,
-                onRename: onRename,
-                onNodeCreated: onNodeCreated
+//                beforeDrag: beforeDrag,
+//                beforeDrop: beforeDrop,
+//                beforeDragOpen: beforeDragOpen,
+//                onDrag: onDrag,
+//                onDrop: onDrop,
+                onClick: onClick,
+                onCheck: onCheck,
+//                onExpand: onExpand,
+//                beforeEditName: beforeEditName,
+//                beforeRemove: beforeRemove,
+//                beforeRename: beforeRename,
+//                onRemove: onRemove,
+//                onRename: onRename,
+//                onNodeCreated: onNodeCreated
             },
             view: {
                 showLine: true,
-                addHoverDom: addHoverDom,
-                removeHoverDom: removeHoverDom,
+//                addHoverDom: addHoverDom,
+//                removeHoverDom: removeHoverDom,
                 selectedMulti: false
             }
         };
 
         var zNodes = eval(${data});
 
-
-        console.log("ori: ", zNodes);
-        function dropPrev(treeId, nodes, targetNode) {
-            var pNode = targetNode.getParentNode();
-            if (pNode && pNode.dropInner === false) {
-                return false;
-            } else {
-                for (var i=0,l=curDragNodes.length; i<l; i++) {
-                    var curPNode = curDragNodes[i].getParentNode();
-                    if (curPNode && curPNode !== targetNode.getParentNode() && curPNode.childOuter === false) {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-        function onNodeCreated(event, treeId, treeNode) {
-            console.log("treeNode", treeNode);
-            if(treeNode.name.indexOf("新节点") > -1){
-                var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
-                console.log("新节点创建了");
-                treeObj.editName(treeNode);
-            }
-
-        }
-        function dropInner(treeId, nodes, targetNode) {
-            if (targetNode && targetNode.dropInner === false) {
-                return false;
-            } else {
-                for (var i=0,l=curDragNodes.length; i<l; i++) {
-                    if (!targetNode && curDragNodes[i].dropRoot === false) {
-                        return false;
-                    } else if (curDragNodes[i].parentTId && curDragNodes[i].getParentNode() !== targetNode && curDragNodes[i].getParentNode().childOuter === false) {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-        function dropNext(treeId, nodes, targetNode) {
-            var pNode = targetNode.getParentNode();
-            if (pNode && pNode.dropInner === false) {
-                return false;
-            } else {
-                for (var i=0,l=curDragNodes.length; i<l; i++) {
-                    var curPNode = curDragNodes[i].getParentNode();
-                    if (curPNode && curPNode !== targetNode.getParentNode() && curPNode.childOuter === false) {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-
-        var log, className = "dark", curDragNodes, autoExpandNode;
-        function beforeDrag(treeId, treeNodes) {
-            className = (className === "dark" ? "":"dark");
-            showLog("[ "+getTime()+" beforeDrag ]&nbsp;&nbsp;&nbsp;&nbsp; drag: " + treeNodes.length + " nodes." );
-            for (var i=0,l=treeNodes.length; i<l; i++) {
-                if (treeNodes[i].drag === false) {
-                    curDragNodes = null;
-                    return false;
-                } else if (treeNodes[i].parentTId && treeNodes[i].getParentNode().childDrag === false) {
-                    curDragNodes = null;
-                    return false;
-                }
-            }
-            curDragNodes = treeNodes;
-            return true;
-        }
-        function beforeDragOpen(treeId, treeNode) {
-            autoExpandNode = treeNode;
-            return true;
-        }
-        function beforeDrop(treeId, treeNodes, targetNode, moveType, isCopy) {
-            className = (className === "dark" ? "":"dark");
-            showLog("[ "+getTime()+" beforeDrop ]&nbsp;&nbsp;&nbsp;&nbsp; moveType:" + moveType);
-            showLog("target: " + (targetNode ? targetNode.name : "root") + "  -- is "+ (isCopy==null? "cancel" : isCopy ? "copy" : "move"));
-            return true;
-        }
-        function onDrag(event, treeId, treeNodes) {
-            className = (className === "dark" ? "":"dark");
-            showLog("[ "+getTime()+" onDrag ]&nbsp;&nbsp;&nbsp;&nbsp; drag: " + treeNodes.length + " nodes." );
-        }
-        function onDrop(event, treeId, treeNodes, targetNode, moveType, isCopy) {
-            className = (className === "dark" ? "":"dark");
-            showLog("[ "+getTime()+" onDrop ]&nbsp;&nbsp;&nbsp;&nbsp; moveType:" + moveType);
-            showLog("target: " + (targetNode ? targetNode.name : "root") + "  -- is "+ (isCopy==null? "cancel" : isCopy ? "copy" : "move"))
-        }
-        function onExpand(event, treeId, treeNode) {
-            if (treeNode === autoExpandNode) {
-                className = (className === "dark" ? "":"dark");
-                showLog("[ "+getTime()+" onExpand ]&nbsp;&nbsp;&nbsp;&nbsp;" + treeNode.name);
-            }
-        }
-
-        function showLog(str) {
-            if (!log) log = $("#log");
-            log.append("<li class='"+className+"'>"+str+"</li>");
-            if(log.children("li").length > 8) {
-                log.get(0).removeChild(log.children("li")[0]);
-            }
-        }
-        function getTime() {
-            var now= new Date(),
-                h=now.getHours(),
-                m=now.getMinutes(),
-                s=now.getSeconds(),
-                ms=now.getMilliseconds();
-            return (h+":"+m+":"+s+ " " +ms);
-        }
-
-        function showRemoveBtn(treeId, treeNode) {
-            return !treeNode.isFirstNode;
-        }
-        function showRenameBtn(treeId, treeNode) {
-            return !treeNode.isLastNode;
-        }
-
         function setTrigger() {
             var zTree = $.fn.zTree.getZTreeObj("treeDemo");
             zTree.setting.edit.drag.autoExpandTrigger = $("#callbackTrigger").attr("checked");
         }
 
-        function beforeEditName(treeId, treeNode) {
-            className = (className === "dark" ? "":"dark");
-            showLog("[ "+getTime()+" beforeEditName ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name);
-            var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-            zTree.selectNode(treeNode);
-//            return confirm("进入节点 -- " + treeNode.name + " 的编辑状态吗？");
-        }
-        function beforeRemove(treeId, treeNode) {
-            className = (className === "dark" ? "":"dark");
-            showLog("[ "+getTime()+" beforeRemove ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name);
-            var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-            zTree.selectNode(treeNode);
-            return confirm("确认删除 节点 -- " + treeNode.name + " 吗？");
-        }
-        function onRemove(e, treeId, treeNode) {
-            showLog("[ "+getTime()+" onRemove ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name);
-        }
-        function beforeRename(treeId, treeNode, newName, isCancel) {
-            className = (className === "dark" ? "":"dark");
-//            showLog((isCancel ? "<span style='color:red'>":"") + "[ "+getTime()+" beforeRename ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name + (isCancel ? "</span>":""));
-            if (newName.length == 0) {
-                alert("节点名称不能为空.");
-                var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-                setTimeout(function(){zTree.editName(treeNode)}, 10);
+
+        /**
+         * 节点被点击时候触发操作
+         * @param e
+         * @param treeId
+         * @param treeNode
+         */
+        function onClick(e, treeId, treeNode) {
+            if(!clickable){
                 return false;
             }
-            return true;
-        }
-        function onRename(e, treeId, treeNode, isCancel) {
-//            showLog((isCancel ? "<span style='color:red'>":"") + "[ "+getTime()+" onRename ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name + (isCancel ? "</span>":""));
-        }
-        var newCount = 1;
-        function addHoverDom(treeId, treeNode) {
-            var sObj = $("#" + treeNode.tId + "_span");
-            if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
-            var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
-                + "' title='添加新节点' onfocus='this.blur();'></span>";
-            sObj.after(addStr);
-            var btn = $("#addBtn_"+treeNode.tId);
-            if (btn) btn.bind("click", function(){
-                var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-                zTree.addNodes(treeNode, {id:(100 + newCount), pId:treeNode.id, name:"添加新节点" + (newCount++)});
-                return false;
-            });
-        };
-        function removeHoverDom(treeId, treeNode) {
-            $("#addBtn_"+treeNode.tId).unbind().remove();
-        };
+            zeroModal.loading(3);
+            var branchId = treeNode.id;
+            var buffer = '';
+            $.ajax({
+                url: "/user/listAll.do",
+                data: {branchId: branchId},
 
+                success: function (data) {
+                    var users = JSON.parse(data);
+                    $.each(users, function (idx, obj) {
+                        console.log(obj)
+                        var username = obj.username;
+                        var name = '';
+                        if(obj.profile){
+                            name =  obj.profile.name;
+                        }
+                        buffer = buffer + "<tr rowid=" + obj.id +"><td>" + username + "</td><td>" + name +"</td><td><a href='javascript:add(" +obj.id + ");'>选择</a></td></tr>";
+//                        buffer = buffer + "<tr><td>" + username + "</td><td>" +
+//                            name +"</td><td><input type='checkbox' value='" + obj.id + "'></td></tr>";
+                    });
+                    $("#user-container").find("tbody").html(buffer);
+                    zeroModal.closeAll();
+                },
+                error: function (data) {
+                    buffer = buffer + "<tr><td colspan='3'>查询失败！</td></tr>";
+                    $("#user-container").find("tbody").html(buffer);
+                    zeroModal.closeAll();
+                }
+            });
+        }
+
+        function onCheck(event, treeId, treeNode) {
+            var id = treeNode.id;
+            var name = treeNode.name;
+            var checked = treeNode.checked;
+            if(checked){
+                if($("#branch-box tbody ").find("tr[rowid='" + id +"']").length > 0){
+                    console.log("已经添加过了");
+                    return false;
+                }
+                $("#branch-box tbody").append("<tr rowid='" + id + "'><td>" + name
+                    +"</td><td><a href='javascript:delBranch(" + id + ");'>删除</a> </td></tr>")
+            }
+        }
         $(document).ready(function(){
             $.fn.zTree.init($("#treeDemo"), setting, zNodes);
             $("#callbackTrigger").bind("change", {}, setTrigger);
@@ -250,14 +139,132 @@
         </ol>
     </div>
 
-    <div class="zTreeDemoBackground left">
-        <ul id="treeDemo" class="ztree"></ul>
+
+    <div class="progress">
+        <div class="progress-bar" style="width: 30%; background-color: #7bc0ff">
+            <span style="height: 30px;">1 设置信息</span>
+        </div>
+        <div class="progress-bar  progress-bar-striped" style="width:35%; background-color: #389fff">
+            <span>2 选择用户</span>
+        </div>
+        <div class="progress-bar" style="width: 35%; background-color: #3076ff">
+            <span>3 生成试卷</span>
+        </div>
     </div>
 
-    <button class="btn btn-info commit">确定</button>
-    <button class="btn btn-info cancel">取消</button>
+    <input type="hidden" name="id" value="${scene.id}">
+    <div class="form-inline form-group">
+        <label class="control-label">人员选择方式</label>
+        <div>
+            <select class="form-control" id="userType">
+                <option value="0">指定场次的参加机构</option>
+                <option value="1">指定考试人员</option>
+            </select>
+            <span class="help-block with-errors">如果考试人员较多，建议直接选择参考机构；如果少量人员考试，直接点击机构信息然后选择用户</span>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="zTreeDemoBackground left">
+                <ul id="treeDemo" class="ztree"></ul>
+            </div>
+        </div>
+        <div class="col-md-4 choice-user" style="display: none;">
+            <table class="table table-bordered" id="user-container">
+                <thead>
+                <tr>
+                    <th class="col-md-1">用户名</th>
+                    <th class="col-md-1">姓名</th>
+                    <th class="col-md-1"><input class="selectAll" type="checkbox"></th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+
+            </table>
+        </div>
+
+        <div class="col-md-4  choice-user" style="display: none;">
+            <table class="table table-bordered" id="choice-box">
+                <thead>
+                <tr>
+                    <th>用户名</th>
+                    <th>姓名</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-4 col-md-offset-4 choice-branch">
+            <table class="table table-bordered" id="branch-box">
+                <thead>
+                <tr>
+                    <th>机构</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="button pull-right" style="margin-bottom: 50px;">
+        <button class="btn btn-warning btn-cancel" onclick="history.back();">取消</button>
+
+        <div class="space">
+
+        </div>
+        <button class="btn btn-primary btn-commit">下一步</button>
+
+    </div>
 </div>
 <script>
+    var clickable = false;
+    $(function () {
+        $("#userType").on("change", function () {
+            console.log("type");
+            var type = $(this).val();
+            if(type == 0){//按照机构选择
+                clickable = false;
+                $(".choice-user").hide();
+                $(".choice-branch").show();
+            }else if(type == 1){//按照用户选择
+                clickable = true;
+                setting.check.enable = false;
+                $(".choice-user").show();
+                $(".choice-branch").hide();
+
+            }else{
+                clickable = false;
+                console.log("无效数据");
+            }
+        })
+    })
+    function delBranch(id) {
+        $("#branch-box").find("tr[rowid='" + id +"']").remove();
+    }function del(id) {
+        $("#choice-box").find("tr[rowid='" + id +"']").remove();
+    }
+
+    function add(id) {
+        if($("#choice-box").find("tr[rowid='" + id +"']").length > 0){
+            console.log("已经添加了该用户")
+            return false;
+        }
+        var $tr = $("#user-container tr[rowid='" + id +"']");
+        var username = $tr.find("td:eq(0)").html();
+        var name = $tr.find("td:eq(1)").html();
+        $("#choice-box").find("tbody").append("<tr userId='" + id + "'><td>"
+            + username + "</td><td>" + name + "</td><td><a href='javaScript:del(" + id + ");'>删除</a> </td></tr>");
+    }
     $(".commit").on("click", function () {
         var zTree = $.fn.zTree.getZTreeObj("treeDemo");
         var data = zTree.transformToArray(zTree.getNodes());
@@ -283,7 +290,61 @@
 
     $(".cancel").on("click", function () {
         window.history.back();
-    })
+    });
+
+
+    /**
+     * 提交信息
+     */
+    $(".btn-commit").click(function () {
+        zeroModal.loading(4);
+        var type= $("#userType").val();
+        var ids = new Array();
+        if(type == 0){//处理机构
+            $("#branch-box tbody").find("tr").each(function (idx, obj) {
+                var id = $(obj).attr("rowId");
+                ids.push(id);
+            })
+        }else if(type == 1){//处理用户
+            $("#choice-box tbody").find("tr").each(function (idx, obj) {
+                var id = $(obj).attr("rowId");
+                ids.push(id);
+            })
+        }else{
+            swal("", "非法操作", "error");
+            zeroModal.closeAll();
+            return false;
+        }
+        if(ids.length == 0){
+            swal("", "没有选择用户或者指定机构", "warning");
+            zeroModal.closeAll();
+            return false;
+        }
+
+        console.log("ids: ", ids);
+        console.log("ids string: ", JSON.stringify(ids));
+        $.ajax({
+            url: "saveUser.do",
+            type: "post",
+            data: {ids: JSON.stringify(ids), type: type, "id": $("[name='id']").val()},
+            success: function (data) {
+                zeroModal.closeAll();
+                if (data == "-1") {
+                    swal("", "请选择本场考试人员", "warning");
+                    return false;
+                }
+                if (data == "0") {
+                    window.location.href = "selectPolicy.do?id=" + $("[name='id']").val();
+                    return false;
+                }
+            },
+            error: function (data) {
+                zeroModal.closeAll();
+                swal("", "保存考试人员失败", "error");
+                return false;
+            }
+        })
+    });
 </script>
 </body>
 </html>

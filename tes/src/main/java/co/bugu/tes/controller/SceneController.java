@@ -23,10 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping("/scene")
@@ -47,6 +44,8 @@ public class SceneController {
     @Autowired
     IQuestionBankService bankService;
 
+
+
     @Autowired
     IPaperPolicyService paperPolicyService;
 
@@ -54,6 +53,9 @@ public class SceneController {
     IQuestionMetaInfoService questionMetaInfoService;
     @Autowired
     IQuestionPolicyService questionPolicyService;
+
+    @Autowired
+    IUserService userService;
 
     private static Logger logger = LoggerFactory.getLogger(SceneController.class);
 
@@ -164,6 +166,7 @@ public class SceneController {
 
     @RequestMapping(value = "/setUser")
     public String toSetUser(ModelMap model, RedirectAttributes redirectAttributes){
+        Scene scene = (Scene) model.get("scene");
         List<Branch> branchList = branchService.findByObject(null);
         JSONArray array = new JSONArray();
         for(Branch branch: branchList){
@@ -174,18 +177,66 @@ public class SceneController {
             array.add(json);
         }
         model.put("data", array.toString());
+        model.put("scene", scene);
         return "scene/setUser";
     }
 
+//    @RequestMapping(value = "/saveUser", method = RequestMethod.POST)
+//    @ResponseBody
+//    public String saveUserThenSelectPaperPolciy(Scene scene, String userInfos, RedirectAttributes redirectAttributes){
+//        List<Integer> list =  JSON.parseArray(userInfos, Integer.class);
+//        if(list == null || list.size() == 0){
+//            redirectAttributes.addFlashAttribute("err", "请选择本场考试用户");
+////            return  "redirect:selectUser.do";
+//            return  "-1";
+//        }
+//        Collections.sort(list);
+//        scene.setJoinUser(JSON.toJSONString(list, true));
+//        sceneService.updateById(scene);
+//        redirectAttributes.addFlashAttribute("scene", scene);
+//
+////        return "redirect:generatePaper.do";
+//        return "0";
+//    }
+
+
+    /**
+     *
+     * @param scene
+     * @param ids  id集合
+     * @param type  0 根据机构选择； 1 直接选择用户
+     * @param redirectAttributes
+     * @return
+     */
     @RequestMapping(value = "/saveUser", method = RequestMethod.POST)
     @ResponseBody
-    public String saveUserThenSelectPaperPolciy(Scene scene, String userInfos, RedirectAttributes redirectAttributes){
-        List<Integer> list =  JSON.parseArray(userInfos, Integer.class);
+    public String saveUserThenSelectPaperPolciy(Scene scene, String ids, Integer type, RedirectAttributes redirectAttributes){
+        List<Integer> list =  JSON.parseArray(ids, Integer.class);
         if(list == null || list.size() == 0){
             redirectAttributes.addFlashAttribute("err", "请选择本场考试用户");
 //            return  "redirect:selectUser.do";
             return  "-1";
         }
+        if(type == 0){//根据机构
+            scene.setChoiceInfo(JSON.toJSONString(list));
+            List<Integer> res = new ArrayList<>();
+            for(Integer branchId: list){
+                User user =new User();
+                user.setBranchId(branchId);
+                List<User> users = userService.findByObject(user);
+                for(User u: users){
+                    res.add(u.getId());
+                }
+            }
+            list = res;
+        }else if(type == 1){//直接保存用户
+
+        }else{
+            redirectAttributes.addFlashAttribute("err", "选择考生方式有误");
+            return "-1";
+        }
+        sceneService.addUserToScene(list, scene);
+        scene.setUserType(type);
         Collections.sort(list);
         scene.setJoinUser(JSON.toJSONString(list, true));
         sceneService.updateById(scene);

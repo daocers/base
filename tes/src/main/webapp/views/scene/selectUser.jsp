@@ -14,6 +14,17 @@
             <li><a href="#" class="active">选择参考人员</a></li>
         </ol>
     </div>
+    <div class="progress">
+        <div class="progress-bar" style="width: 30%; background-color: #7bc0ff">
+            <span style="height: 30px;">1 设置信息</span>
+        </div>
+        <div class="progress-bar  progress-bar-striped" style="width:35%; background-color: #389fff">
+            <span>2 选择用户</span>
+        </div>
+        <div class="progress-bar" style="width: 35%; background-color: #3076ff">
+            <span>3 生成试卷</span>
+        </div>
+    </div>
     <input type="hidden" value="${type}" id="type">
     <div class="row">
         <div class="col-md-8">

@@ -14,6 +14,17 @@
             <li><a href="#" class="active">选择试卷策略</a></li>
         </ol>
     </div>
+    <div class="progress">
+        <div class="progress-bar" style="width: 30%; background-color: #7bc0ff">
+            <span style="height: 30px;">1 设置信息</span>
+        </div>
+        <div class="progress-bar" style="width:35%; background-color: #389fff">
+            <span>2 选择用户</span>
+        </div>
+        <div class="progress-bar progress-bar-striped" style="width: 35%; background-color: #3076ff">
+            <span>3 生成试卷</span>
+        </div>
+    </div>
     <input type="hidden" value="${type}" id="type">
     <div class="row">
         <div class="col-md-8">
@@ -115,7 +126,7 @@
         }
         zeroModal.loading(3);
         $.ajax({
-            url: '/paperpolicy/listAll.do',
+            url: '/paperPolicy/listAll.do',
             data: {departmentId: deptId, branchId: branchId, stationId: stationId},
             success: function (data) {
                 if (data == '-1') {
@@ -159,7 +170,7 @@
                 $("#policy").val($(this).parentsUntil("tr").next().text());
                 var paperPolicyId = $(this).val();
                 $.ajax({
-                    url: "/paperpolicy/getPolicyInfo.do",
+                    url: "/paperPolicy/getPolicyInfo.do",
                     data: {id: paperPolicyId},
                     success: function (data) {
                         $("#content").val(data);
@@ -180,7 +191,7 @@
         var paperPolicyId = $("#paperPolicyId").val();
         if (paperPolicyId) {
             $.ajax({
-                url: "/paperpolicy/getPolicyInfo.do",
+                url: "/paperPolicy/getPolicyInfo.do",
                 data: {id: paperPolicyId},
                 success: function (data) {
                     $("#content").val(data);

@@ -26,4 +26,8 @@ public interface ISceneService extends IBaseService<Scene>{
     //禁止考试。此时需要把用户从场次关联表中的状态改为禁用
     boolean disabledUserOfScene(Scene scene, User user);
 
+    int addUserToScene(List<Integer> userIds, Scene scene);
+
+    int deleteUserOfScene(Integer userId, Integer sceneId);
+
 }

@@ -25,6 +25,8 @@
         <result column="update_user_id" property="updateUserId" jdbcType="INTEGER"/>
         <result column="join_user" property="joinUser" jdbcType="CLOB"/>
         <result column="bank_id" property="bankId" jdbcType="INTEGER"/>
+        <result column="user_type" property="userType" jdbcType="INTEGER"/>
+        <result column="choice_info" property="choiceInfo" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="scene_list">
     id, auth_code, begin_time,
@@ -35,7 +37,7 @@
     paper_type,
     reason, remark, status,
     update_time, update_user_id,
-    join_user, station_id, bank_id
+    join_user, station_id, bank_id, user_type, choice_info
   </sql>
     <select id="selectById" resultMap="SceneMap" parameterType="java.lang.Integer">
         select
@@ -120,6 +122,12 @@
             <if test="bankId != null">
                 bank_id,
             </if>
+            <if test="userType != null">
+                user_type,
+            </if>
+            <if test="choiceInfo != null">
+                choice_info,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -190,6 +198,12 @@
             </if>
             <if test="bankId != null">
                 #{bankId},
+            </if>
+            <if test="userType != null">
+                #{userType},
+            </if>
+            <if test="choiceInfo != null">
+                #{choiceInfo},
             </if>
         </trim>
     </insert>
@@ -262,6 +276,12 @@
             <if test="bankId != null">
                 bank_id = #{bankId},
             </if>
+            <if test="userType != null">
+                user_type = #{userType},
+            </if>
+            <if test="choiceInfo != null">
+                choice_info = #{choiceInfo},
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
@@ -281,11 +301,16 @@
         </where>
     </select>
 
-    <insert id="addSceneUserX" parameterType="Map">
-        insert into scene_user_x (scene_id, user_id) VALUES (#{sceneId}, #{userId})
+    <insert id="addSceneUserX" parameterType="map">
+        insert into scene_user_x (scene_id, user_id, user_status) VALUES (#{sceneId}, #{userId}, #{userStatus})
     </insert>
 
-    <insert id="deleteSceneUserX" parameterType="int">
+    <delete id="deleteSceneUserX" parameterType="int">
         delete from scene_user_x where scene_id = #{sceneId}
-    </insert>
+    </delete>
+
+    <delete id="deleteUserFromSceneUserX" parameterType="map">
+        delete from scene_user_x where scene_id = #{sceneId} and user_id = #{userId}
+    </delete>
+
 </mapper>
