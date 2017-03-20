@@ -89,7 +89,6 @@
                                     <td>${item.name}</td>
                                     <td class="opr-td"><a href="" class="del-row">删除</a></td>
                                 </tr>
-
                             </c:forEach>
                             </tbody>
                         </table>
