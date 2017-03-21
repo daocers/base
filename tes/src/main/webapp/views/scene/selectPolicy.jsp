@@ -32,10 +32,14 @@
                 <input id="id" type="hidden" name="id" value="${scene.id}">
                 <div class="form-group form-inline">
                     <label class="control-label" style="margin-right: 15px;">选择题库</label>
-                    <select class="form-control" name="bankId">
-                        <option value="">不限</option>
+                    <select class="form-control" name="bankId" required>
+                        <option>--请选择--</option>
+                        <option value="0"
+                                <c:if test="scene.bankId == 0">selected</c:if>>不限
+                        </option>
                         <c:forEach items="${bankList}" var="bank">
-                            <option value="${bank.id}" <c:if test="${scene.bankId == bank.id}">selected</c:if>>${bank.name}</option>
+                            <option value="${bank.id}"
+                                    <c:if test="${scene.bankId == bank.id}">selected</c:if>>${bank.name}</option>
                         </c:forEach>
                     </select>
                 </div>

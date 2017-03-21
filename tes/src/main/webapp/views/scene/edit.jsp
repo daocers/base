@@ -214,6 +214,20 @@
 
                 </div>
 
+                <div class="form-group">
+                    <label class="control-label col-md-2">试卷生成方式</label>
+                    <div class="col-md-10">
+                        <select class="form-control" name="paperType">
+                            <option value="1">按策略随机</option>
+                            <option value="2">按策略统一</option>
+                            <%--<option value="3">导入试题</option>--%>
+                            <%--<option value="4">系统随机</option>--%>
+                            <%--<option value="5">系统统一</option>--%>
+                        </select>
+                        <span class="help-block with-errors">随机方式每张试卷不相同，统一方式每张试卷相同</span>
+                    </div>
+                </div>
+
 
                 <%--<div class="form-group">--%>
                 <%--<label class="control-label col-md-2">开场人</label>--%>

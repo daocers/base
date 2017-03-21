@@ -94,7 +94,7 @@
 
                 <div class="row">
                     <button type="button" class="btn btn-warning">取消</button>
-                    <button class="btn btn-success">确定,开场</button>
+                    <button class="btn btn-success" type="button" id="confirm">确定,开场</button>
                 </div>
             </form>
 
@@ -103,7 +103,29 @@
     </div>
 </div>
 <script>
-
+    $("#confirm").on("click", function () {
+        zeroModal.loading(4);
+        $.ajax({
+            url:"confirm.do",
+            type: "post",
+            data: {id: $("#id").val()},
+            success: function (data) {
+                var res = JSON.parse(data);
+                if(res.code == 0){
+                    swal("", "开场成功", "success");
+                }else {
+                    swal("", res.msg, "warning");
+                }
+                zeroModal.closeAll();
+                window.location.href='list.do';
+            },
+            error: function (data) {
+                swal("", "开场失败", "error");
+                zeroModal.closeAll();
+                window.location.href='list.do';
+            }
+        })
+    })
 </script>
 </body>
 </html>

@@ -60,7 +60,7 @@ public class QuestionUtil {
         for (int i = 0; i < ids.size(); i++) {
 //            keys[i] = Constant.QUESTION_PROPITEM_ID + questionMetaInfoId + "_" + ids.get(i);
             if (questionBankId != null && questionBankId != 0) {
-                keys[i] = Constant.QUESTION_PROPITEM_ID + questionMetaInfoId + Constant.QUESTION_BANK_ID+ "_" +
+                keys[i] = Constant.QUESTION_PROPITEM_ID + questionMetaInfoId + "_" +Constant.QUESTION_BANK_ID +
                         + questionBankId + "_" + ids.get(i);
             } else {
                 keys[i] = Constant.QUESTION_PROPITEM_ID + questionMetaInfoId + "_" + ids.get(i);
@@ -82,7 +82,7 @@ public class QuestionUtil {
         String[] keys = new String[ids.size()];
         for (int i = 0; i < ids.size(); i++) {
             if (questionBankId != null && questionBankId != 0) {//指定题库
-                keys[i] = Constant.QUESTION_PROPITEM_ID + questionMetaInfoId + Constant.QUESTION_BANK_ID+ "_" +
+                keys[i] = Constant.QUESTION_PROPITEM_ID + questionMetaInfoId + "_" + Constant.QUESTION_BANK_ID +
                         + questionBankId + "_" + ids.get(i);
             } else {//不分题库，在所有的题目信息中获取
                 keys[i] = Constant.QUESTION_PROPITEM_ID + questionMetaInfoId + "_" + ids.get(i);

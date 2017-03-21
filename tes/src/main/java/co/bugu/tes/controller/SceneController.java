@@ -253,6 +253,7 @@ public class SceneController {
     @RequestMapping(value = "/savePolicy", method = RequestMethod.POST)
     public String savePolicyThenPriview(Scene scene, RedirectAttributes redirectAttributes) {
         Integer paperPolicyId = scene.getPaperPolicyId();
+        Integer bankId = scene.getBankId();
         scene = sceneService.findById(scene.getId());
         if (scene.getPaperPolicyId() != null) {
             PaperPolicy policy = paperPolicyService.findById(scene.getPaperPolicyId());
@@ -288,6 +289,7 @@ public class SceneController {
         }
         scene.setPaperPolicyId(paperPolicyId);
         scene.setStatus(Constant.STATUS_ENABLE);
+        scene.setBankId(bankId);
         sceneService.updateById(scene);
         redirectAttributes.addFlashAttribute(scene);
         return "redirect:preview.do";
@@ -337,17 +339,28 @@ public class SceneController {
      * @return
      */
     @RequestMapping(value = "/confirm", method = RequestMethod.POST)
-    public String confirm(Scene scene) {
+    @ResponseBody
+    public String confirm(Scene scene, ModelMap model) {
+        JSONObject json = new JSONObject();
         try {
-
-
             scene.setStatus(Constant.STATUS_ENABLE);
             sceneService.updateById(scene);
             logger.info("开场成功");
+            scene = sceneService.findById(scene.getId());
+            try{
+                paperService.generateAllPaper(scene);
+                json.put("code", 0);
+            }catch (Exception e){
+                json.put("code", -1);
+                json.put("msg", "生成试卷失败");
+                logger.error("生成试卷失败", e);
+            }
         } catch (Exception e) {
+            json.put("code", -1);
+            json.put("msg", "确认开场失败");
             logger.error("确认开场失败", e);
         }
-        return "redirect:list.do";
+        return json.toJSONString();
     }
 
 //    /**

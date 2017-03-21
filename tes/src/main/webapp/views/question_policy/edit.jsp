@@ -5,7 +5,7 @@
     <title>试题策略编辑</title>
     <%@ include file="../template/header.jsp" %>
     <style type="text/css">
-        .opr-td{
+        .opr-td {
             vertical-align: middle;
             padding-left: 10px;
             padding-top: 10px;
@@ -72,8 +72,8 @@
                                     <c:forEach items="${propertyList}" var="property">
                                         <th>${property.name}</th>
                                     </c:forEach>
-                                    <th  class="cell-edit">选择数量</th>
-                                    <th  class="cell-edit">题库存量</th>
+                                    <th class="cell-edit">选择数量</th>
+                                    <th class="cell-edit">题库存量</th>
                                     <th class="cell-edit">操作</th>
                                 </c:if>
 
@@ -105,7 +105,8 @@
 
                                             </c:forEach>
                                             <td width="80px;"><input class="form-control form-control-intable want"
-                                                                     value="${line.get(line.size() - 1)}" type="number"
+                                                                     value="${line.get(line.size() - 1) == null ? 0: line.get(line.size() - 1)}"
+                                                                     type="number"
                                                                      min="0"></td>
                                             <td width="90px;"><input class="form-control form-control-intable exist"
                                                                      type="number" min="0" readonly></td>
@@ -141,7 +142,7 @@
 <script>
     $("body").on("click", ".del-row", function () {
         console.log($("tbody").find("tr").length);
-        if($("tbody").find("tr").length == 1){
+        if ($("tbody").find("tr").length == 1) {
             swal("", "只剩一条基础信息，请勿删除！", "info");
             return false;
         }
@@ -152,21 +153,21 @@
     var changeMetaInfo = false;
 
     $("#questionMetaInfoId").on("click", function () {
-        if(!$("#id").val()){
+        if (!$("#id").val()) {
             console.log("true");
             return true;
         }
-        if(!changeMetaInfo){
+        if (!changeMetaInfo) {
             swal({
                 text: "不建议修改题型，是否继续:",
                 type: "warning",
                 showCancelButton: true,
 
             }).then(function (isConfirm) {
-                if(isConfirm){
+                if (isConfirm) {
                     changeMetaInfo = true;
 //                $this.trigger("click");
-                }else{
+                } else {
                     return false;
                 }
             })
@@ -244,9 +245,9 @@
         $(".table-editable").find("tbody tr").each(function (idx, e) {
             var line = new Array();
             $(e).find("td").each(function (idx1, e1) {
-                if(idx1 == len - 1){
+                if (idx1 == len - 1) {
 
-                }else if (idx1 == len - 2) {
+                } else if (idx1 == len - 2) {
                     data.push(line);
                 } else if (idx1 == len - 3) {
                     line.push($(e1).find("input").val());
@@ -270,14 +271,20 @@
 
     var lineHtml;
     $("#addLine").click(function () {
+        if($(".table-editable").find("tbody tr:last td").length == 1){
+            return false;
+        }
         lineHtml = $(".table-editable").find("tbody tr:last").html().replace("input-warning", "");
-        if(!lineHtml || lineHtml == ''){
+        if (!lineHtml || lineHtml == '') {
             swal("", "操作失误，请刷新页面重试!", "info");
             return false;
         }
         $(".table-editable").find("tbody").append("<tr>" + lineHtml + "</tr>");
-        $(".table-editable").find("tbody tr:last input, tbody tr:last select").each(function (idx, e) {
+        $(".table-editable").find("tbody tr:last select").each(function (idx, e) {
             $(e).val("");
+        })
+        $(".table-editable").find("tbody tr:last input").each(function (idx, e) {
+            $(e).val("0");
         })
         return false;
     })
@@ -293,6 +300,7 @@
         console.log(metaId)
         if (!metaId) {
             console.log("没有选值");
+            zeroModal.closeAll();
             return false;
         }
         var valueFlag = false;
@@ -348,9 +356,9 @@
             success: function (data) {
                 if (data == "-1") {
                     swal(
-                            "请求失败",
-                            "服务异常，请联系管理员",
-                            "error"
+                        "请求失败",
+                        "服务异常，请联系管理员",
+                        "error"
                     );
                     zeroModal.closeAll();
                 } else {
@@ -380,7 +388,7 @@
                         tmp = "</select></td>"
                     });
                     builder += tmp;
-                    builder += '<td width="80px;"><input class="form-control form-control-intable want" type="number" min="0"></td>';
+                    builder += '<td width="80px;"><input class="form-control form-control-intable want" type="number" min="0" value="0"></td>';
                     builder += '<td width="90px;"><input class="form-control form-control-intable exist" readonly type="number" value="0"></td>';
                     builder += "<td class='opr-td'><a href='' class='del-row'>删除</a></td>";
 
@@ -392,9 +400,9 @@
             },
             error: function () {
                 swal(
-                        "请求失败",
-                        "服务异常，请联系管理员",
-                        "error"
+                    "请求失败",
+                    "服务异常，请联系管理员",
+                    "error"
                 );
                 zeroModal.closeAll();
             }

@@ -15,20 +15,22 @@
         </ol>
     </div>
     <input type="hidden" value="${param.type}" id="type">
-    <div class="row">
+    <input type="hidden" value="${paper.id}" id="paperId">
+    <input type="hidden" value="${paper.questionIds}" id="questionIds">
+    <div class="row" style="margin-bottom: 15px;">
         <div class="form form-inline pull-left">
             <div class="input-group">
                 <div class="input-group-addon">
                     考试名称：
                 </div>
-                <input class="form-control col-md-1" readonly type="text" value="三综合考试第一场">
+                <input class="form-control col-md-1" readonly type="text" value="${scene.name}">
             </div>
             <div class="input-group">
                 <div class="input-group-addon">
                     更换另外一套试卷
                 </div>
                 <div class="input-group-btn">
-                    <button class="btn btn-danger" onclick="alert('确定后本套试卷将失效，答题信息作废，且不能更换回本套试卷，确定更换？')">确定</button>
+                    <button class="btn btn-danger" id="changePaper">确定</button>
                 </div>
             </div>
             <div class="input-group">
@@ -44,12 +46,17 @@
                 </select>
             </div>
         </div>
+
         <div class="form form-inline pull-right">
-            <div class="input-group">
-                <div class="input-group-addon">剩余时间：</div>
-                <input id="timer" type="text" class="form-control" value="00小时11分28秒" readonly style="width: 150px;">
+            <div class="form-group">
+                <div class="input-group">
+                    <div class="input-group-addon">剩余时间：</div>
+                    <input id="timer" type="text" class="timer form-control" value="00小时11分28秒" readonly style="width: 150px;">
+                </div>
             </div>
+
         </div>
+
     </div>
     <div class="row">
         <div class="col-md-8">
@@ -135,7 +142,28 @@
     </div>
 </div>
 <script>
+    //
+    $(function () {
+//        初始化定时器
+        var info = $("#timer").val();
+        $("#timer").timer({
+            duration: '65s',
+            countdown: true,
+            format: '%H:%M:%S',
+            callback: function () {
+                swal("", "时间到", "info");
+            }
+        })
 
+    });
+
+    function getSeconds() {
+        return $("#timer").data("seconds");
+    }
+
+    $("#changePaper").bind("click", function () {
+        swal("", "更换试卷后当前试卷作废，剩余作答时间不变。且仅有一次更换机会，确认要更换试卷吗？", "warning");
+    });
 </script>
 </body>
 </html>

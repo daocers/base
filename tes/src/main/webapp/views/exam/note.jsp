@@ -8,7 +8,7 @@
 <body>
 <div class="container">
     <form action="exam.do" method="post">
-        <input type="hidden" value="${scene.id}" id="sceneId"/>
+        <input type="hidden" name="id" value="${scene.id == null ? "59":scene.id}" id="sceneId"/>
         <div class="row">
             <div class="col-md-9">
                 <h3>考试须知：</h3>

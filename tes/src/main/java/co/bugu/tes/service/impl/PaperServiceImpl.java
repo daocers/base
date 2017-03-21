@@ -97,6 +97,7 @@ public class PaperServiceImpl extends BaseServiceImpl<Paper> implements IPaperSe
         baseDao.insert("tes.paper.insert", paper);
         int index = 0;
         for (Integer questionId : paperQuestionIdList) {
+            //关系的添加可以放到提交试题时候操作，整个插入，提高试卷生成速度
             Map<String, Integer> param = new HashMap<>();
             param.put("paperId", paper.getId());
             param.put("questionId", questionId);
@@ -125,21 +126,23 @@ public class PaperServiceImpl extends BaseServiceImpl<Paper> implements IPaperSe
                 if (StringUtils.isEmpty(quesContent)) {
                     throw new Exception("试题策略内容不能为空");
                 }
+                List<String> propertyList = JSON.parseArray(quesContent, String.class);
+                for(String item: propertyList){
+                    //            int数组，最后一个元素是该属性组合的所选试题数量，前面的为试题属性组合
+                    List<Integer> propertyIds = JSON.parseArray(item, Integer.class);
+                    Integer count = propertyIds.remove(propertyIds.size() - 1);
+                    Integer existCount = QuestionUtil.getCountByPropItemId(questionPolicy.getQuestionMetaInfoId(), bankId, propertyIds);
+                    if (existCount < count) {
+                        throw new Exception("试题数量不足");
+                    }
+                    Set<String> questionIds = QuestionUtil.findQuestionByPropItemId(questionPolicy.getQuestionMetaInfoId(), bankId, propertyIds);
+                    List<Integer> quesIdList = new ArrayList<>();
+                    for (String id : questionIds) {
+                        quesIdList.add(Integer.parseInt(id));
+                    }
 
-//            int数组，最后一个元素是该属性组合的所选试题数量，前面的为试题属性组合
-                List<Integer> propertyIds = JSON.parseArray(quesContent, Integer.class);
-                Integer count = propertyIds.remove(propertyIds.size() - 1);
-                Integer existCount = QuestionUtil.getCountByPropItemId(questionPolicy.getQuestionMetaInfoId(), bankId, propertyIds);
-                if (existCount < count) {
-                    throw new Exception("试题数量不足");
+                    res.addAll(QuestionUtil.getResult(quesIdList, count));
                 }
-                Set<String> questionIds = QuestionUtil.findQuestionByPropItemId(questionPolicy.getQuestionMetaInfoId(), bankId, propertyIds);
-                List<Integer> quesIdList = new ArrayList<>();
-                for (String id : questionIds) {
-                    quesIdList.add(Integer.parseInt(id));
-                }
-
-                res.addAll(QuestionUtil.getResult(quesIdList, count));
             }
         }else{//普通模式
             String content = paperPolicy.getContent();

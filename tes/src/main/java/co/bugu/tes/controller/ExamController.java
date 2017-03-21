@@ -79,10 +79,12 @@ public class ExamController {
         paper.setSceneId(scene.getId());
         paper.setStatus(0);//0 正常， 1未作答， 2 作废
         List<Paper> papers = paperService.findByObject(paper);
-        if(papers == null || papers.size() > 0){
+        if(papers == null || papers.size() == 0){
             model.put("err", "没有找到试卷，请联系管理员！");
         }else{
             model.put("paper", papers.get(0));
+            scene = sceneService.findById(scene.getId());
+            model.put("scene", scene);
         }
         return "exam/exam";
     }

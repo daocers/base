@@ -45,15 +45,15 @@
     <script src="../assets/js/jquery-filestyle.min.js"></script>
 
     <%--定时器--%>
-    <link rel="stylesheet" href="../assets/css/jquery.syotimer.css">
-    <script src="../assets/js/jquery.syotimer.js"></script>
+    <%--<link rel="stylesheet" href="../assets/css/jquery.syotimer.css">--%>
+    <%--<script src="../assets/js/jquery.syotimer.js"></script>--%>
 
     <%--弹出框--%>
     <link rel="stylesheet" href="../assets/css/sweetalert2.css">
     <script src="../assets/js/sweetalert2.js"></script>
 
     <%--另外一个定时器--%>
-    <script src="../assets/js/jquery.countdown.js"></script>
+    <%--<script src="../assets/js/jquery.countdown.js"></script>--%>
 
 
     <%--美化checkbox和radio--%>
@@ -71,8 +71,10 @@
     <script src="../assets/js/flatpickr.min.js"></script>
     <script src="../assets/js/flatpickr.l10n.zh.js"></script>
 
+    <script src="../assets/js/timer.jquery.min.js"></script>
 
-    <%--自定义的js和css，因为依赖其他js，故放在最后--%>
+
+<%--自定义的js和css，因为依赖其他js，故放在最后--%>
     <link href="../assets/css/my.css" rel="stylesheet">
     <script src="../assets/js/page-nav.js"></script>
     <script src="../assets/js/my.js"></script>
