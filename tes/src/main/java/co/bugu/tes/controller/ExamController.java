@@ -2,11 +2,15 @@ package co.bugu.tes.controller;
 
 import co.bugu.framework.core.util.BuguWebUtil;
 import co.bugu.tes.model.Paper;
+import co.bugu.tes.model.Question;
+import co.bugu.tes.model.QuestionMetaInfo;
 import co.bugu.tes.model.Scene;
 import co.bugu.tes.service.IPaperService;
+import co.bugu.tes.service.IQuestionMetaInfoService;
+import co.bugu.tes.service.IQuestionService;
 import co.bugu.tes.service.ISceneService;
-import com.sun.javafx.tk.TKSceneListener;
-import org.apache.commons.lang.StringUtils;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +23,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by user on 2017/1/12.
@@ -35,6 +41,10 @@ public class ExamController {
     ISceneService sceneService;
     @Autowired
     IPaperService paperService;
+    @Autowired
+    IQuestionService questionService;
+    @Autowired
+    IQuestionMetaInfoService metaInfoService;
 
     /**
      *
@@ -70,6 +80,12 @@ public class ExamController {
 
     @RequestMapping("/exam")
     public String toExam(Scene scene, ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Map<Integer, String> metaInfoMap = new HashMap<>();
+        List<QuestionMetaInfo> metaInfoList = metaInfoService.findByObject(null);
+        for(QuestionMetaInfo metaInfo: metaInfoList){
+            metaInfoMap.put(metaInfo.getId(), metaInfo.getCode());
+        }
+        model.put("metaInfo", JSON.toJSONString(metaInfoMap));
         if(scene.getId() == null){
             throw new Exception("非法操作");
         }
@@ -98,6 +114,32 @@ public class ExamController {
     @RequestMapping("/commit")
     public String commitPaper(){
         return "exam/result";
+    }
+
+
+    @RequestMapping("/getQuestion")
+    @ResponseBody
+    public String getQuestion(Integer paperId, Integer questionId){
+        JSONObject json = new JSONObject();
+        try{
+            Question question = questionService.findById(questionId);
+            if(question == null){
+                json.put("code", -1);
+                json.put("msg", "没有查到对应的试题");
+            }else{
+                JSONObject ques = new JSONObject();
+                ques.put("title", question.getTitle());
+                ques.put("content", question.getContent());
+                ques.put("metaInfoId", question.getMetaInfoId());
+                json.put("code", 0);
+                json.put("data", ques);
+            }
+        }catch (Exception e){
+            logger.error("获取试题信息失败", e);
+            json.put("code", -1);
+            json.put("msg", "获取试题信息失败");
+        }
+        return json.toJSONString();
     }
 
 
