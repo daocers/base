@@ -56,3 +56,10 @@ SearchParamUtil.processSearchParam(station, request);处理查询参数，如果
 
 
 
+
+考试流程：
+ 学员
+1 进入我的考试界面，查看当前待参加考试
+2 选择考试，跳转到考试须知界面
+3 开始答题
+4 开始

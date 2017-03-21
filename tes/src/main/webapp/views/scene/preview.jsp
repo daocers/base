@@ -1,9 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="../template/header.jsp" %>
 <html>
 <head>
     <meta charset="utf-8">
     <title>场次信息预览</title>
+    <%@ include file="../template/header.jsp" %>
     <style type="text/css">
         /*.preview tbody.table tr td{*/
         /*widtd: 60px;*/
@@ -17,7 +17,7 @@
 </head>
 <body>
 <div class="container">
-    <div class="row nav-patd">
+    <div class="row nav-path">
         <ol class="breadcrumb">
             <li><a href="#">首页</a></li>
             <li><a href="#">场次管理</a></li>
@@ -27,7 +27,7 @@
     <input type="hidden" value="${type}" id="type">
     <div class="row">
         <div class="col-md-8">
-            <form action="confirm.do" metdod="post">
+            <form action="confirm.do" method="post">
                 <input type="hidden" id="id" name="id" value="${scene.id}">
                 <table class="table table-responsive table-bordered preview">
                     <thead>基本信息</thead>
@@ -94,7 +94,7 @@
 
                 <div class="row">
                     <button type="button" class="btn btn-warning">取消</button>
-                    <button type="submit" class="btn btn-success">确定,开场</button>
+                    <button class="btn btn-success">确定,开场</button>
                 </div>
             </form>
 

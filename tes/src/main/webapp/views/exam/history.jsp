@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>我的考试|待考</title>
+    <title>我的考试|已参加</title>
     <%@ include file="../template/header.jsp" %>
 </head>
 <body>

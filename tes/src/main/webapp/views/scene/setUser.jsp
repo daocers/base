@@ -153,6 +153,7 @@
     </div>
 
     <input type="hidden" name="id" value="${scene.id}">
+    <input type="hidden" id="choiceInfo" value="${scene.choiceInfo}">
     <div class="form-inline form-group">
         <label class="control-label">人员选择方式</label>
         <div>
@@ -315,18 +316,25 @@
             zeroModal.closeAll();
             return false;
         }
+        var choiceInfo = $("#choiceInfo").val();
+        console.log("choiceINfo: ", choiceInfo);
+
         if(ids.length == 0){
-            swal("", "没有选择用户或者指定机构", "warning");
-            zeroModal.closeAll();
-            return false;
+            if(!choiceInfo || choiceInfo.length == 0){
+                swal("", "没有选择用户或者指定机构", "warning");
+                zeroModal.closeAll();
+                return false;
+            }else{
+                choiceInfo = JSON.stringify(new Array());
+            }
+        }else{
+            choiceInfo = JSON.stringify(ids);
         }
 
-        console.log("ids: ", ids);
-        console.log("ids string: ", JSON.stringify(ids));
         $.ajax({
             url: "saveUser.do",
             type: "post",
-            data: {ids: JSON.stringify(ids), type: type, "id": $("[name='id']").val()},
+            data: {ids: choiceInfo, type: type, "id": $("[name='id']").val()},
             success: function (data) {
                 zeroModal.closeAll();
                 if (data == "-1") {

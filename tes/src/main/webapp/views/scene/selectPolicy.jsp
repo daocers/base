@@ -80,6 +80,17 @@
                         </tr>
                         </thead>
                         <tbody>
+                        <c:forEach var="policy" items="${policyList}">
+                            <tr>
+                                <td><input name="paperPolicyId" type="checkbox" value="${policy.id}"></td>
+                                <td>${policy.name}</td>
+                                <td>${policy.branchId}</td>
+                                <td>${policy.departmentId}</td>
+                                <td>${policy.stationId}</td>
+                                <td>${policy.content}</td>
+                                <td>${policy.count}</td>
+                            </tr>
+                        </c:forEach>
                         <tr>
                             <td colspan="7">请选择筛选条件！</td>
                         </tr>
@@ -150,7 +161,7 @@
                         html += "</tr>";
                     });
                     if (html == "") {
-                        html = "<tr><td colspan='6'>查询无数据！</td></tr>";
+                        html = "<tr><td colspan='7'>查询无数据！</td></tr>";
                     }
                     console.log("html: ", html);
                     $(".data-table > tbody").html(html);

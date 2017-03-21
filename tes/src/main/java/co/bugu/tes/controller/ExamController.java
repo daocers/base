@@ -1,14 +1,24 @@
 package co.bugu.tes.controller;
 
+import co.bugu.framework.core.util.BuguWebUtil;
+import co.bugu.tes.model.Paper;
 import co.bugu.tes.model.Scene;
+import co.bugu.tes.service.IPaperService;
 import co.bugu.tes.service.ISceneService;
+import com.sun.javafx.tk.TKSceneListener;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,68 +33,70 @@ public class ExamController {
 
     @Autowired
     ISceneService sceneService;
+    @Autowired
+    IPaperService paperService;
 
     /**
-     * 检查考试状态，包括参考人员的状态， 未入场，已入场，已提交等
+     *
+     * @param model
+     * @param type type= new,待参加考试， type= his, 已参加考试
      * @return
      */
-    @RequestMapping("/checkStatus")
-    public String checkStatus(){
-        try{
-
-        }catch (Exception e){
-            logger.error("获取考试状态失败", e);
+    @RequestMapping("/{type}/list")
+    public String list(ModelMap model, @PathVariable String type){
+        String page = "";
+        List<Scene> sceneList = new ArrayList<>();
+        if("new".equals(type)){
+            sceneList = sceneService.findByObject(null);
+            page = "exam/list";
+        }else if("his".equals(type)){
+            sceneList = sceneService.findByObject(null);
+            page = "exam/history";
         }
+        model.put("sceneList", sceneList);
+        return page;
+    }
+
+    /**
+     * 跳转考试须知界面
+     * @param scene
+     * @return
+     */
+    @RequestMapping("/note")
+    public String toNote(Scene scene){
+        return "exam/note";
+    }
+
+
+    @RequestMapping("/exam")
+    public String toExam(Scene scene, ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        if(scene.getId() == null){
+            throw new Exception("非法操作");
+        }
+        Integer userId = (Integer) BuguWebUtil.getUserId(request);
+        Paper  paper = new Paper();
+        paper.setUserId(userId);
+        paper.setSceneId(scene.getId());
+        paper.setStatus(0);//0 正常， 1未作答， 2 作废
+        List<Paper> papers = paperService.findByObject(paper);
+        if(papers == null || papers.size() > 0){
+            model.put("err", "没有找到试卷，请联系管理员！");
+        }else{
+            model.put("paper", papers.get(0));
+        }
+        return "exam/exam";
+    }
+
+    @RequestMapping("/answer")
+    @ResponseBody
+    public String commitQuestion(Integer paperId, Integer questionId, String answer){
         return null;
     }
 
-    /**
-     * 提交答案
-     * 记录提交的时间，便于中途断电等异常情况下进行再次答题而时间不错
-     * @param answer
-     * @param questionId
-     * @return
-     */
-    public String commit(String answer, Integer questionId){
-        try{
-
-        }catch (Exception e){
-            logger.error("提交试题答案失败", e);
-        }
-        return null;
+    @RequestMapping("/commit")
+    public String commitPaper(){
+        return "exam/result";
     }
 
-    @RequestMapping("/edit")
-    public String toEdit(Integer id, String authCode, ModelMap model){
-        Scene scene = new Scene();
-        scene.setAuthCode(authCode);
-        List<Scene> sceneList = sceneService.findByObject(scene);
-        if(sceneList == null || sceneList.size() == 0){
-            logger.warn("没有找到对应的场次, 授权码为： {}", authCode);
-            model.put("err", "授权码错误");
-        }
-        if(sceneList.size() > 1){
-            logger.warn("找到");
-        }
-        scene = sceneList.get(0);
-        return "exam/edit";
-    }
-
-
-    /**
-     * 获取参与的考试列表
-     * 根据传入的状态值来判断是获取已经开始的还是未开始，或者未作答
-     * @return
-     */
-    @RequestMapping("/list")
-    public String list(Scene scene){
-        scene.setStatus(0);
-        List<Scene> sceneList = sceneService.findByObject(scene);
-        for(Scene item: sceneList){
-//            if(item.get)
-        }
-//        scene.
-        return "exam/list";
-    }
 
 }

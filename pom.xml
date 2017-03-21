@@ -31,6 +31,7 @@
         <module>java-test</module>
         <module>mq-test</module>
         <module>data_import</module>
+        <module>dbGen</module>
 
     </modules>
     <dependencies>
