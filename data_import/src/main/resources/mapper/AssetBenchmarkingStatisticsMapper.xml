@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="data.AssetBenchmarkingStatisticsDao" >
+  <resultMap id="BaseResultMap" type="co.bugu.data.model.AssetBenchmarkingStatistics" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="push_party_code" property="pushPartyCode" jdbcType="VARCHAR" />
+    <result column="refund_source" property="refundSource" jdbcType="BIT" />
+    <result column="new_or_old_type" property="newOrOldType" jdbcType="BIT" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="asset_code" property="assetCode" jdbcType="VARCHAR" />
+    <result column="product_code" property="productCode" jdbcType="VARCHAR" />
+    <result column="issue_amount" property="issueAmount" jdbcType="DECIMAL" />
+    <result column="product_deadline" property="productDeadline" jdbcType="INTEGER" />
+    <result column="asset_remaining_days" property="assetRemainingDays" jdbcType="INTEGER" />
+    <result column="push_party_name" property="pushPartyName" jdbcType="VARCHAR" />
+    <result column="push_party_cus_num" property="pushPartyCusNum" jdbcType="VARCHAR" />
+    <result column="contract_num" property="contractNum" jdbcType="VARCHAR" />
+    <result column="creditor_rights_transfer_cost" property="creditorRightsTransferCost" jdbcType="DECIMAL" />
+    <result column="product_expiring_date" property="productExpiringDate" jdbcType="TIMESTAMP" />
+    <result column="asset_expiring_date" property="assetExpiringDate" jdbcType="TIMESTAMP" />
+    <result column="del_flag" property="delFlag" jdbcType="BIT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="product_type" property="productType" jdbcType="BIT" />
+    <result column="asset_type" property="assetType" jdbcType="VARCHAR" />
+    <result column="product_status" property="productStatus" jdbcType="BIT" />
+    <result column="asset_status" property="assetStatus" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, push_party_code, refund_source, new_or_old_type, product_name, asset_code, product_code, 
+    issue_amount, product_deadline, asset_remaining_days, push_party_name, push_party_cus_num, 
+    contract_num, creditor_rights_transfer_cost, product_expiring_date, asset_expiring_date, 
+    del_flag, create_time, modify_time, product_type, asset_type, product_status, asset_status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tbl_asset_benchmarking_statistics
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tbl_asset_benchmarking_statistics
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteAll">
+    delete from tbl_asset_benchmarking_statistics
+  </delete>
+  <insert id="insert" parameterType="co.bugu.data.model.AssetBenchmarkingStatistics" >
+    insert into tbl_asset_benchmarking_statistics (id, push_party_code, refund_source, 
+      new_or_old_type, product_name, asset_code, 
+      product_code, issue_amount, product_deadline, 
+      asset_remaining_days, push_party_name, push_party_cus_num, 
+      contract_num, creditor_rights_transfer_cost, 
+      product_expiring_date, asset_expiring_date, 
+      del_flag, create_time, modify_time, 
+      product_type, asset_type, product_status, 
+      asset_status)
+    values (#{id,jdbcType=BIGINT}, #{pushPartyCode,jdbcType=VARCHAR}, #{refundSource,jdbcType=BIT}, 
+      #{newOrOldType,jdbcType=BIT}, #{productName,jdbcType=VARCHAR}, #{assetCode,jdbcType=VARCHAR}, 
+      #{productCode,jdbcType=VARCHAR}, #{issueAmount,jdbcType=DECIMAL}, #{productDeadline,jdbcType=INTEGER}, 
+      #{assetRemainingDays,jdbcType=INTEGER}, #{pushPartyName,jdbcType=VARCHAR}, #{pushPartyCusNum,jdbcType=VARCHAR}, 
+      #{contractNum,jdbcType=VARCHAR}, #{creditorRightsTransferCost,jdbcType=DECIMAL}, 
+      #{productExpiringDate,jdbcType=TIMESTAMP}, #{assetExpiringDate,jdbcType=TIMESTAMP}, 
+      #{delFlag,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, 
+      #{productType,jdbcType=BIT}, #{assetType,jdbcType=VARCHAR}, #{productStatus,jdbcType=BIT}, 
+      #{assetStatus,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="co.bugu.data.model.AssetBenchmarkingStatistics" >
+    insert into tbl_asset_benchmarking_statistics
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="pushPartyCode != null" >
+        push_party_code,
+      </if>
+      <if test="refundSource != null" >
+        refund_source,
+      </if>
+      <if test="newOrOldType != null" >
+        new_or_old_type,
+      </if>
+      <if test="productName != null" >
+        product_name,
+      </if>
+      <if test="assetCode != null" >
+        asset_code,
+      </if>
+      <if test="productCode != null" >
+        product_code,
+      </if>
+      <if test="issueAmount != null" >
+        issue_amount,
+      </if>
+      <if test="productDeadline != null" >
+        product_deadline,
+      </if>
+      <if test="assetRemainingDays != null" >
+        asset_remaining_days,
+      </if>
+      <if test="pushPartyName != null" >
+        push_party_name,
+      </if>
+      <if test="pushPartyCusNum != null" >
+        push_party_cus_num,
+      </if>
+      <if test="contractNum != null" >
+        contract_num,
+      </if>
+      <if test="creditorRightsTransferCost != null" >
+        creditor_rights_transfer_cost,
+      </if>
+      <if test="productExpiringDate != null" >
+        product_expiring_date,
+      </if>
+      <if test="assetExpiringDate != null" >
+        asset_expiring_date,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="modifyTime != null" >
+        modify_time,
+      </if>
+      <if test="productType != null" >
+        product_type,
+      </if>
+      <if test="assetType != null" >
+        asset_type,
+      </if>
+      <if test="productStatus != null" >
+        product_status,
+      </if>
+      <if test="assetStatus != null" >
+        asset_status,
+      </if>
+      <if test="factknotTime != null" >
+        factknot_time,
+      </if>
+      <if test="valueDate != null" >
+        value_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="pushPartyCode != null" >
+        #{pushPartyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="refundSource != null" >
+        #{refundSource,jdbcType=BIT},
+      </if>
+      <if test="newOrOldType != null" >
+        #{newOrOldType,jdbcType=BIT},
+      </if>
+      <if test="productName != null" >
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="assetCode != null" >
+        #{assetCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productCode != null" >
+        #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="issueAmount != null" >
+        #{issueAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="productDeadline != null" >
+        #{productDeadline,jdbcType=INTEGER},
+      </if>
+      <if test="assetRemainingDays != null" >
+        #{assetRemainingDays,jdbcType=INTEGER},
+      </if>
+      <if test="pushPartyName != null" >
+        #{pushPartyName,jdbcType=VARCHAR},
+      </if>
+      <if test="pushPartyCusNum != null" >
+        #{pushPartyCusNum,jdbcType=VARCHAR},
+      </if>
+      <if test="contractNum != null" >
+        #{contractNum,jdbcType=VARCHAR},
+      </if>
+      <if test="creditorRightsTransferCost != null" >
+        #{creditorRightsTransferCost,jdbcType=DECIMAL},
+      </if>
+      <if test="productExpiringDate != null" >
+        #{productExpiringDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="assetExpiringDate != null" >
+        #{assetExpiringDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="productType != null" >
+        #{productType,jdbcType=BIT},
+      </if>
+      <if test="assetType != null" >
+        #{assetType,jdbcType=VARCHAR},
+      </if>
+      <if test="productStatus != null" >
+        #{productStatus,jdbcType=BIT},
+      </if>
+      <if test="assetStatus != null" >
+        #{assetStatus,jdbcType=BIT},
+      </if>
+      <if test="factknotTime != null" >
+        #{factknotTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="valueDate != null" >
+        #{valueDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="co.bugu.data.model.AssetBenchmarkingStatistics" >
+    update tbl_asset_benchmarking_statistics
+    <set >
+      <if test="pushPartyCode != null" >
+        push_party_code = #{pushPartyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="refundSource != null" >
+        refund_source = #{refundSource,jdbcType=BIT},
+      </if>
+      <if test="newOrOldType != null" >
+        new_or_old_type = #{newOrOldType,jdbcType=BIT},
+      </if>
+      <if test="productName != null" >
+        product_name = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="assetCode != null" >
+        asset_code = #{assetCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productCode != null" >
+        product_code = #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="issueAmount != null" >
+        issue_amount = #{issueAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="productDeadline != null" >
+        product_deadline = #{productDeadline,jdbcType=INTEGER},
+      </if>
+      <if test="assetRemainingDays != null" >
+        asset_remaining_days = #{assetRemainingDays,jdbcType=INTEGER},
+      </if>
+      <if test="pushPartyName != null" >
+        push_party_name = #{pushPartyName,jdbcType=VARCHAR},
+      </if>
+      <if test="pushPartyCusNum != null" >
+        push_party_cus_num = #{pushPartyCusNum,jdbcType=VARCHAR},
+      </if>
+      <if test="contractNum != null" >
+        contract_num = #{contractNum,jdbcType=VARCHAR},
+      </if>
+      <if test="creditorRightsTransferCost != null" >
+        creditor_rights_transfer_cost = #{creditorRightsTransferCost,jdbcType=DECIMAL},
+      </if>
+      <if test="productExpiringDate != null" >
+        product_expiring_date = #{productExpiringDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="assetExpiringDate != null" >
+        asset_expiring_date = #{assetExpiringDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="productType != null" >
+        product_type = #{productType,jdbcType=BIT},
+      </if>
+      <if test="assetType != null" >
+        asset_type = #{assetType,jdbcType=VARCHAR},
+      </if>
+      <if test="productStatus != null" >
+        product_status = #{productStatus,jdbcType=BIT},
+      </if>
+      <if test="assetStatus != null" >
+        asset_status = #{assetStatus,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="co.bugu.data.model.AssetBenchmarkingStatistics" >
+    update tbl_asset_benchmarking_statistics
+    set push_party_code = #{pushPartyCode,jdbcType=VARCHAR},
+      refund_source = #{refundSource,jdbcType=BIT},
+      new_or_old_type = #{newOrOldType,jdbcType=BIT},
+      product_name = #{productName,jdbcType=VARCHAR},
+      asset_code = #{assetCode,jdbcType=VARCHAR},
+      product_code = #{productCode,jdbcType=VARCHAR},
+      issue_amount = #{issueAmount,jdbcType=DECIMAL},
+      product_deadline = #{productDeadline,jdbcType=INTEGER},
+      asset_remaining_days = #{assetRemainingDays,jdbcType=INTEGER},
+      push_party_name = #{pushPartyName,jdbcType=VARCHAR},
+      push_party_cus_num = #{pushPartyCusNum,jdbcType=VARCHAR},
+      contract_num = #{contractNum,jdbcType=VARCHAR},
+      creditor_rights_transfer_cost = #{creditorRightsTransferCost,jdbcType=DECIMAL},
+      product_expiring_date = #{productExpiringDate,jdbcType=TIMESTAMP},
+      asset_expiring_date = #{assetExpiringDate,jdbcType=TIMESTAMP},
+      del_flag = #{delFlag,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      product_type = #{productType,jdbcType=BIT},
+      asset_type = #{assetType,jdbcType=VARCHAR},
+      product_status = #{productStatus,jdbcType=BIT},
+      asset_status = #{assetStatus,jdbcType=BIT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

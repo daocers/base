@@ -8,4 +8,6 @@ import java.util.Map;
  */
 public interface IDataService {
     void add(List<List<String>> assetData, List<List<String>> productData, Map<String, Integer> type, Map<String, Integer> cType) throws Exception;
+
+    void addTongji();
 }

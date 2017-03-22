@@ -312,6 +312,64 @@ public class DataServiceImpl implements IDataService {
 //        throw new Exception("抛出异常，保持数据不入库");
     }
 
+    @Override
+    public void addTongji() {
+        logger.info("=======================================资产对标统计启动!=============================================");
+        //获取票据相关列表
+        List<ProductTongji> list = baseDao.selectList("data.productTongji.selectAllForBill");
+        if(list!=null){
+            baseDao.delete("data.AssetBenchmarkingStatisticsDao.deleteAll");
+//            assetBenchmarkingStatisticsDao.deleteAll();
+        }
+        for(ProductTongji product : list){
+            AssetBenchmarkingStatistics assetBenchmarkingStatistics = new AssetBenchmarkingStatistics();
+            assetBenchmarkingStatistics.setProductStatus(product.getStatus());
+            assetBenchmarkingStatistics.setAssetStatus(product.getAssetStatus());
+            assetBenchmarkingStatistics.setPushPartyCode(product.getPushPartyCode());
+            assetBenchmarkingStatistics.setProductCode(product.getProductCode());
+            assetBenchmarkingStatistics.setProductName(product.getProductName());
+            assetBenchmarkingStatistics.setCreateTime(new Date());
+            assetBenchmarkingStatistics.setModifyTime(new Date());
+            assetBenchmarkingStatistics.setRefundSource(product.getRefundSource());
+//            assetBenchmarkingStatistics.setProductStatus(product.getStatus());
+            assetBenchmarkingStatistics.setIssueAmount(product.getIssueAmount());
+//            assetBenchmarkingStatistics.setRaiseAmount(product.getSettleAmount());
+//            assetBenchmarkingStatistics.setRaiseStartDate(product.getRaiseStartDate());
+//            assetBenchmarkingStatistics.setRaiseEndDate(product.getRaiseEndDate());
+//            assetBenchmarkingStatistics.setProductValueDate(product.getValueDate());
+            assetBenchmarkingStatistics.setProductDeadline(product.getProductDeadline());
+            assetBenchmarkingStatistics.setProductExpiringDate(product.getExpiringDate());
+//            assetBenchmarkingStatistics.setPlanAnnualYield(product.getPlanAnnualYield());
+//            assetBenchmarkingStatistics.setPlanCashDay(product.getExpiringDate());
+//            assetBenchmarkingStatistics.setPracticalCashDay(product.getRepaymentTime());
+//            assetBenchmarkingStatistics.setExtendDeadline(product.getExtendDeadline());
+//            assetBenchmarkingStatistics.setRemark(product.getRemark());
+            assetBenchmarkingStatistics.setProductType(product.getProductType());
+            assetBenchmarkingStatistics.setNewOrOldType(product.getNewOrOldType());
+            assetBenchmarkingStatistics.setPushPartyName(product.getOriginalDebtor());
+            assetBenchmarkingStatistics.setPushPartyCusNum(product.getDebtorCusNum());
+            assetBenchmarkingStatistics.setContractNum(product.getContractNum());
+            assetBenchmarkingStatistics.setCreditorRightsTransferCost(product.getCreditorRightsTransferCost());
+            assetBenchmarkingStatistics.setFactknotTime(product.getFactknotTime());
+            assetBenchmarkingStatistics.setValueDate(product.getValueDate());
+            if(product.getPassiveId()!=null){
+//                替票的处理，都是保理资产，不用处理
+//                BillAssets assets = getSourceAsset(product.getPassiveId());
+//                assetBenchmarkingStatistics.setAssetCode(assets.getAssetsCode());
+//                assetBenchmarkingStatistics.setAssetExpiringDate(assets.getBillRateDueDate());
+//                assetBenchmarkingStatistics.setAssetRemainingDays(assets.getBillRemainingDays());
+//                assetBenchmarkingStatistics.setInterest(assets.getAssetsInterest());
+            }else{
+                assetBenchmarkingStatistics.setAssetCode(product.getAssetsCode());
+                assetBenchmarkingStatistics.setAssetExpiringDate(product.getBillRateDueDate());
+                assetBenchmarkingStatistics.setAssetRemainingDays(product.getBillRemainingDays());
+//                assetBenchmarkingStatistics.setInterest(product.getAssetsInterest());
+            }
+            baseDao.insert("data.AssetBenchmarkingStatisticsDao.insertSelective", assetBenchmarkingStatistics);
+//            assetBenchmarkingStatisticsDao.insertSelective(assetBenchmarkingStatistics);
+        }
+    }
+
     private void initPushPartyInfo(Map<Long, String> pushPartyIdNameMap, Map<String, Long> pushPartyMap) {
         Map<String, Long> map = new HashMap<>();
         List<PushParty> list = pushPartyService.findByObject(null);
@@ -435,4 +493,6 @@ public class DataServiceImpl implements IDataService {
         DecimalFormat decimalFormat = new DecimalFormat("0000");
         return productDate + decimalFormat.format(prodNo);
     }
+
+
 }

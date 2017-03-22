@@ -17,27 +17,27 @@
 
         <!-- jdbc连接信息 -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://localhost:3306/asset_web"
-                        userId="root" password="root"/>
+                        connectionURL="jdbc:mysql://114.215.142.252:3306/tes"
+                        userId="admin" password="admin!@#$%"/>
 
         <!-- java类型解析器 可选配置 -->
         <javaTypeResolver>
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
 
-        <javaModelGenerator targetPackage="co.bugu.data.model" targetProject="D:\code\daocers\java\base/generator//generate/src/main/java/">
+        <javaModelGenerator targetPackage="co.bugu.tes.model" targetProject="D:\code\daocers\java\base/generator//generate/src/main/java/">
             <property name="enableSubPackages" value="true"/>
         </javaModelGenerator>
 
-        <sqlMapGenerator targetPackage="co.bugu.data.dao" targetProject="D:\code\daocers\java\base/generator//generate/src/main/java/">
-        <!--<sqlMapGenerator targetPackage="data.pushParty" targetProject="D:\code\daocers\java\base/generator//generate/src/main/java/">-->
+        <sqlMapGenerator targetPackage="co.bugu.tes.dao" targetProject="D:\code\daocers\java\base/generator//generate/src/main/java/">
+        <!--<sqlMapGenerator targetPackage="data.answer" targetProject="D:\code\daocers\java\base/generator//generate/src/main/java/">-->
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
 
 
 
 
-        <table tableName="tbl_push_party" domainObjectName="PushParty" alias=""
+        <table tableName="answer" domainObjectName="Answer" alias=""
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">

@@ -1,0 +1,644 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="data.productTongji" >
+  <resultMap id="BaseResultMap" type="co.bugu.data.model.ProductTongji" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="product_code" property="productCode" jdbcType="VARCHAR" />
+    <result column="product_type" property="productType" jdbcType="BIT" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="issue_amount" property="issueAmount" jdbcType="DECIMAL" />
+    <result column="product_deadline" property="productDeadline" jdbcType="INTEGER" />
+    <result column="plan_annual_yield" property="planAnnualYield" jdbcType="DECIMAL" />
+    <result column="raise_start_date" property="raiseStartDate" jdbcType="TIMESTAMP" />
+    <result column="raise_end_date" property="raiseEndDate" jdbcType="TIMESTAMP" />
+    <result column="start_bid_amount" property="startBidAmount" jdbcType="DECIMAL" />
+    <result column="increment_amount" property="incrementAmount" jdbcType="DECIMAL" />
+    <result column="extend_deadline" property="extendDeadline" jdbcType="INTEGER" />
+    <result column="value_date" property="valueDate" jdbcType="TIMESTAMP" />
+    <result column="expiring_date" property="expiringDate" jdbcType="TIMESTAMP" />
+    <result column="extend_expiring_date" property="extendExpiringDate" jdbcType="TIMESTAMP" />
+    <result column="nterest_mode" property="nterestMode" jdbcType="BIT" />
+    <result column="contract_template" property="contractTemplate" jdbcType="BIT" />
+    <result column="plan_cash_day" property="planCashDay" jdbcType="TIMESTAMP" />
+    <result column="interest_penalty_rate" property="interestPenaltyRate" jdbcType="DECIMAL" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="settle_amount" property="settleAmount" jdbcType="DECIMAL" />
+    <result column="product_desc" property="productDesc" jdbcType="VARCHAR" />
+    <result column="project_detail" property="projectDetail" jdbcType="VARCHAR" />
+    <result column="refund_source" property="refundSource" jdbcType="BIT" />
+    <result column="repayment_amount" property="repaymentAmount" jdbcType="DECIMAL" />
+    <result column="factraise_time" property="factraiseTime" jdbcType="TIMESTAMP" />
+    <result column="factknot_time" property="factknotTime" jdbcType="TIMESTAMP" />
+    <result column="repayment_time" property="repaymentTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="del_flag" property="delFlag" jdbcType="BIT" />
+    <result column="ext" property="ext" jdbcType="VARCHAR" />
+    <result column="new_or_old_type" property="newOrOldType" jdbcType="BIT" />
+    <result column="contract_url" property="contractUrl" jdbcType="VARCHAR" />
+    <result column="continue_status" property="continueStatus" jdbcType="VARCHAR" />
+    <result column="continue_amount" property="continueAmount" jdbcType="DECIMAL" />
+    <result column="push_party_id" property="pushPartyId" jdbcType="BIGINT" />
+    <result column="bill_type" property="billType" jdbcType="BIT" />
+    <result column="bill_type_name" property="billTypeName" jdbcType="VARCHAR" />
+    <result column="assets_code" property="assetsCode" jdbcType="VARCHAR" />
+    <result column="passive_id" property="passiveId" jdbcType="BIGINT" />
+    <result column="bill_rate_due_date" property="billRateDueDate" jdbcType="TIMESTAMP" />
+    <result column="bill_remaining_days" property="billRemainingDays" jdbcType="INTEGER" />
+    <result column="assets_interest" property="assetsInterest" jdbcType="DECIMAL" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="push_party_code" property="pushPartyCode" jdbcType="VARCHAR" />
+    <result column="contract_num" property="contractNum" jdbcType="VARCHAR" />
+    <result column="debtor_cus_num" property="debtorCusNum" jdbcType="VARCHAR" />
+    <result column="original_debtor" property="originalDebtor" jdbcType="VARCHAR" />
+    <result column="creditor_rights_transfer_cost" property="creditorRightsTransferCost" jdbcType="DECIMAL" />
+    <result column="asset_type" property="assetType" jdbcType="VARCHAR" />
+    <result column="asset_status" property="assetStatus" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, product_code, product_type, product_name, issue_amount, product_deadline, plan_annual_yield, 
+    raise_start_date, raise_end_date, start_bid_amount, increment_amount, extend_deadline, 
+    value_date, expiring_date, extend_expiring_date, nterest_mode, contract_template, 
+    plan_cash_day, interest_penalty_rate, status, settle_amount, product_desc, project_detail, 
+    refund_source, repayment_amount, factraise_time, factknot_time, repayment_time, create_time, 
+    modify_time, del_flag, ext, new_or_old_type, contract_url, continue_status, continue_amount, 
+    push_party_id, bill_type, bill_type_name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tbl_product
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAllForBill" resultMap="BaseResultMap">
+    <![CDATA[ 
+    SELECT
+	*
+FROM
+	( -- 票据资产
+		SELECT
+			a2.assets_adoption_rate AS creditor_rights_transfer_cost, -- 平台采购成本
+			NULL AS contract_num, -- 原始资产合同编号
+			NULL AS debtor_cus_num, -- 债务人客户编号
+			NULL AS original_debtor, -- 原始债务人
+			p2.new_or_old_type, -- 新/旧
+			t2.push_party_org_code AS push_party_code, -- 推送方编码
+			NULL AS remark, -- 备注
+			p2.product_deadline, -- 产品期限
+			p2.value_date, -- 产品起息日
+			p2.raise_start_date, -- 募集开始时间
+			p2.raise_end_date, -- 募集结束时间
+			p2.settle_amount, -- 结标金额
+			p2.issue_amount, -- 发标金额
+			p2.refund_source, -- 还款来源1其他2债务人还款
+			p2.repayment_time, -- 实际还款时间
+			p2.expiring_date, -- 产品到期日
+			a2.assets_interest, -- 资产利息
+			p2.plan_annual_yield, -- 产品年化收益率
+			a2.bill_remaining_days, -- 资产期限
+			a2.bill_rate_due_date, -- 资产计息到期日
+			a2.passive_id, -- 被替票ID
+			p2.status,  -- 产品状态
+			p2.create_time,
+			p2.product_code, -- 产品编码
+			p2.product_type, -- 产品类型
+			p2.product_name, -- 产品名
+			p2.id,
+			a2.assets_code, -- 资产编码
+			a2.`status` as asset_status, -- 资产状态
+			p2.factknot_time -- 实际结标时间
+		FROM
+			(
+				SELECT
+					p1.new_or_old_type,
+					p1.product_deadline,
+					p1.value_date,
+					p1.raise_start_date,
+					p1.raise_end_date,
+					p1.settle_amount,
+					p1.issue_amount,
+					p1.refund_source,
+					p1.repayment_time,
+					p1.expiring_date,
+					p1.plan_annual_yield,
+					p1.status,
+					p1.create_time,
+					p1.product_name,
+					p1.product_code,
+					p1.product_type,
+					p1.id,
+					p1.factknot_time
+				FROM
+					tbl_product p1
+				WHERE
+					p1.product_type = 1 and p1.status !=5 and p1.status !=11
+			) p2
+		LEFT JOIN tbl_bill_product_relation r2 ON p2.id = r2.product_id
+		LEFT JOIN tbl_bill_assets a2 ON r2.asset_id = a2.id
+		LEFT JOIN tbl_push_party t2 ON a2.push_party_id = t2.id
+		
+		UNION ALL
+ -- 内部资产		
+		SELECT
+				a2.rate as creditor_rights_transfer_cost,
+				a2.contract_num,
+				a2.debtor_cus_num,
+				a2.original_debtor,
+				p2.new_or_old_type,
+				t2.push_party_org_code AS push_party_code,
+				a2.remark,
+				p2.product_deadline,
+				p2.value_date,
+				p2.raise_start_date,
+				p2.raise_end_date,
+				p2.settle_amount,
+				p2.issue_amount,
+				p2.refund_source,
+				p2.repayment_time,
+				p2.expiring_date,
+				NULL AS assets_interest,
+				p2.plan_annual_yield,
+				a2.new_deadline AS bill_remaining_days,
+				a2.expiring_date AS bill_rate_due_date,
+				NULL AS passive_id,
+				p2.status,
+				p2.create_time,
+				p2.product_code,
+				p2.product_type,
+				p2.product_name,
+				p2.id,
+				a2.assets_code,
+				a2.`status` as asset_status,
+				p2.factknot_time -- 实际结标时间
+			FROM
+				(
+					SELECT
+						p1.new_or_old_type,
+						p1.product_deadline,
+						p1.value_date,
+						p1.raise_start_date,
+						p1.raise_end_date,
+						p1.settle_amount,
+						p1.issue_amount,
+						p1.refund_source,
+						p1.repayment_time,
+						p1.expiring_date,
+						p1.plan_annual_yield,
+						p1.status,
+						p1.create_time,
+						p1.product_name,
+						p1.product_code,
+						p1.product_type,
+						p1.id,
+						p1.factknot_time
+					FROM
+						tbl_product p1
+					WHERE
+						p1.product_type = 2 and p1.status !=5 and p1.status !=11
+				) p2
+			LEFT JOIN tbl_factoring_product_relation r2 ON p2.id = r2.product_id
+			LEFT JOIN tbl_factoring_asset a2 ON r2.asset_id = a2.id
+			LEFT JOIN tbl_push_party t2 ON a2.push_party = t2.id
+	) al
+ORDER BY
+	al.create_time DESC
+     ]]>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tbl_product
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="co.bugu.data.model.ProductTongji" >
+    insert into tbl_product (id, product_code, product_type, 
+      product_name, issue_amount, product_deadline, 
+      plan_annual_yield, raise_start_date, raise_end_date, 
+      start_bid_amount, increment_amount, extend_deadline, 
+      value_date, expiring_date, extend_expiring_date, 
+      nterest_mode, contract_template, plan_cash_day, 
+      interest_penalty_rate, status, settle_amount, 
+      product_desc, project_detail, refund_source, 
+      repayment_amount, factraise_time, factknot_time, 
+      repayment_time, create_time, modify_time, 
+      del_flag, ext, new_or_old_type, 
+      contract_url, continue_status, continue_amount, 
+      push_party_id, bill_type, bill_type_name
+      )
+    values (#{id,jdbcType=BIGINT}, #{productCode,jdbcType=VARCHAR}, #{productType,jdbcType=BIT}, 
+      #{productName,jdbcType=VARCHAR}, #{issueAmount,jdbcType=DECIMAL}, #{productDeadline,jdbcType=INTEGER}, 
+      #{planAnnualYield,jdbcType=DECIMAL}, #{raiseStartDate,jdbcType=TIMESTAMP}, #{raiseEndDate,jdbcType=TIMESTAMP}, 
+      #{startBidAmount,jdbcType=DECIMAL}, #{incrementAmount,jdbcType=DECIMAL}, #{extendDeadline,jdbcType=INTEGER}, 
+      #{valueDate,jdbcType=TIMESTAMP}, #{expiringDate,jdbcType=TIMESTAMP}, #{extendExpiringDate,jdbcType=TIMESTAMP}, 
+      #{nterestMode,jdbcType=BIT}, #{contractTemplate,jdbcType=BIT}, #{planCashDay,jdbcType=TIMESTAMP}, 
+      #{interestPenaltyRate,jdbcType=DECIMAL}, #{status,jdbcType=INTEGER}, #{settleAmount,jdbcType=DECIMAL}, 
+      #{productDesc,jdbcType=VARCHAR}, #{projectDetail,jdbcType=VARCHAR}, #{refundSource,jdbcType=BIT}, 
+      #{repaymentAmount,jdbcType=DECIMAL}, #{factraiseTime,jdbcType=TIMESTAMP}, #{factknotTime,jdbcType=TIMESTAMP}, 
+      #{repaymentTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, 
+      #{delFlag,jdbcType=BIT}, #{ext,jdbcType=VARCHAR}, #{newOrOldType,jdbcType=BIT}, 
+      #{contractUrl,jdbcType=VARCHAR}, #{continueStatus,jdbcType=VARCHAR}, #{continueAmount,jdbcType=DECIMAL}, 
+      #{pushPartyId,jdbcType=BIGINT}, #{billType,jdbcType=BIT}, #{billTypeName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="co.bugu.data.model.ProductTongji" >
+    insert into tbl_product
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="productCode != null" >
+        product_code,
+      </if>
+      <if test="productType != null" >
+        product_type,
+      </if>
+      <if test="productName != null" >
+        product_name,
+      </if>
+      <if test="issueAmount != null" >
+        issue_amount,
+      </if>
+      <if test="productDeadline != null" >
+        product_deadline,
+      </if>
+      <if test="planAnnualYield != null" >
+        plan_annual_yield,
+      </if>
+      <if test="raiseStartDate != null" >
+        raise_start_date,
+      </if>
+      <if test="raiseEndDate != null" >
+        raise_end_date,
+      </if>
+      <if test="startBidAmount != null" >
+        start_bid_amount,
+      </if>
+      <if test="incrementAmount != null" >
+        increment_amount,
+      </if>
+      <if test="extendDeadline != null" >
+        extend_deadline,
+      </if>
+      <if test="valueDate != null" >
+        value_date,
+      </if>
+      <if test="expiringDate != null" >
+        expiring_date,
+      </if>
+      <if test="extendExpiringDate != null" >
+        extend_expiring_date,
+      </if>
+      <if test="nterestMode != null" >
+        nterest_mode,
+      </if>
+      <if test="contractTemplate != null" >
+        contract_template,
+      </if>
+      <if test="planCashDay != null" >
+        plan_cash_day,
+      </if>
+      <if test="interestPenaltyRate != null" >
+        interest_penalty_rate,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="settleAmount != null" >
+        settle_amount,
+      </if>
+      <if test="productDesc != null" >
+        product_desc,
+      </if>
+      <if test="projectDetail != null" >
+        project_detail,
+      </if>
+      <if test="refundSource != null" >
+        refund_source,
+      </if>
+      <if test="repaymentAmount != null" >
+        repayment_amount,
+      </if>
+      <if test="factraiseTime != null" >
+        factraise_time,
+      </if>
+      <if test="factknotTime != null" >
+        factknot_time,
+      </if>
+      <if test="repaymentTime != null" >
+        repayment_time,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="modifyTime != null" >
+        modify_time,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+      <if test="ext != null" >
+        ext,
+      </if>
+      <if test="newOrOldType != null" >
+        new_or_old_type,
+      </if>
+      <if test="contractUrl != null" >
+        contract_url,
+      </if>
+      <if test="continueStatus != null" >
+        continue_status,
+      </if>
+      <if test="continueAmount != null" >
+        continue_amount,
+      </if>
+      <if test="pushPartyId != null" >
+        push_party_id,
+      </if>
+      <if test="billType != null" >
+        bill_type,
+      </if>
+      <if test="billTypeName != null" >
+        bill_type_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="productCode != null" >
+        #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productType != null" >
+        #{productType,jdbcType=BIT},
+      </if>
+      <if test="productName != null" >
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="issueAmount != null" >
+        #{issueAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="productDeadline != null" >
+        #{productDeadline,jdbcType=INTEGER},
+      </if>
+      <if test="planAnnualYield != null" >
+        #{planAnnualYield,jdbcType=DECIMAL},
+      </if>
+      <if test="raiseStartDate != null" >
+        #{raiseStartDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="raiseEndDate != null" >
+        #{raiseEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="startBidAmount != null" >
+        #{startBidAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="incrementAmount != null" >
+        #{incrementAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="extendDeadline != null" >
+        #{extendDeadline,jdbcType=INTEGER},
+      </if>
+      <if test="valueDate != null" >
+        #{valueDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expiringDate != null" >
+        #{expiringDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="extendExpiringDate != null" >
+        #{extendExpiringDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="nterestMode != null" >
+        #{nterestMode,jdbcType=BIT},
+      </if>
+      <if test="contractTemplate != null" >
+        #{contractTemplate,jdbcType=BIT},
+      </if>
+      <if test="planCashDay != null" >
+        #{planCashDay,jdbcType=TIMESTAMP},
+      </if>
+      <if test="interestPenaltyRate != null" >
+        #{interestPenaltyRate,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="settleAmount != null" >
+        #{settleAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="productDesc != null" >
+        #{productDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="projectDetail != null" >
+        #{projectDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="refundSource != null" >
+        #{refundSource,jdbcType=BIT},
+      </if>
+      <if test="repaymentAmount != null" >
+        #{repaymentAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="factraiseTime != null" >
+        #{factraiseTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="factknotTime != null" >
+        #{factknotTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="repaymentTime != null" >
+        #{repaymentTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=BIT},
+      </if>
+      <if test="ext != null" >
+        #{ext,jdbcType=VARCHAR},
+      </if>
+      <if test="newOrOldType != null" >
+        #{newOrOldType,jdbcType=BIT},
+      </if>
+      <if test="contractUrl != null" >
+        #{contractUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="continueStatus != null" >
+        #{continueStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="continueAmount != null" >
+        #{continueAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="pushPartyId != null" >
+        #{pushPartyId,jdbcType=BIGINT},
+      </if>
+      <if test="billType != null" >
+        #{billType,jdbcType=BIT},
+      </if>
+      <if test="billTypeName != null" >
+        #{billTypeName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="co.bugu.data.model.ProductTongji" >
+    update tbl_product
+    <set >
+      <if test="productCode != null" >
+        product_code = #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productType != null" >
+        product_type = #{productType,jdbcType=BIT},
+      </if>
+      <if test="productName != null" >
+        product_name = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="issueAmount != null" >
+        issue_amount = #{issueAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="productDeadline != null" >
+        product_deadline = #{productDeadline,jdbcType=INTEGER},
+      </if>
+      <if test="planAnnualYield != null" >
+        plan_annual_yield = #{planAnnualYield,jdbcType=DECIMAL},
+      </if>
+      <if test="raiseStartDate != null" >
+        raise_start_date = #{raiseStartDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="raiseEndDate != null" >
+        raise_end_date = #{raiseEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="startBidAmount != null" >
+        start_bid_amount = #{startBidAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="incrementAmount != null" >
+        increment_amount = #{incrementAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="extendDeadline != null" >
+        extend_deadline = #{extendDeadline,jdbcType=INTEGER},
+      </if>
+      <if test="valueDate != null" >
+        value_date = #{valueDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expiringDate != null" >
+        expiring_date = #{expiringDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="extendExpiringDate != null" >
+        extend_expiring_date = #{extendExpiringDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="nterestMode != null" >
+        nterest_mode = #{nterestMode,jdbcType=BIT},
+      </if>
+      <if test="contractTemplate != null" >
+        contract_template = #{contractTemplate,jdbcType=BIT},
+      </if>
+      <if test="planCashDay != null" >
+        plan_cash_day = #{planCashDay,jdbcType=TIMESTAMP},
+      </if>
+      <if test="interestPenaltyRate != null" >
+        interest_penalty_rate = #{interestPenaltyRate,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="settleAmount != null" >
+        settle_amount = #{settleAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="productDesc != null" >
+        product_desc = #{productDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="projectDetail != null" >
+        project_detail = #{projectDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="refundSource != null" >
+        refund_source = #{refundSource,jdbcType=BIT},
+      </if>
+      <if test="repaymentAmount != null" >
+        repayment_amount = #{repaymentAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="factraiseTime != null" >
+        factraise_time = #{factraiseTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="factknotTime != null" >
+        factknot_time = #{factknotTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="repaymentTime != null" >
+        repayment_time = #{repaymentTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=BIT},
+      </if>
+      <if test="ext != null" >
+        ext = #{ext,jdbcType=VARCHAR},
+      </if>
+      <if test="newOrOldType != null" >
+        new_or_old_type = #{newOrOldType,jdbcType=BIT},
+      </if>
+      <if test="contractUrl != null" >
+        contract_url = #{contractUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="continueStatus != null" >
+        continue_status = #{continueStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="continueAmount != null" >
+        continue_amount = #{continueAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="pushPartyId != null" >
+        push_party_id = #{pushPartyId,jdbcType=BIGINT},
+      </if>
+      <if test="billType != null" >
+        bill_type = #{billType,jdbcType=BIT},
+      </if>
+      <if test="billTypeName != null" >
+        bill_type_name = #{billTypeName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="co.bugu.data.model.ProductTongji" >
+    update tbl_product
+    set product_code = #{productCode,jdbcType=VARCHAR},
+      product_type = #{productType,jdbcType=BIT},
+      product_name = #{productName,jdbcType=VARCHAR},
+      issue_amount = #{issueAmount,jdbcType=DECIMAL},
+      product_deadline = #{productDeadline,jdbcType=INTEGER},
+      plan_annual_yield = #{planAnnualYield,jdbcType=DECIMAL},
+      raise_start_date = #{raiseStartDate,jdbcType=TIMESTAMP},
+      raise_end_date = #{raiseEndDate,jdbcType=TIMESTAMP},
+      start_bid_amount = #{startBidAmount,jdbcType=DECIMAL},
+      increment_amount = #{incrementAmount,jdbcType=DECIMAL},
+      extend_deadline = #{extendDeadline,jdbcType=INTEGER},
+      value_date = #{valueDate,jdbcType=TIMESTAMP},
+      expiring_date = #{expiringDate,jdbcType=TIMESTAMP},
+      extend_expiring_date = #{extendExpiringDate,jdbcType=TIMESTAMP},
+      nterest_mode = #{nterestMode,jdbcType=BIT},
+      contract_template = #{contractTemplate,jdbcType=BIT},
+      plan_cash_day = #{planCashDay,jdbcType=TIMESTAMP},
+      interest_penalty_rate = #{interestPenaltyRate,jdbcType=DECIMAL},
+      status = #{status,jdbcType=INTEGER},
+      settle_amount = #{settleAmount,jdbcType=DECIMAL},
+      product_desc = #{productDesc,jdbcType=VARCHAR},
+      project_detail = #{projectDetail,jdbcType=VARCHAR},
+      refund_source = #{refundSource,jdbcType=BIT},
+      repayment_amount = #{repaymentAmount,jdbcType=DECIMAL},
+      factraise_time = #{factraiseTime,jdbcType=TIMESTAMP},
+      factknot_time = #{factknotTime,jdbcType=TIMESTAMP},
+      repayment_time = #{repaymentTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      del_flag = #{delFlag,jdbcType=BIT},
+      ext = #{ext,jdbcType=VARCHAR},
+      new_or_old_type = #{newOrOldType,jdbcType=BIT},
+      contract_url = #{contractUrl,jdbcType=VARCHAR},
+      continue_status = #{continueStatus,jdbcType=VARCHAR},
+      continue_amount = #{continueAmount,jdbcType=DECIMAL},
+      push_party_id = #{pushPartyId,jdbcType=BIGINT},
+      bill_type = #{billType,jdbcType=BIT},
+      bill_type_name = #{billTypeName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

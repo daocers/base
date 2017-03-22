@@ -79,6 +79,15 @@
     <script src="../assets/js/page-nav.js"></script>
     <script src="../assets/js/my.js"></script>
     <script src="../assets/js/common.js"></script>
+    <script>
+        /**
+         * 修改swal默认设置
+         */
+        swal.setDefaults({
+            confirmButtonText: '确定',
+            cancelButtonText: "取消"
+        });
+    </script>
 </head>
 <body>
 

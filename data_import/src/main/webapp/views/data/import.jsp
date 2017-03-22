@@ -40,8 +40,16 @@
         </div>
 
     </div>
+
+
+    <div>
+        <button class="btn btn-info" id="tongji">添加资产对标统计</button>
+    </div>
 </div>
 <script>
+    $("#tongji").on("click", function () {
+        window.location.href = 'tongji.do';
+    })
 </script>
 </body>
 </html>

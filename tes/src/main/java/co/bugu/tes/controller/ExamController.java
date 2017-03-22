@@ -119,7 +119,7 @@ public class ExamController {
 
     @RequestMapping("/getQuestion")
     @ResponseBody
-    public String getQuestion(Integer paperId, Integer questionId){
+    public String getQuestionAndSaveAnswer(Integer paperId, Integer questionId, Integer time, Integer answer){
         JSONObject json = new JSONObject();
         try{
             Question question = questionService.findById(questionId);
@@ -131,6 +131,7 @@ public class ExamController {
                 ques.put("title", question.getTitle());
                 ques.put("content", question.getContent());
                 ques.put("metaInfoId", question.getMetaInfoId());
+                ques.put("remark", question.getExtraInfo());
                 json.put("code", 0);
                 json.put("data", ques);
             }

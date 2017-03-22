@@ -13,6 +13,14 @@
         .form-group > .radio.inline > label {
             padding-left: 15px;
         }
+
+        .list-group {
+            border: none;
+        }
+
+        .list-group-item {
+            border: none;
+        }
     </style>
 </head>
 <body>
@@ -28,7 +36,7 @@
     <input type="hidden" value="${paper.id}" id="paperId">
     <input type="hidden" value="${paper.questionIds}" id="questionIds">
     <%--<div class="hidden" id="metaInfo">--%>
-        <%--${metaInfo}--%>
+    <%--${metaInfo}--%>
     <%--</div>--%>
     <input type="hidden" value='${metaInfo}' id="metaInfo">
     <div class="row" style="margin-bottom: 15px;">
@@ -44,19 +52,15 @@
                     更换另外一套试卷
                 </div>
                 <div class="input-group-btn">
-                    <button class="btn btn-danger" id="changePaper">确定</button>
+                    <button class="btn btn-warning" id="changePaper">确定</button>
                 </div>
             </div>
-            <div class="input-group">
+            <div class="input-group" style="border: 1px solid #6bff22">
                 <div class="input-group-addon">
-                    题目：
+                    当前做答：
                 </div>
-                <select class="form-control">
-                    <option value="1">单选第一题</option>
-                    <option value="2">单选第二题</option>
-                    <option value="3">单选第三题</option>
-                    <option value="4">多选第一题</option>
-                    <option value="5">判断第一题</option>
+                <select class="form-control" id="current">
+
                 </select>
             </div>
         </div>
@@ -65,142 +69,146 @@
             <div class="form-group">
                 <div class="input-group">
                     <div class="input-group-addon">剩余时间：</div>
-                    <input id="timer" type="text" class="timer form-control" value="00小时11分28秒" readonly
-                           style="width: 150px;">
+                    <input id="timer" type="text" class="timer form-control" readonly
+                           style="width: 100px; color: #2b59ff;">
+                    <button class="btn btn-primary btn-group-addon" id="commitPaper">提交试卷</button>
                 </div>
             </div>
 
         </div>
-
     </div>
     <div class="row">
         <div class="col-md-8">
             <div class="form form-horizontal">
                 <div class="form-group">
-                    <!--<label class="control-label">题目</label>-->
                     <div class="col-md-12">
-                        <div class="panel panel-default" style="margin-left: -15px;">
+                        <div class="panel panel-default" style="margin-left: -15px; margin-right: -25px;">
                             <div class="panel-heading">
-                                <h3 class="panel-title" id="title" ></h3>
+                                <h3 class="panel-title" id="title" style="min-height: 25px;"></h3>
                             </div>
                             <div class="panel-body" style="min-height: 300px;">
                                 <ul class="list-group" id="content">
                                 </ul>
                             </div>
 
-                            <%--<div class="panel-footer">Panel footer</div>--%>
+                            <div class="panel-footer" id="answer" style="padding-left: 30px; min-height: 50px;">
+                                <div class="form-group answer-box" id="single-box" style="display: none">
+                                    <label class="radio inline">
+                                        <input type="radio" name="answer" value="A">&nbsp;&nbsp;A
+                                    </label>
+                                    <label class="radio inline">
+                                        <input type="radio" name="answer" value="B">&nbsp;&nbsp;B
+                                    </label>
+                                    <label class="radio inline">
+                                        <input type="radio" name="answer" value="C">&nbsp;&nbsp;C
+                                    </label>
+                                    <label class="radio inline">
+                                        <input type="radio" name="answer" value="D">&nbsp;&nbsp;D
+                                    </label>
+                                    <label class="radio inline">
+                                        <input type="radio" name="answer" value="E">&nbsp;&nbsp;E
+                                    </label>
+                                    <label class="radio inline">
+                                        <input type="radio" name="answer" value="F">&nbsp;&nbsp;F
+                                    </label>
+                                </div>
+                                <div class="form-group answer-box" id="multi-box" style="display: none">
+                                    <label class="checkbox inline">
+                                        <input type="checkbox" name="answer" value="A">&nbsp;&nbsp;A
+                                    </label>
+                                    <label class="checkbox inline">
+                                        <input type="checkbox" name="answer" value="B">&nbsp;&nbsp;B
+                                    </label>
+                                    <label class="checkbox inline">
+                                        <input type="checkbox" name="answer" value="C">&nbsp;&nbsp;C
+                                    </label>
+                                    <label class="checkbox inline">
+                                        <input type="checkbox" name="answer" value="D">&nbsp;&nbsp;D
+                                    </label>
+                                    <label class="checkbox inline">
+                                        <input type="checkbox" name="answer" value="E">&nbsp;&nbsp;E
+                                    </label>
+                                    <label class="checkbox inline">
+                                        <input type="checkbox" name="answer" value="F">&nbsp;&nbsp;F
+                                    </label>
+                                    <label class="checkbox inline">
+                                        <input type="checkbox" name="answer" value="G">&nbsp;&nbsp;G
+                                    </label>
+                                </div>
+                                <div class="form-group answer-box" id="judge-box" style="display: none">
+                                    <label class="radio inline">
+                                        <input type="radio" name="answer" value="T">&nbsp;&nbsp;正确
+                                    </label>
+                                    <label class="radio inline">
+                                        <input type="radio" name="answer" value="F">&nbsp;&nbsp;错误
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="panel-footer" id="opr-box" style="padding-left: 30px; padding-right: 30px;">
+                                <div class="row">
+                                    <button class="btn btn-default pull-left" id="prevBtn">上一题</button>
+                                    <div class="space" style="display: inline-block; margin-right: 200px;">
+
+                                    </div>
+                                    <button class="btn btn-primary pull-right" id="nextBtn">下一题</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="form-group" id="single-box" style="display: none">
-                    <label class="radio inline">
-                        <input type="radio" name="answer" value="A">&nbsp;&nbsp;A
-                    </label>
-                    <label class="radio inline">
-                        <input type="radio" name="answer" value="B">&nbsp;&nbsp;B
-                    </label>
-                    <label class="radio inline">
-                        <input type="radio" name="answer" value="C">&nbsp;&nbsp;C
-                    </label>
-                    <label class="radio inline">
-                        <input type="radio" name="answer" value="D">&nbsp;&nbsp;D
-                    </label>
-                    <label class="radio inline">
-                        <input type="radio" name="answer" value="E">&nbsp;&nbsp;E
-                    </label>
-                    <label class="radio inline">
-                        <input type="radio" name="answer" value="F">&nbsp;&nbsp;F
-                    </label>
-                </div>
-                <div class="form-group" id="multi-box" style="display: none">
-                    <label class="checkbox inline">
-                        <input type="checkbox" name="answer" value="A">&nbsp;&nbsp;A
-                    </label>
-                    <label class="checkbox inline">
-                        <input type="checkbox" name="answer" value="B">&nbsp;&nbsp;B
-                    </label>
-                    <label class="checkbox inline">
-                        <input type="checkbox" name="answer" value="C">&nbsp;&nbsp;C
-                    </label>
-                    <label class="checkbox inline">
-                        <input type="checkbox" name="answer" value="D">&nbsp;&nbsp;D
-                    </label>
-                    <label class="checkbox inline">
-                        <input type="checkbox" name="answer" value="E">&nbsp;&nbsp;E
-                    </label>
-                    <label class="checkbox inline">
-                        <input type="checkbox" name="answer" value="F">&nbsp;&nbsp;F
-                    </label>
-                    <label class="checkbox inline">
-                        <input type="checkbox" name="answer" value="G">&nbsp;&nbsp;G
-                    </label>
-                </div>
-                <div class="form-group" id="judge-box" style="display: none">
-                    <label class="radio inline">
-                        <input type="radio" name="answer" value="T">&nbsp;&nbsp;正确
-                    </label>
-                    <label class="radio inline">
-                        <input type="radio" name="answer" value="F">&nbsp;&nbsp;错误
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-md-2">备注：</label>
-                    <textarea class="form-control">
-                        本题备注信息
-                    </textarea>
-                </div>
-                <div class="row">
-                    <button class="btn btn-default pull-left" id="prevBtn">上一题</button>
-                    <div class="space" style="display: inline-block; margin-right: 200px;">
-
-                    </div>
-                    <button class="btn btn-primary pull-right" id="nextBtn">下一题</button>
-                </div>
-
             </div>
         </div>
-        <div class="col-md-3 pull-right" style="padding-right: 0px;">
-            <table class="table table-bordered table-responsive">
-                <thead>
-                <tr>
-                    <th>题号</th>
-                    <th>我的答案</th>
-                    <th>最佳答案</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td><a href="#">单选1</a></td>
-                    <td>c</td>
-                    <td>B</td>
-                </tr>
-                <tr>
-                    <td><a href="#">单选1</a></td>
-                    <td>c</td>
-                    <td>B</td>
-                </tr>
-                <tr>
-                    <td><a href="#">单选1</a></td>
-                    <td>c</td>
-                    <td>B</td>
-                </tr>
-                <tr>
-                    <td><a href="#">单选1</a></td>
-                    <td>c</td>
-                    <td>B</td>
-                </tr>
-                </tbody>
-            </table>
+        <div class=" pull-right">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">作答信息</h3>
+                </div>
+                <div style="max-height: 400px; overflow-y: auto;">
+                    <table class="table table-bordered" id="myAnswer">
+                        <thead>
+                        <tr>
+                            <th width="100px">题号</th>
+                            <th width="90px">我的答案</th>
+                            <th width="90px" class="hide">最佳答案</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    @点击题目，跳转到对应的作答页面
+                </div>
+            </div>
         </div>
     </div>
 </div>
 <script>
+    var answerArr = "";
     var metaInfo = eval(${metaInfo});
     console.log("metaInfo: ", metaInfo)
     var index = 0;
     var questionIds = new Array();
+
+
     $(function () {
-//        初始化定时器
+        questionIds = JSON.parse($("#questionIds").val());
+        //初始化答题数据
+        var quebody = "";
+        var selectBox = "";
+        $.each(questionIds, function (idx, obj) {
+            quebody += "<tr queid='" + obj + "'><td><a href='javascript:jumpTo(" + obj + ")'>" + "第" + (idx + 1) + "题" + "</a> </td><td></td><td class='hide'></td></tr>"
+            selectBox += "<option value='" + idx + "'>第" + (idx + 1) + "题</option>"
+        });
+        $("#myAnswer tbody").html(quebody);
+        $("#current").html(selectBox);
+
+        /**
+         * 初始化题目
+         */
+        getQuestionInfo();
+
+//        所有数据初始化完成后，初始化定时器
         var info = $("#timer").val();
         $("#timer").timer({
             duration: '65s',
@@ -210,16 +218,31 @@
                 swal("", "时间到", "info");
             }
         });
-        questionIds = JSON.parse($("#questionIds").val());
 
         /**
-         * 初始化题目
+         * 选中执行事件
          */
-        getQuestionInfo();
+        $("[name='answer']").on("ifChecked", function () {
+            var answer = $(this).val();
+        })
 
-
+        $("[name='answer']").on("ifUnchecked", function () {
+            var answer = $(this).val();
+        })
 
     });
+
+    /**
+     * 获取作答信息
+     */
+    function getAnswer() {
+        var res = "";
+        var checkedInput = $("[name='answer']:checked");
+        $.each(checkedInput, function (idx, obj) {
+            res += obj;
+        });
+        return res;
+    }
 
     /**
      * 前一题
@@ -239,7 +262,8 @@
      * */
     $("#nextBtn").on("click", function () {
         if (index == questionIds.length - 1) {
-            swal("", "已经是最后一题了", "info");
+            swal("", "已经是最后一题了,请提交试卷。", "info");
+            return false;
         }
         zeroModal.loading(4);
         getQuestionInfo();
@@ -248,16 +272,39 @@
     });
     /**
      * 获取试题信息
+     * 并提交当前答案
      */
     function getQuestionInfo() {
         if (index < 0 || index > questionIds.length - 1) {
             swal("", "数据异常，请联系管理员", "error");
             return false;
         }
+        var param = {};
+        param.paperId = $("#paperId").val();
+        if(index == 0){
+            param.questionId = questionIds[index + 1];
+            param.time = -1;
+            param.answer = -1;
+        }else if(index == questionIds.length - 1){
+            var time= getSeconds();
+            var ans = getAnswer();
+            param.time = time;
+            param.answer = ans;
+            param.questionId = -1;
+        }else{
+            var time= getSeconds();
+            var ans = getAnswer();
+            param.time = time;
+            param.answer = ans;
+            param.questionId = questionIds[index + 1];
+        }
+
+
+
         $.ajax({
             url: "getQuestion.do",
             type: "post",
-            data: {paperId: $("#paperId").val(), questionId: questionIds[index + 1]},
+            data: param,
             success: function (data) {
                 console.log(data);
                 var res = JSON.parse(data);
@@ -265,36 +312,45 @@
                     var question = res.data;
                     var title = question.title;
                     var content = JSON.parse(question.content);
+                    var remark = question.remark;
                     var metaInfoId = question.metaInfoId;
-                    if(metaInfo[metaInfoId] == "single"){
+
+
+                    var answerCount = 0;
+                    var buffer = '';
+                    $.each(content, function (idx, obj) {
+                        answerCount++;
+                        buffer += '<li class="list-group-item">' + obj + '</li>';
+                    });
+
+                    if (metaInfo[metaInfoId] == "single") {
                         $("#single-box").show();
                         $("#multi-box").hide();
                         $("#judge-box").hide();
-                    }else if(metaInfo[metaInfoId] == "multi"){
+                    } else if (metaInfo[metaInfoId] == "multi") {
                         $("#single-box").hide();
                         $("#multi-box").show();
                         $("#judge-box").hide();
-                    }else if(metaInfo[metaInfoId] == "judge"){
+                    } else if (metaInfo[metaInfoId] == "judge") {
                         $("#single-box").hide();
                         $("#multi-box").hide();
                         $("#judge-box").show();
                     }
-
-
+                    $("[name='answer']").iCheck("uncheck")
+                    $(".answer-box").find("label:gt(" + (answerCount - 1) + ")").hide();
+                    $(".answer-box").find("label:lt(" + answerCount + ")").show();
                     $("#title").html(title);
-                    var buffer = '';
-                    $.each(content, function (idx, obj) {
-                        buffer += '<li class="list-group-item">' + obj + '</li>';
-                    });
                     $("#content").html(buffer);
-                    index++;
+                    if (remark) {
+                        $("#remark").html("备注：" + remark);
+                    }
                     zeroModal.closeAll();
                 } else {
                     swal("", res.msg, "warning");
                 }
             },
             error: function (data) {
-
+                swal("", "获取试题异常，请联系管理员", "error");
             }
         })
     }
@@ -314,6 +370,16 @@
         radioClass: 'iradio_square-blue',
         increaseArea: '20%' // optional
     });
+
+    $("#commitPaper").on("click", commitPaper);
+
+    function commitPaper() {
+        swal({})
+        var seconds = getSeconds();
+        if (!seconds) {
+            console.log("没有获取到时间信息");
+        }
+    }
 </script>
 </body>
 </html>

@@ -54,13 +54,18 @@ $(function () {
      */
     var err = $("#err").text().trim();
     if (err && err != '') {
-        zeroModal.error(err);
+        swal("", err, "error");
+        return false;
     }
 
     var msg = $("#msg").text().trim();
     if (msg && msg != '') {
         zeroModal.alert(msg);
+        swal("", msg, "info");
+        return false;
     }
+
+
 
 
 })
@@ -86,6 +91,7 @@ jQuery.fn.extend({
         })
     }
 })
+
 
 
 /**
