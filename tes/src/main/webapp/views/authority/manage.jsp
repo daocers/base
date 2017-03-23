@@ -274,50 +274,60 @@
     </div>
 
     <div class="col-md-5">
-        <table class="table table-bordered">
-            <tbody>
-            <tr>
-                <td class="col-md-1">名称</td>
-                <td id="name"></td>
-            </tr>
-            <tr>
-                <td class="col-md-1">URL</td>
-                <td id="url"></td>
-            </tr>
-            <tr>
-                <td class="col-md-1">Controller</td>
-                <td id="controller"></td>
-            </tr>
-            <tr>
-                <td class="col-md-1">Method</td>
-                <td id="action"></td>
-            </tr>
-            <tr>
-                <td class="col-md-1">请求方式</td>
-                <td id="acceptMethod"></td>
-            </tr>
-            <tr>
-                <td class="col-md-1">参数</td>
-                <td id="param"></td>
-            </tr>
-            <tr>
-                <td class="col-md-1"> 权限</td>
-                <td id="needAuth"></td>
-            </tr>
-            <tr>
-                <td class="col-md-1">page</td>
-                <td id="isPage"></td>
-            </tr>
-            <tr>
-                <td>API</td>
-                <td id="isApi"></td>
-            </tr>
-            <tr>
-                <td>描述</td>
-                <td id="description"></td>
-            </tr>
-            </tbody>
-        </table>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    权限详情
+                </h3>
+            </div>
+            <table class="table table-bordered">
+                <tbody>
+                <tr>
+                    <td class="col-md-1">名称</td>
+
+                    <td id="name"></td>
+                </tr>
+                <tr>
+                    <td class="col-md-1">URL</td>
+                    <td id="url"></td>
+                </tr>
+                <tr>
+                    <td class="col-md-1">Controller</td>
+                    <td id="controller"></td>
+                </tr>
+                <tr>
+                    <td class="col-md-1">Method</td>
+                    <td id="action"></td>
+                </tr>
+                <tr>
+                    <td class="col-md-1">请求方式</td>
+                    <td id="acceptMethod"></td>
+                </tr>
+                <tr>
+                    <td class="col-md-1">参数</td>
+                    <td id="param"></td>
+                </tr>
+                <tr>
+                    <td class="col-md-1"> 权限</td>
+                    <td id="needAuth"></td>
+                </tr>
+                <tr>
+                    <td class="col-md-1">page</td>
+                    <td id="isPage"></td>
+                </tr>
+                <tr>
+                    <td>API</td>
+                    <td id="isApi"></td>
+                </tr>
+                <tr>
+                    <td>描述</td>
+                    <td id="description"></td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+
     </div>
 
 

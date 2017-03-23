@@ -62,7 +62,6 @@ $(function () {
     if (msg && msg != '') {
         zeroModal.alert(msg);
         swal("", msg, "info");
-        return false;
     }
 
 

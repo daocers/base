@@ -35,7 +35,7 @@
     <input type="hidden" value="${param.type}" id="type">
     <input type="hidden" value="${paper.id}" id="paperId">
     <input type="hidden" value="${paper.questionIds}" id="questionIds">
-    <input type="hidden" value="${paper.seconds}" id="seconds">
+    <input type="hidden" value="${leftSeconds}" id="leftSeconds">
     <div class="row" style="margin-bottom: 15px;">
         <div class="form form-inline pull-left">
             <div class="input-group">
@@ -187,6 +187,7 @@
     <%--提交试题--%>
     function commitQuestion() {
         var resFlag = true;
+        var paperId = $("#paperId").val();
         var questionId = questionIdList[index];
         var answer = getAnswer();
         if(!answer || answer == ''){//没有答题
@@ -195,7 +196,7 @@
             $.ajax({
                 url: 'commitQuestion',
                 type: "post",
-                data: {questionId: questionId, answer: answer},
+                data: {questionId: questionId, answer: answer, paperId: paperId},
                 success: function (data) {
                     var res = JSON.parse(data);
                     if(res.code == 0){
@@ -217,12 +218,12 @@
 
     }
     /*获取试题*/
-    function getQuestion(index) {
+    function getQuestion(id) {
         var reqFlag = true;
         $.ajax({
             url: "getQuestion.do",
             type: "post",
-            data: {questionId: index},
+            data: {questionId: id},
             success: function (data) {
                 console.log(data);
                 var res = JSON.parse(data);
@@ -290,7 +291,7 @@
         $.ajax({
             url: "commitPaper.do",
             type: 'post',
-            data: {answer: JSON.stringify(data)},
+            data: {answerInfo: JSON.stringify(data), paperId: paperId},
             success: function (data) {
                 var res = JSON.parse(data);
                 if(res.code == 0){
@@ -357,9 +358,9 @@
         }
     }
     /*初始化计时器*/
-    function initTimer(seconds) {
+    function initTimer() {
         $("#timer").timer({
-            duration: $("#seconds").val() + 'm',
+            duration: $("#leftSeconds").val() + 's',
             countdown: true,
             format: '%H:%M:%S',
             callback: function () {

@@ -1,11 +1,13 @@
 package co.bugu.tes.controller;
 
 import co.bugu.framework.core.util.BuguWebUtil;
+import co.bugu.framework.core.util.DatabaseUtil;
 import co.bugu.tes.model.*;
 import co.bugu.tes.service.*;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.ss.formula.functions.PPMT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +15,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by user on 2017/1/12.
@@ -75,8 +76,17 @@ public class ExamController {
     }
 
 
+    /**
+     * 跳转到考试界面
+     * @param scene
+     * @param model
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
     @RequestMapping("/exam")
-    public String toExam(Scene scene, ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public String toExam(Scene scene, ModelMap model, HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes) throws Exception {
         Map<Integer, String> metaInfoMap = new HashMap<>();
         List<QuestionMetaInfo> metaInfoList = metaInfoService.findByObject(null);
         for(QuestionMetaInfo metaInfo: metaInfoList){
@@ -84,8 +94,51 @@ public class ExamController {
         }
         model.put("metaInfo", JSON.toJSONString(metaInfoMap));
         if(scene.getId() == null){
-            throw new Exception("非法操作");
+            throw new Exception("非法操作,没有找到对应的场次");
         }
+
+        boolean continueFlag = true;
+        scene = sceneService.findById(scene.getId());
+        Date now = new Date();
+        Date beginTime = scene.getBeginTime();
+        Date endTime = scene.getEndTime();
+        if(beginTime.compareTo(now) > 0){
+            redirectAttributes.addFlashAttribute("msg", "考试开始时间未到，请等待。");
+            continueFlag = false;
+        }
+        Integer delay = scene.getDelay();
+        if(delay == null || delay == 0){//不考虑递延状态，考试时间内都可以进入
+            if(endTime.compareTo(now) <= 0){
+                redirectAttributes.addFlashAttribute("msg", "考试已经结束，无法参加考试。");
+                continueFlag = false;
+            }
+        }else{
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(beginTime);
+            calendar.add(Calendar.MINUTE, delay);
+            Date lastEntry = calendar.getTime();
+            if(lastEntry.compareTo(now) < 0){
+                continueFlag = false;
+                redirectAttributes.addFlashAttribute("msg", "开场超过" + delay + "分钟，无法参加考试");
+            }
+        }
+
+        //不符合考试条件，跳转到考试列表页面
+        if(continueFlag == false){
+            return "redirect:list.do";
+        }
+
+        Integer leftMinute = 0;
+        Long left = (endTime.getTime() - now.getTime())/1000/60;
+        if(left.intValue() < scene.getDuration()){
+            leftMinute = left.intValue();
+        }else{
+            leftMinute = scene.getDuration();
+        }
+
+        model.put("leftSeconds", leftMinute * 60);
+
+
         Integer userId = (Integer) BuguWebUtil.getUserId(request);
         Paper  paper = new Paper();
         paper.setUserId(userId);
@@ -99,56 +152,99 @@ public class ExamController {
             scene = sceneService.findById(scene.getId());
             model.put("scene", scene);
         }
-        return "exam/exam";
+        return "exam/examine";
     }
 
-    @RequestMapping("/answer")
+
+    /**
+     * 提交问题答案 单选判断等暂时不需要
+     * @param questionId 题目id
+     * @param answer    答案
+     * @param seconds 提交时候从开始答题所用的时间（s)
+     * @param paperId 试卷id
+     * @return
+     */
+    @RequestMapping(value = "/commitQuestion", method = RequestMethod.POST)
     @ResponseBody
-    public String commitQuestion(Integer paperId, Integer questionId, String answer){
-        return null;
+    public String commitQuestion(Integer paperId, Integer questionId,  String answer, Integer seconds){
+        JSONObject json = new JSONObject();
+        json.put("code", 0);
+        if(StringUtils.isEmpty(answer)){
+            json.put("code", -1);
+            json.put("msg", "答案为空");
+        }else{
+            Answer ans = new Answer();
+            ans.setAnswer(answer);
+            ans.setPaperId(paperId);
+            ans.setQuestionId(questionId);
+            ans.setSeconds(seconds);
+            answerService.save(ans);
+        }
+        return json.toJSONString();
     }
 
-    @RequestMapping("/commit")
-    public String commitPaper(){
-        return "exam/result";
-    }
 
-
-    @RequestMapping("/getQuestion")
+    /**
+     * 提交试卷
+     * @param paperId
+     * @param answerInfo
+     * @return
+     */
+    @RequestMapping(value = "/commitPaper", method = RequestMethod.POST)
     @ResponseBody
-    public String getQuestionAndSaveAnswer(Integer paperId, Integer current, Integer currentIndex, Integer questionId, Integer time, String answer){
+    public String commitPaper(Integer paperId, String answerInfo){
         JSONObject json = new JSONObject();
         json.put("code", 0);
         try{
-            if(currentIndex == 0 && answer.equals("-1") ){
-                logger.info("获取第一题");
-            }else if(current > 0 && StringUtils.isNotEmpty(answer)){
-                Answer a = new Answer();
-                a.setAnswer(answer);
-                a.setPaperId(paperId);
-                a.setQuestionId(current);
-                a.setSeconds(time);
-                answerService.save(a);
-                logger.info("保存作答记录成功");
+            boolean saveAnsFlag = true;
+            try{
+                Map<Integer, String> answerMap = JSON.parseObject(answerInfo, HashMap.class);
+                answerService.savePaperAnswer(answerMap, paperId);
+            }catch (Exception e){
+                json.put("code", 1);
+                json.put("msg", "保存试卷答案失败");
+                saveAnsFlag = false;
+                logger.error("保存试卷答案失败", e);
             }
 
-            if(questionId == -1){
-                logger.info("已经是最后一题了");
-                json.put("code", -2);
-                json.put("msg", "已经是最后一题了");
+            Paper paper = paperService.findById(paperId);
+            paper.setId(paperId);
+            if(saveAnsFlag){
+                paper.setStatus(3);//保存成功
             }else{
-                Question question = questionService.findById(questionId);
-                if(question == null){
-                    json.put("code", -1);
-                    json.put("msg", "没有查到对应的试题");
-                }else{
-                    JSONObject ques = new JSONObject();
-                    ques.put("title", question.getTitle());
-                    ques.put("content", question.getContent());
-                    ques.put("metaInfoId", question.getMetaInfoId());
-                    ques.put("remark", question.getExtraInfo());
-                    json.put("data", ques);
-                }
+                paper.setStatus(4);//保存失败
+            }
+            paperService.updateById(paper);
+        }catch (Exception e){
+            logger.error("提交试卷信息失败", e);
+            json.put("code", -1);
+            json.put("msg", "提交试卷失败");
+        }
+        return json.toJSONString();
+    }
+
+    /**
+     * 获取试题
+     * @param questionId  试题id
+     * @return
+     */
+    @RequestMapping("/getQuestion")
+    @ResponseBody
+    public String getQuestion(Integer questionId){
+        JSONObject json = new JSONObject();
+        json.put("code", 0);
+        try{
+            Question question = questionService.findById(questionId);
+            if(question == null){
+                json.put("code", -1);
+                json.put("msg", "没有查到对应的试题");
+            }else{
+                JSONObject ques = new JSONObject();
+                ques.put("title", question.getTitle());
+                ques.put("content", question.getContent());
+                ques.put("metaInfoId", question.getMetaInfoId());
+                ques.put("remark", question.getExtraInfo());
+                json.put("data", ques);
             }
         }catch (Exception e){
             logger.error("获取试题信息失败", e);
