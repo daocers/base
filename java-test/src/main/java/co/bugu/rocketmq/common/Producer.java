@@ -6,6 +6,8 @@ import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
 import com.alibaba.rocketmq.client.producer.SendResult;
 import com.alibaba.rocketmq.common.message.Message;
 import com.alibaba.rocketmq.remoting.exception.RemotingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -15,6 +17,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class Producer {
     public static void main(String[] args) throws IOException {
+        Logger logger = LoggerFactory.getLogger(Producer.class);
         /**
          * 一个应用创建一个Producer，由应用来维护此对象，可以设置为全局对象或者单例<br>
          * 注意：ProducerGroupName需要由应用来保证唯一<br>
@@ -22,8 +25,8 @@ public class Producer {
          * 因为服务器会回查这个Group下的任意一个Producer
          */
         DefaultMQProducer producer = new DefaultMQProducer("ProducerGroupName");
-        //producer.setNamesrvAddr("192.168.180.1:9876");
-        producer.setNamesrvAddr("192.168.1.128:9876");
+        producer.setNamesrvAddr("127.0.0.1:9876");
+//        producer.setNamesrvAddr("192.168.1.128:9876");
         producer.setInstanceName("ProducerOrderly");
         /**
          * Producer对象在使用之前必须要调用start初始化，初始化一次即可<br>
@@ -34,7 +37,7 @@ public class Producer {
         } catch (MQClientException e) {
             e.printStackTrace();
         }
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 3; i++) {
             try {
                 /**
                  * 下面这段代码表明一个Producer对象可以发送多个topic，多个tag的消息。
@@ -43,36 +46,18 @@ public class Producer {
                  * 需要对这种情况做处理。另外，消息可能会存在发送失败的情况，失败重试由应用来处理。
                  */
                 {
-                    Message msg = new Message("TopicTest1",// topic
+                    Message msg = new Message("myTopic",// topic
                             "TagA",// tag
                             "OrderID001",// key
                             ("Hello MetaQ").getBytes());// body
                     SendResult sendResult = producer.send(msg);
+                    System.out.println("发送状态" +sendResult.getSendStatus().name());
+                    System.out.println("消息id：" + sendResult.getMsgId());
                     System.out.println(sendResult);
                 }
 
-                {
-                    Message msg = new Message("TopicTest2",
-                            "TagB",
-                            "OrderID001",
-                            ("Hello MetaQ TagB".getBytes()));
 
-                    SendResult sendResult = producer.send(msg);
-                    System.out.println(sendResult);
-                }
-
-                {
-                    Message msg = new Message("TopicTest3",
-                            "TagC",
-                            "OrderID001",
-                            ("Hello MetaQ TagC").getBytes());
-
-                    SendResult sendResult = producer.send(msg);
-
-                    System.out.println(sendResult);
-                }
-
-                TimeUnit.MILLISECONDS.sleep(1000);
+                TimeUnit.MILLISECONDS.sleep(100);
 
             } catch (MQClientException e) {
                 e.printStackTrace();

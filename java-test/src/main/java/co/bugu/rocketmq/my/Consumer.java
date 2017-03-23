@@ -16,7 +16,7 @@ import java.util.List;
 public class Consumer {
     public static void main(String[] args) throws MQClientException {
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("consumerGroup");
-        consumer.setNamesrvAddr("192.168.1.128:9876");
+        consumer.setNamesrvAddr("114.215.142.252:9876");
         consumer.setInstanceName("my-consumer" + System.currentTimeMillis());
         consumer.subscribe("his", "qin || han");
         consumer.setVipChannelEnabled(false);

@@ -24,17 +24,17 @@ public class Consumer {
          * 注意：ConsumerGroupName需要由应用来保证唯一
          */
         DefaultMQPushConsumer pushConsumer = new DefaultMQPushConsumer("consumerGroupName");
-        //pushConsumer.setNamesrvAddr("192.168.180.1:9876");
-        pushConsumer.setNamesrvAddr("192.168.1.128:9876");
+        pushConsumer.setNamesrvAddr("127.0.0.1:9876");
+//        pushConsumer.setNamesrvAddr("192.168.1.128:9876");
         pushConsumer.setInstanceName("Consumer");
-        pushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
+        pushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_TIMESTAMP);
         pushConsumer.setVipChannelEnabled(false);
         try {
             /**
              * 订阅指定topic下tags分别等于TagA或TagC或TagD
              * 两个参数：第一个参数是topic第二个参数是tags
              */
-            pushConsumer.subscribe("TopicTest1", "TagA || TagC || TagD");
+            pushConsumer.subscribe("myTopic", "TagA || TagC || TagD");
             /**
              * 订阅指定topic下所有消息<br>
              * 注意：一个consumer对象可以订阅多个topic
@@ -44,7 +44,7 @@ public class Consumer {
                 @Override
                 public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs,
                                                                 ConsumeConcurrentlyContext consumeConcurrentlyContext) {
-                    System.out.println(Thread.currentThread().getName() + " Receive New Messages: " + msgs.size());
+//                    System.out.println(Thread.currentThread().getName() + " Receive New Messages: " + msgs.size());
                     MessageExt messageExt = msgs.get(0);
                     if("TopicTest1".equals(messageExt.getTopic())){
                         // 执行TopicTest1的消费逻辑
@@ -59,6 +59,7 @@ public class Consumer {
                     }else if("TopicTest2".equals(messageExt.getTopic())){
                         System.out.println(new String(messageExt.getBody()));
                     }
+                    System.out.println("接收到消息：id为 " + messageExt.getMsgId());
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
             });
