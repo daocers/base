@@ -1,16 +1,11 @@
 package co.bugu.tes.controller;
 
 import co.bugu.framework.core.util.BuguWebUtil;
-import co.bugu.tes.model.Paper;
-import co.bugu.tes.model.Question;
-import co.bugu.tes.model.QuestionMetaInfo;
-import co.bugu.tes.model.Scene;
-import co.bugu.tes.service.IPaperService;
-import co.bugu.tes.service.IQuestionMetaInfoService;
-import co.bugu.tes.service.IQuestionService;
-import co.bugu.tes.service.ISceneService;
+import co.bugu.tes.model.*;
+import co.bugu.tes.service.*;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +40,8 @@ public class ExamController {
     IQuestionService questionService;
     @Autowired
     IQuestionMetaInfoService metaInfoService;
+    @Autowired
+    IAnswerService answerService;
 
     /**
      *
@@ -119,21 +116,39 @@ public class ExamController {
 
     @RequestMapping("/getQuestion")
     @ResponseBody
-    public String getQuestionAndSaveAnswer(Integer paperId, Integer questionId, Integer time, Integer answer){
+    public String getQuestionAndSaveAnswer(Integer paperId, Integer current, Integer currentIndex, Integer questionId, Integer time, String answer){
         JSONObject json = new JSONObject();
+        json.put("code", 0);
         try{
-            Question question = questionService.findById(questionId);
-            if(question == null){
-                json.put("code", -1);
-                json.put("msg", "没有查到对应的试题");
+            if(currentIndex == 0 && answer.equals("-1") ){
+                logger.info("获取第一题");
+            }else if(current > 0 && StringUtils.isNotEmpty(answer)){
+                Answer a = new Answer();
+                a.setAnswer(answer);
+                a.setPaperId(paperId);
+                a.setQuestionId(current);
+                a.setSeconds(time);
+                answerService.save(a);
+                logger.info("保存作答记录成功");
+            }
+
+            if(questionId == -1){
+                logger.info("已经是最后一题了");
+                json.put("code", -2);
+                json.put("msg", "已经是最后一题了");
             }else{
-                JSONObject ques = new JSONObject();
-                ques.put("title", question.getTitle());
-                ques.put("content", question.getContent());
-                ques.put("metaInfoId", question.getMetaInfoId());
-                ques.put("remark", question.getExtraInfo());
-                json.put("code", 0);
-                json.put("data", ques);
+                Question question = questionService.findById(questionId);
+                if(question == null){
+                    json.put("code", -1);
+                    json.put("msg", "没有查到对应的试题");
+                }else{
+                    JSONObject ques = new JSONObject();
+                    ques.put("title", question.getTitle());
+                    ques.put("content", question.getContent());
+                    ques.put("metaInfoId", question.getMetaInfoId());
+                    ques.put("remark", question.getExtraInfo());
+                    json.put("data", ques);
+                }
             }
         }catch (Exception e){
             logger.error("获取试题信息失败", e);
