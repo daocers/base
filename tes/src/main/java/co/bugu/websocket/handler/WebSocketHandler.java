@@ -40,10 +40,18 @@ public class WebSocketHandler extends TextWebSocketHandler {
      */
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
+        String res = "";
         System.out.println("handleMessage" + message.toString());
         logger.debug("handleMessage" + message.toString());
+        String content = message.getPayload().toString();
+        Integer length = message.getPayloadLength();
+        if("1".equals(content)){
+            res = "age";
+        }else{
+            res = "time";
+        }
         //sendMessageToUsers();  
-        session.sendMessage(new TextMessage(new Date() + ""));
+        session.sendMessage(new TextMessage(new Date().toString() + " " + res));
     }
 
     @Override
