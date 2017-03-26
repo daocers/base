@@ -9,6 +9,7 @@ public class Answer {
     private Integer questionId;
     private String answer;
     private Integer seconds;
+    private String timeLeft;
     private Integer result;
     private Double score;
 
@@ -18,6 +19,14 @@ public class Answer {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getTimeLeft() {
+        return timeLeft;
+    }
+
+    public void setTimeLeft(String timeLeft) {
+        this.timeLeft = timeLeft;
     }
 
     public Integer getPaperId() {

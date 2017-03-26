@@ -1,13 +1,12 @@
 package co.bugu.tes.controller;
 
 import co.bugu.framework.core.util.BuguWebUtil;
-import co.bugu.framework.core.util.DatabaseUtil;
 import co.bugu.tes.model.*;
 import co.bugu.tes.service.*;
+import co.bugu.websocket.WebSocketSessionUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.ss.formula.functions.PPMT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -105,27 +107,29 @@ public class ExamController {
         if(beginTime.compareTo(now) > 0){
             redirectAttributes.addFlashAttribute("msg", "考试开始时间未到，请等待。");
             continueFlag = false;
-        }
-        Integer delay = scene.getDelay();
-        if(delay == null || delay == 0){//不考虑递延状态，考试时间内都可以进入
-            if(endTime.compareTo(now) <= 0){
-                redirectAttributes.addFlashAttribute("msg", "考试已经结束，无法参加考试。");
-                continueFlag = false;
-            }
         }else{
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(beginTime);
-            calendar.add(Calendar.MINUTE, delay);
-            Date lastEntry = calendar.getTime();
-            if(lastEntry.compareTo(now) < 0){
-                continueFlag = false;
-                redirectAttributes.addFlashAttribute("msg", "开场超过" + delay + "分钟，无法参加考试");
+            Integer delay = scene.getDelay();
+            if(delay == null || delay == 0){//不考虑递延状态，考试时间内都可以进入
+                if(endTime.compareTo(now) <= 0){
+                    redirectAttributes.addFlashAttribute("msg", "考试已经结束，无法参加考试。");
+                    continueFlag = false;
+                }
+            }else{
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(beginTime);
+                calendar.add(Calendar.MINUTE, delay);
+                Date lastEntry = calendar.getTime();
+                if(lastEntry.compareTo(now) < 0){
+                    continueFlag = false;
+                    redirectAttributes.addFlashAttribute("msg", "开场超过" + delay + "分钟，无法参加考试");
+                }
             }
         }
 
+
         //不符合考试条件，跳转到考试列表页面
         if(continueFlag == false){
-            return "redirect:list.do";
+            return "redirect:new/list.do";
         }
 
         Integer leftMinute = 0;
@@ -136,7 +140,7 @@ public class ExamController {
             leftMinute = scene.getDuration();
         }
 
-        model.put("leftSeconds", leftMinute * 60);
+        model.put("timeLeft", leftMinute/60 + "h" + leftMinute % 60 + "m" + "0s");
 
 
         Integer userId = (Integer) BuguWebUtil.getUserId(request);
@@ -160,13 +164,13 @@ public class ExamController {
      * 提交问题答案 单选判断等暂时不需要
      * @param questionId 题目id
      * @param answer    答案
-     * @param seconds 提交时候从开始答题所用的时间（s)
+     * @param timeLeft 提交时候剩余时间
      * @param paperId 试卷id
      * @return
      */
     @RequestMapping(value = "/commitQuestion", method = RequestMethod.POST)
     @ResponseBody
-    public String commitQuestion(Integer paperId, Integer questionId,  String answer, Integer seconds){
+    public String commitQuestion(Integer paperId, Integer questionId, String answer, String timeLeft){
         JSONObject json = new JSONObject();
         json.put("code", 0);
         if(StringUtils.isEmpty(answer)){
@@ -177,7 +181,7 @@ public class ExamController {
             ans.setAnswer(answer);
             ans.setPaperId(paperId);
             ans.setQuestionId(questionId);
-            ans.setSeconds(seconds);
+            ans.setTimeLeft(timeLeft);
             answerService.save(ans);
         }
         return json.toJSONString();
@@ -252,6 +256,31 @@ public class ExamController {
             json.put("msg", "获取试题信息失败");
         }
         return json.toJSONString();
+    }
+
+
+    @ResponseBody
+    @RequestMapping("/sendMessage")
+    public String sendMessageToClient() throws IOException {
+        JSONObject json = new JSONObject();
+        json.put("type", 4);
+        Map<Integer, WebSocketSession> sessionMap = WebSocketSessionUtil.getAllWebSocketSessions();
+        for(Map.Entry<Integer, WebSocketSession> entry: sessionMap.entrySet()){
+            WebSocketSession session = entry.getValue();
+            session.sendMessage(new TextMessage(json.toJSONString()));
+        }
+        return "";
+    }
+
+    /**
+     * 向指定客户端发消息
+     * @param userId
+     * @param message
+     * @throws IOException
+     */
+    private void sendMessageToUserClient(Integer userId, String message) throws IOException {
+        WebSocketSession session = WebSocketSessionUtil.getWebSocketSession(userId);
+        session.sendMessage(new TextMessage(message));
     }
 
 

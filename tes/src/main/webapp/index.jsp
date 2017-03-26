@@ -9,69 +9,69 @@
     <link rel="stylesheet" href="/assets/css/bootstrap.css" type="text/css">
     <script src="http://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
     <script>
-        var ws;
-        $(function () {
-            ws = new WebSocket("ws://localhost:8888/ws/my.ws");
-            console.log("初始化");
-            ws.onopen = function () {
-                console.log("open。。。")
-            }
-
-            ws.onmessage = function (event) {
-                console.log("event", event);
-                var data = event.data;
-                console.log("data", data);
-            }
-
-            ws.onclose = function (event) {
-                console.log("event:", event);
-                console.log("close...")
-            }
-        })
-
-
-
-        function sendMessage(msg) {
-            ws.send(msg);
-        }
+//        var ws;
+//        $(function () {
+//            ws = new WebSocket("ws://localhost:8080/ws/my.ws");
+//            console.log("初始化");
+//            ws.onopen = function () {
+//                console.log("open。。。")
+//            }
+//
+//            ws.onmessage = function (event) {
+//                console.log("event", event);
+//                var data = event.data;
+//                console.log("data", data);
+//            }
+//
+//            ws.onclose = function (event) {
+//                console.log("event:", event);
+//                console.log("close...")
+//            }
+//        })
+//
+//
+//
+//        function sendMessage(msg) {
+//            ws.send(msg);
+//        }
     </script>
     <script language="javascript" type="text/javascript">
 
-        var echo_websocket;
-        function init() {
-            output = document.getElementById("output");
-        }
-        function send_echo() {
-//            echo_websocket = new SockJS("http://localhost:8888/ws/my") ;   //初始化 websocket
-            echo_websocket = new WebSocket("ws://localhost:8888/ws/my.ws");
-            echo_websocket.onopen = function () {
-                console.log('Info: connection opened.');
-                echo_websocket.send("abcabc");
-
-            };
-
-            echo_websocket.onmessage = function (event) {
-                console.log('Received: ' + event.data); //处理服务端返回消息
-            };
-
-            echo_websocket.onclose = function (event) {
-                console.log('Info: connection closed.');
-                console.log(event);
-            };
-
-        }
-
-        function doSend(message) {
-            echo_websocket.send(message);
-            writeToScreen("Sent message: " + message);
-        }
-        function writeToScreen(message) {
-            var pre = document.createElement("p");
-            pre.style.wordWrap = "break-word";
-            pre.innerHTML = message;
-            output.appendChild(pre);
-        }
-        window.addEventListener("load", init, false);
+//        var echo_websocket;
+//        function init() {
+//            output = document.getElementById("output");
+//        }
+//        function send_echo() {
+////            echo_websocket = new SockJS("http://localhost:8888/ws/my") ;   //初始化 websocket
+//            echo_websocket = new WebSocket("ws://localhost:8888/ws/my.ws");
+//            echo_websocket.onopen = function () {
+//                console.log('Info: connection opened.');
+//                echo_websocket.send("abcabc");
+//
+//            };
+//
+//            echo_websocket.onmessage = function (event) {
+//                console.log('Received: ' + event.data); //处理服务端返回消息
+//            };
+//
+//            echo_websocket.onclose = function (event) {
+//                console.log('Info: connection closed.');
+//                console.log(event);
+//            };
+//
+//        }
+//
+//        function doSend(message) {
+//            echo_websocket.send(message);
+//            writeToScreen("Sent message: " + message);
+//        }
+//        function writeToScreen(message) {
+//            var pre = document.createElement("p");
+//            pre.style.wordWrap = "break-word";
+//            pre.innerHTML = message;
+//            output.appendChild(pre);
+//        }
+//        window.addEventListener("load", init, false);
     </script>
 </head>
 <body>
@@ -92,11 +92,26 @@
         <button class="btn btn-info" id="btn">发送</button>
 
     </form>
+
+    <button class="btn btn-danger" id="sendFromServer">从服务器发消息</button>
 </div>
 <div id="output"></div>
 <script>
     $("#btn").on("click", function () {
         sendMessage($("#info").val());
+    });
+
+
+    $("#sendFromServer").on("click", function () {
+        $.ajax({
+            url: "/exam/sendMessage.do",
+            success: function (data) {
+                console.log("send good")
+            },
+            error: function () {
+                console.log("send error");
+            }
+        })
     })
 </script>
 </body>

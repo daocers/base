@@ -12,9 +12,7 @@ import co.bugu.tes.service.IUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import sun.rmi.runtime.Log;
 
-import java.security.Key;
 import java.util.List;
 
 @Service
@@ -86,7 +84,9 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
     public User findFullById(Integer id) {
         try{
             User user = JedisUtil.getJson(Constant.USER_INFO_PREFIX + id, User.class);
-            return user;
+            if(user != null){
+                return user;
+            }
         }catch (Exception e){
             logger.error("查询redis失败",e);
         }

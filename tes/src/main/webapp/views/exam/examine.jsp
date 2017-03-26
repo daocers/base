@@ -35,7 +35,7 @@
     <input type="hidden" value="${param.type}" id="type">
     <input type="hidden" value="${paper.id}" id="paperId">
     <input type="hidden" value="${paper.questionIds}" id="questionIds">
-    <input type="hidden" value="${leftSeconds}" id="leftSeconds">
+    <input type="hidden" value="${timeLeft}" id="timeLeft">
     <div class="row" style="margin-bottom: 15px;">
         <div class="form form-inline pull-left">
             <div class="input-group">
@@ -67,7 +67,7 @@
                 <div class="input-group">
                     <div class="input-group-addon">剩余时间：</div>
                     <input id="timer" type="text" class="timer form-control" readonly
-                           style="width: 100px; color: #2b59ff;">
+                           style="width: 120px; color: #2b59ff;">
                     <button class="btn btn-primary btn-group-addon" id="commitPaper">提交试卷</button>
                 </div>
             </div>
@@ -184,19 +184,21 @@
     var currentIndex = -1;
     var questionCount = 0;
     var questionIdList= new Array();
+    var metaInfoMap = eval(${metaInfo});
     <%--提交试题--%>
     function commitQuestion() {
         var resFlag = true;
         var paperId = $("#paperId").val();
-        var questionId = questionIdList[index];
+        var questionId = questionIdList[currentIndex];
         var answer = getAnswer();
+        $("table tbody").find("tr[queid='" + questionId + "'] > td:eq(1)").text(answer);
         if(!answer || answer == ''){//没有答题
             return true;
         }else{
             $.ajax({
-                url: 'commitQuestion',
+                url: 'commitQuestion.do',
                 type: "post",
-                data: {questionId: questionId, answer: answer, paperId: paperId},
+                data: {questionId: questionId, answer: answer, paperId: paperId, timeLeft: getTileLeft()},
                 success: function (data) {
                     var res = JSON.parse(data);
                     if(res.code == 0){
@@ -208,10 +210,12 @@
                         swal("提交答案失败", msg, "error");
                         resFlag = false;
                     }
+                    return resFlag;
                 },
                 error: function (data) {
                     resFlag = false;
                     swal("", "服务异常", "error");
+                    return resFlag;
                 }
             })
         }
@@ -318,49 +322,42 @@
             swal("", "已经是最后一题","warning");
             return false;
         }
-        var res = commitQuestion();
-        if(res){
-            console.log("提交试题成功");
-            res = getQuestion(currentIndex + 1);
-            if(res){
-                currentIndex++;
-                return false;
-            }else{
-                swal("", "获取试题失败", "error");
-                return false;
-            }
-        }else{
+        try {
+            commitQuestion();
+            getQuestion(questionIdList[currentIndex + 1]);
+            currentIndex++;
+            return false;
+        }catch(err){
+            console.log("失败", err);
             swal("", "提交试题失败", "error");//此处根据需要后续不做弹框处理，要做页面头部显示
             return false;
         }
-
     }
+
     /*前一题*/
     function prev() {
         if(currentIndex == 0 || currentIndex == -1){
             swal("", "已经是第一题","warning");
             return false;
         }
-        var res = commitQuestion();
-        if(res){
-            console.log("提交试题成功");
-            res = getQuestion(currentIndex + 1);
-            if(res){
-                currentIndex--;
-                return false;
-            }else{
-                swal("", "获取试题失败", "error");
-                return false;
-            }
-        }else{
+        try {
+            commitQuestion();
+            getQuestion(questionIdList[currentIndex - 1]);
+            currentIndex--;
+            return false;
+        }catch(err){
+            console.log("失败", err);
             swal("", "提交试题失败", "error");//此处根据需要后续不做弹框处理，要做页面头部显示
             return false;
         }
     }
     /*初始化计时器*/
     function initTimer() {
+        var left = $("#timeLeft").val();
+//        left = left + "s";
+        console.log("leftTime: ", left)
         $("#timer").timer({
-            duration: $("#leftSeconds").val() + 's',
+            duration: left,
             countdown: true,
             format: '%H:%M:%S',
             callback: function () {
@@ -379,212 +376,61 @@
             res += $(obj).val();
         });
         return res;
-    }
-
-
-
-
-
-
-
-
-
-    /*8888888888888888888888888888888888888888888888*/
-
-    var metaInfoMap = eval(${metaInfo});
-    var index = 0;
-    var questionIds = new Array();
-
-
-    $(function () {
-        questionIds = JSON.parse($("#questionIds").val());
-        //初始化答题数据
-        var quebody = "";
-        var selectBox = "";
-        $.each(questionIds, function (idx, obj) {
-            quebody += "<tr queid='" + obj + "'><td><a href='javascript:jumpTo(" + obj + ")'>" + "第" + (idx + 1) + "题" + "</a> </td><td></td><td class='hide'></td></tr>"
-            selectBox += "<option value='" + idx + "'>第" + (idx + 1) + "题</option>"
-        });
-        $("#myAnswer tbody").html(quebody);
-        $("#current").html(selectBox);
-
-        /**
-         * 初始化题目
-         */
-        getQuestionInfo();
-
-//        所有数据初始化完成后，初始化定时器
-        var info = $("#timer").val();
-        $("#timer").timer({
-            duration: '65s',
-            countdown: true,
-            format: '%H:%M:%S',
-            callback: function () {
-                swal("", "时间到", "info");
-            }
-        });
-
-        /**
-         * 选中执行事件
-         */
-        $("[name='answer']").on("ifChecked", function () {
-            var answer = $(this).val();
-        })
-
-        $("[name='answer']").on("ifUnchecked", function () {
-            var answer = $(this).val();
-        })
-
-    });
-
-    /**
-     * 获取作答信息
-     */
-    function getAnswer() {
-        var res = "";
-        var checkedInput = $("[name='answer']:checked");
-        $.each(checkedInput, function (idx, obj) {
-            res += $(obj).val();
-        });
-        return res;
-    }
-
-    /**
-     * 前一题
-     */
-    $("#prevBtn").on("click", function () {
-        if (index == 0) {
-            swal("", "已经是第一题了", "info");
-        }
-        zeroModal.loading(4);
-        var flag = getQuestionInfo();
-        if(flag){
-            index--;
-        }
-        zeroModal.closeAll();
-    });
-
-    /**
-     *  后一题
-     * */
-    $("#nextBtn").on("click", function () {
-        if (index == questionIds.length - 1) {
-            swal("", "已经是最后一题了,请提交试卷。", "info");
-            return false;
-        }
-        zeroModal.loading(4);
-        var flag = getQuestionInfo();
-        console.log("flag: ", flag);
-        if(flag){
-            index++;
-        }
-        zeroModal.closeAll();
-    });
-    /**
-     * 获取试题信息
-     * 并提交当前答案
-     */
-    function getQuestionInfo() {
-        console.log("index: ", index);
-        if (index < 0 || index > questionIds.length - 1) {
-            swal("", "数据异常，请联系管理员", "error");
-            return false;
-        }
-        var param = {};
-        param.paperId = $("#paperId").val();
-        param.current = questionIds[index];
-        param.currentIndex = index;
-        if(index == 0){
-            param.questionId = questionIds[index + 1];
-            param.time = -1;
-            param.answer = -1;
-        }else if(index == questionIds.length - 1){
-            var time= getSeconds();
-            var ans = getAnswer();
-            param.time = time;
-            param.answer = ans;
-            param.questionId = -1;
-        }else{
-            var time= getSeconds();
-            var ans = getAnswer();
-            param.time = time;
-            param.answer = ans;
-            param.questionId = questionIds[index + 1];
-        }
-
-        console.log("answer: ", param.answer);
-        if(param.answer != -1){
-            $("table tbody tr:eq(" + index + ")").find("td:eq(1)").val(param.answer);
-        }
-
-
-        var reqFlag = true;
-        $.ajax({
-            url: "getQuestion.do",
-            type: "post",
-            data: param,
-            success: function (data) {
-                console.log(data);
-                var res = JSON.parse(data);
-                if (res.code == 0) {
-                    var question = res.data;
-                    var title = question.title;
-                    var content = JSON.parse(question.content);
-                    var remark = question.remark;
-                    var metaInfoId = question.metaInfoId;
-
-
-                    var answerCount = 0;
-                    var buffer = '';
-                    $.each(content, function (idx, obj) {
-                        answerCount++;
-                        buffer += '<li class="list-group-item">' + obj + '</li>';
-                    });
-
-                    if (metaInfoMap[metaInfoId] == "single") {
-                        $("#single-box").show();
-                        $("#multi-box").hide();
-                        $("#judge-box").hide();
-                    } else if (metaInfoMap[metaInfoId] == "multi") {
-                        $("#single-box").hide();
-                        $("#multi-box").show();
-                        $("#judge-box").hide();
-                    } else if (metaInfoMap[metaInfoId] == "judge") {
-                        $("#single-box").hide();
-                        $("#multi-box").hide();
-                        $("#judge-box").show();
-                    }
-                    $("[name='answer']").iCheck("uncheck")
-                    $(".answer-box").find("label:gt(" + (answerCount - 1) + ")").hide();
-                    $(".answer-box").find("label:lt(" + answerCount + ")").show();
-                    $("#title").html(title);
-                    $("#content").html(buffer);
-                    if (remark) {
-                        $("#remark").html("备注：" + remark);
-                    }
-                    zeroModal.closeAll();
-                    reqFlag = true;
-                } else {
-                    swal("", res.msg, "warning");
-                    reqFlag = false;
-                }
-            },
-            error: function (data) {
-                swal("", "获取试题异常，请联系管理员", "error");
-                reqFlag = false;
-            }
-        });
-        return reqFlag;
     }
 
     function getSeconds() {
         return $("#timer").data("seconds");
     }
 
+    function getTileLeft() {
+        return $("#timer").val();
+    }
+
+    $(function () {
+        questionIdList = JSON.parse($("#questionIds").val());
+        //初始化答题数据
+        var tableBox = "";
+        var selectBox = "";
+        $.each(questionIdList, function (idx, obj) {
+            tableBox += "<tr queid='" + obj + "'><td><a href='javascript:jumpTo(" + obj + ")'>" + "第" + (idx + 1) + "题" + "</a> </td><td></td><td class='hide'></td></tr>"
+            selectBox += "<option value='" + idx + "'>第" + (idx + 1) + "题</option>"
+        });
+        $("#myAnswer tbody").html(tableBox);
+        $("#current").html(selectBox);
+
+        /**
+         * 初始化题目
+         */
+        var queFlag = getQuestion(questionIdList[0]);
+        //第一次加载题目后将currentIndex++,也就是变成0
+        if(queFlag){
+            currentIndex++;
+        }
+        initTimer();
+//        /**
+//         * 选中执行事件
+//         */
+//        $("[name='answer']").on("ifChecked", function () {
+//            var answer = $(this).val();
+//        })
+//
+//        $("[name='answer']").on("ifUnchecked", function () {
+//            var answer = $(this).val();
+//        })
+
+        $("#prevBtn").on("click", prev);
+
+        $("#nextBtn").on("click", next);
+    });
+
+    /**
+     * 获取作答信息
+     */
+
+
     $("#changePaper").bind("click", function () {
         swal("", "更换试卷后当前试卷作废，剩余作答时间不变。且仅有一次更换机会，确认要更换试卷吗？", "warning");
     });
-
 
     //勾选插件
     $("[type='checkbox'], [type='radio']").iCheck({
@@ -595,13 +441,46 @@
 
     $("#commitPaper").on("click", commitPaper);
 
-    function commitPaper() {
-        swal({})
-        var seconds = getSeconds();
-        if (!seconds) {
-            console.log("没有获取到时间信息");
+
+/**
+ * 以下是websocket处理，用来处理强制交卷信息
+* */
+    var ws;
+    $(function () {
+        ws = new WebSocket("ws://localhost:8080/ws/my.ws");
+        console.log("初始化");
+        ws.onopen = function () {
+            console.log("open。。。")
         }
-    }
+
+        ws.onmessage = function (event) {
+            console.log("event", event);
+            var data = event.data;
+            console.log("收到服务器消息：", data);
+
+            var res = "";
+            try{
+                res = JSON.parse(data);
+            }catch (err){
+                console.log("解析消息失败: ", err);
+            }
+            if(res != ''){
+                var type = res.type;
+                if(type == "4"){
+                    swal("", "教师强制提交试卷", "info");
+                    zeroModal.loading(3);
+                    commitPaper();
+//                    $("#changePaper").trigger("click");
+                }
+            }
+        }
+
+        ws.onclose = function (event) {
+            console.log("event:", event);
+            console.log("close...")
+        }
+    })
+
 </script>
 </body>
 </html>

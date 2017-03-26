@@ -6,12 +6,13 @@
         <result column="paper_id" property="paperId" jdbcType="INTEGER"/>
         <result column="question_id" property="questionId" jdbcType="INTEGER"/>
         <result column="answer" property="answer" jdbcType="VARCHAR"/>
+        <result column="time_left" property="timeLeft" jdbcType="VARCHAR"/>
         <result column="seconds" property="seconds" jdbcType="INTEGER"/>
         <result column="result" property="result" jdbcType="INTEGER"/>
         <result column="score" property="score" jdbcType="DOUBLE"/>
     </resultMap>
     <sql id="answer_list">
-    id, paper_id, question_id, answer, seconds, result, score
+    id, paper_id, question_id, answer, seconds, result, score, time_left
   </sql>
     <select id="selectById" resultMap="AnswerMap" parameterType="java.lang.Integer">
         select
@@ -48,6 +49,9 @@
             <if test="score != null">
                 score,
             </if>
+            <if test="timeLeft != null">
+                time_left,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -71,6 +75,9 @@
             <if test="score != null">
                 #{score,jdbcType=DOUBLE},
             </if>
+            <if test="timeLeft != null">
+                #{timeLeft, jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <update id="updateById" parameterType="co.bugu.tes.model.Answer">
@@ -93,6 +100,9 @@
             </if>
             <if test="score != null">
                 score = #{score,jdbcType=DOUBLE},
+            </if>
+            <if test="timeLeft != null">
+                time_left = #{timeLeft, jdbcType=VARCHAR},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
