@@ -154,7 +154,7 @@
                 <div class="form-group">
                     <label class="control-label col-md-2">考试开始时间</label>
                     <div class="col-md-10">
-                        <input class="form-control time" type="text" name="beginTime"
+                        <input class="form-control time" type="text" name="beginTime" data-min-date="today"
                                value="<fmt:formatDate value="${scene.beginTime}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate> ">
                         <span class="help-block with-errors"></span>
                     </div>
@@ -316,10 +316,12 @@
     </div>
 </div>
 <script>
+
     /**
      * 计算结束时间
      */
     $("[name='beginTime'], [name='delay'], [name='duration']").bind("change", function () {
+        console.log("changed...")
         var beginTime = $("[name='beginTime']").val();
         var delay = $("[name='delay']").val().trim();
         var duration = $("[name='duration']").val().trim();

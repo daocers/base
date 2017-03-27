@@ -22,7 +22,8 @@ $(function () {
      * 初始化时间日期插件，默认是不显示时间，如果有需要可以进行个性化设置，data-date-format进行设置
      */
     $(".date").flatpickr({
-        dateFormat: 'yyyy-mm-dd'
+        dateFormat: 'yyyy-mm-dd',
+        onChange: change
     });
 
     $(".time").flatpickr({
@@ -31,7 +32,12 @@ $(function () {
         enableTime: true,
         enableSeconds: true,
         minuteIncrement: 1,
-    })
+        onChange: change
+    });
+
+    function change() {
+        $(".date, .time").trigger("change");
+    }
 
     // console.log("detail， 开始禁用")
     var type = $("#type").val();

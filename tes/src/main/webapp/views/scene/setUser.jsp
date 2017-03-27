@@ -14,7 +14,8 @@
         <!--
         var setting = {
             check:{
-                enable: true
+                enable: true,
+                autoCheckTrigger: true,
             },
             edit: {
                 enable: false,

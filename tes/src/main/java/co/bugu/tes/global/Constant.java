@@ -42,4 +42,6 @@ public interface Constant {
     String QUESTION_BANK_ID = "BANK_";
 
     String QUESTION_PERFIX = "QUESTION_PREFIX_";
+
+    String SCENE_USER_LIST = "SCENE_USER_LIST_";
 }

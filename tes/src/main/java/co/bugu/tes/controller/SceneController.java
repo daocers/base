@@ -2,6 +2,7 @@ package co.bugu.tes.controller;
 
 import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.core.util.BuguWebUtil;
+import co.bugu.framework.util.JedisUtil;
 import co.bugu.framework.util.JsonUtil;
 import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.*;
@@ -70,6 +71,17 @@ public class SceneController {
     @RequestMapping(value = "/list")
     public String list(Scene scene, Integer curPage, Integer showCount, ModelMap model, HttpServletRequest request) {
         try {
+            Paper paper = new Paper();
+            paper.setStatus(0);
+            paper.setUserId((Integer) BuguWebUtil.getUserId(request));
+            List<Paper> paperList = paperService.findByObject(paper);
+            List<Integer> sceneIdList = new ArrayList<>();
+            if(paperList != null && paperList.size() > 0){
+                Integer sceneId = paper.getSceneId();
+                if(!sceneIdList.contains(sceneId)){
+                    sceneIdList.add(sceneId);
+                }
+            }
             Integer userId = (Integer) BuguWebUtil.getUserId(request);
 //            if(userId == null){
 //                throw new TesException("用户信息获取异常");
