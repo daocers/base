@@ -30,44 +30,35 @@
         <div class="col-md-8">
             <form class="form-horizontal" method="post" action="savePolicy.do" data-toggle="validator" role="form">
                 <input id="id" type="hidden" name="id" value="${scene.id}">
-                <div class="form-group form-inline">
-                    <label class="control-label" style="margin-right: 15px;">选择题库</label>
-                    <select class="form-control" name="bankId" required>
-                        <option>--请选择--</option>
-                        <option value="0"
-                                <c:if test="scene.bankId == 0">selected</c:if>>不限
-                        </option>
-                        <c:forEach items="${bankList}" var="bank">
-                            <option value="${bank.id}"
-                                    <c:if test="${scene.bankId == bank.id}">selected</c:if>>${bank.name}</option>
-                        </c:forEach>
-                    </select>
+                <div class="form-group">
+                    <div class="input-group">
+                        <label class="control-label input-group-addon" style="margin-right: 15px;">选择题库</label>
+                        <select class="form-control" name="bankId" required>
+                            <option>--请选择--</option>
+                            <option value="0"
+                                    <c:if test="scene.bankId == 0">selected</c:if>>不限
+                            </option>
+                            <c:forEach items="${bankList}" var="bank">
+                                <option value="${bank.id}"
+                                        <c:if test="${scene.bankId == bank.id}">selected</c:if>>${bank.name}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
                 </div>
-                <div class="form-group form-inline">
-                    <label class="control-label">部门</label>
-                    <select class="form-control" id="departmentId">
-                        <option value="">请选择</option>
-                        <c:forEach var="department" items="${departmentList}">
-                            <option value="${department.id}">${department.name}</option>
-                        </c:forEach>
-                    </select>
-                    <label class="control-label">机构</label>
-                    <select class="form-control" id="branchId">
-                        <option value="">请选择</option>
-                        <c:forEach var="branch" items="${branchList}">
-                            <option value="${branch.id}">${branch.name}</option>
-                        </c:forEach>
-                    </select>
-                    <label class="control-label">岗位</label>
-                    <select class="form-control" id="stationId">
-                        <option value="">请选择</option>
-                        <c:forEach var="station" items="${stationList}">
-                            <option value="${station.id}">${station.name}</option>
-                        </c:forEach>
-                    </select>
-                    <button class="btn btn-info" type="button" onclick="javascript:search();">查询</button>
-                    <span style="margin-left: 30px; padding-bottom: 5px; margin-bottom: 5px;">没有合适策略？<a
-                            href="/paperpolicy/edit.do">去添加</a> </span>
+
+
+                <div class="form-group">
+                    <div class="input-group">
+                        <label class="input-group-addon" style="margin-right: 15px;">策略类型</label>
+                        <select class="form-control" id="policyType" required>
+                            <option value="0">我的策略</option>
+                            <option value="1">公共策略</option>
+                        </select>
+                        <button class="btn btn-info btn-group-addon" type="button">查询</button>
+                        <span style="margin-left: 30px; padding-bottom: 5px; margin-bottom: 5px;">没有合适策略？<a
+                                href="/paperPolicy/edit.do">去添加</a> </span>
+                    </div>
+
                 </div>
 
                 <div class="" style="min-height: 300px;">
@@ -84,7 +75,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <c:forEach var="policy" items="${policyList}">
+                        <c:forEach var="policy" items="${pageInfo.data}">
                             <tr>
                                 <td><input name="paperPolicyId" type="checkbox" value="${policy.id}"></td>
                                 <td>${policy.name}</td>

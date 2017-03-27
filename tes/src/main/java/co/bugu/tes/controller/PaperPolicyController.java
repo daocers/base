@@ -1,6 +1,7 @@
 package co.bugu.tes.controller;
 
 import co.bugu.framework.core.dao.PageInfo;
+import co.bugu.framework.core.mybatis.ThreadLocalUtil;
 import co.bugu.framework.core.util.BuguWebUtil;
 import co.bugu.framework.util.JsonUtil;
 import co.bugu.tes.enums.PaperPolicyType;
@@ -12,6 +13,7 @@ import co.bugu.tes.model.User;
 import co.bugu.tes.service.IPaperPolicyService;
 import co.bugu.tes.service.IQuestionMetaInfoService;
 import co.bugu.tes.service.IQuestionPolicyService;
+import co.bugu.tes.service.IUserService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -28,14 +30,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("/paperPolicy")
 public class PaperPolicyController {
+    @Autowired
+    IUserService userService;
     @Autowired
     IPaperPolicyService paperpolicyService;
     @Autowired
@@ -163,14 +164,21 @@ public class PaperPolicyController {
 
     /**
     * 异步请求 获取全部
-    * @param paperpolicy 查询条件
+    * @param paperPolicy 查询条件
     * @return
     */
     @RequestMapping(value = "/listAll")
     @ResponseBody
-    public String listAll(PaperPolicy paperpolicy){
+    public String listAll(PaperPolicy paperPolicy, HttpServletRequest request){
         try{
-            List<PaperPolicy> list = paperpolicyService.findByObject(paperpolicy);
+            if(paperPolicy.getPrivaryType() == 0){//公开的
+                User user = userService.findById((Integer) BuguWebUtil.getUserId(request));
+                Map<String, Object> map = new HashMap();
+                map.put("EQ_privaryType", 0);
+                map.put("NEQ_branchId", user.getBranchId());
+                ThreadLocalUtil.set(map);
+            }
+            List<PaperPolicy> list = paperpolicyService.findByObject(null);
             return JsonUtil.toJsonString(list);
         }catch (Exception e){
             logger.error("获取全部列表失败", e);

@@ -136,19 +136,32 @@ public class SceneController {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String saveSceneThenSelectUser(HttpServletRequest request, ModelMap model, Scene scene, RedirectAttributes redirectAttributes) {
         try {
+            Date now = new Date();
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(scene.getBeginTime());
             calendar.add(Calendar.MINUTE, scene.getDelay());
             calendar.add(Calendar.MINUTE, scene.getDuration());
             scene.setEndTime(calendar.getTime());
             scene.setCreateUserId((Integer) BuguWebUtil.getUserId(request));
-            scene.setCreateTime(new Date());
+            scene.setCreateTime(now);
             if (scene.getChangePaper() == null) {
                 scene.setChangePaper(1);//为空的时候表示不可更换试卷
             }
+            Integer userId = (Integer) BuguWebUtil.getUserId(request);
+            if(userId != null){
+                User user = userService.findById(userId);
+                scene.setBranchId(user.getBranchId());
+                scene.setDepartmentId(user.getDepartmentId());
+                scene.setCreateUserId(userId);
+            }else{
+                throw new Exception("用户未登录");
+            }
+
+            SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+            String index = JedisUtil.incr(Constant.SCENE_INDEX) + "";
+            JedisUtil.expire(Constant.SCENE_INDEX, 60);
             //设置创建的用户id
-            scene.setCreateUserId(1);
-            scene.setCode("20170101121200");
+            scene.setCode(format.format(now) + index);
             if (scene.getId() == null) {
                 sceneService.save(scene);
             } else {
@@ -230,24 +243,32 @@ public class SceneController {
     }
 
     @RequestMapping(value = "/selectPolicy")
-    public String toGenPaper(ModelMap model, Scene scene) {
+    public String toGenPaper(ModelMap model, Scene scene, HttpServletRequest request) throws Exception {
         scene = sceneService.findById(scene.getId());
         if (scene.getPaperPolicyId() != null) {
             PaperPolicy paperPolicy = paperPolicyService.findById(scene.getPaperPolicyId());
             model.put("policyName", paperPolicy.getName());
         }
 
+        User user = userService.findById((Integer) BuguWebUtil.getUserId(request));
+        PaperPolicy obj = new PaperPolicy();
+        obj.setBranchId(user.getBranchId());
+        obj.setStatus(0);
+        PageInfo<PaperPolicy> pageInfo = new PageInfo<>();
+        pageInfo = paperPolicyService.findByObject(obj, pageInfo);
+        model.put("pageInfo", pageInfo);
+
         //查询全部可用的paperPolicy
-        List<PaperPolicy> policyList = paperPolicyService.findByObject(null);
-        model.put("policyList", policyList);
+//        List<PaperPolicy> policyList = paperPolicyService.findByObject(null);
+//        model.put("policyList", policyList);
         model.put("scene", scene);
-        List<Department> departmentList = departmentService.findByObject(null);
-        List<Branch> branchList = branchService.findByObject(null);
-        List<Station> stationList = stationService.findByObject(null);
+//        List<Department> departmentList = departmentService.findByObject(null);
+//        List<Branch> branchList = branchService.findByObject(null);
+//        List<Station> stationList = stationService.findByObject(null);
         List<QuestionBank> bankList = bankService.findByObject(null);
-        model.put("departmentList", departmentList);
-        model.put("branchList", branchList);
-        model.put("stationList", stationList);
+//        model.put("departmentList", departmentList);
+//        model.put("branchList", branchList);
+//        model.put("stationList", stationList);
         model.put("bankList", bankList);
         return "scene/selectPolicy";
     }

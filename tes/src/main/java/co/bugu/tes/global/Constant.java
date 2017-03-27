@@ -44,4 +44,6 @@ public interface Constant {
     String QUESTION_PERFIX = "QUESTION_PREFIX_";
 
     String SCENE_USER_LIST = "SCENE_USER_LIST_";
+
+    String SCENE_INDEX = "SCENE_INDEX";
 }

@@ -156,18 +156,21 @@
     <input type="hidden" name="id" value="${scene.id}">
     <input type="hidden" id="choiceInfo" value="${scene.choiceInfo}">
     <div class="form-inline form-group">
-        <label class="control-label">人员选择方式</label>
-        <div>
-            <select class="form-control" id="userType">
-                <option value="0">指定场次的参加机构</option>
-                <option value="1">指定考试人员</option>
-            </select>
-            <span class="help-block with-errors">如果考试人员较多，建议直接选择参考机构；如果少量人员考试，直接点击机构信息然后选择用户</span>
+        <div class="input-group">
+            <label class="input-group-addon">人员选择方式</label>
+            <div>
+                <select class="form-control" id="userType">
+                    <option value="2">我的机构</option>
+                    <option value="0">指定机构</option>
+                    <option value="1">指定用户</option>
+                </select>
+            </div>
         </div>
-
     </div>
+    <span class="help-block with-errors">如果考试人员较多，建议直接选择参考机构；如果少量人员考试，直接点击机构信息然后选择用户</span>
+
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-4" id="tree" style="display: none;">
             <div class="zTreeDemoBackground left">
                 <ul id="treeDemo" class="ztree"></ul>
             </div>
@@ -187,7 +190,7 @@
             </table>
         </div>
 
-        <div class="col-md-4  choice-user" style="display: none;">
+        <div class="col-md-4  choice-user" style="display: none; overflow-y: auto; height: 300px;">
             <table class="table table-bordered" id="choice-box">
                 <thead>
                 <tr>
@@ -202,7 +205,7 @@
             </table>
         </div>
 
-        <div class="col-md-4 col-md-offset-4 choice-branch">
+        <div class="col-md-4 col-md-offset-4 choice-branch" style="overflow-y: auto; height: 300px; display: none">
             <table class="table table-bordered" id="branch-box">
                 <thead>
                 <tr>
@@ -218,7 +221,7 @@
     </div>
 
 
-    <div class="button pull-right" style="margin-bottom: 50px;">
+    <div class="button" style="margin-bottom: 50px; margin-top: 30px;">
         <button class="btn btn-warning btn-cancel" onclick="history.back();">取消</button>
 
         <div class="space">
@@ -238,13 +241,21 @@
                 clickable = false;
                 $(".choice-user").hide();
                 $(".choice-branch").show();
+                $("#tree").show();
             }else if(type == 1){//按照用户选择
                 clickable = true;
                 setting.check.enable = false;
                 $(".choice-user").show();
                 $(".choice-branch").hide();
-
-            }else{
+                $("#tree").show();
+            }else if(type == 2){
+                clickable = false;
+                setting.check.enable = false;
+                $("#tree").hide();
+                $(".choice-branch").hide();
+                $(".choice-user").hide();
+            }
+            else{
                 clickable = false;
                 console.log("无效数据");
             }
@@ -312,6 +323,8 @@
                 var id = $(obj).attr("rowId");
                 ids.push(id);
             })
+        }else if(type == 2){
+
         }else{
             swal("", "非法操作", "error");
             zeroModal.closeAll();
