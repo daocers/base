@@ -157,18 +157,30 @@
     <input type="hidden" id="choiceInfo" value="${scene.choiceInfo}">
     <div class="form-inline form-group">
         <div class="input-group">
-            <label class="input-group-addon">人员选择方式</label>
+            <label class="input-group-addon">考试人员控制方式</label>
             <div>
                 <select class="form-control" id="userType">
                     <option value="2">我的机构</option>
                     <option value="0">指定机构</option>
                     <option value="1">指定用户</option>
+                    <option value="3">设置授权码</option>
                 </select>
             </div>
         </div>
     </div>
     <span class="help-block with-errors">如果考试人员较多，建议直接选择参考机构；如果少量人员考试，直接点击机构信息然后选择用户</span>
+    <span class="help-block with-errors">【我的机构】 我所在机构的用户均可参加，不包括下属机构</span>
+    <span class="help-block with-errors">【指定机构】 指定机构下的用户可参加，不包括下属机构</span>
+    <span class="help-block with-errors">【指定用户】 指定用户可参加，单击机构名称可查询用户信息，适用于少量用户考试</span>
+    <span class="help-block with-errors">【设置授权码】 用户录入授权码参与考试，适用于集中性的考试</span>
 
+    <div class="row form-inline authBox">
+        <div class="form-group">
+            <label class="control-label ">授权码</label>
+            <input class="form-control" minlength="6" maxlength="6" name="authCode" id="authCode" placeholder="请输入6位数字或字母组合">
+            <button class="btn btn-info" type="button">自动生成</button>
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-4" id="tree" style="display: none;">
             <div class="zTreeDemoBackground left">
@@ -242,18 +254,28 @@
                 $(".choice-user").hide();
                 $(".choice-branch").show();
                 $("#tree").show();
+                $(".authBox").hide();
             }else if(type == 1){//按照用户选择
                 clickable = true;
                 setting.check.enable = false;
                 $(".choice-user").show();
                 $(".choice-branch").hide();
                 $("#tree").show();
-            }else if(type == 2){
+                $(".authBox").hide();
+            }else if(type == 2){//我的机构
                 clickable = false;
                 setting.check.enable = false;
                 $("#tree").hide();
                 $(".choice-branch").hide();
                 $(".choice-user").hide();
+                $(".authBox").hide();
+            }else if(type == 3){
+                clickable = false;
+                setting.check.enable = false;
+                $("#tree").hide();
+                $(".choice-branch").hide();
+                $(".choice-user").hide();
+                $(".authBox").show();
             }
             else{
                 clickable = false;
@@ -323,8 +345,14 @@
                 var id = $(obj).attr("rowId");
                 ids.push(id);
             })
-        }else if(type == 2){
+        }else if(type == 2){//我的机构
 
+        }else if(type == 3){//设置授权码
+            choiceInfo = $("#authCode").val();
+            if(!choiceInfo || choiceInfo == ''){
+                swal("请输入6位授权码");
+                return false;
+            }
         }else{
             swal("", "非法操作", "error");
             zeroModal.closeAll();

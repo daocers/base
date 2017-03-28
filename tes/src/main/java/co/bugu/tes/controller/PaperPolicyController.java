@@ -171,14 +171,18 @@ public class PaperPolicyController {
     @ResponseBody
     public String listAll(PaperPolicy paperPolicy, HttpServletRequest request){
         try{
+            List<PaperPolicy> list = null;
+            User user = userService.findById((Integer) BuguWebUtil.getUserId(request));
             if(paperPolicy.getPrivaryType() == 0){//公开的
-                User user = userService.findById((Integer) BuguWebUtil.getUserId(request));
                 Map<String, Object> map = new HashMap();
                 map.put("EQ_privaryType", 0);
                 map.put("NEQ_branchId", user.getBranchId());
                 ThreadLocalUtil.set(map);
+                list = paperpolicyService.findByObject(null);
+            }else{// 等于1时候为私有
+                paperPolicy.setBranchId(user.getBranchId());
+                list = paperpolicyService.findByObject(paperPolicy);
             }
-            List<PaperPolicy> list = paperpolicyService.findByObject(null);
             return JsonUtil.toJsonString(list);
         }catch (Exception e){
             logger.error("获取全部列表失败", e);

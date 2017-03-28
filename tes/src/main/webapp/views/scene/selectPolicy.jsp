@@ -50,7 +50,7 @@
                 <div class="form-group">
                     <div class="input-group">
                         <label class="input-group-addon" style="margin-right: 15px;">策略类型</label>
-                        <select class="form-control" id="policyType" required>
+                        <select class="form-control" id="privaryType" required>
                             <option value="0">我的策略</option>
                             <option value="1">公共策略</option>
                         </select>
@@ -86,9 +86,9 @@
                                 <td>${policy.count}</td>
                             </tr>
                         </c:forEach>
-                        <tr>
-                            <td colspan="7">请选择筛选条件！</td>
-                        </tr>
+                        <%--<tr>--%>
+                            <%--<td colspan="7">请选择筛选条件！</td>--%>
+                        <%--</tr>--%>
                         </tbody>
                     </table>
                 </div>
@@ -122,18 +122,20 @@
 </div>
 <script>
     function search() {
-        var deptId = $("#departmentId").val();
-        var branchId = $("#branchId").val();
-        var stationId = $("#stationId").val();
+//        var deptId = $("#departmentId").val();
+//        var branchId = $("#branchId").val();
+//        var stationId = $("#stationId").val();
+        var privaryType = $("#privaryType").val();
 
-        if (!deptId && !branchId && !stationId) {
-            zeroModal.alert("请选择筛选条件");
-            return false;
-        }
+//        if (!deptId && !branchId && !stationId) {
+//            zeroModal.alert("请选择筛选条件");
+//            return false;
+//        }
         zeroModal.loading(3);
         $.ajax({
             url: '/paperPolicy/listAll.do',
-            data: {departmentId: deptId, branchId: branchId, stationId: stationId},
+//            data: {departmentId: deptId, branchId: branchId, stationId: stationId},
+            data: {privaryType: privaryType},
             success: function (data) {
                 if (data == '-1') {
                     zeroModal.closeAll();

@@ -71,6 +71,23 @@ public class SceneController {
     @RequestMapping(value = "/list")
     public String list(Scene scene, Integer curPage, Integer showCount, ModelMap model, HttpServletRequest request) {
         try {
+            Integer userId = (Integer) BuguWebUtil.getUserId(request);
+            User user = userService.findFullById(userId);
+            List<Role> roleList = user.getRoleList();
+            if(roleList == null){
+                throw new Exception("该用户没有分配角色");
+            }
+            List<String> roles = new ArrayList<>();
+            for(Role role: roleList){
+                roles.add(role.getCode());
+            }
+            if(roles.contains("admin")){//超级管理员，选择全部
+
+            }else if(roles.contains("branchManager")){//分行管理员
+
+            }else if(roles.contains("user")){//一般用户
+                JedisUtil.get(Constant.USER_SCENE_LIST + userId);
+            }
             Paper paper = new Paper();
             paper.setStatus(0);
             paper.setUserId((Integer) BuguWebUtil.getUserId(request));
@@ -82,7 +99,6 @@ public class SceneController {
                     sceneIdList.add(sceneId);
                 }
             }
-            Integer userId = (Integer) BuguWebUtil.getUserId(request);
 //            if(userId == null){
 //                throw new TesException("用户信息获取异常");
 //            }

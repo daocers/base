@@ -260,6 +260,19 @@ public class JedisUtil {
         }
     }
 
+    public static List<String> getList(String key){
+	    Jedis jedis = null;
+	    try{
+	        jedis = getJedis();
+	        return jedis.lrange(key, 0, -1);
+        }catch (Exception e){
+	        logger.error("jedis lrange 异常", e);
+	        return null;
+        }finally {
+            release(jedis);
+        }
+    }
+
     public static Map<String, String> hgetall(String key) {
         Jedis jedis = null;
         try {
