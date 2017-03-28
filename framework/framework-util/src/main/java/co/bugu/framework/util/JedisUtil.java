@@ -248,6 +248,21 @@ public class JedisUtil {
         }
     }
 
+    public static void pushList(String key, List<String> value){
+	    Jedis jedis = null;
+	    try{
+	        jedis = getJedis();
+	        for(String item: value){
+	            jedis.rpush(item);
+            }
+        }catch (Exception e){
+	        logger.error("jedis pushList 异常");
+        }finally {
+            release(jedis);
+        }
+    }
+
+
     public static void lrem(String key, String value) {
         Jedis jedis = null;
         try {

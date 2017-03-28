@@ -129,7 +129,6 @@ public class SceneController {
             Scene scene = null;
             if (id == null) {
                 SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
-
                 scene = new Scene();
             } else {
                 scene = sceneService.findById(id);
@@ -146,12 +145,15 @@ public class SceneController {
      * 保存设置，跳转到选择用户界面
      *
      * @param scene
-     * @param model
+     * @param request
      * @return
      */
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public String saveSceneThenSelectUser(HttpServletRequest request, ModelMap model, Scene scene, RedirectAttributes redirectAttributes) {
+    @ResponseBody
+    public String saveScene(HttpServletRequest request, Scene scene) {
+        JSONObject json = new JSONObject();
         try {
+            json.put("code", 0);
             Date now = new Date();
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(scene.getBeginTime());
@@ -183,20 +185,32 @@ public class SceneController {
             } else {
                 sceneService.updateById(scene);
             }
-//            redirectAttributes.addFlashAttribute("scene", scene);
-            redirectAttributes.addFlashAttribute(scene);
+            json.put("data", scene.getId());
         } catch (Exception e) {
-            logger.error("保存信息失败", e);
-            model.put("errMsg", "保存信息失败");
+            json.put("code", -1);
+            json.put("msg", "场次信息保存失败");
         }
-        return "redirect:setUser.do?id=" + scene.getId();
+        return json.toJSONString();
     }
 
     @RequestMapping(value = "/setUser")
-    public String toSetUser(ModelMap model, RedirectAttributes redirectAttributes) {
-        Scene scene = (Scene) model.get("scene");
-        scene = sceneService.findById(scene.getId());
-        List<Branch> branchList = branchService.findByObject(null);
+    public String toSetUser(Integer sceneId, ModelMap model, HttpServletRequest request) {
+        Integer userId = (Integer) BuguWebUtil.getUserId(request);
+        List<String> role = userService.getRoleList(userId);
+        List<Branch> branchList = new ArrayList<>();
+        if(role.contains("admin")){
+            branchList = branchService.findByObject(null);
+        }else if(role.contains("branchManager")){
+            User user = userService.findById(userId);
+            getAllUnderBranch(user.getBranchId(), branchList);
+            branchList.add(branchService.findById(user.getBranchId()));
+        }else if(role.contains("user")){
+
+        }
+
+//        Scene scene = (Scene) model.get("scene");
+        Scene scene = sceneService.findById(sceneId);
+
         JSONArray array = new JSONArray();
         for (Branch branch : branchList) {
             JSONObject json = new JSONObject();
@@ -210,52 +224,85 @@ public class SceneController {
         return "scene/setUser";
     }
 
+
     /**
-     * @param scene
-     * @param ids                id集合
-     * @param type               0 根据机构选择； 1 直接选择用户
-     * @param redirectAttributes
+     * 获取当前机构下的所有机构信息
+     * @param branchId
+     * @param branchList
+     */
+    private void getAllUnderBranch(Integer branchId, List<Branch> branchList){
+        Branch obj = new Branch();
+        obj.setSuperiorId(branchId);
+        List<Branch> branches = branchService.findByObject(obj);
+        if(branches == null || branches.size() == 0){
+            return;
+        }else{
+            branchList.addAll(branches);
+            for(Branch bran: branches){
+                getAllUnderBranch(bran.getId(), branchList);
+            }
+        }
+
+    }
+    /**
+     * @param sceneId
+     * @param info                id集合
+     * @param type               0 根据机构选择； 1 直接选择用户 2 我的机构 3 直接指定授权码
      * @return
      */
     @RequestMapping(value = "/saveUser", method = RequestMethod.POST)
     @ResponseBody
-    public String saveUserThenSelectPaperPolciy(Scene scene, String ids, Integer type, RedirectAttributes redirectAttributes) {
-        List<Integer> list = JSON.parseArray(ids, Integer.class);
-        if (list == null || list.size() == 0) {
-            scene = sceneService.findById(scene.getId());
-            if (StringUtils.isEmpty(scene.getChoiceInfo())) {
-                redirectAttributes.addFlashAttribute("err", "请选择本场考试用户");
-//            return  "redirect:selectUser.do";
-                return "-1";
+    public String saveUserThenSelectPaperPolciy(Integer sceneId, String info, Integer type) {
+        JSONObject json = new JSONObject();
+        try{
+            if(sceneId == null){
+                json.put("code", -1);
+                json.put("err", "场次id不能为空");
+                return json.toJSONString();
             }
-        } else {
-            if (type == 0) {//根据机构
-                scene.setChoiceInfo(JSON.toJSONString(list));
-                List<Integer> res = new ArrayList<>();
-                for (Integer branchId : list) {
+
+            Scene scene = new Scene();
+            scene.setId(sceneId);
+            scene.setUserType(type);
+
+            if(type == 0){//根据机构选择
+                List<Integer> userIdList = new ArrayList<>();
+                if(StringUtils.isEmpty(info)){
+                    json.put("code", -1);
+                    json.put("err", "没有选择机构");
+                    return json.toJSONString();
+                }
+                List<Integer> branchIdList = JSON.parseArray(info, Integer.class);
+                for(Integer branchId: branchIdList){
                     User user = new User();
                     user.setBranchId(branchId);
-                    List<User> users = userService.findByObject(user);
-                    for (User u : users) {
-                        res.add(u.getId());
+                    List<User> userList = userService.findByObject(user);
+                    for(User u: userList){
+                        userIdList.add(u.getId());
                     }
                 }
-                list = res;
-            } else if (type == 1) {//直接保存用户
+                scene.setJoinUser(JSON.toJSONString(userIdList));
+                scene.setChoiceInfo(info);
+            }else if(type == 1){//直接指定用户
+                scene.setJoinUser(info);
+                scene.setChoiceInfo(info);
+            }else if(type == 2){//我的机构
 
-            } else {
-                redirectAttributes.addFlashAttribute("err", "选择考生方式有误");
-                return "-1";
+            }else if(type == 3){//授权码
+                scene.setAuthCode(info);
+            }else {
+                json.put("code", -1);
+                json.put("err", "人员选择方式不支持");
+                return json.toJSONString();
             }
-            sceneService.addUserToScene(list, scene);
-            scene.setUserType(type);
-            Collections.sort(list);
-            scene.setJoinUser(JSON.toJSONString(list, true));
             sceneService.updateById(scene);
+            json.put("code", 0);
+        }catch (Exception e){
+            logger.error("设置参考用户失败", e);
+            json.put("code", -1);
+            json.put("err", "保存考试用户失败");
         }
-
-        redirectAttributes.addFlashAttribute("scene", scene);
-        return "0";
+        return json.toJSONString();
     }
 
     @RequestMapping(value = "/selectPolicy")
@@ -369,8 +416,6 @@ public class SceneController {
     @RequestMapping(value = "/generatePaper", method = RequestMethod.POST)
     public String saveUserAndGeneratePaper(Scene scene, ModelMap model, @ModelAttribute("scene") Scene old) {
         try {
-
-
             paperService.generateAllPaper(scene);
             scene = sceneService.findById(scene.getId());
             model.put("scene", scene);
@@ -412,29 +457,6 @@ public class SceneController {
         return json.toJSONString();
     }
 
-//    /**
-//    * 保存结果，根据是否带有id来表示更新或者新增
-//    * @param scene
-//    * @param model
-//    * @return
-//    */
-//    @RequestMapping(value = "/save", method = RequestMethod.POST)
-//    public String save(Scene scene, ModelMap model){
-//        try{
-//            if(scene.getId() == null){
-//                sceneService.save(scene);
-//            }else{
-//                sceneService.updateById(scene);
-//            }
-//        }catch (Exception e){
-//            logger.error("保存失败", e);
-//            model.put("scene", scene);
-//            model.put("errMsg", "保存失败");
-//            return "scene/edit";
-//        }
-//        return "redirect:list.do";
-//    }
-
     /**
      * 异步请求 获取全部
      *
@@ -452,30 +474,4 @@ public class SceneController {
             return "-1";
         }
     }
-
-    /**
-     * 异步请求 删除
-     *
-     * @param scene id
-     * @return
-     */
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    @ResponseBody
-    public String delete(Scene scene) {
-        try {
-            sceneService.delete(scene);
-            return "0";
-        } catch (Exception e) {
-            logger.error("删除失败", e);
-            return "-1";
-        }
-    }
-
-
-//    @InitBinder
-//    public void initBinder(WebDataBinder binder){
-//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        format.setLenient(false);
-//        binder.registerCustomEditor(Date.class, new CustomDateEditor(format, true));
-//    }
 }

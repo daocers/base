@@ -1,5 +1,6 @@
 package co.bugu.rocketmq.common;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.rocketmq.client.exception.MQBrokerException;
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
@@ -10,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -24,10 +27,10 @@ public class Producer {
          * ProducerGroup这个概念发送普通的消息时，作用不大，但是发送分布式事务消息时，比较关键，
          * 因为服务器会回查这个Group下的任意一个Producer
          */
-        DefaultMQProducer producer = new DefaultMQProducer("ProducerGroupName");
-        producer.setNamesrvAddr("127.0.0.1:9876");
+        DefaultMQProducer producer = new DefaultMQProducer("zgSystemProducer");
+        producer.setNamesrvAddr("10.143.88.73:9876;10.143.88.74:9876;10.143.88.75:9876");
 //        producer.setNamesrvAddr("192.168.1.128:9876");
-        producer.setInstanceName("ProducerOrderly");
+        producer.setInstanceName(String.valueOf(System.currentTimeMillis()));
         /**
          * Producer对象在使用之前必须要调用start初始化，初始化一次即可<br>
          * 注意：切记不可以在每次发送消息时，都调用start方法
@@ -37,7 +40,7 @@ public class Producer {
         } catch (MQClientException e) {
             e.printStackTrace();
         }
-        for (int i = 0; i < 3; i++) {
+//        for (int i = 0; i < 3; i++) {
             try {
                 /**
                  * 下面这段代码表明一个Producer对象可以发送多个topic，多个tag的消息。
@@ -46,10 +49,16 @@ public class Producer {
                  * 需要对这种情况做处理。另外，消息可能会存在发送失败的情况，失败重试由应用来处理。
                  */
                 {
-                    Message msg = new Message("myTopic",// topic
-                            "TagA",// tag
-                            "OrderID001",// key
-                            ("Hello MetaQ").getBytes());// body
+                    Map<String, String> map = new HashMap<>();
+                    map.put("result", "T");
+                    map.put("id", "154");
+                    map.put("type", "returnTicket");
+                    map.put("status", "5");
+
+                    Message msg = new Message("zgsystem",// topic
+                            "bill",// tag
+                            "tuipiao" + System.currentTimeMillis()/1000,// key
+                            JSON.toJSONString(map).getBytes());// body
                     SendResult sendResult = producer.send(msg);
                     System.out.println("发送状态" +sendResult.getSendStatus().name());
                     System.out.println("消息id：" + sendResult.getMsgId());
@@ -68,7 +77,7 @@ public class Producer {
             } catch (MQBrokerException e) {
                 e.printStackTrace();
             }
-        }
+//        }
         /**
          * 应用退出时，要调用shutdown来清理资源，关闭网络连接，从MetaQ服务器上注销自己
          * 注意：我们建议应用在JBOSS、Tomcat等容器的退出销毁方法里调用shutdown方法

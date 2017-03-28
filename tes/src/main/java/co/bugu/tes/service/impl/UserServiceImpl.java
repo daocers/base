@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -104,5 +105,40 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
             }
         }
         return user;
+    }
+
+    @Override
+    public List<String> getRoleList(Integer userId) {
+        List<String> roleList = new ArrayList<>();
+        try{
+            roleList = JedisUtil.lrange(Constant.USER_ROLES + userId);
+        }catch (Exception e){
+            logger.error("jedis获取列表失败");
+            List<Role> list = baseDao.selectList("tes.role.selectRoleByUser", userId);
+            for(Role role: list){
+                roleList.add(role.getCode());
+            }
+            JedisUtil.pushList(Constant.USER_ROLES + userId, roleList);
+        }
+        return roleList;
+    }
+
+    @Override
+    public List<String> getAuthorityList(Integer userId) {
+        List<String> authorityList = new ArrayList<>();
+        try{
+            authorityList = JedisUtil.lrange(Constant.USER_AUTHORITYS + userId);
+        }catch (Exception e){
+            logger.error("jedis获取列表失败");
+            List<Role> list = baseDao.selectList("tes.role.selectRoleByUser", userId);
+            for(Role role: list){
+                List<Authority> authorities = baseDao.selectList("tes.authority.selectAuthorityByRole", role.getId());
+                for(Authority authority: authorities){
+                    authorityList.add(authority.getId() +"");
+                }
+            }
+            JedisUtil.pushList(Constant.USER_AUTHORITYS + userId, authorityList);
+        }
+        return authorityList;
     }
 }

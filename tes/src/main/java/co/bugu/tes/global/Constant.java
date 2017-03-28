@@ -43,7 +43,23 @@ public interface Constant {
 
     String QUESTION_PERFIX = "QUESTION_PREFIX_";
 
+    /**
+     * 用户需要参加的场次列表
+    * */
     String USER_SCENE_LIST = "USER_SCENE_LIST_";
 
+    /**
+     * 同一时刻开场的序号，避免场次编号重复
+     * */
     String SCENE_INDEX = "SCENE_INDEX";
+
+    /**
+     * 用户角色
+     * */
+    String USER_ROLES = "USER_ROLES_";
+
+    /**
+     * 用户权限
+     * */
+    String USER_AUTHORITYS = "USER_AUTHORITY_";
 }

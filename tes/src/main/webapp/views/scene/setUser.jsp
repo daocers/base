@@ -376,7 +376,7 @@
         $.ajax({
             url: "saveUser.do",
             type: "post",
-            data: {ids: choiceInfo, type: type, "id": $("[name='id']").val()},
+            data: {info: choiceInfo, type: type, "sceneId": $("[name='id']").val()},
             success: function (data) {
                 zeroModal.closeAll();
                 if (data == "-1") {

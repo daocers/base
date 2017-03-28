@@ -40,4 +40,8 @@ public interface IUserService extends IBaseService<User>{
     //    }
     //
     User findFullById(Integer id);
+
+    List<String> getRoleList(Integer userId);
+
+    List<String> getAuthorityList(Integer userId);
 }
