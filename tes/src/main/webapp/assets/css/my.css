@@ -86,6 +86,11 @@ tbody > tr > td.cell-edit{
     padding: 0px;
 }
 
+table tbody tr td.editable{
+    padding: 0px;
+    height: 22px;
+}
+
 /*输入警告*/
 .input-warning {
     /*color: #ff8e18;*/

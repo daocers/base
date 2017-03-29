@@ -52,7 +52,7 @@ public class ExamController {
      * @param type type= new,待参加考试， type= his, 已参加考试
      * @return
      */
-    @RequestMapping("/{type}/list")
+    @RequestMapping("/list")
     public String list(ModelMap model, @PathVariable String type){
         String page = "";
         List<Scene> sceneList = new ArrayList<>();
@@ -129,7 +129,7 @@ public class ExamController {
 
         //不符合考试条件，跳转到考试列表页面
         if(continueFlag == false){
-            return "redirect:new/list.do";
+            return "redirect:list.do?type=new";
         }
 
         Integer leftMinute = 0;

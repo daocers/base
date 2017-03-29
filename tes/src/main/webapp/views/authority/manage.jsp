@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>管理</title>
+    <title>权限管理</title>
     <%@ include file="../template/header.jsp" %>
 
     <%--<link rel="stylesheet" href="../assets/css/demo.css" type="text/css">--%>
@@ -11,6 +11,11 @@
     <script type="text/javascript" src="../assets/js/jquery.ztree.core.js"></script>
     <script type="text/javascript" src="../assets/js/jquery.ztree.excheck.js"></script>
     <script type="text/javascript" src="../assets/js/jquery.ztree.exedit.js"></script>
+    <style>
+        .form-control-intable{
+            height: 36px;
+        }
+    </style>
     <SCRIPT type="text/javascript">
         <!--
         var setting = {
@@ -41,7 +46,7 @@
                 beforeDragOpen: beforeDragOpen,
                 onDrag: onDrag,
                 onDrop: onDrop,
-                onClick: onClick,
+                onDblClick: onDoubleClick,
                 onExpand: onExpand,
                 beforeEditName: beforeEditName,
                 beforeRemove: beforeRemove,
@@ -243,9 +248,10 @@
          * @param treeId
          * @param treeNode
          */
-        function onClick(e, treeId, treeNode) {
+        function onDoubleClick(e, treeId, treeNode) {
             var id = treeNode.id;
             getInfo(id);
+            return false;
         }
 
         $(document).ready(function () {
@@ -281,11 +287,12 @@
                 </h3>
             </div>
             <table class="table table-bordered">
+                <input type="hidden" id="authId"/>
                 <tbody>
                 <tr>
                     <td class="col-md-1">名称</td>
 
-                    <td id="name"></td>
+                    <td class="editable"><input id="name" type="text" class="form-control form-control-intable" name="name" value="新的名称"></td>
                 </tr>
                 <tr>
                     <td class="col-md-1">URL</td>
@@ -321,13 +328,14 @@
                 </tr>
                 <tr>
                     <td>描述</td>
-                    <td id="description"></td>
+                    <td class="editable"><input class="form-control form-control-intable" id="description" ></td>
                 </tr>
                 </tbody>
             </table>
-
         </div>
-
+        <div class="panel panel-info">
+            <button class="btn btn-info pull-right" type="button" id="commitChange">提交修改</button>
+        </div>
     </div>
 
 
@@ -342,13 +350,14 @@
                 var obj = JSON.parse(data);
                 if (obj.code == 0) {
                     obj = obj.data;
-                    $("#name").text(obj.name);
+                    $("#authId").val(obj.id);
+                    $("#name").val(obj.name);
                     $("#url").text(obj.url);
                     $("#param").text(obj.param);
                     $("#controller").text(obj.controller);
                     $("#action").text(obj.action);
                     $("#acceptMethod").text(obj.acceptMethod);
-                    $("#description").text(obj.description);
+                    $("#description").val(obj.description);
                     $("#isApi").text(obj.isApi == 0);
                     $("#isPage").text(obj.isApi == 1);
                     $("#needAuth").text("暂无");
@@ -358,9 +367,7 @@
                     swal("", obj.msg, "error");
                 }
             }
-
         });
-
     }
     $(".commit").on("click", function () {
         var zTree = $.fn.zTree.getZTreeObj("treeDemo");
@@ -383,6 +390,39 @@
                 console.log("提交失败");
             }
         })
+    });
+
+    $("#commitChange").on("click", function () {
+        zeroModal.loading(3);
+        var id = $("#authId").val();
+        var name = $("#name").val();
+        var des = $("#description").val();
+
+        $.ajax({
+            url: "save.do",
+            type: 'post',
+            data: {id: id, name: name, description: des},
+            success: function (data) {
+                var res = JSON.parse(data);
+                if(res.code == 0){
+                    var tree =  $.fn.zTree.getZTreeObj("treeDemo");
+                    var node = tree.getNodeByParam("id", id, null);
+                    if(node){
+                        node.name = name;
+                        tree.updateNode(node);
+                    }
+                    zeroModal.closeAll();
+                }else{
+                    swal("", res.err, "error");
+                    zeroModal.closeAll();
+                }
+            },
+            error: function (data) {
+                swal("", "保存失败", "error");
+                zeroModal.closeAll();
+            }
+        })
+
     });
 
     $(".cancel").on("click", function () {

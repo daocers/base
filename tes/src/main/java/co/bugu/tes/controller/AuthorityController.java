@@ -12,7 +12,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.collections.map.HashedMap;
-import org.apache.http.auth.AUTH;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,20 +88,22 @@ public class AuthorityController {
      * @return
      */
     @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @ResponseBody
     public String save(Authority authority, ModelMap model) {
+        JSONObject json = new JSONObject();
         try {
             if (authority.getId() == null) {
                 authorityService.save(authority);
             } else {
                 authorityService.updateById(authority);
             }
+            json.put("code", 0);
         } catch (Exception e) {
             logger.error("保存失败", e);
-            model.put("authority", authority);
-            model.put("errMsg", "保存失败");
-            return "authority/edit";
+            json.put("code", -1);
+            json.put("err", "保存权限失败");
         }
-        return "redirect:list.do";
+        return json.toJSONString();
     }
 
     /**
