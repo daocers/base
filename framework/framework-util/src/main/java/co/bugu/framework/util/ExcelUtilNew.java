@@ -277,41 +277,45 @@ public class ExcelUtilNew {
         List<List<String>> res = new ArrayList<>();
         Sheet sheet = workbook.getSheetAt(sheetIndex);
         logger.debug("当前sheet： {}， 有 {} 行", new Integer[]{sheetIndex, sheet.getLastRowNum()});
+        Integer cellCount = null;
         for(Row row: sheet){
+            if(cellCount == null){
+                cellCount = Integer.valueOf(row.getLastCellNum());
+            }
             Integer rowIndex = row.getRowNum();
             List<String> rowData = new ArrayList<>();
-            for(Cell cell: row){
+            for(int i = 0; i < cellCount; i++){
+                Cell cell = row.getCell(i);
                 Integer rowNum = row.getRowNum();
                 logger.debug("当前row： {}， 有 {} 列", new Object[]{rowNum, row.getLastCellNum()});
-                Integer colIndex = cell.getColumnIndex();
-//                logger.debug("当前 sheet: " + sheetIndex + ", row: " + rowIndex + ", column: " + colIndex);
-//                logger.debug("当前cell: {}", cell.getCellType());
-                CellReference cellRef = new CellReference(row.getRowNum(), cell.getColumnIndex());
                 String data = "";
-                switch (cell.getCellType()){
-                    case Cell.CELL_TYPE_STRING:
-                        data = cell.getRichStringCellValue().getString();
-                        break;
-                    case Cell.CELL_TYPE_NUMERIC:
-                        if(HSSFDateUtil.isCellDateFormatted(cell)){
-                            Date date = HSSFDateUtil.getJavaDate(cell.getNumericCellValue());
-                            data = format.format(date);
-                        }else{
-                            data = cell.getNumericCellValue() + "";
-                        }
-                        break;
-                    case Cell.CELL_TYPE_BLANK:
-                        data = "";
-                        break;
-                    case Cell.CELL_TYPE_FORMULA:
-                        data = cell.getCellFormula();
-                        break;
-                    case Cell.CELL_TYPE_BOOLEAN:
-                        data = cell.getBooleanCellValue() + "";
-                        break;
-                    default:
-                        data = cell.getStringCellValue();
+                if(cell != null){
+                    switch (cell.getCellType()){
+                        case Cell.CELL_TYPE_STRING:
+                            data = cell.getRichStringCellValue().getString();
+                            break;
+                        case Cell.CELL_TYPE_NUMERIC:
+                            if(HSSFDateUtil.isCellDateFormatted(cell)){
+                                Date date = HSSFDateUtil.getJavaDate(cell.getNumericCellValue());
+                                data = format.format(date);
+                            }else{
+                                data = cell.getNumericCellValue() + "";
+                            }
+                            break;
+                        case Cell.CELL_TYPE_BLANK:
+                            data = "";
+                            break;
+                        case Cell.CELL_TYPE_FORMULA:
+                            data = cell.getCellFormula();
+                            break;
+                        case Cell.CELL_TYPE_BOOLEAN:
+                            data = cell.getBooleanCellValue() + "";
+                            break;
+                        default:
+                            data = cell.getStringCellValue();
+                    }
                 }
+
                 rowData.add(data);
             }
             res.add(rowData);

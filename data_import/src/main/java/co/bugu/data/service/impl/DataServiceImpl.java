@@ -4,14 +4,17 @@ import co.bugu.data.model.*;
 import co.bugu.data.service.*;
 import co.bugu.framework.core.dao.BaseDao;
 import com.alibaba.fastjson.JSON;
+import com.microsoft.schemas.office.office.STInsetMode;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.print.Doc;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -51,7 +54,6 @@ public class DataServiceImpl implements IDataService {
         initPushPartyInfo(pushPartyIdNameMap, pushPartyMap);
 
 
-
         if (assetData != null && assetData.size() > 0) {
             assetData.remove(0);
         }
@@ -60,7 +62,7 @@ public class DataServiceImpl implements IDataService {
         Dic dic = new Dic();
         dic.setName("内部资产");
         List<Dic> list = dicService.findByObject(dic);
-        if(list.size() > 0){
+        if (list.size() > 0) {
             dic = list.get(0);
         }
         int row = 1;
@@ -79,7 +81,7 @@ public class DataServiceImpl implements IDataService {
         factoringAsset.setOriginalRate(zero);
         factoringAsset.setRePricingMode(null);//重定价方式
         factoringAsset.setAssetAmount(zero);
-        factoringAsset.setInterestCalculation((byte)78);//计息方式
+        factoringAsset.setInterestCalculation((byte) 78);//计息方式
         factoringAsset.setGuaranteeMode("");//担保方式
         factoringAsset.setCreditor("");//债权人
         factoringAsset.setDebtor("");//债务人
@@ -103,7 +105,7 @@ public class DataServiceImpl implements IDataService {
         if (factoringAsset.getResidualMaturity() < 0) {
             factoringAsset.setResidualMaturity(0);
         }
-        factoringAsset.setStatus((byte)10);
+        factoringAsset.setStatus((byte) 10);
         factoringAsset.setBaseCreditorRightsContract(false);
         factoringAsset.setCreditorRightsTransferApplication(false);
         factoringAsset.setReceivableCreditTransferApplication(false);
@@ -151,7 +153,7 @@ public class DataServiceImpl implements IDataService {
             asset.setDebtorCusNum(line.get(15));//债务人客户编号
             asset.setContractNum(line.get(16));//合同编号
             asset.setPushParty(pushPartyMap.get(line.get(33)));//供应商编号
-            if(StringUtils.isEmpty(line.get(17))){
+            if (StringUtils.isEmpty(line.get(17))) {
                 asset.setPushPartyOgrName(pushPartyIdNameMap.get(asset.getPushParty()));
             }
             asset.setPushDate(StringUtils.isEmpty(line.get(18)) ? null : format.parse(line.get(18)));//资产推送日期
@@ -182,13 +184,13 @@ public class DataServiceImpl implements IDataService {
             asset.setCreateTime(new Date());
             asset.setModifyTime(new Date());
             StringBuffer buffer = new StringBuffer();
-            if(StringUtils.isEmpty(assetNo)){
+            if (StringUtils.isEmpty(assetNo)) {
                 buffer.append(pushCode)
                         .append(asset.getAssetCtype())
                         .append(asset.getAssetGtype())
                         .append(generateAssetCode())
                         .append(++seqNo);
-            }else{
+            } else {
                 buffer.append(pushCode)
                         .append(assetNo);
             }
@@ -254,7 +256,7 @@ public class DataServiceImpl implements IDataService {
             product.setMaxInvestNum(null);//最大投资次数
             product.setNterestMode(78);//计息方式（到期一次性支付，在系统dic表中的数据id，谨慎起见应该先查询）
             product.setContractTemplate(1);//合同模板
-            product.setRepaymentAmount(StringUtils.isEmpty(line.get(26))? null : BigDecimal.valueOf(Double.valueOf(line.get(26))));//还款金额（资产方还本息）
+            product.setRepaymentAmount(StringUtils.isEmpty(line.get(26)) ? null : BigDecimal.valueOf(Double.valueOf(line.get(26))));//还款金额（资产方还本息）
             product.setFactraiseTime(null);//实际募集时间
             product.setFactknotTime(null);//实际结标时间
             product.setRepaymentTime(null);//实际还款时间
@@ -269,9 +271,9 @@ public class DataServiceImpl implements IDataService {
             baseDao.insert("data.product.insert", product);
             String pushCode = line.get(2);
 
-            if(StringUtils.isEmpty(assetCode)){
+            if (StringUtils.isEmpty(assetCode)) {
                 assetCode = "中间数据0000001";
-            }else{
+            } else {
                 assetCode = pushCode + assetCode;
             }
             assetNoProdIdMap.put(assetCode, product.getId());
@@ -279,7 +281,7 @@ public class DataServiceImpl implements IDataService {
         }
 
         Iterator<Map.Entry<Long, String>> iterator = productIdAssetCodeMap.entrySet().iterator();
-        while(iterator.hasNext()){
+        while (iterator.hasNext()) {
             Map.Entry<Long, String> entry = iterator.next();
             Long productId = entry.getKey();
             String assetCode = entry.getValue();
@@ -291,7 +293,6 @@ public class DataServiceImpl implements IDataService {
 //            relationService.save(relation);
             baseDao.insert("data.factoringProductRelation.insert", relation);
         }
-
 
 
 //        Iterator<Map.Entry<String, Long>> iterator = assetNoProdIdMap.entrySet().iterator();
@@ -317,11 +318,11 @@ public class DataServiceImpl implements IDataService {
         logger.info("=======================================资产对标统计启动!=============================================");
         //获取票据相关列表
         List<ProductTongji> list = baseDao.selectList("data.productTongji.selectAllForBill");
-        if(list!=null){
+        if (list != null) {
             baseDao.delete("data.AssetBenchmarkingStatisticsDao.deleteAll");
 //            assetBenchmarkingStatisticsDao.deleteAll();
         }
-        for(ProductTongji product : list){
+        for (ProductTongji product : list) {
             AssetBenchmarkingStatistics assetBenchmarkingStatistics = new AssetBenchmarkingStatistics();
             assetBenchmarkingStatistics.setProductStatus(product.getStatus());
             assetBenchmarkingStatistics.setAssetStatus(product.getAssetStatus());
@@ -352,14 +353,14 @@ public class DataServiceImpl implements IDataService {
             assetBenchmarkingStatistics.setCreditorRightsTransferCost(product.getCreditorRightsTransferCost());
             assetBenchmarkingStatistics.setFactknotTime(product.getFactknotTime());
             assetBenchmarkingStatistics.setValueDate(product.getValueDate());
-            if(product.getPassiveId()!=null){
+            if (product.getPassiveId() != null) {
 //                替票的处理，都是保理资产，不用处理
 //                BillAssets assets = getSourceAsset(product.getPassiveId());
 //                assetBenchmarkingStatistics.setAssetCode(assets.getAssetsCode());
 //                assetBenchmarkingStatistics.setAssetExpiringDate(assets.getBillRateDueDate());
 //                assetBenchmarkingStatistics.setAssetRemainingDays(assets.getBillRemainingDays());
 //                assetBenchmarkingStatistics.setInterest(assets.getAssetsInterest());
-            }else{
+            } else {
                 assetBenchmarkingStatistics.setAssetCode(product.getAssetsCode());
                 assetBenchmarkingStatistics.setAssetExpiringDate(product.getBillRateDueDate());
                 assetBenchmarkingStatistics.setAssetRemainingDays(product.getBillRemainingDays());
@@ -367,6 +368,143 @@ public class DataServiceImpl implements IDataService {
             }
             baseDao.insert("data.AssetBenchmarkingStatisticsDao.insertSelective", assetBenchmarkingStatistics);
 //            assetBenchmarkingStatisticsDao.insertSelective(assetBenchmarkingStatistics);
+        }
+    }
+
+    /**
+     * 最新版的导入旧数据
+     *
+     * @param assetDate
+     * @param productData
+     */
+    @Override
+    public void addBatch(List<List<String>> assetDate, List<List<String>> productData) throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        assetDate.remove(0);
+        int codeIndex = 1;
+
+        Map<String, Long> assetCodeIdMap = new HashMap<>();
+        for (List<String> line : assetDate) {
+            FactoringAsset asset = new FactoringAsset();
+            asset.setAssetsCode(line.get(1).equals("") ? codeIndex++ + "" : line.get(1));//资产编号
+            asset.setAssetsType(line.get(2).equals("债权转让") ? : );//资产类型
+            asset.setAssetCtype(null);//子类型
+            asset.setValueDate(line.get(4).equals("")? null: format.parse(line.get(4)));
+            asset.setExpiringDate(line.get(5).equals("") ? null : format.parse(line.get(5)));
+            asset.setNewDeadline(null);
+            asset.setDeadline(line.get(7).equals("")? null: Integer.parseInt(line.get(7)));
+            asset.setRate(line.get(8).equals("") ? BigDecimal.valueOf(0.00) : BigDecimal.valueOf(Double.valueOf(line.get(8))));
+            asset.setRePricingMode(line.get(9));
+            asset.setAssetAmount(BigDecimal.valueOf(Double.valueOf(line.get(10))));
+            asset.setInterestCalculation(line.get(11));//计息方式
+            asset.setGuaranteeMode(line.get(12));
+            asset.setCreditor(line.get(13));
+            asset.setDebtor(line.get(14));
+            asset.setOriginalDebtor(line.get(15));
+            asset.setSecuredParty(line.get(16));
+            asset.setDebtorCusNum(line.get(17));
+            asset.setContractNum(line.get(18));
+            asset.setPushParty();
+            asset.setPushPartyOgrName(line.get(20));
+            asset.setPushDate(line.get(21).equals("") ? null: format.parse(line.get(21)));
+            asset.setUseDate(line.get(22).equals("") ? null: format.parse(line.get(22)));
+            asset.setAssetExpireDate(line.get(23).equals("") ? null : format.parse(line.get(23)));
+            asset.setPushingResidualMaturity(line.get(24).equals("") ? null : Integer.valueOf(line.get(24)));
+            asset.setCreditorRightsTransferCost(line.get(25).equals("") ? null : BigDecimal.valueOf(Double.valueOf(line.get(25))));
+            asset.setSlottingAllowance(line.get(26).equals("") ? null :BigDecimal.valueOf(Double.valueOf(line.get(26))));
+            asset.setAssetBalanceRepeat(line.get(27).equals("") ? null : BigDecimal.valueOf(Double.valueOf(line.get(27))));
+            asset.setAssetBalance(line.get(28).equals("") ? null : BigDecimal.valueOf(Double.valueOf(line.get(28))));
+            asset.setResidualMaturity(line.get(29).equals("") ? null :Integer.valueOf(line.get(29)));
+            asset.setStatus((byte) 10);//已到期
+            asset.setBaseCreditorRightsContract(line.get(31).equals("√"));
+            asset.setCreditorRightsTransferApplication(line.get(32).equals("√"));
+            asset.setReceivableCreditTransferApplication(line.get(33).equals("√"));
+            asset.setCreditAssetTransferContract(line.get(34).equals("√"));
+            asset.setTransferMoneyCertificate(line.get(35).equals("√"));
+            asset.setCreditorRightsTransferProtocol(line.get(36).equals("√"));
+            asset.setRemark(line.get(37));
+            asset.setUseableBalance(line.get(38).equals("") ? BigDecimal.ZERO: BigDecimal.valueOf(Double.valueOf(line.get(38))));
+            asset.setFreezeAmount(line.get(39).equals("") ? BigDecimal.ZERO : BigDecimal.valueOf(Double.valueOf(line.get(39))));
+            asset.setPauseAmount(line.get(40).equals("") ? BigDecimal.ZERO: BigDecimal.valueOf(Double.valueOf(line.get(40))));
+            asset.setDelFlag(false);
+            asset.setCreateTime(new Date());
+            asset.setModifyTime(new Date());
+            asset.setRejectReason(line.get(44));
+            asset.setPauseReason(line.get(45));
+            asset.setAssetGtype(null);
+            asset.setOriginalRate(line.get(47).equals("") ? null : BigDecimal.valueOf(Double.valueOf(line.get(47))));
+            baseDao.insert("data.asset.insert", asset);
+            assetCodeIdMap.put(asset.getAssetsCode(), asset.getId());
+        }
+
+        Map<String, Long> productCodeIdMap = new HashMap<>();
+        Map<String, String> assetProductCodeMap = new HashMap<>();
+        codeIndex = 1;
+        for(List<String> line : productData){
+            Product product = new Product();
+            product.setProductCode(line.get(1).equals("") ? "BL" + codeIndex++ : line.get(1));
+            product.setProductType(2);//1 票据， 2 保理
+            product.setProductName(line.get(3));
+            product.setIssueAmount(line.get(4).equals("")? BigDecimal.ZERO: BigDecimal.valueOf(Double.valueOf(line.get(4))));
+            product.setProductDeadline(line.get(5).equals("")? null: Integer.valueOf(line.get(5)));
+            product.setPlanAnnualYield(line.get(6).equals("")? null: BigDecimal.valueOf(Double.valueOf(line.get(6))));
+            product.setRaiseStartDate(line.get(7).equals("") ? null: format.parse(line.get(7)));
+            product.setRaiseEndDate(line.get(8).equals("")? null: format.parse(line.get(8)));
+            product.setStartBidAmount(line.get(9).equals("") ? null: BigDecimal.valueOf(Double.valueOf(line.get(9))));
+            product.setIncrementAmount(line.get(10).equals("") ? null: BigDecimal.valueOf(Double.valueOf(line.get(10))));
+            product.setExtendDeadline(line.get(11).equals("") ? null : Integer.valueOf(line.get(11)));
+            product.setValueDate(line.get(12).equals("")? null: format.parse(line.get(12)));
+            product.setExpiringDate(line.get(13).equals("")? null :format.parse(line.get(13)));
+            product.setExtendExpiringDate(line.get(14).equals("")?null :format.parse(line.get(14)));
+            product.setNterestMode();//按天计息
+            product.setContractTemplate(null);//合同模板
+            product.setPlanCashDay(line.get(17).equals("")? null :format.parse(line.get(17)));
+            product.setInterestPenaltyRate(line.get(18).equals("")? null : BigDecimal.valueOf(Double.valueOf(line.get(18)));
+            product.setStatus(8);//已结清，对应系统已还清
+            product.setSettleAmount(line.get(20).equals("") ? null : BigDecimal.valueOf(Double.valueOf(line.get(20))));
+            product.setProductDesc(line.get(21));
+            product.setProjectDetail(line.get(22));
+            product.setRefundSource(line.get(23));
+            product.setRepaymentAmount(line.get(24).equals("") ? null : BigDecimal.valueOf(Double.valueOf(line.get(24))));
+            product.setFactraiseTime(line.get(25).equals("") ? null : format.parse(line.get(25)));
+            product.setFactknotTime(line.get(26).equals("")? null : format.parse(line.get(26)));
+            product.setRepaymentTime(line.get(27).equals("") ? null : format.parse(line.get(27)));
+            product.setCreateTime(new Date());
+            product.setModifyTime(new Date());
+            product.setDelFlag(0);
+            product.setExt(line.get(31));
+            product.setNewOrOldType(line.get(32));
+            product.setContractUrl(line.get(33));
+            product.setContinueStatus(line.get(34));
+            product.setContinueAmount(line.get(35).equals("") ? null: BigDecimal.valueOf(Double.valueOf(line.get(35))));
+            product.setPushPartyId(line.get(36));
+            product.setBillType(null);
+            product.setBillTypeName(null);
+            product.setMaxInvestAmount(line.get(39).equals("") ? null : BigDecimal.valueOf(Double.valueOf(line.get(39))));
+            product.setMaxInvestTotalAmount(line.get(40).equals("") ? null : BigDecimal.valueOf(Double.valueOf(line.get(40))));
+            product.setMaxInvestNum(line.get(41).equals("") ? null : Integer.valueOf(line.get(41)));
+            String assetCode = line.get(44);
+            if(StringUtils.isNotEmpty(assetCode)){
+                assetProductCodeMap.put(assetCode, product.getProductCode());
+            }
+
+            baseDao.insert("data.product.insert", product);
+            productCodeIdMap.put(product.getProductCode(), product.getId());
+
+            Iterator<String> iterator = assetProductCodeMap.keySet().iterator();
+            while(iterator.hasNext()){
+                String assetCodeInfo = iterator.next();
+                String productCodeInfo = assetProductCodeMap.get(assetCodeInfo);
+                Long assetId = assetCodeIdMap.get(assetCodeInfo);
+                Long productId = productCodeIdMap.get(productCodeInfo);
+                FactoringProductRelation relation = new FactoringProductRelation();
+                relation.setProductId(productId);
+                relation.setAssetId(assetId);
+                baseDao.insert("data.relation.insert", relation);
+
+            }
+
+
         }
     }
 
@@ -438,7 +576,7 @@ public class DataServiceImpl implements IDataService {
     }
 
     private Integer getProductStatus(String name) {
-        if(StringUtils.isEmpty(name)){
+        if (StringUtils.isEmpty(name)) {
             return 9;
         }
         Map<String, Integer> map = new HashMap<>();
@@ -474,9 +612,9 @@ public class DataServiceImpl implements IDataService {
     }
 
 
-    private String generateAssetCode(){
+    private String generateAssetCode() {
 
-        if(StringUtils.isEmpty(dateInfo)){
+        if (StringUtils.isEmpty(dateInfo)) {
             SimpleDateFormat format = new SimpleDateFormat("yyMMdd");
             Date date = new Date();
             dateInfo = format.format(date);
@@ -484,8 +622,8 @@ public class DataServiceImpl implements IDataService {
         return dateInfo;
     }
 
-    private String generateProductCode(){
-        if(StringUtils.isEmpty(productDate)){
+    private String generateProductCode() {
+        if (StringUtils.isEmpty(productDate)) {
             SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
             productDate = format.format(new Date());
         }
