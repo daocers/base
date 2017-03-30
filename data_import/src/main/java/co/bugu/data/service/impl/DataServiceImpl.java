@@ -378,16 +378,29 @@ public class DataServiceImpl implements IDataService {
      * @param productData
      */
     @Override
-    public void addBatch(List<List<String>> assetDate, List<List<String>> productData) throws ParseException {
+    public void addBatch(List<List<String>> assetDate, List<List<String>> productData) throws Exception {
+        List<Dic> dics = dicService.findByObject(null);
+        Map<String, Long> dicMap = new HashMap<>();
+        for(Dic dic: dics){
+            dicMap.put(dic.getName(), dic.getId());
+        }
+        Map<String, Long> pushPartyOrgNameIdMap = new HashMap<>();
+        Map<String, Long> codeIdMap = new HashMap<>();
+        List<PushParty> pushParties = pushPartyService.findByObject(null);
+        for(PushParty party: pushParties){
+            pushPartyOrgNameIdMap.put(party.getPushPartyOgrName(), party.getId());
+            codeIdMap.put(party.getPushPartyOrgCode(), party.getId());
+        }
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         assetDate.remove(0);
         int codeIndex = 1;
+
 
         Map<String, Long> assetCodeIdMap = new HashMap<>();
         for (List<String> line : assetDate) {
             FactoringAsset asset = new FactoringAsset();
             asset.setAssetsCode(line.get(1).equals("") ? codeIndex++ + "" : line.get(1));//资产编号
-            asset.setAssetsType(line.get(2).equals("债权转让") ? : );//资产类型
+            asset.setAssetsType(line.get(2).equals("债权转让") ? dicMap.get("债权转让").intValue() : dicMap.get("应收账款").intValue());//资产类型
             asset.setAssetCtype(null);//子类型
             asset.setValueDate(line.get(4).equals("")? null: format.parse(line.get(4)));
             asset.setExpiringDate(line.get(5).equals("") ? null : format.parse(line.get(5)));
@@ -396,7 +409,8 @@ public class DataServiceImpl implements IDataService {
             asset.setRate(line.get(8).equals("") ? BigDecimal.valueOf(0.00) : BigDecimal.valueOf(Double.valueOf(line.get(8))));
             asset.setRePricingMode(line.get(9));
             asset.setAssetAmount(BigDecimal.valueOf(Double.valueOf(line.get(10))));
-            asset.setInterestCalculation(line.get(11));//计息方式
+//            asset.setInterestCalculation(dicMap.get(line.get(11)).byteValue());//计息方式
+            asset.setInterestCalculation(dicMap.get("到期一次还本付息").byteValue());//计息方式
             asset.setGuaranteeMode(line.get(12));
             asset.setCreditor(line.get(13));
             asset.setDebtor(line.get(14));
@@ -404,8 +418,10 @@ public class DataServiceImpl implements IDataService {
             asset.setSecuredParty(line.get(16));
             asset.setDebtorCusNum(line.get(17));
             asset.setContractNum(line.get(18));
-            asset.setPushParty();
+//            asset.setPushParty();
             asset.setPushPartyOgrName(line.get(20));
+
+            asset.setPushParty(pushPartyOrgNameIdMap.get(line.get(20)));
             asset.setPushDate(line.get(21).equals("") ? null: format.parse(line.get(21)));
             asset.setUseDate(line.get(22).equals("") ? null: format.parse(line.get(22)));
             asset.setAssetExpireDate(line.get(23).equals("") ? null : format.parse(line.get(23)));
@@ -433,9 +449,10 @@ public class DataServiceImpl implements IDataService {
             asset.setPauseReason(line.get(45));
             asset.setAssetGtype(null);
             asset.setOriginalRate(line.get(47).equals("") ? null : BigDecimal.valueOf(Double.valueOf(line.get(47))));
-            baseDao.insert("data.asset.insert", asset);
+            baseDao.insert("data.factoringAsset.insert", asset);
             assetCodeIdMap.put(asset.getAssetsCode(), asset.getId());
         }
+
 
         Map<String, Long> productCodeIdMap = new HashMap<>();
         Map<String, String> assetProductCodeMap = new HashMap<>();
@@ -456,15 +473,15 @@ public class DataServiceImpl implements IDataService {
             product.setValueDate(line.get(12).equals("")? null: format.parse(line.get(12)));
             product.setExpiringDate(line.get(13).equals("")? null :format.parse(line.get(13)));
             product.setExtendExpiringDate(line.get(14).equals("")?null :format.parse(line.get(14)));
-            product.setNterestMode();//按天计息
+            product.setNterestMode(dicMap.get(line.get(15)).intValue());//按天计息
             product.setContractTemplate(null);//合同模板
             product.setPlanCashDay(line.get(17).equals("")? null :format.parse(line.get(17)));
-            product.setInterestPenaltyRate(line.get(18).equals("")? null : BigDecimal.valueOf(Double.valueOf(line.get(18)));
+            product.setInterestPenaltyRate(line.get(18).equals("")? null : BigDecimal.valueOf(Double.valueOf(line.get(18))));
             product.setStatus(8);//已结清，对应系统已还清
             product.setSettleAmount(line.get(20).equals("") ? null : BigDecimal.valueOf(Double.valueOf(line.get(20))));
             product.setProductDesc(line.get(21));
             product.setProjectDetail(line.get(22));
-            product.setRefundSource(line.get(23));
+            product.setRefundSource(line.get(23).equals("其他")? 1: 2);
             product.setRepaymentAmount(line.get(24).equals("") ? null : BigDecimal.valueOf(Double.valueOf(line.get(24))));
             product.setFactraiseTime(line.get(25).equals("") ? null : format.parse(line.get(25)));
             product.setFactknotTime(line.get(26).equals("")? null : format.parse(line.get(26)));
@@ -473,11 +490,11 @@ public class DataServiceImpl implements IDataService {
             product.setModifyTime(new Date());
             product.setDelFlag(0);
             product.setExt(line.get(31));
-            product.setNewOrOldType(line.get(32));
+            product.setNewOrOldType(line.get(32).equals("过渡户")? 1:0);
             product.setContractUrl(line.get(33));
             product.setContinueStatus(line.get(34));
             product.setContinueAmount(line.get(35).equals("") ? null: BigDecimal.valueOf(Double.valueOf(line.get(35))));
-            product.setPushPartyId(line.get(36));
+            product.setPushPartyId(codeIdMap.get(line.get(36)));
             product.setBillType(null);
             product.setBillTypeName(null);
             product.setMaxInvestAmount(line.get(39).equals("") ? null : BigDecimal.valueOf(Double.valueOf(line.get(39))));
@@ -500,7 +517,7 @@ public class DataServiceImpl implements IDataService {
                 FactoringProductRelation relation = new FactoringProductRelation();
                 relation.setProductId(productId);
                 relation.setAssetId(assetId);
-                baseDao.insert("data.relation.insert", relation);
+                baseDao.insert("data.factoringProductRelation.insert", relation);
 
             }
 

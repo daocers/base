@@ -13,5 +13,5 @@ public interface IDataService {
     void addTongji();
 
 
-    void addBatch(List<List<String>> assetDate, List<List<String>> productData) throws ParseException;
+    void addBatch(List<List<String>> assetDate, List<List<String>> productData) throws Exception;
 }
