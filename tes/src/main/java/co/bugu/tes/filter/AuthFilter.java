@@ -48,11 +48,11 @@ public class AuthFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
-
+        String url = request.getRequestURI();
+        BuguWebUtil.set(request, "previous", url);
         if(!BuguWebUtil.hasSingin(request)){//未登录
             String method = request.getMethod();
             Map<String, String[]> params = request.getParameterMap();
-            String url = request.getRequestURI();
             boolean needFilter = true;
             for(String exclude : excludeUrls){
                 boolean mathch = Pattern.matches(exclude, url);

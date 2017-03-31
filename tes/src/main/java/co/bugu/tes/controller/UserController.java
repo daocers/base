@@ -9,6 +9,8 @@ import co.bugu.tes.service.*;
 import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.util.JsonUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import org.aspectj.weaver.NewParentTypeMunger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.text.NumberFormat;
 import java.util.*;
 
 @Controller
@@ -235,5 +238,26 @@ public class UserController {
             res.addAll(users);
         }
         return JSON.toJSONString(res);
+    }
+
+
+    @RequestMapping("/resetPassword")
+    @ResponseBody
+    public String resetPassword(Integer userId, ModelMap model){
+        Random random = new Random();
+        Integer code = random.nextInt(100) + 100;
+        String newPassword = "password" + code;
+        String salt = EncryptUtil.getSalt(5);
+        newPassword = EncryptUtil.md5(newPassword + salt);
+        User user = new User();
+        user.setId(userId);
+        user.setSalt(salt);
+        user.setPassword(newPassword);
+        userService.updateById(user);
+        model.put("password", newPassword);
+        JSONObject json = new JSONObject();
+        json.put("code", 0);
+        json.put("data", newPassword);
+        return json.toJSONString();
     }
 }

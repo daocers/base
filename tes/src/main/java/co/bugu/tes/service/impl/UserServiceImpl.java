@@ -9,6 +9,8 @@ import co.bugu.tes.model.Profile;
 import co.bugu.tes.model.Role;
 import co.bugu.tes.model.User;
 import co.bugu.tes.service.IUserService;
+import com.alibaba.fastjson.JSON;
+import com.rabbitmq.tools.json.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -19,9 +21,6 @@ import java.util.List;
 @Service
 public class UserServiceImpl extends BaseServiceImpl<User> implements IUserService {
     private static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
-    //    @Autowired
-//    BaseDao baseDao;
-//
     @Override
     public int save(User user) {
         baseDao.insert("tes.user.insert", user);
@@ -33,7 +32,6 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
         return 1;
     }
 
-    //
     @Override
     public int updateById(User user) {
         baseDao.update("tes.user.updateById", user);
@@ -55,21 +53,6 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
 
     }
 
-    //
-//    @Override
-//    public int saveOrUpdate(User user) {
-//        if(user.getId() == null){
-//            return baseDao.insert("tes.user.insert", user);
-//        }else{
-//            return baseDao.update("tes.user.updateById", user);
-//        }
-//    }
-//
-//    @Override
-//    public int delete(User user) {
-//        return baseDao.delete("tes.user.deleteById", user);
-//    }
-//
     @Override
     public User findById(Integer id) {;
         try{
@@ -96,14 +79,23 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
             List<Role> roles = baseDao.selectList("tes.role.selectRoleByUser", user.getId());
             if(roles != null && roles.size() > 0){
                 user.setRoleList(roles);
+                List<String> roleList = new ArrayList<>();
+                List<String> authList = new ArrayList<>();
                 for(Role role: roles){
+                    roleList.add(role.getCode());
                     List<Authority> authorities = baseDao.selectList("tes.authority.selectAuthorityByRole", role.getId());
                     if(authorities != null){
                         role.setAuthorityList(authorities);
+                        for(Authority authority: authorities){
+                            authList.add(authority.getId() + "");
+                        }
                     }
                 }
+                JedisUtil.pushList(Constant.USER_ROLES + id, roleList);
+                JedisUtil.pushList(Constant.USER_AUTHORITYS + id, authList);
             }
         }
+        JedisUtil.setJson(Constant.USER_INFO_PREFIX + id, user);
         return user;
     }
 

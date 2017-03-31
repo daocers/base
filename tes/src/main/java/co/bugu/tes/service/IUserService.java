@@ -7,41 +7,14 @@ import co.bugu.framework.core.dao.PageInfo;
 
 import java.util.List;
 
-public interface IUserService extends IBaseService<User>{
-//    int save(User user);
-//
-//    int updateById(User user);
-//
-//    int saveOrUpdate(User user);
-//
-//    int delete(User user);
-//
-//    User findById(Integer id);
-//
-//    List<User> findAllByObject(User user);
-//
-//    PageInfo listByObject(User user, PageInfo<User> pageInfo) throws Exception;
+public interface IUserService extends IBaseService<User> {
 
     void batchAdd(List<User> userList);
 
-    //
-    //    @Override
-    //    public int saveOrUpdate(User user) {
-    //        if(user.getId() == null){
-    //            return baseDao.insert("tes.user.insert", user);
-    //        }else{
-    //            return baseDao.update("tes.user.updateById", user);
-    //        }
-    //    }
-    //
-    //    @Override
-    //    public int delete(User user) {
-    //        return baseDao.delete("tes.user.deleteById", user);
-    //    }
-    //
     User findFullById(Integer id);
 
     List<String> getRoleList(Integer userId);
 
     List<String> getAuthorityList(Integer userId);
+
 }

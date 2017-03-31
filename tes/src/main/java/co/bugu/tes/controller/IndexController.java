@@ -3,7 +3,6 @@ package co.bugu.tes.controller;
 import co.bugu.framework.core.util.BuguWebUtil;
 import co.bugu.framework.core.util.VerifyCodeUtil;
 import co.bugu.framework.util.EncryptUtil;
-import co.bugu.framework.util.JedisUtil;
 import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.User;
 import co.bugu.tes.service.IUserService;
@@ -37,20 +36,24 @@ public class IndexController {
 
     /**
      * 跳转到对应的登录页面
+     *
      * @param request
      * @param response
      * @return
      */
     @RequestMapping("/login")
-    public String toLogin(ModelMap model, HttpServletRequest request, HttpServletResponse response){
-        Cookie[]  cookies = request.getCookies();
-        if(cookies != null){
-            for(Cookie cookie: cookies){
+    public String toLogin(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
+        if(BuguWebUtil.getUserId(request) != null){
+            return "index";
+        }
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
                 String name = cookie.getName();
-                if(name.equals("rememberMe")){
+                if (name.equals("rememberMe")) {
                     model.put("rememberMe", 0);
                 }
-                if("username".equals(name)){
+                if ("username".equals(name)) {
                     model.put("username", cookie.getValue());
                 }
             }
@@ -60,11 +63,11 @@ public class IndexController {
 
 
     @RequestMapping("/index")
-    public String index(HttpServletRequest request,  HttpServletResponse response){
+    public String index(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
         String username = session.getAttribute("username").toString();
         String rememberMe = session.getAttribute("rememberMe").toString();
-        if(StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(rememberMe)){
+        if (StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(rememberMe)) {
             Cookie cookie = new Cookie("username", session.getAttribute("username").toString());
             Cookie remCookie = new Cookie("rememberMe", session.getAttribute("rememberMe").toString());
             Integer max = 3600 * 24 * 7;
@@ -75,8 +78,10 @@ public class IndexController {
         }
         return "index";
     }
+
     /**
      * 登陆，传入用户名，密码
+     *
      * @param username
      * @param password
      * @param request
@@ -84,34 +89,33 @@ public class IndexController {
      */
     @RequestMapping(value = "/signIn", method = RequestMethod.POST)
     @ResponseBody
-    public String signIn(String username, String password, Integer rememberMe, HttpServletRequest request, HttpServletResponse response){
-        try{
+    public String signIn(String username, String password, Integer rememberMe, HttpServletRequest request, HttpServletResponse response) {
+        try {
             User user = new User();
             user.setUsername(username);
             List<User> userList = userService.findByObject(user);
-            if(userList.size() == 0){
+            if (userList.size() == 0) {
                 return "1";//用户不存在
-            }else if(userList.size() > 1){
+            } else if (userList.size() > 1) {
                 return "2";//数据紊乱，应该只有一个匹配，结果有多个
-            }else{
+            } else {
                 user = userList.get(0);
                 String finalPass = EncryptUtil.md5(password + user.getSalt());
 
                 //登陆成功，缓存用户权限，角色信息等
-                if(finalPass.equals(user.getPassword())){
+                if (finalPass.equals(user.getPassword())) {
                     user = userService.findFullById(user.getId());
-                    JedisUtil.setJson(Constant.USER_INFO_PREFIX + user.getId(), user);
                     WebUtils.setSessionAttribute(request, Constant.SESSION_USER_ID, user.getId());
-                    if(rememberMe == 0){
+                    if (rememberMe == 0) {
                         WebUtils.setSessionAttribute(request, "username", username);
                         WebUtils.setSessionAttribute(request, "rememberMe", rememberMe);
                     }
                     return "0";
-                }else{
+                } else {
                     return "3";//密码不正确
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("登录失败", e);
             return "-1";
         }
@@ -119,14 +123,15 @@ public class IndexController {
 
     /**
      * 退出登录
+     *
      * @param request
      * @return
      */
     @RequestMapping("/signOut")
-    public String signOut(HttpServletRequest request){
-        try{
+    public String signOut(HttpServletRequest request) {
+        try {
             BuguWebUtil.remove(request, Constant.SESSION_USER_ID);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("注销失败", e);
         }
         return "redirect:/login.do";
@@ -135,6 +140,7 @@ public class IndexController {
 
     /**
      * 获取验证码
+     *
      * @param request
      * @param response
      * @return
@@ -152,18 +158,19 @@ public class IndexController {
      * 获取在线信息
      * 有对应的页面信息
      * 管理员，考试教师可用
+     *
      * @return
      */
-    public String getOnlineInfo(){
-        try{
+    public String getOnlineInfo() {
+        try {
 
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("获取在线信息失败", e);
         }
         return null;
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         String str = "*.findObject";
         str = str.replaceAll("\\*", "\\\\S*");
         System.out.println(str);

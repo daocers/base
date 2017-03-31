@@ -1,9 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="../template/header.jsp" %>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>品类编辑</title>
+    <title>用户编辑</title>
+    <%@ include file="../template/header.jsp" %>
+
 </head>
 <body>
 <div class="container">
@@ -53,20 +54,20 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="control-label col-md-2">所属机构</label>
-                    <div class="col-md-10">
-                        <select class="form-control" name="branchId" required style="display: inline-block;">
-                            <option>请选择</option>
-                            <c:forEach items="${branchList}" var="branch">
-                                <option value="${branch.id}" <c:if
-                                        test="${user.branchId == branch.id}"> selected</c:if> >${branch.name}</option>
-                            </c:forEach>
-                        </select>
-                        ？缺少机构 去<a href="../branch/edit.do">添加</a>
-                        <span class="help-block with-errors">用于所在分行、支行、网点或者分理处</span>
-                    </div>
-                </div>
+                <%--<div class="form-group">--%>
+                    <%--<label class="control-label col-md-2">所属机构</label>--%>
+                    <%--<div class="col-md-10">--%>
+                        <%--<select class="form-control" name="branchId" required style="display: inline-block;">--%>
+                            <%--<option>请选择</option>--%>
+                            <%--<c:forEach items="${branchList}" var="branch">--%>
+                                <%--<option value="${branch.id}" <c:if--%>
+                                        <%--test="${user.branchId == branch.id}"> selected</c:if> >${branch.name}</option>--%>
+                            <%--</c:forEach>--%>
+                        <%--</select>--%>
+                        <%--？缺少机构 去<a href="../branch/edit.do">添加</a>--%>
+                        <%--<span class="help-block with-errors">用于所在分行、支行、网点或者分理处</span>--%>
+                    <%--</div>--%>
+                <%--</div>--%>
                 <div class="form-group">
                     <label class="control-label col-md-2">部门</label>
                     <div class="col-md-10">
@@ -158,7 +159,7 @@
                     <div class="space">
 
                     </div>
-                    <button class="btn btn-warning btn-cancel">取消</button>
+                    <button class="btn btn-warning btn-cancel" onclick="history.back();">取消</button>
                 </div>
             </form>
         </div>
