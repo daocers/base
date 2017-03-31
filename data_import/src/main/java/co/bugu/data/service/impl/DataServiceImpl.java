@@ -391,7 +391,7 @@ public class DataServiceImpl implements IDataService {
             pushPartyOrgNameIdMap.put(party.getPushPartyOgrName(), party.getId());
             codeIdMap.put(party.getPushPartyOrgCode(), party.getId());
         }
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         assetDate.remove(0);
         int codeIndex = 1;
 
@@ -405,8 +405,8 @@ public class DataServiceImpl implements IDataService {
             asset.setValueDate(line.get(4).equals("")? null: format.parse(line.get(4)));
             asset.setExpiringDate(line.get(5).equals("") ? null : format.parse(line.get(5)));
             asset.setNewDeadline(null);
-            asset.setDeadline(line.get(7).equals("")? null: Integer.parseInt(line.get(7)));
-            asset.setRate(line.get(8).equals("") ? BigDecimal.valueOf(0.00) : BigDecimal.valueOf(Double.valueOf(line.get(8))));
+            asset.setDeadline(line.get(7).equals("")? null: Double.valueOf(line.get(7)).intValue());
+            asset.setRate(line.get(8).equals("") ? BigDecimal.valueOf(0.00) : BigDecimal.valueOf(Double.valueOf(line.get(8)) * 100));
             asset.setRePricingMode(line.get(9));
             asset.setAssetAmount(BigDecimal.valueOf(Double.valueOf(line.get(10))));
 //            asset.setInterestCalculation(dicMap.get(line.get(11)).byteValue());//计息方式
@@ -425,12 +425,12 @@ public class DataServiceImpl implements IDataService {
             asset.setPushDate(line.get(21).equals("") ? null: format.parse(line.get(21)));
             asset.setUseDate(line.get(22).equals("") ? null: format.parse(line.get(22)));
             asset.setAssetExpireDate(line.get(23).equals("") ? null : format.parse(line.get(23)));
-            asset.setPushingResidualMaturity(line.get(24).equals("") ? null : Integer.valueOf(line.get(24)));
-            asset.setCreditorRightsTransferCost(line.get(25).equals("") ? null : BigDecimal.valueOf(Double.valueOf(line.get(25))));
-            asset.setSlottingAllowance(line.get(26).equals("") ? null :BigDecimal.valueOf(Double.valueOf(line.get(26))));
+            asset.setPushingResidualMaturity(line.get(24).equals("") ? null : Double.valueOf(line.get(24)).intValue());
+            asset.setCreditorRightsTransferCost(line.get(25).equals("") ? null : BigDecimal.valueOf(Double.valueOf(line.get(25)) * 100));
+            asset.setSlottingAllowance(line.get(26).equals("") ? null :BigDecimal.valueOf(Double.valueOf(line.get(26)) * 100));
             asset.setAssetBalanceRepeat(line.get(27).equals("") ? null : BigDecimal.valueOf(Double.valueOf(line.get(27))));
             asset.setAssetBalance(line.get(28).equals("") ? null : BigDecimal.valueOf(Double.valueOf(line.get(28))));
-            asset.setResidualMaturity(line.get(29).equals("") ? null :Integer.valueOf(line.get(29)));
+            asset.setResidualMaturity(line.get(29).equals("") ? null :Double.valueOf(line.get(29)).intValue());
             asset.setStatus((byte) 10);//已到期
             asset.setBaseCreditorRightsContract(line.get(31).equals("√"));
             asset.setCreditorRightsTransferApplication(line.get(32).equals("√"));
@@ -457,19 +457,20 @@ public class DataServiceImpl implements IDataService {
         Map<String, Long> productCodeIdMap = new HashMap<>();
         Map<String, String> assetProductCodeMap = new HashMap<>();
         codeIndex = 1;
+        productData.remove(0);
         for(List<String> line : productData){
             Product product = new Product();
             product.setProductCode(line.get(1).equals("") ? "BL" + codeIndex++ : line.get(1));
             product.setProductType(2);//1 票据， 2 保理
             product.setProductName(line.get(3));
             product.setIssueAmount(line.get(4).equals("")? BigDecimal.ZERO: BigDecimal.valueOf(Double.valueOf(line.get(4))));
-            product.setProductDeadline(line.get(5).equals("")? null: Integer.valueOf(line.get(5)));
-            product.setPlanAnnualYield(line.get(6).equals("")? null: BigDecimal.valueOf(Double.valueOf(line.get(6))));
+            product.setProductDeadline(line.get(5).equals("")? null: Double.valueOf(line.get(5)).intValue());
+            product.setPlanAnnualYield(line.get(6).equals("")? null: BigDecimal.valueOf(Double.valueOf(line.get(6)) * 100));
             product.setRaiseStartDate(line.get(7).equals("") ? null: format.parse(line.get(7)));
             product.setRaiseEndDate(line.get(8).equals("")? null: format.parse(line.get(8)));
             product.setStartBidAmount(line.get(9).equals("") ? null: BigDecimal.valueOf(Double.valueOf(line.get(9))));
             product.setIncrementAmount(line.get(10).equals("") ? null: BigDecimal.valueOf(Double.valueOf(line.get(10))));
-            product.setExtendDeadline(line.get(11).equals("") ? null : Integer.valueOf(line.get(11)));
+            product.setExtendDeadline(line.get(11).equals("") ? null : Double.valueOf(line.get(11)).intValue());
             product.setValueDate(line.get(12).equals("")? null: format.parse(line.get(12)));
             product.setExpiringDate(line.get(13).equals("")? null :format.parse(line.get(13)));
             product.setExtendExpiringDate(line.get(14).equals("")?null :format.parse(line.get(14)));
@@ -499,27 +500,27 @@ public class DataServiceImpl implements IDataService {
             product.setBillTypeName(null);
             product.setMaxInvestAmount(line.get(39).equals("") ? null : BigDecimal.valueOf(Double.valueOf(line.get(39))));
             product.setMaxInvestTotalAmount(line.get(40).equals("") ? null : BigDecimal.valueOf(Double.valueOf(line.get(40))));
-            product.setMaxInvestNum(line.get(41).equals("") ? null : Integer.valueOf(line.get(41)));
+            product.setMaxInvestNum(line.get(41).equals("") ? null : Double.valueOf(line.get(41)).intValue());
             String assetCode = line.get(44);
             if(StringUtils.isNotEmpty(assetCode)){
                 assetProductCodeMap.put(assetCode, product.getProductCode());
             }
 
             baseDao.insert("data.product.insert", product);
-            productCodeIdMap.put(product.getProductCode(), product.getId());
+//            productCodeIdMap.put(product.getProductCode(), product.getId());
 
-            Iterator<String> iterator = assetProductCodeMap.keySet().iterator();
-            while(iterator.hasNext()){
-                String assetCodeInfo = iterator.next();
-                String productCodeInfo = assetProductCodeMap.get(assetCodeInfo);
-                Long assetId = assetCodeIdMap.get(assetCodeInfo);
-                Long productId = productCodeIdMap.get(productCodeInfo);
-                FactoringProductRelation relation = new FactoringProductRelation();
-                relation.setProductId(productId);
-                relation.setAssetId(assetId);
-                baseDao.insert("data.factoringProductRelation.insert", relation);
-
-            }
+//            Iterator<String> iterator = assetProductCodeMap.keySet().iterator();
+//            while(iterator.hasNext()){
+//                String assetCodeInfo = iterator.next();
+//                String productCodeInfo = assetProductCodeMap.get(assetCodeInfo);
+//                Long assetId = assetCodeIdMap.get(assetCodeInfo);
+//                Long productId = productCodeIdMap.get(productCodeInfo);
+//                FactoringProductRelation relation = new FactoringProductRelation();
+//                relation.setProductId(productId);
+//                relation.setAssetId(assetId);
+//                baseDao.insert("data.factoringProductRelation.insert", relation);
+//
+//            }
 
 
         }

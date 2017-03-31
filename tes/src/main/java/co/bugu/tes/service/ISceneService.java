@@ -30,4 +30,6 @@ public interface ISceneService extends IBaseService<Scene>{
 
     int deleteUserOfScene(Integer userId, Integer sceneId);
 
+    List<Scene> selectJoinedByUserId(Integer userId);
+
 }

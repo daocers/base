@@ -2,27 +2,20 @@ package co.bugu.tes.model;
 
 import java.util.Date;
 
+/**
+ * 交易信息， 可适当根据需要添加属性，包括公私类型，业务类型等
+ */
 public class Trade {
     private Integer id;
-
-    private Integer branchId;
-
-    private String code;
-
-    private Date createTime;
-
-    private Integer createUserId;
-
-    private Integer departmentId;
-
     private String name;
-
+    private String tradeCode;
+    private Integer branchId;
+    private Integer departmentId;
     private Integer stationId;
-
     private Integer status;
-
+    private Date createTime;
     private Date updateTime;
-
+    private Integer createUserId;
     private Integer updateUserId;
 
     public Integer getId() {
@@ -41,12 +34,12 @@ public class Trade {
         this.branchId = branchId;
     }
 
-    public String getCode() {
-        return code;
+    public String getTradeCode() {
+        return tradeCode;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setTradeCode(String tradeCode) {
+        this.tradeCode = tradeCode;
     }
 
     public Date getCreateTime() {

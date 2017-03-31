@@ -1,13 +1,38 @@
 package co.bugu.tes.model;
 
+/**
+ * 页面信息
+ */
 public class Page {
     private Integer id;
 
     private String code;
 
+    private String tradeId;
+
     private Integer status;
 
     private String url;
+    /**
+     * 用于排序，表示在一个交易中出现的先后顺序
+     */
+    private Integer idx;
+
+    public Integer getIdx() {
+        return idx;
+    }
+
+    public void setIdx(Integer idx) {
+        this.idx = idx;
+    }
+
+    public String getTradeId() {
+        return tradeId;
+    }
+
+    public void setTradeId(String tradeId) {
+        this.tradeId = tradeId;
+    }
 
     public Integer getId() {
         return id;

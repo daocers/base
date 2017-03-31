@@ -28,7 +28,7 @@
     <input type="hidden" value="${type}" id="type">
     <div class="row">
         <div class="col-md-8">
-            <form class="form-horizontal" method="post" action="savePolicy.do" data-toggle="validator" role="form">
+            <form class="form-horizontal" method="post" action="savePolicy.do" data-toggle="validator" role="form" id="sceneForm">
                 <input id="id" type="hidden" name="id" value="${scene.id}">
                 <div class="form-group">
                     <div class="input-group">
@@ -211,6 +211,28 @@
             })
         }
 
+    })
+
+    $(".btn-commit").on("click", function () {
+        $.ajax({
+            url: 'savePolicy.do',
+            type: 'post',
+            data: $("#sceneForm").serialize(),
+            success: function (data) {
+                var res = JSON.parse(data);
+                if(res.code == 0){
+                    var id = res.data;
+                    window.location.href = 'generatePaper.do?id=' + id;
+                }else{
+                    swal("", res.msg, "error");
+                    return false;
+                }
+            },
+            error: function (data) {
+                swal("", "保存失败", "error");
+                return false;
+            }
+        })
     })
 </script>
 </body>

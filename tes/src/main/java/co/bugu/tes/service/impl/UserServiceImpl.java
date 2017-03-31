@@ -114,6 +114,9 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
             roleList = JedisUtil.lrange(Constant.USER_ROLES + userId);
         }catch (Exception e){
             logger.error("jedis获取列表失败");
+
+        }
+        if(roleList == null || roleList.size() == 0){
             List<Role> list = baseDao.selectList("tes.role.selectRoleByUser", userId);
             for(Role role: list){
                 roleList.add(role.getCode());

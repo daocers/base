@@ -174,7 +174,7 @@
     <span class="help-block with-errors">【指定用户】 指定用户可参加，单击机构名称可查询用户信息，适用于少量用户考试</span>
     <span class="help-block with-errors">【设置授权码】 用户录入授权码参与考试，适用于集中性的考试</span>
 
-    <div class="row form-inline authBox">
+    <div class="row form-inline authBox" style="display: none">
         <div class="form-group">
             <label class="control-label ">授权码</label>
             <input class="form-control" minlength="6" maxlength="6" name="authCode" id="authCode" placeholder="请输入6位数字或字母组合">

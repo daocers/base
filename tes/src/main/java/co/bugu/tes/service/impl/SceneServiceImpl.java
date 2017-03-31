@@ -145,4 +145,10 @@ public class SceneServiceImpl extends BaseServiceImpl<Scene> implements ISceneSe
         baseDao.delete("tes.scene.deleteUserFromSceneUserX", map);
         return 0;
     }
+
+    @Override
+    public List<Scene> selectJoinedByUserId(Integer userId) {
+
+        return baseDao.selectList("tes.scene.selectJoinedByUserId", userId);
+    }
 }

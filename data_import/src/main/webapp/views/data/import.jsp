@@ -30,7 +30,7 @@
 
                 <div class="form-group">
                     <div class="col-md-offset-1" style="padding-left: 15px;">
-                        <input type="file" name="file" class="jfilestyle" data-input="true" data-buttonText="导入文件">
+                        <input type="file" name="file" class="jfilestyle" data-input="true" data-buttonText="选择文件">
                         <button class="btn btn-success" onclick="javascript:commit()">上传</button>
                     </div>
 

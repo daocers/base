@@ -313,4 +313,10 @@
         delete from scene_user_x where scene_id = #{sceneId} and user_id = #{userId}
     </delete>
 
+    <select id="selectJoinedByUserId" resultMap="SceneMap" parameterType="int">
+        SELECT
+        <include refid="scene_list"/>
+        from scene WHERE id in (SELECT DISTINCT scene_id from paper where user_id = #{userId})
+    </select>
+
 </mapper>

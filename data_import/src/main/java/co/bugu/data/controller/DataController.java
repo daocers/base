@@ -47,41 +47,14 @@ public class DataController {
 
 
         File tarFile = new File(System.currentTimeMillis() + file.getOriginalFilename());
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try{
             file.transferTo(tarFile);
-            Map<String, Integer> type = new HashMap<>();
-            Map<String, Integer> cType = new HashMap<>();
-            Dic dic = new Dic();
-            dic.setName("内部资产");
-            List<Dic> list =  dicService.findByObject(dic);
-            if(list.size() > 0){
-                dic = list.get(0);
-            }
-
-            Long id = dic.getId();
-            dic = new Dic();
-            dic.setPid(id);
-            List<Dic> dics = dicService.findByObject(dic);
-            for (Dic dic1 : dics) {
-                type.put(dic1.getName(), dic1.getId().intValue());
-                dic = new Dic();
-                dic.setPid(dic1.getId());
-                List<Dic> dics1 = dicService.findByObject(dic);
-                for (Dic dic2 : dics1) {
-                    cType.put(dic2.getName(), dic2.getId().intValue());
-                }
-            }
 
             List<List<String>> assetData = ExcelUtilNew.getData(tarFile);
 
             List<List<String>> productData = ExcelUtilNew.getData(tarFile, 1);
-//            logger.debug("type信息： {}", JSON.toJSONString(type, true));
-//            logger.debug("ctype信息： {}", JSON.toJSONString(cType, true));
-//            logger.debug("资产信息：{}", JSON.toJSONString(assetData, true));
-//            logger.debug("产品信息：{}", JSON.toJSONString(productData, true));
-            dataService.add(assetData, productData, type, cType);
-//            dataService.add(null, null);
+
+            dataService.addBatch(assetData, productData);
         }catch (Exception e){
             logger.error("处理数据失败", e);
         }finally {
