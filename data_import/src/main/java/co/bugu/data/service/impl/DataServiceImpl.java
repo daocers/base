@@ -371,6 +371,19 @@ public class DataServiceImpl implements IDataService {
         }
     }
 
+    @Override
+    public void addRelation(List<List<String>> productData) {
+        productData.remove(0);
+        for(List<String> line: productData){
+            String productName = line.get(3);
+            String assetCode = line.get(44);
+            Map<String, String> map = new HashMap<>();
+            map.put("productName", productName);
+            map.put("assetCode", assetCode);
+            baseDao.insert("data.factoringProductRelation.addRelation", map);
+        }
+    }
+
     /**
      * 最新版的导入旧数据
      *

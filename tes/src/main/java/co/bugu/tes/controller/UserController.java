@@ -1,15 +1,18 @@
 package co.bugu.tes.controller;
 
+import co.bugu.framework.core.util.BuguWebUtil;
 import co.bugu.framework.util.EncryptUtil;
 import co.bugu.framework.util.ExcelUtilNew;
 import co.bugu.tes.enums.ExamStatus;
 import co.bugu.tes.enums.UserStatus;
+import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.*;
 import co.bugu.tes.service.*;
 import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.util.JsonUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.sun.deploy.net.proxy.pac.PACFunctions;
 import org.aspectj.weaver.NewParentTypeMunger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -240,6 +243,39 @@ public class UserController {
         return JSON.toJSONString(res);
     }
 
+
+    @RequestMapping("/toChangePassword")
+    public String toChangePassword(){
+        return "user/changePassword";
+    }
+    /**
+     * 修改密码
+     * @param oldPassword
+     * @param password
+     * @param request
+     * @return
+     */
+    @RequestMapping("/changePassword")
+    @ResponseBody
+    public String changePassword(String oldPassword, String password, HttpServletRequest request){
+        JSONObject json = new JSONObject();
+        Integer userId = (Integer) BuguWebUtil.getUserId(request);
+        User user = userService.findById(userId);
+        if(EncryptUtil.md5(oldPassword + user.getSalt()).equals(user.getPassword())){
+            String salt = EncryptUtil.getSalt(5);
+            String newPassword = EncryptUtil.md5(password + salt);
+            user.setSalt(salt);
+            user.setPassword(newPassword);
+            userService.updateById(user);
+            json.put("code", 0);
+            BuguWebUtil.remove(request, Constant.SESSION_USER_ID);
+        }else{
+            json.put("code", -1);
+            json.put("err", "旧密码错误");
+        }
+        return json.toJSONString();
+
+    }
 
     @RequestMapping("/resetPassword")
     @ResponseBody

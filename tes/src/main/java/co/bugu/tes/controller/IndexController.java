@@ -76,7 +76,7 @@ public class IndexController {
             response.addCookie(cookie);
             response.addCookie(remCookie);
         }
-        return "index";
+        return "index/index";
     }
 
     /**

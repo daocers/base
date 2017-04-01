@@ -1,5 +1,7 @@
 package co.bugu.data.service;
 
+import co.bugu.data.model.Product;
+
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +14,7 @@ public interface IDataService {
 
     void addTongji();
 
+    void addRelation(List<List<String>> productData);
 
     void addBatch(List<List<String>> assetDate, List<List<String>> productData) throws Exception;
 }

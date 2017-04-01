@@ -55,6 +55,7 @@ public class DataController {
             List<List<String>> productData = ExcelUtilNew.getData(tarFile, 1);
 
             dataService.addBatch(assetData, productData);
+            dataService.addRelation(productData);
         }catch (Exception e){
             logger.error("处理数据失败", e);
         }finally {
