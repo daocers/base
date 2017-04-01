@@ -161,3 +161,18 @@ table.table > thead > tr > th{
 .pre-table{
     margin-bottom: 5px;
 }
+
+
+/**
+* 改造导航栏
+*/
+.pagination li a.info:hover, .pagination li.disabled a, .pagination li.disabled a:hover{
+    background-color: white;
+    color: #337ab7;
+    cursor: default;
+}
+nav > ul.pagination > li.active > a, nav > ul.pagination > li.active > a:hover, .pagination li.disabled {
+    background: whitesmoke;
+    color: darkblue;
+    border-color: #ddd;
+}

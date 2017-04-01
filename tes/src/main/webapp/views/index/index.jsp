@@ -272,7 +272,7 @@
             <li>
                 <div class="link"><i class="fa fa-paint-brush"></i>系统管理<i class="fa fa-chevron-down"></i></div>
                 <ul class="submenu">
-                    <li><a href="#">用户管理</a></li>
+                    <li><a href="/user/list.do">用户管理</a></li>
                     <li><a href="#">角色管理</a></li>
                     <li><a href="#">权限管理</a></li>
                 </ul>
@@ -305,8 +305,11 @@
         </ul>
     </div>
 
-    <div class="col-md-10">
-        <div></div>
+    <%--<div class="col-md-10" style="width: 800px;">--%>
+    <div class="col-md-10" style="width: 780px;">
+        <div id="main" class="row">
+
+        </div>
     </div>
 </div>
 
@@ -340,6 +343,7 @@
             $(".menu-left a").removeClass("active");
             $(this).addClass("active");
             var url = $(this).attr("href");
+            console.log("url: ", url);
             if(!url || url == "#" || url == ''){
                 return false;
             }

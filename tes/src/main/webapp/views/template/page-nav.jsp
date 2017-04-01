@@ -9,13 +9,14 @@
 <%@ taglib prefix="c"
            uri="http://java.sun.com/jsp/jstl/core" %>
 
-<div>
-    <label class="control-label">总共${pi.count}条 ${pi.curPage}/${pi.pageSize}页</label>
-</div>
+<%--<div>--%>
+    <%--<label class="control-label">总共${pi.count}条 ${pi.curPage}/${pi.pageSize}页</label>--%>
+<%--</div>--%>
 <nav>
     <ul class="pagination">
+        <li class="info">总共${pi.count}条 ${pi.curPage}/${pi.pageSize}页</li>
         <c:if test="${pi.curPage == 1}">
-            <li class="disabled active"><a class=""><span>上一页</span></a>
+            <li class="disabled info"><a class=""><span>上一页</span></a>
             </li>
         </c:if>
         <c:if test="${pi.curPage  > 1}">
@@ -71,12 +72,12 @@
         </c:if>
     </ul>
 </nav>
-<div class="form-inline">
-    <label class="control-label">跳转至</label>
-    <input id="to-page" type="number" class="form-control" min="1" max="${pi.pageSize}">
-    <label>页</label>
-    <button class="btn btn-primary btn-to-page" type="button">跳转</button>
-</div>
+<%--<div class="form-inline">--%>
+    <%--<label class="control-label">跳转至</label>--%>
+    <%--<input id="to-page" type="number" class="form-control" min="1" max="${pi.pageSize}">--%>
+    <%--<label>页</label>--%>
+    <%--<button class="btn btn-primary btn-to-page" type="button">跳转</button>--%>
+<%--</div>--%>
 
 
 <%--<html>--%>

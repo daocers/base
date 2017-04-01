@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+<%@ taglib prefix="c"
+           uri="http://java.sun.com/jsp/jstl/core" %>
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%--<%@ include file="../template/header.jsp" %>--%>
 <html lang="en">
 <head>
@@ -7,30 +12,14 @@
     <title>管理</title>
 </head>
 <body>
-<div class="container">
-    <div class="row nav-path">
-        <ol class="breadcrumb">
-            <li><a href="#">首页</a></li>
-            <li><a href="#" class="active">商品管理</a></li>
-        </ol>
-    </div>
-    <div class="row info-search">
-
-        <div class="pull-right form-inline">
-            <input type="text" class="form-control" placeholder="输入关键词，例如名称、品牌、序号、供应商等">
-            <!--<span class="input-group-btn">-->
-            <button class="btn btn-info" type="button">搜索</button>
-        </div>
-    </div>
+<div class="">
 
     <div class="row pre-table">
         <div class="pull-left form-inline">
             <button class="btn btn-info" id="import">导入数据</button>
             <button class="btn btn-primary" id="download">下载模板</button>
         </div>
-        <div class="pull-right">
-            <jsp:include page="../template/page-nav.jsp"/>
-        </div>
+
     </div>
     <div class="row table-responsive">
         <table class="table table-bordered">
@@ -79,7 +68,7 @@
 
         </div>
         <div class="pull-right">
-
+            <jsp:include page="../template/page-nav.jsp"/>
         </div>
     </div>
 </div>
