@@ -350,6 +350,7 @@
         }else if(type == 3){//设置授权码
             choiceInfo = $("#authCode").val();
             if(!choiceInfo || choiceInfo == ''){
+                zeroModal.closeAll();
                 swal("请输入6位授权码");
                 return false;
             }

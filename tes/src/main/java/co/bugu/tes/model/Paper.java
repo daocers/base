@@ -19,7 +19,17 @@ public class Paper {
 
     private Integer userId;
 
+    private String content;
+
     private String questionIds;
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 
     public String getQuestionIds() {
         return questionIds;

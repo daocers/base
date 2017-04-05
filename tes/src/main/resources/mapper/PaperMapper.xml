@@ -11,9 +11,10 @@
         <result column="status" property="status" jdbcType="INTEGER"/>
         <result column="user_id" property="userId" jdbcType="INTEGER"/>
         <result column="question_ids" property="questionIds" jdbcType="CLOB"/>
+        <result column="content" property="content" jdbcType="CLOB"/>
     </resultMap>
     <sql id="paper_list">
-    id, answer_flag, begin_time, end_time, mark, scene_id, status, user_id, question_ids
+    id, answer_flag, begin_time, end_time, mark, scene_id, status, user_id, question_ids, content
   </sql>
     <select id="selectById" resultMap="PaperMap" parameterType="java.lang.Integer">
         select
@@ -56,6 +57,9 @@
             <if test="questionIds != null">
                 question_ids,
             </if>
+            <if test="content != null">
+                content,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -85,6 +89,9 @@
             <if test="questionIds != null">
                 #{questionIds},
             </if>
+            <if test="content != null">
+                #{content},
+            </if>
         </trim>
     </insert>
     <update id="updateById" parameterType="co.bugu.tes.model.Paper">
@@ -113,6 +120,9 @@
             </if>
             <if test="questionIds != null">
                 question_ids = #{questionIds},
+            </if>
+            <if test="content != null">
+                 content = #{content},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}

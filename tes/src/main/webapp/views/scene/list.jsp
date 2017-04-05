@@ -10,7 +10,7 @@
 <%@ include file="../template/header.jsp" %>
 <%@ include file="../template/menu-top.jsp"%>
 <%@ include file="../template/menu-left.jsp"%>
-<div class="" style="width:780px; vertical-align: top; display: inline-block">
+<div class="" style="width:900px; vertical-align: top; display: inline-block">
     <div class="row nav-path">
         <ol class="breadcrumb">
             <li><a href="#">首页</a></li>

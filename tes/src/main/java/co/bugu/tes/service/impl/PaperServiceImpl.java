@@ -5,9 +5,9 @@ import co.bugu.framework.core.service.impl.BaseServiceImpl;
 import co.bugu.tes.enums.PaperPolicyType;
 import co.bugu.tes.enums.PaperType;
 import co.bugu.tes.model.*;
+import co.bugu.tes.service.IAnswerService;
 import co.bugu.tes.service.IPaperService;
-import co.bugu.framework.core.dao.BaseDao;
-import co.bugu.framework.core.dao.PageInfo;
+import co.bugu.tes.service.IQuestionService;
 import co.bugu.tes.util.QuestionUtil;
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang.StringUtils;
@@ -18,6 +18,11 @@ import java.util.*;
 
 @Service
 public class PaperServiceImpl extends BaseServiceImpl<Paper> implements IPaperService {
+    @Autowired
+    IAnswerService answerService;
+    @Autowired
+    IQuestionService questionService;
+
     @Override
     public boolean generateAllPaper(Scene scene) throws Exception {
         if (scene.getId() == null) {
@@ -165,9 +170,50 @@ public class PaperServiceImpl extends BaseServiceImpl<Paper> implements IPaperSe
     }
 
     @Override
-    public Double computeScore(Integer sceneId, Integer paperId) {
-
+    public Double computeScore(Map<Integer, Double> metaInfoIdScoreMap, Integer paperId) {
+        Paper paper = baseDao.selectOne("tes.paper.selectById", paperId);
+        if(paper == null){
+            return null;
+        }else{
+            String content = paper.getContent();
+            if(StringUtils.isNotEmpty(content)){
+                Double amount = 0.00;
+                Map<Integer, List<Integer>> map = JSON.parseObject(content, HashMap.class);
+                Iterator<Integer> iter = map.keySet().iterator();
+                while(iter.hasNext()){
+                    Integer questionMetaInfoId = iter.next();
+                    List<Integer> questionIds = map.get(questionMetaInfoId);
+                    Double score = metaInfoIdScoreMap.get(questionMetaInfoId);
+                    for(Integer questionId: questionIds){
+                        boolean res = checkQuestion(questionId, paperId);
+                        if(res){
+                            amount += score;
+                        }
+                    }
+                }
+                return amount;
+            }
+        }
         return null;
+    }
+
+    private boolean checkQuestion(Integer questionId, Integer paperId){
+        Answer answer = new Answer();
+        answer.setPaperId(paperId);
+        answer.setQuestionId(questionId);
+        List<Answer> list = answerService.findByObject(answer);
+        if(list == null || list.size() == 0){
+            return false;
+        }else{
+            answer = list.get(0);
+            Question question = questionService.findById(questionId);
+            if(question == null){
+                return false;
+            }else{
+                return answer.getAnswer().equals(question.getAnswer());
+            }
+
+        }
     }
 
 }

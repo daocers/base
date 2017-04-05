@@ -58,7 +58,7 @@
         }
 
         .accordion li:last-child .link {
-            border-bottom: 0;
+            /*border-bottom: 0;*/
         }
 
         .accordion li i {

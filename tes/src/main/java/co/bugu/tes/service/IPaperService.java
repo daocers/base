@@ -5,9 +5,8 @@ import co.bugu.framework.core.service.IBaseService;
 import co.bugu.tes.model.Paper;
 import co.bugu.tes.model.Scene;
 import co.bugu.tes.model.User;
-import co.bugu.framework.core.dao.PageInfo;
 
-import java.util.List;
+import java.util.Map;
 
 public interface IPaperService extends IBaseService<Paper>{
 //    int save(Paper paper);
@@ -31,7 +30,9 @@ public interface IPaperService extends IBaseService<Paper>{
     boolean generatePaperForUser(Scene scene, User user);
 
 
-    Double computeScore(Integer sceneId, Integer paperId);
+    Double computeScore(Map<Integer, Double> metaInfoIdScoreMap, Integer paperId);
+
+
 
 
 

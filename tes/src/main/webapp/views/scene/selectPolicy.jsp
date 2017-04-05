@@ -77,7 +77,7 @@
                         <tbody>
                         <c:forEach var="policy" items="${pageInfo.data}">
                             <tr>
-                                <td><input name="paperPolicyId" type="checkbox" value="${policy.id}"></td>
+                                <td><input name="paperPolicyId" type="radio" value="${policy.id}"></td>
                                 <td>${policy.name}</td>
                                 <td>${policy.branchId}</td>
                                 <td>${policy.departmentId}</td>
@@ -148,7 +148,7 @@
                     $.each(paperPolicyList, function (index, val) {
                         console.log("index: ", index);
                         html += "<tr>";
-                        html += '<td><input type="checkbox" name="paperPolicyId" value="' + val.id + '"></td>';
+                        html += '<td><input type="radio" name="paperPolicyId" value="' + val.id + '"></td>';
                         html += "<td>" + val.name + "</td>"
                         html += "<td>" + val.branchId + "</td>"
                         html += "<td>" + val.departmentId + "</td>"
@@ -173,7 +173,7 @@
     }
 
     $(function () {
-        $("table").on("click", "input[type='checkbox']", function () {
+        $("table").on("click", "input[type='radio']", function () {
             if ($(this).is(":checked")) {
                 $("#policy").val($(this).parentsUntil("tr").next().text());
                 var paperPolicyId = $(this).val();
