@@ -262,15 +262,17 @@
     </SCRIPT>
 </head>
 <body>
-<div class="container">
-    <div class="row nav-path">
-        <ol class="breadcrumb">
-            <li><a href="#">首页</a></li>
-            <li><a href="#" class="active">权限管理</a></li>
-        </ol>
-    </div>
+<%@ include file="../template/menu-top.jsp" %>
+<%@ include file="../template/menu-left.jsp" %>
+<div class="" style="width:780px; vertical-align: top; display: inline-block">
+    <%--<div class="row nav-path">--%>
+        <%--<ol class="breadcrumb">--%>
+            <%--<li><a href="#">首页</a></li>--%>
+            <%--<li><a href="#" class="active">权限管理</a></li>--%>
+        <%--</ol>--%>
+    <%--</div>--%>
 
-    <div class="col-md-4">
+    <div class="col-md-5">
         <div class="zTreeDemoBackground left">
             <ul id="treeDemo" class="ztree"></ul>
         </div>
@@ -292,7 +294,7 @@
                 <tr>
                     <td class="col-md-1">名称</td>
 
-                    <td class="editable"><input id="name" type="text" class="form-control form-control-intable" name="name" value="新的名称"></td>
+                    <td class="editable"><input id="name" type="text" class="form-control form-control-intable" name="name" placeholder="请输入新的名称..."></td>
                 </tr>
                 <tr>
                     <td class="col-md-1">URL</td>

@@ -14,12 +14,15 @@
 <%--</div>--%>
 <nav>
     <ul class="pagination">
-        <li class="info">总共${pi.count}条 ${pi.curPage}/${pi.pageSize}页</li>
+        <li><a class="info"> 共${pi.count}条记录, ${pi.curPage}/${pi.pageSize}页</a></li>
+
         <c:if test="${pi.curPage == 1}">
-            <li class="disabled info"><a class=""><span>上一页</span></a>
+            <li class="disabled"><a href="#">首页</a> </li>
+            <li class="disabled"><a class=""><span>上一页</span></a>
             </li>
         </c:if>
         <c:if test="${pi.curPage  > 1}">
+            <li><a href="javascript:toPage(1);">首页</a> </li>
             <li><a href="javascript:toPage(${pi.curPage} - 1);"><span>上一页</span></a>
             </li>
         </c:if>
@@ -65,10 +68,12 @@
         </c:if>
         <c:if test="${pi.curPage} == ${pi.pageSize}">
             <li class="disabled"><a><span>下一页</span></a></li>
+            <li class="disabled"><a><span>尾页</span></a></li>
 
         </c:if>
         <c:if test="${pi.curPage} < ${pi.pageSize}">
             <li><a href="javascript:toPage(${pi.curPage} - 1);"><span>下一页</span></a></li>
+            <li><a href="javascript:toPage(${pi.pageSize});"><span>尾页</span></a></li>
         </c:if>
     </ul>
 </nav>

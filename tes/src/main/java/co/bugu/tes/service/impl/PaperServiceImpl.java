@@ -164,4 +164,10 @@ public class PaperServiceImpl extends BaseServiceImpl<Paper> implements IPaperSe
         return false;
     }
 
+    @Override
+    public Double computeScore(Integer sceneId, Integer paperId) {
+
+        return null;
+    }
+
 }

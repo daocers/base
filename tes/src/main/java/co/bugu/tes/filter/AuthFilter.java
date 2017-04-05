@@ -12,6 +12,7 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +63,14 @@ public class AuthFilter implements Filter {
                 }
             }
             if(needFilter){//需要过滤
-                response.sendRedirect("/login.do");
+                if(request.getHeader("X-Requested-With") == null){//常规请求
+                    response.sendRedirect("/login.do");
+                }else{//ajax请求
+                    ServletOutputStream os = response.getOutputStream();
+                    os.print("login");
+                    os.flush();
+                    os.close();
+                }
             }else{
                 filterChain.doFilter(servletRequest, servletResponse);
             }

@@ -4,29 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <title>题型管理</title>
-    <%@ include file="../template/header.jsp" %>
 </head>
 <body>
-<div class="container">
+<%@ include file="../template/header.jsp" %>
+<%@ include file="../template/menu-top.jsp"%>
+<%@ include file="../template/menu-left.jsp"%>
+<div class="" style="width:780px; vertical-align: top; display: inline-block">
     <div class="row nav-path">
         <ol class="breadcrumb">
             <li><a href="#">首页</a></li>
             <li><a href="#" class="active">题型管理</a></li>
         </ol>
     </div>
-    <div class="row info-search">
-        <div class="pull-right form-inline">
-            <input type="text" class="form-control" placeholder="输入关键词，例如名称、品牌、序号、供应商等">
-            <!--<span class="input-group-btn">-->
-            <button class="btn btn-info" type="button">搜索</button>
-        </div>
-    </div>
 
-    <div class="row pre-table">
-        <div class="pull-right">
-            <jsp:include page="../template/page-nav.jsp"/>
-        </div>
-    </div>
     <div class="row table-responsive">
         <table class="table table-bordered">
             <thead>
@@ -70,6 +60,7 @@
 
         </div>
         <div class="pull-right">
+            <jsp:include page="../template/page-nav.jsp"/>
 
         </div>
     </div>
@@ -77,5 +68,6 @@
 <script type="javascript">
 
 </script>
+<jsp:include page="../template/foot.jsp"/>
 </body>
 </html>

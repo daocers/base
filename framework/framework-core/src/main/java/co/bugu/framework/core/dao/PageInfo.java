@@ -32,6 +32,7 @@ public class PageInfo<E> {
     private Integer curPage;
 
     public PageInfo(){
+        this.curPage = 1;
         this.showCount = 10;
     }
 

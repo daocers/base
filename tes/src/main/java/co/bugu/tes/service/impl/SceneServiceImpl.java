@@ -40,8 +40,10 @@ public class SceneServiceImpl extends BaseServiceImpl<Scene> implements ISceneSe
 
     @Override
     public int updateById(Scene scene) {
+        String joinUser = scene.getJoinUser();
+        scene.setJoinUser(null);
         baseDao.update("tes.scene.updateById", scene);
-        if(scene.getJoinUser() != null){
+        if(joinUser != null){
             List<Integer> userList = JSON.parseArray(scene.getJoinUser(), Integer.class);
             if(userList.size() > 0){
                 baseDao.delete("tes.scene.deleteSceneUserX", scene.getId());

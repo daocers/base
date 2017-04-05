@@ -85,7 +85,8 @@ public class JedisUtil {
             release(jedis);
         }
 	}
-	
+
+
 	/**
 	 * @Title: sexists
 	 * @Description: set中是否存在指定元素
@@ -118,6 +119,37 @@ public class JedisUtil {
             release(jedis);
         }
 	}
+
+	public static Set<String> getAllOfSet(String key){
+	    Jedis jedis = null;
+	    try{
+	        jedis = pool.getResource();
+	        return jedis.smembers(key);
+        }catch (Exception e){
+	        logger.error("smembers 异常", e);
+	        return null;
+        }finally {
+            release(jedis);
+        }
+    }
+
+    /**
+     * 获取set长度
+     * @param key
+     * @return
+     */
+	public static Long scard(String key){
+	    Jedis jedis = null;
+	    try{
+	        jedis = pool.getResource();
+	        return jedis.scard(key);
+        }catch (Exception e){
+	        logger.error("scard 异常", e);
+	        return null;
+        }finally {
+            release(jedis);
+        }
+    }
 
     public static String get(String key) {
         Jedis jedis = null;

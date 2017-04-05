@@ -31,5 +31,10 @@ public interface IPaperService extends IBaseService<Paper>{
     boolean generatePaperForUser(Scene scene, User user);
 
 
+    Double computeScore(Integer sceneId, Integer paperId);
+
+
+
+
 
 }

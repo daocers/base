@@ -4,12 +4,15 @@ import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.core.util.BuguWebUtil;
 import co.bugu.framework.util.JedisUtil;
 import co.bugu.framework.util.JsonUtil;
+import co.bugu.framework.util.exception.TesException;
 import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.*;
 import co.bugu.tes.service.*;
+import co.bugu.tes.util.QuestionUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.sun.org.apache.bcel.internal.generic.ARRAYLENGTH;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -342,12 +345,16 @@ public class SceneController {
      * 如果是更改，paperPolicyId有值
      * 如果没有做更改， paperPolicyId无值
      *
+     * 保存后需要验证试卷策略可行性
+     *
      * @param scene
-     * @param redirectAttributes
+     * @param
      * @return
      */
     @RequestMapping(value = "/savePolicy", method = RequestMethod.POST)
-    public String savePolicyThenPriview(Scene scene, RedirectAttributes redirectAttributes) {
+    @ResponseBody
+    public String savePolicy(Scene scene) throws TesException {
+        JSONObject json = new JSONObject();
         Integer paperPolicyId = scene.getPaperPolicyId();
         Integer bankId = scene.getBankId();
         scene = sceneService.findById(scene.getId());
@@ -374,25 +381,84 @@ public class SceneController {
                             .append(score)
                             .append(" 分\n\t");
                 }
-                redirectAttributes.addFlashAttribute("policyInfo", stringBuilder.toString());
             }
         }
 
         if (scene.getPaperPolicyId() == null && paperPolicyId == null) {
-            redirectAttributes.addFlashAttribute("err", "请选择试卷策略");
-            redirectAttributes.addFlashAttribute(scene);
-            return "redirect:selectPolicy.do";
+            json.put("code", -1);
+            json.put("err", "请选择试卷策略");
+        }else{
+            boolean res = false;
+            if(bankId == 0){//不限题库
+                res = checkPaperPolicyAvailable(scene.getPaperPolicyId(), null);
+            }else{//指定题库
+                res = checkPaperPolicyAvailable(scene.getPaperPolicyId(), bankId);
+            }
+            if(res){
+                scene.setPaperPolicyId(paperPolicyId);
+                scene.setStatus(Constant.STATUS_ENABLE);
+                scene.setBankId(bankId);
+                sceneService.updateById(scene);
+                json.put("code", 0);
+            }else {
+                json.put("code", -1);
+                json.put("err", "试卷策略题量不足，无法生成试卷");
+            }
         }
-        scene.setPaperPolicyId(paperPolicyId);
-        scene.setStatus(Constant.STATUS_ENABLE);
-        scene.setBankId(bankId);
-        sceneService.updateById(scene);
-        redirectAttributes.addFlashAttribute(scene);
-        return "redirect:preview.do";
+        return json.toJSONString();
+    }
+
+    /**
+     * 检查指定的试卷策略是否可用
+     * （校验试卷题库数量）
+     * @param paperPolicyId
+     * @return
+     */
+    private boolean checkPaperPolicyAvailable(Integer paperPolicyId, Integer bankId) throws TesException {
+        PaperPolicy paperPolicy = paperPolicyService.findById(paperPolicyId);
+        if(paperPolicy.getSelectType() == 0){//普通模式
+            String content = paperPolicy.getContent();
+            List<HashMap> list = JSON.parseArray(content, HashMap.class);
+            for(HashMap<String, String> map: list){
+                Integer questionMetaInfoId = Integer.valueOf(map.get("questionMetaInfoId"));
+                Integer questionPolicyId = Integer.valueOf(map.get("questionPolicyId"));
+                Double score = Double.valueOf(map.get("score"));
+                QuestionPolicy questionPolicy = questionPolicyService.findById(questionPolicyId);
+                String questionPolicyContent = questionPolicy.getContent();
+                List<List> contentList = JSON.parseArray(questionPolicyContent, List.class);
+                for(List<Integer> item: contentList){
+                    Integer count = item.remove(item.size() - 1);
+                    Integer exist = QuestionUtil.getCountByPropItemId(questionMetaInfoId, bankId, item);
+                    if(count > exist){
+                        return false;
+                    }
+                }
+
+            }
+
+        }else if(paperPolicy.getSelectType() == 1){//策略模式
+            String content = paperPolicy.getContent();
+            List<HashMap> list =JSON.parseArray(content, HashMap.class);
+            for(HashMap<String, String> map: list){
+                Integer questionMetaInfoId = Integer.valueOf(map.get("questionMetaInfoId"));
+                Integer count = Integer.valueOf(map.get("count"));
+                Double score = Double.valueOf(map.get("score"));
+                Integer exist = QuestionUtil.getCountByPropItemId(questionMetaInfoId, bankId, null);
+                if(count > exist){
+                    return false;
+                }
+            }
+        }else{
+            logger.warn("参数非法，selectType不能为空");
+            return false;
+        }
+        return true;
     }
 
     @RequestMapping(value = "/preview")
-    public String toPreview() {
+    public String toPreview(Integer id, ModelMap model) {
+        Scene scene = sceneService.findById(id);
+        model.put("scene", scene);
         return "scene/preview";
     }
 

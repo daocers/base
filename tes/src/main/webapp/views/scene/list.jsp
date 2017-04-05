@@ -5,29 +5,19 @@
 <head>
     <meta charset="UTF-8">
     <title>场次管理</title>
-    <%@ include file="../template/header.jsp" %>
 </head>
 <body>
-<div class="container">
+<%@ include file="../template/header.jsp" %>
+<%@ include file="../template/menu-top.jsp"%>
+<%@ include file="../template/menu-left.jsp"%>
+<div class="" style="width:780px; vertical-align: top; display: inline-block">
     <div class="row nav-path">
         <ol class="breadcrumb">
             <li><a href="#">首页</a></li>
             <li><a href="#" class="active">场次管理</a></li>
         </ol>
     </div>
-    <div class="row info-search">
-        <div class="pull-right form-inline">
-            <input type="text" class="form-control" placeholder="输入关键词，例如名称、品牌、序号、供应商等">
-            <!--<span class="input-group-btn">-->
-            <button class="btn btn-info" type="button">搜索</button>
-        </div>
-    </div>
 
-    <div class="row pre-table">
-        <div class="pull-right">
-            <jsp:include page="../template/page-nav.jsp"/>
-        </div>
-    </div>
     <div class="row table-responsive">
         <table class="table table-bordered">
             <thead>
@@ -102,7 +92,22 @@
 
         </div>
         <div class="pull-right">
-
+            <%--<nav>--%>
+                <%--<ul class="pagination">--%>
+                    <%--<li><a class="info">共12条记录，3页</a> </li>--%>
+                    <%--<li><a href="#">首页</a> </li>--%>
+                    <%--<li class="disabled"><a href="#">前一页</a> </li>--%>
+                    <%--<li><a href="#">1</a> </li>--%>
+                    <%--<li><a href="#">2</a> </li>--%>
+                    <%--<li class="active"><a href="#">3</a> </li>--%>
+                    <%--<li><a href="#">4</a> </li>--%>
+                    <%--<li><a href="#">5</a> </li>--%>
+                    <%--<li><a href="#">...</a> </li>--%>
+                    <%--<li><a href="#">后一页</a> </li>--%>
+                    <%--<li><a href="#">尾页</a> </li>--%>
+                <%--</ul>--%>
+            <%--</nav>--%>
+            <jsp:include page="../template/page-nav.jsp"/>
         </div>
     </div>
 </div>

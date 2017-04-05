@@ -359,7 +359,6 @@
             return false;
         }
         var choiceInfo = $("#choiceInfo").val();
-        console.log("choiceINfo: ", choiceInfo);
 
         if(ids.length == 0){
             if(!choiceInfo || choiceInfo.length == 0){
@@ -373,17 +372,22 @@
             choiceInfo = JSON.stringify(ids);
         }
 
+
+        console.log("choiceINfo: ", choiceInfo + "?");
+
         $.ajax({
             url: "saveUser.do",
             type: "post",
-            data: {info: choiceInfo, type: type, "sceneId": $("[name='id']").val()},
+            data: {info: choiceInfo, type: type, sceneId: $("[name='id']").val()},
             success: function (data) {
+                var res = JSON.parse(data);
                 zeroModal.closeAll();
-                if (data == "-1") {
+                if (res.code == "-1") {
                     swal("", "请选择本场考试人员", "warning");
                     return false;
                 }
-                if (data == "0") {
+                if (res.code == "0") {
+                    console.log("god")
                     window.location.href = "selectPolicy.do?id=" + $("[name='id']").val();
                     return false;
                 }

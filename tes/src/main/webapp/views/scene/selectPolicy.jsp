@@ -222,17 +222,16 @@
                 var res = JSON.parse(data);
                 if(res.code == 0){
                     var id = res.data;
-                    window.location.href = 'generatePaper.do?id=' + id;
+                    window.location.href = 'preview.do?id=' + id;
                 }else{
                     swal("", res.msg, "error");
-                    return false;
                 }
             },
             error: function (data) {
                 swal("", "保存失败", "error");
-                return false;
             }
         })
+        return false;
     })
 </script>
 </body>

@@ -35,6 +35,11 @@ public class QuestionUtil {
         Integer questionMetaInfoId = question.getMetaInfoId();
         Integer bankId = question.getQuestionBankId();
         List<Integer> propItemIdList = JSON.parseArray(question.getPropItemIdInfo(), Integer.class);
+
+        //不指定题目属性
+        JedisUtil.sadd(Constant.QUESTION_PROPITEM_ID + questionMetaInfoId, questionId);
+        JedisUtil.sadd(Constant.QUESTION_PROPITEM_ID + questionMetaInfoId + "_" + Constant.QUESTION_BANK_ID +bankId, questionId);
+        //指定题目属性
         for (Integer id : propItemIdList) {
             JedisUtil.sadd(Constant.QUESTION_PROPITEM_ID + questionMetaInfoId + "_" +
                     Constant.QUESTION_BANK_ID + bankId + "_" + id, questionId);
@@ -53,20 +58,26 @@ public class QuestionUtil {
      * @throws TesException
      */
     public static Set<String> findQuestionByPropItemId(Integer questionMetaInfoId, Integer questionBankId, List<Integer> ids) throws TesException {
-        String[] keys = new String[ids.size()];
-//        for(int i = 0; i < ids.length; i++){
-//            keys[i] = Constant.QUESTION_PROPITEM_ID + questionMetaInfoId + "_"+ ids[i];
-//        }
-        for (int i = 0; i < ids.size(); i++) {
-//            keys[i] = Constant.QUESTION_PROPITEM_ID + questionMetaInfoId + "_" + ids.get(i);
-            if (questionBankId != null && questionBankId != 0) {
-                keys[i] = Constant.QUESTION_PROPITEM_ID + questionMetaInfoId + "_" +Constant.QUESTION_BANK_ID +
-                        + questionBankId + "_" + ids.get(i);
-            } else {
-                keys[i] = Constant.QUESTION_PROPITEM_ID + questionMetaInfoId + "_" + ids.get(i);
+        if(ids == null){//不指定属性集合
+            if(questionBankId == null){
+                return JedisUtil.getAllOfSet(Constant.QUESTION_PROPITEM_ID + questionMetaInfoId);
+            }else{
+                return JedisUtil.getAllOfSet(Constant.QUESTION_PROPITEM_ID + questionMetaInfoId
+                        + "_" + Constant.QUESTION_BANK_ID + questionBankId);
             }
+        }else{//指定属性集合
+            String[] keys = new String[ids.size()];
+            for (int i = 0; i < ids.size(); i++) {
+                if (questionBankId != null && questionBankId != 0) {
+                    keys[i] = Constant.QUESTION_PROPITEM_ID + questionMetaInfoId + "_" +Constant.QUESTION_BANK_ID +
+                            + questionBankId + "_" + ids.get(i);
+                } else {
+                    keys[i] = Constant.QUESTION_PROPITEM_ID + questionMetaInfoId + "_" + ids.get(i);
+                }
+            }
+            return JedisUtil.sinterForObj(keys);
         }
-        return JedisUtil.sinterForObj(keys);
+
     }
 
     /**
@@ -79,16 +90,26 @@ public class QuestionUtil {
      * @throws TesException
      */
     public static int getCountByPropItemId(Integer questionMetaInfoId, Integer questionBankId, List<Integer> ids) throws TesException {
-        String[] keys = new String[ids.size()];
-        for (int i = 0; i < ids.size(); i++) {
-            if (questionBankId != null && questionBankId != 0) {//指定题库
-                keys[i] = Constant.QUESTION_PROPITEM_ID + questionMetaInfoId + "_" + Constant.QUESTION_BANK_ID +
-                        + questionBankId + "_" + ids.get(i);
-            } else {//不分题库，在所有的题目信息中获取
-                keys[i] = Constant.QUESTION_PROPITEM_ID + questionMetaInfoId + "_" + ids.get(i);
+        if(ids == null){
+            if(questionBankId == null){
+                return JedisUtil.scard(Constant.QUESTION_PROPITEM_ID + questionMetaInfoId).intValue();
+            }else{
+                return JedisUtil.scard(Constant.QUESTION_PROPITEM_ID + questionMetaInfoId
+                        + "_" + Constant.QUESTION_BANK_ID + questionBankId).intValue();
             }
+        }else{
+            String[] keys = new String[ids.size()];
+            for (int i = 0; i < ids.size(); i++) {
+                if (questionBankId != null && questionBankId != 0) {//指定题库
+                    keys[i] = Constant.QUESTION_PROPITEM_ID + questionMetaInfoId + "_" + Constant.QUESTION_BANK_ID +
+                            + questionBankId + "_" + ids.get(i);
+                } else {//不分题库，在所有的题目信息中获取
+                    keys[i] = Constant.QUESTION_PROPITEM_ID + questionMetaInfoId + "_" + ids.get(i);
+                }
+            }
+            return JedisUtil.sinterForSize(keys);
         }
-        return JedisUtil.sinterForSize(keys);
+
     }
 
     /**
