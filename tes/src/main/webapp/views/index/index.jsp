@@ -86,7 +86,7 @@
             border-radius: 0px;
         }
         .menu-left{
-            width: 260px;
+            width: 240px;
             padding-left: 0px;
             margin-top: -20px;
         }
@@ -107,7 +107,7 @@
         .accordion {
             border: 1px solid gainsboro;
             /*width: 100%;*/
-            max-width: 360px;
+            max-width: 240px;
             margin: 0 20px 20px 0px;
             background: ghostwhite;
         }
@@ -266,48 +266,51 @@
     </nav>
 </div>
 
-<div class="row" style="margin: 0px">
-    <div class="col-md-2 menu-left">
-        <ul id="accordion" class="accordion">
-            <li>
-                <div class="link"><i class="fa fa-paint-brush"></i>系统管理<i class="fa fa-chevron-down"></i></div>
-                <ul class="submenu">
-                    <li><a href="/user/list.do">用户管理</a></li>
-                    <li><a href="#">角色管理</a></li>
-                    <li><a href="#">权限管理</a></li>
-                </ul>
-            </li>
-            <li>
-                <div class="link"><i class="fa fa-code"></i>考试管理<i class="fa fa-chevron-down"></i></div>
-                <ul class="submenu">
-                    <li><a href="#">我参加的</a></li>
-                    <li><a href="#">我创建的</a></li>
-                    <li><a href="#">我要考试</a></li>
-                </ul>
-            </li>
-            <li>
-                <div class="link"><i class="fa fa-mobile"></i>试题管理<i class="fa fa-chevron-down"></i></div>
-                <ul class="submenu">
-                    <li><a href="#">题型设置</a></li>
-                    <li><a href="#">题目管理</a></li>
-                    <li><a href="#">试卷管理</a></li>
-                    <li><a href="#">Otros dispositivos</a></li>
-                </ul>
-            </li>
-            <li><div class="link"><i class="fa fa-globe"></i>考试<i class="fa fa-chevron-down"></i></div>
-                <ul class="submenu">
-                    <li><a href="#">Google</a></li>
-                    <li><a href="#">Bing</a></li>
-                    <li><a href="#">Yahoo</a></li>
-                    <li><a href="#">Otros buscadores</a></li>
-                </ul>
-            </li>
-        </ul>
+<div class="row">
+    <div style="display: inline-block; float: left">
+        <div class="menu-left" style="margin-left: 15px">
+            <ul id="accordion" class="accordion">
+                <li>
+                    <div class="link"><i class="fa fa-paint-brush"></i>系统管理<i class="fa fa-chevron-down"></i></div>
+                    <ul class="submenu">
+                        <li><a href="/user/list.do">用户管理</a></li>
+                        <li><a href="#">角色管理</a></li>
+                        <li><a href="#">权限管理</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="link"><i class="fa fa-code"></i>考试管理<i class="fa fa-chevron-down"></i></div>
+                    <ul class="submenu">
+                        <li><a href="#">我参加的</a></li>
+                        <li><a href="#">我创建的</a></li>
+                        <li><a href="#">我要考试</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="link"><i class="fa fa-mobile"></i>试题管理<i class="fa fa-chevron-down"></i></div>
+                    <ul class="submenu">
+                        <li><a href="#">题型设置</a></li>
+                        <li><a href="#">题目管理</a></li>
+                        <li><a href="#">试卷管理</a></li>
+                        <li><a href="#">Otros dispositivos</a></li>
+                    </ul>
+                </li>
+                <li><div class="link"><i class="fa fa-globe"></i>考试<i class="fa fa-chevron-down"></i></div>
+                    <ul class="submenu">
+                        <li><a href="#">Google</a></li>
+                        <li><a href="#">Bing</a></li>
+                        <li><a href="#">Yahoo</a></li>
+                        <li><a href="#">Otros buscadores</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
     </div>
 
-    <%--<div class="col-md-10" style="width: 800px;">--%>
-    <div class="col-md-10" style="width: 780px;">
-        <div id="main" class="row">
+
+    <div class="col-md-10" style="width: 780px; margin-left: 5px;   ">
+    <%--<div class="" style="width: 720px;">--%>
+        <div id="main" class="row" style="margin-right: 0px">
 
         </div>
     </div>

@@ -12,16 +12,19 @@
     <title>管理</title>
 </head>
 <body>
+<%--<div class="" style="display: inline-block">--%>
+<%--<%@ include file="../template/menu.jsp"%>--%>
+<%--</div>--%>
 <div class="">
 
-    <div class="row pre-table">
+    <div class=" pre-table">
         <div class="pull-left form-inline">
             <button class="btn btn-info" id="import">导入数据</button>
             <button class="btn btn-primary" id="download">下载模板</button>
         </div>
 
     </div>
-    <div class="row table-responsive">
+    <div class="row">
         <table class="table table-bordered">
             <thead>
             <tr>
@@ -57,7 +60,7 @@
         </table>
     </div>
 
-    <div class="row after-table">
+    <div class="after-table">
         <div class="pull-left form-inline">
             <select class="form-control show-count">
                 <option value="10" <c:if test="${ pi.showCount == 10 }">selected</c:if>>10</option>
@@ -77,21 +80,23 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
                 <h4 class="modal-title">选择文件</h4>
             </div>
             <div class="modal-body">
                 <div class="row" style="margin-left: 10px;">
-                    <form id="upload" class="form-horizontal" method="post" action="batchAdd.do"  enctype="multipart/form-data">
+                    <form id="upload" class="form-horizontal" method="post" action="batchAdd.do"
+                          enctype="multipart/form-data">
                         <input type="file" name="file" class="jfilestyle" data-input="true" data-buttonText="导入文件">
-                        <button class="btn btn-success"onclick="javascript:upload()">上传</button>
-                        ？   没有模板文件<a href="javascript:downloadModel()">点击下载</a>模板
+                        <button class="btn btn-success" onclick="javascript:upload()">上传</button>
+                        ？ 没有模板文件<a href="javascript:downloadModel()">点击下载</a>模板
                     </form>
                 </div>
             </div>
             <%--<div class="modal-footer">--%>
-                <%--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>--%>
-                <%--<button type="button" class="btn btn-primary">Save changes</button>--%>
+            <%--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>--%>
+            <%--<button type="button" class="btn btn-primary">Save changes</button>--%>
             <%--</div>--%>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

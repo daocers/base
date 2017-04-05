@@ -1,79 +1,40 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: daocers
-  Date: 2016/7/14
-  Time: 11:31
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>菜单栏</title>
-    <%--<link rel="stylesheet" href="../asset/css/bootstrap.css">--%>
-    <%--<script src="../asset/js/jquery-2.2.0.min.js"></script>--%>
-    <%--<script src="../asset/js/bootstrap.js"></script>--%>
-    <script>
-        var Accordion = function (e, multiple) {
-            this.e = e || {};
-            this.multiple = multiple || false;
-            var links = this.e.find(".link");
-            links.on("click", {e: this.e, multiple: this.multiple}, this.dropdown)
-        }
-
-        Accordion.prototype.dropdown = function (e) {
-//            $(".accordion li.open").removeClass("open");
-            var $e = e.data.e;
-            $this = $(this),
-                $next = $this.next();
-
-            $next.slideToggle();
-            $this.parent().toggleClass('open');
-
-            if (!e.data.multiple) {
-                $e.find('.submenu').not($next).slideUp().parent().removeClass('open');
-            }
-            ;
-        }
-
-        $(function () {
-            var accordion = new Accordion($('#accordion'), false);
-        })
-    </script>
+    <title>菜单</title>
     <style>
-        * {
+        .navbar-inverse{
+            border-radius: 0px;
+        }
+        .menu-left{
+            width: 240px;
+            margin-left: -15px;
+            padding-left: 0px;
+            margin-top: -20px;
+        }
+        .menu-left * {
+            background-color: ghostwhite;
             margin: 0;
             padding: 0;
             -webkit-box-sizing: border-box;
             -moz-box-sizing: border-box;
             box-sizing: border-box;
         }
-
-        /*body {*/
-            /*!*background: #2d2c41;*!*/
-            /*font-family: "Microsoft YaHei UI";*/
-        /*}*/
-
-        ul.accordion, .accordion ul {
+        .menu-left ul {
             list-style-type: none;
         }
-
-
         /** =======================
          * Contenedor Principal
          ===========================*/
         .accordion {
             border: 1px solid gainsboro;
-            width: 100%;
-            max-width: 360px;
-            margin: 30px auto 20px;
-            background: #FFF;
-            -webkit-border-radius: 4px;
-            -moz-border-radius: 4px;
-            border-radius: 4px;
+            /*width: 100%;*/
+            max-width: 240px;
+            margin: 0 20px 20px 0px;
+            background: ghostwhite;
         }
-
         .accordion .link {
             cursor: pointer;
             display: block;
@@ -89,41 +50,38 @@
             transition: all 0.4s ease;
         }
 
-        .accordion .link:hover {
+        .accordion .link:hover{
             color: darkblue;
+            border-left: 3px solid dodgerblue;
+            background-color: white;
         }
-
         .accordion li:last-child .link {
             border-bottom: 0;
         }
-
         .accordion li i {
             position: absolute;
             top: 16px;
             left: 12px;
             font-size: 18px;
             /*color: #595959;*/
-            color: #8ed7ff;
+            color: cornflowerblue;
             -webkit-transition: all 0.4s ease;
             -o-transition: all 0.4s ease;
             transition: all 0.4s ease;
         }
-
         .accordion li i.fa-chevron-down {
             right: 12px;
             left: auto;
             font-size: 16px;
         }
-
         .accordion li.open .link {
             color: darkblue;
-            background-color: #dbf1ff;
+            /*background-color: #dbf1ff;*/
+            border-left: 3px solid dodgerblue;
         }
-
         .accordion li.open i {
             color: #b63b4d;
         }
-
         .accordion li.open i.fa-chevron-down {
             -webkit-transform: rotate(180deg);
             -ms-transform: rotate(180deg);
@@ -140,16 +98,14 @@
             /*background: #8ed7ff;*/
             font-size: 14px;
         }
-
         .submenu li {
             /*padding-left: 20px;*/
             border-bottom: 1px solid whitesmoke;
         }
 
-        .submenu li:last-child {
+        .submenu li:last-child{
             border-bottom-color: #ccc;
         }
-
         .submenu a {
             display: block;
             text-decoration: none;
@@ -160,23 +116,36 @@
             -o-transition: all 0.25s ease;
             transition: all 0.25s ease;
         }
-
         .submenu a:hover {
-            background: aliceblue;
+            background: white;
             color: grey;
+        }
+
+        .submenu a.active{
+            background: white;
+            border-right: 2px solid powderblue;;
         }
     </style>
 </head>
 <body>
-<div class="row">
-    <div class="menu">
+<div class="hide" id="err">
+    ${err}
+</div>
+<div class="hide" id="msg">
+    ${msg}
+</div>
+
+
+
+<div class="row" style="margin: 0px">
+    <div class="col-md-2 menu-left">
         <ul id="accordion" class="accordion">
             <li>
-                <div class="link"><i class="fa fa-paint-brush"></i>用户中心<i class="fa fa-chevron-down"></i></div>
+                <div class="link"><i class="fa fa-paint-brush"></i>系统管理<i class="fa fa-chevron-down"></i></div>
                 <ul class="submenu">
-                    <li><a href="/user/list.do">用户列表</a></li>
-                    <li><a href="">修改密码</a></li>
-                    <li><a href="/user/resetPassword.do">重置密码</a></li>
+                    <li><a href="/user/list.do">用户管理</a></li>
+                    <li><a href="#">角色管理</a></li>
+                    <li><a href="#">权限管理</a></li>
                 </ul>
             </li>
             <li>
@@ -196,8 +165,7 @@
                     <li><a href="#">Otros dispositivos</a></li>
                 </ul>
             </li>
-            <li>
-                <div class="link"><i class="fa fa-globe"></i>考试<i class="fa fa-chevron-down"></i></div>
+            <li><div class="link"><i class="fa fa-globe"></i>考试<i class="fa fa-chevron-down"></i></div>
                 <ul class="submenu">
                     <li><a href="#">Google</a></li>
                     <li><a href="#">Bing</a></li>
@@ -208,6 +176,48 @@
         </ul>
     </div>
 
+    <%--<div class="col-md-10" style="width: 800px;">--%>
 </div>
+
+    <script>
+        var Accordion = function (e, multiple) {
+            this.e = e || {};
+            this.multiple = multiple || false;
+            var links = this.e.find(".link");
+            links.on("click", {e: this.e, multiple: this.multiple}, this.dropdown)
+        }
+
+        Accordion.prototype.dropdown = function(e) {
+//            $(".accordion li.open").removeClass("open");
+            var $e = e.data.e;
+            $this = $(this),
+                $next = $this.next();
+
+            $next.slideToggle();
+            $this.parent().toggleClass('open');
+
+            if (!e.data.multiple) {
+                $e.find('.submenu').not($next).slideUp().parent().removeClass('open');
+            };
+        }
+
+        $(function () {
+            var accordion = new Accordion($('#accordion'), false);
+//
+//
+//            $(".menu-left .submenu li a").on("click", function () {
+//                $(".menu-left a").removeClass("active");
+//                $(this).addClass("active");
+//                var url = $(this).attr("href");
+//                console.log("url: ", url);
+//                if(!url || url == "#" || url == ''){
+//                    return false;
+//                }
+//                $("#main").load(url);
+//                return false;
+//            })
+//
+        })
+    </script>
 </body>
 </html>
