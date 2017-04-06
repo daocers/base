@@ -538,6 +538,8 @@ public class QuestionController {
             for(Question question: list){
                 QuestionUtil.updateCacheAfterUpdate(question);
             }
+            pageInfo = new PageInfo<>(100, pageInfo.getCurPage() + 1);
+            questionService.findByObject(null, pageInfo);
         }
 
         JSONObject json = new JSONObject();

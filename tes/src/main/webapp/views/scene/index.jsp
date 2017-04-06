@@ -766,7 +766,7 @@
         }
 
         $.ajax({
-            url: 'savePolicy.do',
+            url: 'savePaperPolicy.do',
             type: 'post',
             data: $("#policyForm").serialize() + "&id=" + $("#id").val(),
             success: function (data) {
@@ -835,11 +835,12 @@
             if(isConfirm){
                 zeroModal.loading(3);
                 $.ajax({
-                    url: "/question/updateCache",
+                    url: "/question/updateCache.do",
                     type: 'post',
                     success: function (data) {
                         zeroModal.closeAll();
                         var res = JSON.parse(data);
+                        console.log("res: ", res);
                         if(res.code == 0){
                         }else{
                             swal("", "刷新题库失败", "error");
