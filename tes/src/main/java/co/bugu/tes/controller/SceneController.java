@@ -28,7 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
-@RequestMapping("/scene")
+@RequestMapping("/scene1")
 public class SceneController {
     @Autowired
     ISceneService sceneService;
@@ -140,6 +140,11 @@ public class SceneController {
             model.put("errMsg", "获取信息失败");
         }
         return "scene/edit";
+    }
+
+    @RequestMapping(value = "/index")
+    public String index(){
+        return "scene/index";
     }
 
     /**

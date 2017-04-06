@@ -22,7 +22,7 @@
                 <div class="form-group">
                     <label class="control-label col-md-2">旧密码</label>
                     <div class="col-md-10">
-                        <input class="form-control" type="password" name="oldPassword" id="oldPassword">
+                        <input class="form-control" type="password" name="oldPassword" id="oldPassword"
                                required maxlength="16" minlength="6">
                         <span class="help-block with-errors"></span>
                     </div>

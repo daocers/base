@@ -3,9 +3,14 @@ package co.bugu.tes.util;
 import co.bugu.framework.util.JedisUtil;
 import co.bugu.framework.util.exception.TesException;
 import co.bugu.tes.global.Constant;
+import co.bugu.tes.model.PaperPolicy;
 import co.bugu.tes.model.Question;
+import co.bugu.tes.model.QuestionPolicy;
+import co.bugu.tes.service.IPaperPolicyService;
+import co.bugu.tes.service.IQuestionPolicyService;
 import com.alibaba.fastjson.JSON;
 import org.omg.PortableInterceptor.INACTIVE;
+import org.springframework.beans.factory.annotation.Autowired;
 import redis.clients.jedis.Jedis;
 
 import java.util.*;
@@ -16,6 +21,7 @@ import java.util.*;
  * Created by daocers on 2017/2/13.
  */
 public class QuestionUtil {
+
     /**
      * 更新试题后更新缓存
      * @param question
@@ -141,6 +147,26 @@ public class QuestionUtil {
      */
     public static List<Integer> getResultByQuesMetaId(Integer questionMetaInfoId, Integer count) {
         return null;
+    }
+
+    /**
+     * 检查试题策略是否可用（也就是题库题量是否可用）
+     * @param bankId
+     * @param questionPolicy
+     * @return
+     * @throws TesException
+     */
+    public static boolean checkQuestionPolicy(Integer bankId, QuestionPolicy questionPolicy) throws TesException {
+        String content = questionPolicy.getContent();
+        List<List> list = JSON.parseArray(content, List.class);
+        for(List<Integer> item: list){
+            Integer count = item.remove(item.size() - 1);
+            Integer exist = getCountByPropItemId(questionPolicy.getQuestionMetaInfoId(), bankId, item);
+            if(count > exist){
+                return false;
+            }
+        }
+        return true;
     }
 
 

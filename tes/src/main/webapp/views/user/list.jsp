@@ -5,17 +5,19 @@
            uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%--<%@ include file="../template/header.jsp" %>--%>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>管理</title>
 </head>
 <body>
+<%@ include file="../template/header.jsp" %>
+
 <%--<div class="" style="display: inline-block">--%>
-<%--<%@ include file="../template/menu.jsp"%>--%>
+<%@ include file="../template/menu-top.jsp"%>
+<%--<%@ include file="../template/menu-left.jsp"%>--%>
 <%--</div>--%>
-<div class="">
+<div class="container">
 
     <div class=" pre-table">
         <div class="pull-left form-inline">

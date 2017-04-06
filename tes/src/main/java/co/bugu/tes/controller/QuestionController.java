@@ -14,6 +14,7 @@ import co.bugu.tes.service.IQuestionService;
 import co.bugu.tes.util.QuestionMetaInfoUtil;
 import co.bugu.tes.util.QuestionUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -522,6 +523,28 @@ public class QuestionController {
     }
 
 
+    /**
+     * 更新试题缓存
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/updateCache", method = RequestMethod.POST)
+    @ResponseBody
+    public String updateCache() throws Exception {
+        PageInfo<Question> pageInfo = new PageInfo<>(100, 1);
+        questionService.findByObject(null, pageInfo);
+        while(pageInfo.getData() != null && pageInfo.getData().size() > 0){
+            List<Question> list = pageInfo.getData();
+            for(Question question: list){
+                QuestionUtil.updateCacheAfterUpdate(question);
+            }
+        }
+
+        JSONObject json = new JSONObject();
+        json.put("code", 0);
+        return json.toJSONString();
+
+    }
 
     public static void main(String[] args){
         String info = "A:                  招行";
