@@ -243,7 +243,12 @@
 
     <script>
         $(function () {
-            $('#rootwizard').bootstrapWizard({'tabClass': 'bwizard-steps'});
+            $('#rootwizard').bootstrapWizard({
+                'tabClass': 'bwizard-steps',
+                onTabShow: function (tab, navigator, index) {
+                    console.log("index: ", index);
+                }
+            });
         })
     </script>
 </head>
@@ -512,7 +517,9 @@
                                     <tbody>
                                     <c:forEach var="policy" items="${paperPolicyList}">
                                         <tr>
-                                            <td><input name="paperPolicyId" type="radio" value="${policy.id}"></td>
+                                            <td><input name="paperPolicyId" type="radio" value="${policy.id}"
+                                                       <c:if test="${scene.paperPolicyId == policy.id}">checked</c:if>
+                                            ></td>
                                             <td>${policy.name}</td>
                                             <td>${policy.branchId}</td>
                                             <td>${policy.departmentId}</td>
@@ -566,70 +573,62 @@
 
                 </div>
             </div>
-            <div class="tab-pane" id="tab4">
+            <div class="tab-pane col-md-8" id="tab4">
                 <form action="confirm.do" method="post">
-                    <table class="table table-responsive table-bordered preview">
-                        <thead>基本信息</thead>
-                        <tbody>
-                        <tr>
-                            <td class="col-md-2">名称</td>
-                            <td class="col-md-4">${scene.name}</td>
-                            <td class="col-md-2">编号</td>
-                            <td class="col-md-4">${scene.code}</td>
-                        </tr>
-                        <tr>
-                            <td>开始时间</td>
-                            <td><fmt:formatDate value="${scene.beginTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-                            <td>结束时间</td>
-                            <td><fmt:formatDate value="${scene.endTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-                        </tr>
-                        <tr>
-                            <td>顺延时间（分）</td>
-                            <td>${scene.delay}</td>
-                            <td>考试时长（分）</td>
-                            <td>${scene.duration}</td>
-                        </tr>
-                        <tr>
-                            <td>授权码</td>
-                            <td>${scene.authCode}</td>
-                            <td>是否允许换卷</td>
-                            <td>${scene.changePaper == 0 ? "是" : "否"}</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <div id="preview-box">
+                        <table class="table table-responsive table-bordered preview">
+                            <thead>基本信息</thead>
+                            <tbody>
+                            <tr>
+                                <td class="col-md-2">名称</td>
+                                <td class="col-md-4">${scene.name}</td>
+                                <td class="col-md-2">编号</td>
+                                <td class="col-md-4">${scene.code}</td>
+                            </tr>
+                            <tr>
+                                <td>开始时间</td>
+                                <td><fmt:formatDate value="${scene.beginTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+                                <td>结束时间</td>
+                                <td><fmt:formatDate value="${scene.endTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+                            </tr>
+                            <tr>
+                                <td>顺延时间（分）</td>
+                                <td>${scene.delay}</td>
+                                <td>考试时长（分）</td>
+                                <td>${scene.duration}</td>
+                            </tr>
+                            <tr>
+                                <td>授权码</td>
+                                <td>${scene.authCode}</td>
+                                <td>是否允许换卷</td>
+                                <td>${scene.changePaper == 0 ? "是" : "否"}</td>
+                            </tr>
+                            </tbody>
+                        </table>
 
-                    <table class="table table-responsive table-bordered preview">
-                        <thead>
-                        试卷策略信息
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td class="col-md-2">策略名称</td>
-                            <td colspan="3">${scene.paperPolicyId}</td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-2">题量</td>
-                            <td class="col-md-4">${paperPolicy.count}</td>
-                            <td class="col-md-2">总分</td>
-                            <td class="col-md-4">${paperPolicy.score}</td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-2">策略明细</td>
-                            <td colspan="3">${policyInfo}</td>
-                        </tr>
-                        </tbody>
+                        <table class="table table-responsive table-bordered preview">
+                            <thead>
+                            试卷策略信息
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="col-md-2">策略名称</td>
+                                <td colspan="3">${paperPolicy.name}</td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-2">题量</td>
+                                <td class="col-md-4">${paperPolicy.count}</td>
+                                <td class="col-md-2">总分</td>
+                                <td class="col-md-4">${paperPolicy.score}</td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-2">策略明细</td>
+                                <td colspan="3">${paperPolicy.content}</td>
+                            </tr>
+                            </tbody>
 
-                    </table>
-
-                    <table class="table table-responsive table-bordered preview">
-                        <thead>参考人员</thead>
-                        <tbody>
-                        <tr>
-                            <td colspan="4">${scene.joinUser == null ? "尚未选择参考人员" : scene.joinUser}</td>
-                        </tr>
-                        </tbody>
-
-                    </table>
+                        </table>
+                    </div>
 
                     <div class="button">
                         <button type="button" class="btn btn-warning" onclick="history.back();">取消</button>
@@ -641,7 +640,16 @@
                 </form>
             </div>
             <div class="tab-pane" id="tab5">
-                555
+                <div class="center">
+                    <img src="/assets/img/success.png" height="150px" width="150px" class="img-circle">
+                    <h3>恭喜，开场成功！</h3>
+                    <a href="#" class="btn">确定</a>
+                </div>
+                <div class="center">
+                    <img src="/assets/img/error.png" height="150px" width="150px" class="img-cricle">
+                    <h3>抱歉，开场失败！</h3>
+                    <a href="#" class="btn">场次管理</a>
+                </div>
             </div>
         </div>
     </div>
@@ -765,13 +773,15 @@
             return false;
         }
 
+        var id = $("#id").val();
         $.ajax({
             url: 'savePaperPolicy.do',
             type: 'post',
-            data: $("#policyForm").serialize() + "&id=" + $("#id").val(),
+            data: $("#policyForm").serialize() + "&id=" + id,
             success: function (data) {
                 var res = JSON.parse(data);
                 if (res.code == 0) {
+                    $("#preview-box").load("preview.do?id=" + id);
                     $("#rootwizard").bootstrapWizard('next');
                 } else {
                     swal("", res.err, "error");
@@ -832,7 +842,7 @@
             showCancelButton: true,
 
         }).then(function (isConfirm) {
-            if(isConfirm){
+            if (isConfirm) {
                 zeroModal.loading(3);
                 $.ajax({
                     url: "/question/updateCache.do",
@@ -841,8 +851,8 @@
                         zeroModal.closeAll();
                         var res = JSON.parse(data);
                         console.log("res: ", res);
-                        if(res.code == 0){
-                        }else{
+                        if (res.code == 0) {
+                        } else {
                             swal("", "刷新题库失败", "error");
                         }
                     },
@@ -851,7 +861,7 @@
                         swal("", "刷新题库失败", "error");
                     }
                 })
-            }else{
+            } else {
                 return false;
             }
         })

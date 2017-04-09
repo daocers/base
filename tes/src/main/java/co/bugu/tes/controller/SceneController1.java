@@ -44,16 +44,6 @@ public class SceneController1 {
 
     @RequestMapping("/index")
     public String index(Integer id, ModelMap model){
-        if(id != null){
-            Scene scene = sceneService.findById(id);
-            if(scene == null){
-                model.put("err", "没有对应的场次信息");
-            }else{
-                model.put("scene", scene);
-            }
-        }
-
-
         QuestionMetaInfo metaInfo= new QuestionMetaInfo();
         metaInfo.setStatus(0);
         List<QuestionMetaInfo> metaInfos = questionMetaInfoService.findByObject(metaInfo);
@@ -62,11 +52,37 @@ public class SceneController1 {
             metaInfoIdNameMap.put(info.getId(), info.getName());
         }
 
+        if(id != null){
+            Scene scene = sceneService.findById(id);
+            if(scene.getPaperPolicyId() != null){
+                PaperPolicy paperPolicy = paperPolicyService.findById(scene.getPaperPolicyId());
+                paperPolicy.setContent(getPolicyContentForShow(paperPolicy, metaInfoIdNameMap));
+                model.put("paperPolicy", paperPolicy);
+            }
+            if(scene == null){
+                model.put("err", "没有对应的场次信息");
+            }else{
+                model.put("scene", scene);
+            }
+        }
 
         PaperPolicy policy = new PaperPolicy();
         policy.setStatus(0);
         List<PaperPolicy> policyList = paperPolicyService.findByObject(policy);
         for(PaperPolicy paperPolicy : policyList){
+            paperPolicy.setContent(getPolicyContentForShow(paperPolicy, metaInfoIdNameMap));
+        }
+        model.put("paperPolicyList", policyList);
+
+        QuestionBank bank = new QuestionBank();
+        bank.setStatus(0);
+        List<QuestionBank> bankList = bankService.findByObject(bank);
+        model.put("bankList", bankList);
+        return "scene/index";
+    }
+
+    private String getPolicyContentForShow(PaperPolicy paperPolicy, Map<Integer, String> metaInfoIdNameMap){
+        if(paperPolicy != null){
             String content = paperPolicy.getContent();
             Integer selectType = paperPolicy.getSelectType();
             StringBuffer buffer = new StringBuffer();
@@ -108,18 +124,10 @@ public class SceneController1 {
                             .append("分<br/>");
                 }
             }
-            paperPolicy.setContent(buffer.toString());
+            return buffer.toString();
         }
-        model.put("paperPolicyList", policyList);
-
-
-        QuestionBank bank = new QuestionBank();
-        bank.setStatus(0);
-        List<QuestionBank> bankList = bankService.findByObject(bank);
-        model.put("bankList", bankList);
-        return "scene/index";
+        return null;
     }
-
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
@@ -240,5 +248,23 @@ public class SceneController1 {
         json.put("code", 0);
         json.put("data", res);
         return json.toJSONString();
+    }
+
+    @RequestMapping("/preview")
+    public String preview(Integer id, ModelMap model){
+        QuestionMetaInfo metaInfo= new QuestionMetaInfo();
+        metaInfo.setStatus(0);
+        List<QuestionMetaInfo> metaInfos = questionMetaInfoService.findByObject(metaInfo);
+
+        Map<Integer, String> metaInfoIdNameMap = new HashMap<>();
+        for(QuestionMetaInfo info: metaInfos){
+            metaInfoIdNameMap.put(info.getId(), info.getName());
+        }
+
+        Scene scene = sceneService.findById(id);
+        PaperPolicy paperPolicy = paperPolicyService.findById(scene.getPaperPolicyId());
+        model.put("scene", scene);
+        model.put("paperPolicy", paperPolicy);
+        return "scene/preview-content";
     }
 }
