@@ -1,5 +1,6 @@
 package co.bugu.tes.controller;
 
+import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.core.util.BuguWebUtil;
 import co.bugu.framework.util.JedisUtil;
 import co.bugu.framework.util.exception.TesException;
@@ -41,6 +42,24 @@ public class SceneController1 {
     IQuestionMetaInfoService questionMetaInfoService;
     @Autowired
     IQuestionPolicyService questionPolicyService;
+
+    /**
+     * 我开场的考试
+     * @param model
+     * @param request
+     * @return
+     */
+    @RequestMapping("/list")
+    public String list(Integer showCount, Integer curPage, ModelMap model, HttpServletRequest request) throws Exception {
+        Integer userId = (Integer) BuguWebUtil.getUserId(request);
+        Scene scene = new Scene();
+        scene.setCreateUserId(userId);
+        PageInfo<Scene> pageInfo = new PageInfo<>(showCount, curPage);
+        pageInfo = sceneService.findByObject(scene, pageInfo);
+        model.put("pi", pageInfo);
+        return "scene/list";
+
+    }
 
     @RequestMapping("/index")
     public String index(Integer id, ModelMap model){
@@ -197,7 +216,7 @@ public class SceneController1 {
 
     @RequestMapping(value = "/confirm", method = RequestMethod.POST)
     @ResponseBody
-    public String confirm(Integer id){
+    public String confirm(Integer id, HttpServletRequest request){
         JSONObject json = new JSONObject();
         Scene scene = sceneService.findById(id);
         if(scene == null){
@@ -207,10 +226,16 @@ public class SceneController1 {
             //生成试卷
 
 
-
+            scene = new Scene();
+            scene.setId(id);
+            scene.setUpdateTime(new Date());
+            scene.setUpdateUserId((Integer) BuguWebUtil.getUserId(request));
 
             scene.setStatus(SceneStatusEnum.READY.getStatus());
+            sceneService.updateById(scene);
+            json.put("code", 0);
         }
+
         return json.toJSONString();
     }
 

@@ -92,7 +92,7 @@
         <appender-ref ref="errorAppender" />
     </logger>
 
-    <root level="info">
+    <root level="debug">
         <appender-ref ref="consoleAppender" />
     </root>
 </configuration>

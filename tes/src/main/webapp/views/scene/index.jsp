@@ -640,16 +640,20 @@
                 </form>
             </div>
             <div class="tab-pane" id="tab5">
-                <div class="center">
-                    <img src="/assets/img/success.png" height="150px" width="150px" class="img-circle">
-                    <h3>恭喜，开场成功！</h3>
-                    <a href="#" class="btn">确定</a>
+                <div class="col-md-8">
+                    <div class="center-block" style="display: none;" id="success-box">
+                        <img src="/assets/img/success.png" height="150px" width="150px" class="img-circle">
+                        <h3>恭喜，开场成功！</h3>
+                        <a href="list.do" class="btn btn-success">确定</a>
+                    </div>
+                    <div class="center-block" style="display: none;" id="error-box">
+                        <img src="/assets/img/error.png" height="150px" width="150px" class="img-cricle">
+                        <h3>抱歉，开场失败！</h3>
+                        <h4 id="errMsg"></h4>
+                        <a href="#" class="btn btn-info">场次管理</a>
+                    </div>
                 </div>
-                <div class="center">
-                    <img src="/assets/img/error.png" height="150px" width="150px" class="img-cricle">
-                    <h3>抱歉，开场失败！</h3>
-                    <a href="#" class="btn">场次管理</a>
-                </div>
+
             </div>
         </div>
     </div>
@@ -675,6 +679,9 @@
         }
     })
 
+    /**
+     * 初始化开关键
+     * */
     $(function () {
         $(".change-paper").bootstrapSwitch({
             onSwitchChange: function (event, state) {
@@ -686,7 +693,9 @@
             }
         });
 
-        /*处理试卷策略信息*/
+        /**
+         * 处理试卷策略信息
+         * */
         $("table").on("click", "input[name='paperPolicyId'][type='radio']", function () {
             if ($(this).is(":checked")) {
                 $("#policy").val($(this).parentsUntil("tr").next().text());
@@ -709,7 +718,9 @@
         });
     })
 
-    /*保存基本信息*/
+    /**
+     * 保存基本信息
+     * */
     $("#saveBase").on("click", function () {
         $.ajax({
             url: 'save.do',
@@ -734,6 +745,9 @@
         return false;
     });
 
+    /**
+     * 保存场次授权码
+     * */
     $("#saveAuthCode").on("click", function () {
         $.ajax({
             url: "saveAuthCode.do",
@@ -755,6 +769,9 @@
         return false;
     });
 
+    /**
+     * 保存试卷策略
+     * */
     $("#savePaperPolicy").on("click", function () {
         var bankId = $("[name='bankId']").val();
         if (!bankId) {
@@ -795,6 +812,9 @@
     });
 
 
+    /**
+    * 检查试卷策略是否可用
+    * */
     $("#checkPaperPolicy").on("click", function () {
         var bankId = $("[name='bankId']").val();
         console.log("bankId: ", bankId);
@@ -834,6 +854,9 @@
         return false;
     });
 
+    /**
+     * 更新题库信息，主要是更新试题在redis上的缓存，用于校验试题策略可用性
+     * */
     $("#updateBank").on("click", function () {
         swal({
             title: "耗时请求，谨慎操作",
@@ -866,6 +889,34 @@
             }
         })
     });
+
+    $("#confirm").on("click", function () {
+        var id = $("#id").val();
+        $.ajax({
+            url: "confirm.do",
+            type: 'post',
+            data: {id: id},
+            success: function (data) {
+                var res = JSON.parse(data);
+                if(res.code == 0){
+                    $("#success-box").show();
+                    $("#error-box").hide();
+                }else{
+                    var err = res.err;
+                    $("#success-box").hide();
+                    $("#error-box").show();
+                    $("#errmsg").text(err);
+                }
+                $("#rootwizard").bootstrapWizard('next');
+            },
+            error: function (data) {
+                swal("", "开场失败", "error");
+                $("#success-box").hide();
+                $("#error-box").hide();
+            }
+        });
+        return false;
+    })
 
 
 </script>

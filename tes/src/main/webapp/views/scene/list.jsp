@@ -22,7 +22,7 @@
         <table class="table table-bordered">
             <thead>
             <tr>
-                <th><input type="checkbox" class="selectAll"></th>
+                <%--<th><input type="checkbox" class="selectAll"></th>--%>
                 <th>考试名称</th>
                 <th>场次编码</th>
                 <th>识别码</th>
@@ -42,7 +42,7 @@
             <tbody>
             <c:forEach items="${pi.data}" var="scene" varStatus="line">
                 <tr>
-                    <td><input type="checkbox" objId="${scene.id}"></td>
+                    <%--<td><input type="checkbox" objId="${scene.id}"></td>--%>
                     <td><a href="edit.do?type=detail&id=${scene.id}">${scene.name}</a></td>
                     <td>${scene.code}</td>
                     <td>${scene.authCode}</td>
@@ -70,8 +70,8 @@
                         </c:if>
                     </td>
                     <td>
-                        <a href="edit.do?id=${scene.id}&type=detail" class="opr">详情</a>
-                        <a href="edit.do?id=${scene.id}" class="opr">修改</a>
+                        <a href="index.do?id=${scene.id}&type=detail" class="opr">详情</a>
+                        <a href="index.do?id=${scene.id}" class="opr">修改</a>
                         <a href="javascript:del(${scene.id})" class="opr">删除</a>
                     </td>
                 </tr>
