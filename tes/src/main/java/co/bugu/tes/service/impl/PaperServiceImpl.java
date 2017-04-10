@@ -64,14 +64,14 @@ public class PaperServiceImpl extends BaseServiceImpl<Paper> implements IPaperSe
 
         if (scene.getPaperType() == PaperType.UNIFY.getType()) {
             //统一试卷，每个人试题一致
-            List<Integer> resQuesIds = getPaperQuestionIds(scene.getBankId(), paperPolicy);
+            Map<Integer, Collection<Integer>> resQuesIds = getPaperQuestionIds(scene.getBankId(), paperPolicy);
             for (Integer userId : userIds) {
                 savePaper(userId, scene.getId(), resQuesIds);
             }
         } else if (scene.getPaperType() == PaperType.RANDOM.getType()) {
             //每个人都随机，都不一样
             for (Integer userId : userIds) {
-                List<Integer> resQuesIds = getPaperQuestionIds(scene.getBankId(), paperPolicy);
+                Map<Integer, Collection<Integer>> resQuesIds = getPaperQuestionIds(scene.getBankId(), paperPolicy);
                 savePaper(userId, scene.getId(), resQuesIds);
             }
         } else if (scene.getPaperType() == PaperType.IMPORT.getType()) {
@@ -90,25 +90,32 @@ public class PaperServiceImpl extends BaseServiceImpl<Paper> implements IPaperSe
      *
      * @param userId
      * @param sceneId
-     * @param paperQuestionIdList
+     * @param paperQuestionIdInfo
      */
-    private void savePaper(Integer userId, Integer sceneId, List<Integer> paperQuestionIdList) {
+    private Integer savePaper(Integer userId, Integer sceneId, Map<Integer, Collection<Integer>> paperQuestionIdInfo) {
         Paper paper = new Paper();
         paper.setUserId(userId);
         paper.setAnswerFlag(1);
         paper.setSceneId(sceneId);
         paper.setStatus(0);
-        paper.setQuestionIds(JSON.toJSONString(paperQuestionIdList));
+        paper.setQuestionIds(JSON.toJSONString(paperQuestionIdInfo));
         baseDao.insert("tes.paper.insert", paper);
         int index = 0;
-        for (Integer questionId : paperQuestionIdList) {
-            //关系的添加可以放到提交试题时候操作，整个插入，提高试卷生成速度
-            Map<String, Integer> param = new HashMap<>();
-            param.put("paperId", paper.getId());
-            param.put("questionId", questionId);
-            param.put("idx", index++);
-            baseDao.insert("tes.paper.addQues", param);
+        Iterator<Integer> keyIter = paperQuestionIdInfo.keySet().iterator();
+        while(keyIter.hasNext()){
+            Integer key = keyIter.next();
+            Collection<Integer> collection = paperQuestionIdInfo.get(key);
+            for (Integer questionId : collection) {
+                //关系的添加可以放到提交试题时候操作，整个插入，提高试卷生成速度
+                Map<String, Integer> param = new HashMap<>();
+                param.put("paperId", paper.getId());
+                param.put("questionId", questionId);
+                param.put("idx", index++);
+                baseDao.insert("tes.paper.addQues", param);
+            }
         }
+
+        return paper.getId();
     }
 
     /**
@@ -118,7 +125,8 @@ public class PaperServiceImpl extends BaseServiceImpl<Paper> implements IPaperSe
      * @param paperPolicy
      * @return
      */
-    private List<Integer> getPaperQuestionIds(Integer bankId, PaperPolicy paperPolicy) throws Exception {
+    private Map<Integer, Collection<Integer>> getPaperQuestionIds(Integer bankId, PaperPolicy paperPolicy) throws Exception {
+        Map<Integer, Collection<Integer>> questionIdInfo = new HashMap<>();
         List<Integer> res = new ArrayList<>();
         //策略模式
         if(paperPolicy.getSelectType() == PaperPolicyType.POLICY.getType()){
@@ -145,8 +153,8 @@ public class PaperServiceImpl extends BaseServiceImpl<Paper> implements IPaperSe
                     for (String id : questionIds) {
                         quesIdList.add(Integer.parseInt(id));
                     }
-
-                    res.addAll(QuestionUtil.getResult(quesIdList, count));
+                    questionIdInfo.put(questionPolicy.getQuestionMetaInfoId(), QuestionUtil.getResult(quesIdList, count));
+//                    res.addAll(QuestionUtil.getResult(quesIdList, count));
                 }
             }
         }else{//普通模式
@@ -156,17 +164,72 @@ public class PaperServiceImpl extends BaseServiceImpl<Paper> implements IPaperSe
                 Integer questionMetaInfoId = Integer.parseInt(map.get("questionMetaInfoId"));
                 Integer count = Integer.parseInt(map.get("count"));
                 Double score = Double.valueOf(map.get("score"));
-                res.addAll(QuestionUtil.getResultByQuesMetaId(questionMetaInfoId, count));
+//                res.addAll(QuestionUtil.getResultByQuesMetaId(questionMetaInfoId, count));
+                questionIdInfo.put(questionMetaInfoId, QuestionUtil.getResultByQuesMetaId(questionMetaInfoId, count));
             }
         }
 
-        return res;
+        return questionIdInfo;
     }
 
 
     @Override
-    public boolean generatePaperForUser(Scene scene, User user) {
-        return false;
+    public Integer generatePaperForUser(Scene scene, Integer userId) throws Exception {
+        if (scene.getId() == null) {
+            throw new Exception("场次编号不能为空");
+        }
+        scene = baseDao.selectOne("tes.scene.selectById", scene.getId());
+        if (scene == null) {
+            throw new Exception("未找到对应的场次信息");
+        }
+        String joinUser = scene.getJoinUser();
+        if (StringUtils.isEmpty(joinUser)) {
+            throw new Exception("该场次没有选择参考人员");
+        }
+        List<Integer> userIds = JSON.parseArray(joinUser, Integer.class);
+        Integer paperPolicyId = scene.getPaperPolicyId();
+        if (paperPolicyId == null) {
+            throw new Exception("该场次没有选择试卷生成策略");
+        }
+        PaperPolicy paperPolicy = baseDao.selectOne("tes.paperPolicy.selectById", paperPolicyId);
+        String content = paperPolicy.getContent();
+        if (StringUtils.isEmpty(content)) {
+            throw new Exception("该试卷策略内容为空，请联系管理员确认!");
+        }
+//        获取paperpolicy，并连带获取关联的questionpolicy
+        List<Integer> paperQeustionIdList = new ArrayList<>();
+        List<HashMap> infos = JSON.parseArray(content, HashMap.class);
+
+//        策略模式，需要将关联的试题策略查询出来
+        if(paperPolicy.getSelectType() == PaperPolicyType.POLICY.getType()){
+            List<QuestionPolicy> questionPolicyList = new ArrayList<>();
+            for (Map map : infos) {
+                Integer questionPolicyId = Integer.parseInt(map.get("questionPolicyId").toString());
+                QuestionPolicy questionPolicy = baseDao.selectOne("tes.questionPolicy.selectById", questionPolicyId);
+                questionPolicyList.add(questionPolicy);
+            }
+            paperPolicy.setQuestionPolicyList(questionPolicyList);
+        }
+
+        Integer paperId = null;
+
+        if (scene.getPaperType() == PaperType.UNIFY.getType()) {
+            //统一试卷，每个人试题一致
+            Map<Integer, Collection<Integer>> resQuesIds = getPaperQuestionIds(scene.getBankId(), paperPolicy);
+            paperId = savePaper(userId, scene.getId(), resQuesIds);
+        } else if (scene.getPaperType() == PaperType.RANDOM.getType()) {
+            //每个人都随机，都不一样
+            Map<Integer, Collection<Integer>> resQuesIds = getPaperQuestionIds(scene.getBankId(), paperPolicy);
+            paperId = savePaper(userId, scene.getId(), resQuesIds);
+        } else if (scene.getPaperType() == PaperType.IMPORT.getType()) {
+            //教师导入试题
+//            暂未开通，后续添加
+        } else if (scene.getPaperType() == PaperType.DEEPRANDOM.getType()) {
+            //深度随机，只设置需要的试题数量，随机生成试卷
+        } else if (scene.getPaperType() == PaperType.DEEPUNIFY.getType()) {
+//            深度统一，只设置需要的试题数量，随机生成试卷，每个用户统一
+        }
+        return paperId;
     }
 
     @Override

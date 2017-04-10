@@ -149,13 +149,20 @@ public class ExamController {
         paper.setSceneId(scene.getId());
         paper.setStatus(0);//0 正常， 1未作答， 2 作废
         List<Paper> papers = paperService.findByObject(paper);
-        if(papers == null || papers.size() == 0){
-            model.put("err", "没有找到试卷，请联系管理员！");
+        if(papers == null || papers.size() == 0){//没有生成试卷，生成试卷
+            Integer paperId = paperService.generatePaperForUser(scene, (Integer) BuguWebUtil.getUserId(request));
+//            model.put("err", "没有找到试卷，请联系管理员！");
+            paper = paperService.findById(paperId);
         }else{
-            model.put("paper", papers.get(0));
+            paper = papers.get(0);
+//            model.put("paper", papers.get(0));
             scene = sceneService.findById(scene.getId());
             model.put("scene", scene);
         }
+        String content = paper.getContent();
+        Map map = JSON.parseObject(content, Map.class);
+
+        model.put("paper", paper);
         return "exam/examine";
     }
 

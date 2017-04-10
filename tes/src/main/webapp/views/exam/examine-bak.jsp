@@ -184,12 +184,7 @@
     var currentIndex = -1;
     var questionCount = 0;
     var questionIdList= new Array();
-    /**
-     * 试题类型map
-     * */
     var metaInfoMap = eval(${metaInfo});
-
-    var questionIdMap = eval(${paper.content});
     <%--提交试题--%>
     function commitQuestion() {
         var resFlag = true;
