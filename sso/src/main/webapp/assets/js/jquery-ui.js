@@ -8027,7 +8027,7 @@ function datepicker_getZindex( elem ) {
 	return 0;
 }
 /* Date picker manager.
-   Use the singleton instance of this class, $.datepicker, to interact with the date picker.
+   Use the singleton3 instance of this class, $.datepicker, to interact with the date picker.
    Settings for (groups of) date pickers are maintained in an instance object,
    allowing multiple different settings on the same page. */
 
@@ -10051,7 +10051,7 @@ $.fn.datepicker = function(options){
 	});
 };
 
-$.datepicker = new Datepicker(); // singleton instance
+$.datepicker = new Datepicker(); // singleton3 instance
 $.datepicker.initialized = false;
 $.datepicker.uuid = new Date().getTime();
 $.datepicker.version = "1.11.4";

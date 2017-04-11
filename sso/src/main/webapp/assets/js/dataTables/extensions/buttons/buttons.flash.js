@@ -99,7 +99,7 @@ var ZeroClipboard_TableTools = {
 		this.id = ZeroClipboard_TableTools.nextId++;
 		this.movieId = 'ZeroClipboard_TableToolsMovie_' + this.id;
 
-		// register client with singleton to receive flash events
+		// register client with singleton3 to receive flash events
 		ZeroClipboard_TableTools.register(this.id, this);
 
 		// create movie
