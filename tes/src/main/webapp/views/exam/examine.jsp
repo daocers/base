@@ -189,6 +189,8 @@
      * */
     var metaInfoMap = eval(${metaInfo});
 
+    var questionMap = eval(${questionMap});
+
     var questionIdMap = eval(${paper.content});
     <%--提交试题--%>
     function commitQuestion() {
@@ -229,61 +231,97 @@
     /*获取试题*/
     function getQuestion(id) {
         var reqFlag = true;
-        $.ajax({
-            url: "getQuestion.do",
-            type: "post",
-            data: {questionId: id},
-            success: function (data) {
-                console.log(data);
-                var res = JSON.parse(data);
-                if (res.code == 0) {
-                    var question = res.data;
-                    var title = question.title;
-                    var content = JSON.parse(question.content);
-                    var remark = question.remark;
-                    var metaInfoId = question.metaInfoId;
+        var question = questionMap.id;
+
+        var title = question.title;
+        var content = JSON.parse(question.content);
+        var remark = question.remark;
+        var metaInfoId = question.metaInfoId;
 
 
-                    var answerCount = 0;
-                    var buffer = '';
-                    $.each(content, function (idx, obj) {
-                        answerCount++;
-                        buffer += '<li class="list-group-item">' + obj + '</li>';
-                    });
-
-                    if (metaInfoMap[metaInfoId] == "single") {
-                        $("#single-box").show();
-                        $("#multi-box").hide();
-                        $("#judge-box").hide();
-                    } else if (metaInfoMap[metaInfoId] == "multi") {
-                        $("#single-box").hide();
-                        $("#multi-box").show();
-                        $("#judge-box").hide();
-                    } else if (metaInfoMap[metaInfoId] == "judge") {
-                        $("#single-box").hide();
-                        $("#multi-box").hide();
-                        $("#judge-box").show();
-                    }
-                    $("[name='answer']").iCheck("uncheck")
-                    $(".answer-box").find("label:gt(" + (answerCount - 1) + ")").hide();
-                    $(".answer-box").find("label:lt(" + answerCount + ")").show();
-                    $("#title").html(title);
-                    $("#content").html(buffer);
-                    if (remark) {
-                        $("#remark").html("备注：" + remark);
-                    }
-                    zeroModal.closeAll();
-                    reqFlag = true;
-                } else {
-                    swal("", res.msg, "warning");
-                    reqFlag = false;
-                }
-            },
-            error: function (data) {
-                swal("", "获取试题异常，请联系管理员", "error");
-                reqFlag = false;
-            }
+        var answerCount = 0;
+        var buffer = '';
+        $.each(content, function (idx, obj) {
+            answerCount++;
+            buffer += '<li class="list-group-item">' + obj + '</li>';
         });
+
+        if (metaInfoMap[metaInfoId] == "single") {
+            $("#single-box").show();
+            $("#multi-box").hide();
+            $("#judge-box").hide();
+        } else if (metaInfoMap[metaInfoId] == "multi") {
+            $("#single-box").hide();
+            $("#multi-box").show();
+            $("#judge-box").hide();
+        } else if (metaInfoMap[metaInfoId] == "judge") {
+            $("#single-box").hide();
+            $("#multi-box").hide();
+            $("#judge-box").show();
+        }
+        $("[name='answer']").iCheck("uncheck")
+        $(".answer-box").find("label:gt(" + (answerCount - 1) + ")").hide();
+        $(".answer-box").find("label:lt(" + answerCount + ")").show();
+        $("#title").html(title);
+        $("#content").html(buffer);
+        if (remark) {
+            $("#remark").html("备注：" + remark);
+        }
+//        $.ajax({
+//            url: "getQuestion.do",
+//            type: "post",
+//            data: {questionId: id},
+//            success: function (data) {
+//                console.log(data);
+//                var res = JSON.parse(data);
+//                if (res.code == 0) {
+//                    var question = res.data;
+//                    var title = question.title;
+//                    var content = JSON.parse(question.content);
+//                    var remark = question.remark;
+//                    var metaInfoId = question.metaInfoId;
+//
+//
+//                    var answerCount = 0;
+//                    var buffer = '';
+//                    $.each(content, function (idx, obj) {
+//                        answerCount++;
+//                        buffer += '<li class="list-group-item">' + obj + '</li>';
+//                    });
+//
+//                    if (metaInfoMap[metaInfoId] == "single") {
+//                        $("#single-box").show();
+//                        $("#multi-box").hide();
+//                        $("#judge-box").hide();
+//                    } else if (metaInfoMap[metaInfoId] == "multi") {
+//                        $("#single-box").hide();
+//                        $("#multi-box").show();
+//                        $("#judge-box").hide();
+//                    } else if (metaInfoMap[metaInfoId] == "judge") {
+//                        $("#single-box").hide();
+//                        $("#multi-box").hide();
+//                        $("#judge-box").show();
+//                    }
+//                    $("[name='answer']").iCheck("uncheck")
+//                    $(".answer-box").find("label:gt(" + (answerCount - 1) + ")").hide();
+//                    $(".answer-box").find("label:lt(" + answerCount + ")").show();
+//                    $("#title").html(title);
+//                    $("#content").html(buffer);
+//                    if (remark) {
+//                        $("#remark").html("备注：" + remark);
+//                    }
+//                    zeroModal.closeAll();
+//                    reqFlag = true;
+//                } else {
+//                    swal("", res.msg, "warning");
+//                    reqFlag = false;
+//                }
+//            },
+//            error: function (data) {
+//                swal("", "获取试题异常，请联系管理员", "error");
+//                reqFlag = false;
+//            }
+//        });
         return reqFlag;
 
     }

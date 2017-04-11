@@ -67,13 +67,33 @@ public class ExamController {
         return page;
     }
 
+    @RequestMapping("/index")
+    public String index(){
+        return "exam/index";
+    }
+
+
     /**
      * 跳转考试须知界面
-     * @param scene
+     * @param
      * @return
      */
     @RequestMapping("/note")
-    public String toNote(Scene scene){
+    public String toNote(String authCode, ModelMap model){
+        Scene scene = new Scene();
+        scene.setAuthCode(authCode);
+        List<Scene> sceneList = sceneService.findByObject(scene);
+        if(sceneList != null && sceneList.size() == 1){
+            scene = sceneList.get(0);
+            model.put("scene", scene);
+        }else{
+            if(sceneList == null || sceneList.size() == 0){
+                model.put("err", "没有找到对应的场次");
+            }else{
+                model.put("err", "场次编码重复，请联系管理员");
+            }
+            return "exam/index";
+        }
         return "exam/note";
     }
 
@@ -129,7 +149,7 @@ public class ExamController {
 
         //不符合考试条件，跳转到考试列表页面
         if(continueFlag == false){
-            return "redirect:list.do?type=new";
+            return "redirect:index.do";
         }
 
         Integer leftMinute = 0;
@@ -144,24 +164,43 @@ public class ExamController {
 
 
         Integer userId = (Integer) BuguWebUtil.getUserId(request);
-        Paper  paper = new Paper();
-        paper.setUserId(userId);
-        paper.setSceneId(scene.getId());
-        paper.setStatus(0);//0 正常， 1未作答， 2 作废
-        List<Paper> papers = paperService.findByObject(paper);
-        if(papers == null || papers.size() == 0){//没有生成试卷，生成试卷
-            Integer paperId = paperService.generatePaperForUser(scene, (Integer) BuguWebUtil.getUserId(request));
-//            model.put("err", "没有找到试卷，请联系管理员！");
-            paper = paperService.findById(paperId);
-        }else{
-            paper = papers.get(0);
-//            model.put("paper", papers.get(0));
-            scene = sceneService.findById(scene.getId());
-            model.put("scene", scene);
-        }
+        Integer paperId = paperService.generatePaperForUser(scene, userId);
+        Paper paper = paperService.findById(paperId);
+
+        scene = sceneService.findById(scene.getId());
+
+//        Paper  paper = new Paper();
+//        paper.setUserId(userId);
+//        paper.setSceneId(scene.getId());
+//        paper.setStatus(0);//0 正常， 1未作答， 2 作废
+//        List<Paper> papers = paperService.findByObject(paper);
+//        if(papers == null || papers.size() == 0){//没有生成试卷，生成试卷
+//            Integer paperId = paperService.generatePaperForUser(scene, (Integer) BuguWebUtil.getUserId(request));
+////            model.put("err", "没有找到试卷，请联系管理员！");
+//            paper = paperService.findById(paperId);
+//        }else{
+//            paper = papers.get(0);
+////            model.put("paper", papers.get(0));
+//
+//            model.put("scene", scene);
+//        }
+        Map<Integer, Question> questionMap = new HashMap<>();
+        List<Integer> idList = new ArrayList<>();
         String content = paper.getContent();
         Map map = JSON.parseObject(content, Map.class);
+        Iterator<Integer> keyIter = map.keySet().iterator();
+        while(keyIter.hasNext()){
+            Integer key = keyIter.next();
+            List<Integer> ids = (List<Integer>) map.get(key);
+            idList.addAll(ids);
+        }
 
+        for(Integer id: idList){
+            questionMap.put(id, questionService.findById(id));
+        }
+        model.put("questionMap", JSON.toJSONString(questionMap));
+
+        model.put("scene", scene);
         model.put("paper", paper);
         return "exam/examine";
     }
