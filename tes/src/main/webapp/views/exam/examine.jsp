@@ -185,10 +185,17 @@
     var questionCount = 0;
     var questionIdList= new Array();
     /**
+     * 保存题型id和对应的试题id信息
+     * */
+    var questionMetaAndIdListMap = eval(${paper.content});
+    /**
      * 试题类型map
      * */
     var metaInfoMap = eval(${metaInfo});
 
+    /**
+     * 试题id 对应的试题试题信息
+     * */
     var questionMap = eval(${questionMap});
 
     var questionIdMap = eval(${paper.content});
@@ -231,8 +238,8 @@
     /*获取试题*/
     function getQuestion(id) {
         var reqFlag = true;
-        var question = questionMap.id;
-
+        var question = questionMap[id];
+        console.log("question: ", question);
         var title = question.title;
         var content = JSON.parse(question.content);
         var remark = question.remark;
@@ -430,13 +437,30 @@
     }
 
     $(function () {
-        questionIdList = JSON.parse($("#questionIds").val());
+//        questionIdList = JSON.parse($("#questionIds").val());
         //初始化答题数据
         var tableBox = "";
         var selectBox = "";
-        $.each(questionIdList, function (idx, obj) {
-            tableBox += "<tr queid='" + obj + "'><td><a href='javascript:jumpTo(" + obj + ")'>" + "第" + (idx + 1) + "题" + "</a> </td><td></td><td class='hide'></td></tr>"
-            selectBox += "<option value='" + idx + "'>第" + (idx + 1) + "题</option>"
+//        $.each(questionIdList, function (idx, obj) {
+//            tableBox += "<tr queid='" + obj + "'><td><a href='javascript:jumpTo(" + obj + ")'>" + "第" + (idx + 1) + "题" + "</a> </td><td></td><td class='hide'></td></tr>"
+//            selectBox += "<option value='" + idx + "'>第" + (idx + 1) + "题</option>"
+//        });
+//        $.each(questionMap, function (key, val) {
+//            var queType = metaInfoMap.key;
+//            $.each(val, function (idx, obj) {
+//                tableBox += "<tr queid='" + obj.id + "'><td><a href='javascript:jumpTo(" + obj.id + ")'>" + queType + "第" + (idx + 1) + "题" + "</a> </td><td></td><td class='hide'></td></tr>"
+//                selectBox += "<option value='" + idx + "'>" + queType + "第" + (idx + 1) + "题</option>"
+//            })
+//
+//        });
+
+        $.each(questionMetaAndIdListMap, function (key, val) {
+            var queType = metaInfoMap[key];
+            $.each(val, function (idx, id) {
+                tableBox += "<tr queid='" + id + "'><td><a href='javascript:jumpTo(" + id + ")'>" + queType + "第" + (idx + 1) + "题" + "</a> </td><td></td><td class='hide'></td></tr>"
+                selectBox += "<option value='" + idx + "'>" + queType + "第" + (idx + 1) + "题</option>"
+            })
+
         });
         $("#myAnswer tbody").html(tableBox);
         $("#current").html(selectBox);

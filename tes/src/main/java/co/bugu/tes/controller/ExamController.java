@@ -167,10 +167,14 @@ public class ExamController {
         Paper paper = new Paper();
         paper.setUserId(userId);
         paper.setSceneId(scene.getId());
-        paper.setStatus();
-        Integer paperId = paperService.generatePaperForUser(scene, userId);
-        Paper paper = paperService.findById(paperId);
-
+        paper.setStatus(0);
+        List<Paper> paperList = paperService.findByObject(paper);
+        if(paperList != null && paperList.size() > 0){
+            paper = paperList.get(0);
+        }else{
+            Integer paperId = paperService.generatePaperForUser(scene, userId);
+            paper = paperService.findById(paperId);
+        }
         scene = sceneService.findById(scene.getId());
 
 //        Paper  paper = new Paper();
