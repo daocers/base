@@ -164,6 +164,10 @@ public class ExamController {
 
 
         Integer userId = (Integer) BuguWebUtil.getUserId(request);
+        Paper paper = new Paper();
+        paper.setUserId(userId);
+        paper.setSceneId(scene.getId());
+        paper.setStatus();
         Integer paperId = paperService.generatePaperForUser(scene, userId);
         Paper paper = paperService.findById(paperId);
 

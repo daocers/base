@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
-import java.util.UUID;
+import java.util.Random;
 
 /**
  * Created by user on 2017/4/12.
@@ -26,6 +26,8 @@ public class MQProducerConsumerService {
     private String tag;
     private String producerName;
     private String instanceName;
+
+    private Random random = new Random();
 
     public void init() throws MQClientException {
         producer = new DefaultMQProducer(producerName);
@@ -50,7 +52,8 @@ public class MQProducerConsumerService {
             return null;
         }
         Message message = new Message(topic, tag,
-                Thread.currentThread().getName() + System.currentTimeMillis(), body.getBytes("utf-8"));
+                Thread.currentThread().getName() + System.currentTimeMillis() + random.nextInt(1000),
+                body.getBytes("utf-8"));
 
         logger.info("消息：{}", JSON.toJSONString(message));
         SendResult sendResult = producer.send(message);

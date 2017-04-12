@@ -98,7 +98,8 @@ public class PaperServiceImpl extends BaseServiceImpl<Paper> implements IPaperSe
         paper.setAnswerFlag(1);
         paper.setSceneId(sceneId);
         paper.setStatus(0);
-        paper.setQuestionIds(JSON.toJSONString(paperQuestionIdInfo));
+        paper.setContent(JSON.toJSONString(paperQuestionIdInfo));
+//        paper.setQuestionIds(JSON.toJSONString(paperQuestionIdInfo));
         baseDao.insert("tes.paper.insert", paper);
         int index = 0;
         Iterator<Integer> keyIter = paperQuestionIdInfo.keySet().iterator();
@@ -123,13 +124,25 @@ public class PaperServiceImpl extends BaseServiceImpl<Paper> implements IPaperSe
      *
      * @param  bankId  题库，如果为空，表示从所有题库中随机选择
      * @param paperPolicy
-     * @return
+     * @return  Map<MetaInfoId, QuestionIds>
      */
     private Map<Integer, Collection<Integer>> getPaperQuestionIds(Integer bankId, PaperPolicy paperPolicy) throws Exception {
         Map<Integer, Collection<Integer>> questionIdInfo = new HashMap<>();
         List<Integer> res = new ArrayList<>();
         //策略模式
         if(paperPolicy.getSelectType() == PaperPolicyType.POLICY.getType()){
+            //        策略模式，需要将关联的试题策略查询出来
+            if(paperPolicy.getSelectType() == PaperPolicyType.POLICY.getType()){
+                List<HashMap> infos = JSON.parseArray(paperPolicy.getContent(), HashMap.class);
+                List<QuestionPolicy> questionPolicyList = new ArrayList<>();
+                for (Map map : infos) {
+                    Integer questionPolicyId = Integer.parseInt(map.get("questionPolicyId").toString());
+                    QuestionPolicy questionPolicy = baseDao.selectOne("tes.questionPolicy.selectById", questionPolicyId);
+                    questionPolicyList.add(questionPolicy);
+                }
+                paperPolicy.setQuestionPolicyList(questionPolicyList);
+            }
+
             List<QuestionPolicy> questionPolicyList = paperPolicy.getQuestionPolicyList();
             if (questionPolicyList == null || questionPolicyList.size() == 0) {
                 throw new Exception("试题策略不能为空");
@@ -182,11 +195,6 @@ public class PaperServiceImpl extends BaseServiceImpl<Paper> implements IPaperSe
         if (scene == null) {
             throw new Exception("未找到对应的场次信息");
         }
-        String joinUser = scene.getJoinUser();
-        if (StringUtils.isEmpty(joinUser)) {
-            throw new Exception("该场次没有选择参考人员");
-        }
-        List<Integer> userIds = JSON.parseArray(joinUser, Integer.class);
         Integer paperPolicyId = scene.getPaperPolicyId();
         if (paperPolicyId == null) {
             throw new Exception("该场次没有选择试卷生成策略");
@@ -198,18 +206,9 @@ public class PaperServiceImpl extends BaseServiceImpl<Paper> implements IPaperSe
         }
 //        获取paperpolicy，并连带获取关联的questionpolicy
         List<Integer> paperQeustionIdList = new ArrayList<>();
-        List<HashMap> infos = JSON.parseArray(content, HashMap.class);
 
-//        策略模式，需要将关联的试题策略查询出来
-        if(paperPolicy.getSelectType() == PaperPolicyType.POLICY.getType()){
-            List<QuestionPolicy> questionPolicyList = new ArrayList<>();
-            for (Map map : infos) {
-                Integer questionPolicyId = Integer.parseInt(map.get("questionPolicyId").toString());
-                QuestionPolicy questionPolicy = baseDao.selectOne("tes.questionPolicy.selectById", questionPolicyId);
-                questionPolicyList.add(questionPolicy);
-            }
-            paperPolicy.setQuestionPolicyList(questionPolicyList);
-        }
+
+
 
         Integer paperId = null;
 
