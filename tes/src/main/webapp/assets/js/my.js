@@ -67,7 +67,7 @@ $(function () {
 
     var msg = $("#msg").text().trim();
     if (msg && msg != '') {
-        zeroModal.alert(msg);
+        // zeroModal.alert(msg);
         swal("", msg, "info");
     }
 

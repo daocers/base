@@ -206,7 +206,19 @@ public class ExamController {
         for(Integer id: idList){
             questionMap.put(id, questionService.findById(id));
         }
+
+        Map<Integer, String> answerMap = new HashMap<>();
+        Answer obj = new Answer();
+        obj.setPaperId(paper.getId());
+        List<Answer> answers = answerService.findByObject(obj);
+        for(Answer answer: answers){
+            answerMap.put(answer.getQuestionId(), answer.getAnswer());
+        }
+
+        model.put("answerMap", JSON.toJSONString(answerMap));
+
         model.put("questionMap", JSON.toJSONString(questionMap));
+        model.put("questionIdList", JSON.toJSONString(idList));
 
         model.put("scene", scene);
         model.put("paper", paper);
@@ -231,12 +243,23 @@ public class ExamController {
             json.put("code", -1);
             json.put("msg", "答案为空");
         }else{
-            Answer ans = new Answer();
-            ans.setAnswer(answer);
-            ans.setPaperId(paperId);
-            ans.setQuestionId(questionId);
-            ans.setTimeLeft(timeLeft);
-            answerService.save(ans);
+            Answer obj = new Answer();
+            obj.setPaperId(paperId);
+            obj.setQuestionId(questionId);
+            List<Answer> answers = answerService.findByObject(obj);
+            if(answers != null && answers.size() == 1){
+                Answer ans = answers.get(0);
+                ans.setAnswer(answer);
+                ans.setTimeLeft(timeLeft);
+                answerService.updateById(ans);
+            }else{
+                Answer ans = new Answer();
+                ans.setAnswer(answer);
+                ans.setPaperId(paperId);
+                ans.setQuestionId(questionId);
+                ans.setTimeLeft(timeLeft);
+                answerService.save(ans);
+            }
         }
         return json.toJSONString();
     }
@@ -256,7 +279,7 @@ public class ExamController {
         try{
             boolean saveAnsFlag = true;
             try{
-                Map<Integer, String> answerMap = JSON.parseObject(answerInfo, HashMap.class);
+                Map<String, String> answerMap = JSON.parseObject(answerInfo, HashMap.class);
                 answerService.savePaperAnswer(answerMap, paperId);
             }catch (Exception e){
                 json.put("code", 1);

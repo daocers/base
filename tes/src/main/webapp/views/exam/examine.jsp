@@ -180,10 +180,11 @@
         </div>
     </div>
 </div>
+</body>
 <script>
     var currentIndex = -1;
-    var questionCount = 0;
-    var questionIdList= new Array();
+    //    var questionCount = 0;
+    var questionIdList = eval(${questionIdList});
     /**
      * 保存题型id和对应的试题id信息
      * */
@@ -192,6 +193,11 @@
      * 试题类型map
      * */
     var metaInfoMap = eval(${metaInfo});
+
+    /**
+    **保存已经作答的题目答案信息，key是试题id，value 为答案
+    * */
+    var answerMap = eval(${answerMap})
 
     /**
      * 试题id 对应的试题试题信息
@@ -206,19 +212,19 @@
         var questionId = questionIdList[currentIndex];
         var answer = getAnswer();
         $("table tbody").find("tr[queid='" + questionId + "'] > td:eq(1)").text(answer);
-        if(!answer || answer == ''){//没有答题
+        if (!answer || answer == '') {//没有答题
             return true;
-        }else{
+        } else {
             $.ajax({
                 url: 'commitQuestion.do',
                 type: "post",
                 data: {questionId: questionId, answer: answer, paperId: paperId, timeLeft: getTileLeft()},
                 success: function (data) {
                     var res = JSON.parse(data);
-                    if(res.code == 0){
+                    if (res.code == 0) {
                         console.log("提交答案成功");
                         resFlag = true;
-                    }else{
+                    } else {
                         console.log("提交答案失败，请重试或者点击上一题下一题");
                         var msg = res.msg;
                         swal("提交答案失败", msg, "error");
@@ -338,7 +344,7 @@
         var paperId = $("#paperId").val();
         var data = {};
         $("table tbody tr").each(function (idx, obj) {
-            var questionId = $(obj).attr("queid");
+            var questionId = parseInt($(obj).attr("queid"));
             var answer = $(obj).find("td:eq(1)").text();
             data[questionId] = answer;
         });
@@ -348,11 +354,11 @@
             data: {answerInfo: JSON.stringify(data), paperId: paperId},
             success: function (data) {
                 var res = JSON.parse(data);
-                if(res.code == 0){
+                if (res.code == 0) {
                     resFlag = true;
                     console.log("试卷提交成功");
                     swal("试卷提交成功").then(function (isconfirm) {
-                        if(isconfirm){
+                        if (isconfirm) {
                             window.location.href = "/index.jsp";//页面跳转待定
                         }
                     })
@@ -368,16 +374,16 @@
     }
     /*下一题*/
     function next() {
-        if(currentIndex == questionCount - 1){
-            swal("", "已经是最后一题","warning");
+        commitQuestion();
+        if (currentIndex == questionIdList.length - 1) {
+            swal("", "已经是最后一题", "warning");
             return false;
         }
         try {
-            commitQuestion();
             getQuestion(questionIdList[currentIndex + 1]);
             currentIndex++;
             return false;
-        }catch(err){
+        } catch (err) {
             console.log("失败", err);
             swal("", "提交试题失败", "error");//此处根据需要后续不做弹框处理，要做页面头部显示
             return false;
@@ -386,16 +392,16 @@
 
     /*前一题*/
     function prev() {
-        if(currentIndex == 0 || currentIndex == -1){
-            swal("", "已经是第一题","warning");
+        commitQuestion();
+        if (currentIndex == 0 || currentIndex == -1) {
+            swal("", "已经是第一题", "warning");
             return false;
         }
         try {
-            commitQuestion();
             getQuestion(questionIdList[currentIndex - 1]);
             currentIndex--;
             return false;
-        }catch(err){
+        } catch (err) {
             console.log("失败", err);
             swal("", "提交试题失败", "error");//此处根据需要后续不做弹框处理，要做页面头部显示
             return false;
@@ -436,6 +442,11 @@
         return $("#timer").val();
     }
 
+    function jumpTo(id) {
+        currentIndex = questionIdList.indexOf(id);
+        getQuestion(id);
+
+    }
     $(function () {
 //        questionIdList = JSON.parse($("#questionIds").val());
         //初始化答题数据
@@ -457,7 +468,11 @@
         $.each(questionMetaAndIdListMap, function (key, val) {
             var queType = metaInfoMap[key];
             $.each(val, function (idx, id) {
-                tableBox += "<tr queid='" + id + "'><td><a href='javascript:jumpTo(" + id + ")'>" + queType + "第" + (idx + 1) + "题" + "</a> </td><td></td><td class='hide'></td></tr>"
+                var ans = answerMap[id];
+                if(!ans){
+                    ans = "";
+                }
+                tableBox += "<tr queid='" + id + "'><td><a href='javascript:jumpTo(" + id + ")'>" + queType + "第" + (idx + 1) + "题" + "</a> </td><td>" + ans + "</td><td class='hide'></td></tr>"
                 selectBox += "<option value='" + idx + "'>" + queType + "第" + (idx + 1) + "题</option>"
             })
 
@@ -470,7 +485,7 @@
          */
         var queFlag = getQuestion(questionIdList[0]);
         //第一次加载题目后将currentIndex++,也就是变成0
-        if(queFlag){
+        if (queFlag) {
             currentIndex++;
         }
         initTimer();
@@ -509,9 +524,9 @@
     $("#commitPaper").on("click", commitPaper);
 
 
-/**
- * 以下是websocket处理，用来处理强制交卷信息
-* */
+    /**
+     * 以下是websocket处理，用来处理强制交卷信息
+     * */
     var ws;
     $(function () {
         ws = new WebSocket("ws://localhost:8080/ws/my.ws");
@@ -526,14 +541,14 @@
             console.log("收到服务器消息：", data);
 
             var res = "";
-            try{
+            try {
                 res = JSON.parse(data);
-            }catch (err){
+            } catch (err) {
                 console.log("解析消息失败: ", err);
             }
-            if(res != ''){
+            if (res != '') {
                 var type = res.type;
-                if(type == "4"){
+                if (type == "4") {
                     swal("", "教师强制提交试卷", "info");
                     zeroModal.loading(3);
                     commitPaper();
@@ -549,5 +564,5 @@
     })
 
 </script>
-</body>
+
 </html>

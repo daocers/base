@@ -9,6 +9,6 @@ import java.util.Map;
 *
 */
 public interface IAnswerService extends IBaseService<Answer> {
-    boolean savePaperAnswer(Map<Integer, String> answerMap, Integer paperId);
+    boolean savePaperAnswer(Map<String, String> answerMap, Integer paperId);
 
 }

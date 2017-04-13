@@ -89,7 +89,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
             Integer paperId = jsonObject.getInteger("paperId");
             String answerInfo = jsonObject.getString("answerInfo");
             if(StringUtils.isEmpty(answerInfo)){
-                Map<Integer, String> map = JSON.parseObject(answerInfo, Map.class);
+                Map<String, String> map = JSON.parseObject(answerInfo, Map.class);
                 answerService.savePaperAnswer(map, paperId);
             }
 

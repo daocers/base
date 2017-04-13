@@ -16,11 +16,11 @@ import java.util.Map;
 public class AnswerServiceImpl extends BaseServiceImpl<Answer> implements IAnswerService {
 
     @Override
-    public boolean savePaperAnswer(Map<Integer, String> answerMap, Integer paperId) {
-        Iterator<Map.Entry<Integer, String>> iterator = answerMap.entrySet().iterator();
+    public boolean savePaperAnswer(Map<String, String> answerMap, Integer paperId) {
+        Iterator<Map.Entry<String, String>> iterator = answerMap.entrySet().iterator();
         while(iterator.hasNext()){
-            Map.Entry<Integer, String> entry = iterator.next();
-            Integer questionId = entry.getKey();
+            Map.Entry<String, String> entry = iterator.next();
+            Integer questionId = Integer.valueOf(entry.getKey());
             String answerInfo = entry.getValue();
             Answer answer = new Answer();
             answer.setQuestionId(questionId);

@@ -32,6 +32,7 @@ public class MQProducerConsumerService {
     public void init() throws MQClientException {
         producer = new DefaultMQProducer(producerName);
         producer.setNamesrvAddr(nameServerAddr);
+//        必须设为false否则连接broker10909端口
         producer.setVipChannelEnabled(false);
         producer.setInstanceName(System.currentTimeMillis() + "");
         producer.start();
