@@ -109,10 +109,10 @@ public class ExamController {
      */
     @RequestMapping("/exam")
     public String toExam(Scene scene, ModelMap model, HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes) throws Exception {
-        Map<Integer, String> metaInfoMap = new HashMap<>();
+        Map<Integer, QuestionMetaInfo> metaInfoMap = new HashMap<>();
         List<QuestionMetaInfo> metaInfoList = metaInfoService.findByObject(null);
         for(QuestionMetaInfo metaInfo: metaInfoList){
-            metaInfoMap.put(metaInfo.getId(), metaInfo.getCode());
+            metaInfoMap.put(metaInfo.getId(), metaInfo);
         }
         model.put("metaInfo", JSON.toJSONString(metaInfoMap));
         if(scene.getId() == null){

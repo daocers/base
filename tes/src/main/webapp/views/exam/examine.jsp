@@ -21,6 +21,10 @@
         .list-group-item {
             border: none;
         }
+
+        .current{
+            border: 2px solid yellowgreen;
+        }
     </style>
 </head>
 <body>
@@ -258,16 +262,17 @@
             answerCount++;
             buffer += '<li class="list-group-item">' + obj + '</li>';
         });
+        var code = metaInfoMap[metaInfoId].code;
 
-        if (metaInfoMap[metaInfoId] == "single") {
+        if (code == "single") {
             $("#single-box").show();
             $("#multi-box").hide();
             $("#judge-box").hide();
-        } else if (metaInfoMap[metaInfoId] == "multi") {
+        } else if (code == "multi") {
             $("#single-box").hide();
             $("#multi-box").show();
             $("#judge-box").hide();
-        } else if (metaInfoMap[metaInfoId] == "judge") {
+        } else if (code == "judge") {
             $("#single-box").hide();
             $("#multi-box").hide();
             $("#judge-box").show();
@@ -280,6 +285,19 @@
         if (remark) {
             $("#remark").html("备注：" + remark);
         }
+
+        var ans = $("#myAnswer tbody tr[queid=" + id + "] td:eq(1)").text();
+        if(ans && ans.length > 0){
+            $.each(ans.split(""), function (idx, obj) {
+//                var metaInfoId = questionMap[id].metaInfoId;
+//                var code = metaInfoMap[metaInfoId].code;
+                $("#" + code + "-box").find("input[value='" + obj + "']").iCheck('check');
+            })
+        }
+
+        $("#myanswer tbody tr").removeClass("current");
+        $("#myanswer tbody tr[queid='" + id + "']").addClass("current");
+        $("#current option[queid='" + id + "']").attr("selected", true);
 //        $.ajax({
 //            url: "getQuestion.do",
 //            type: "post",
@@ -446,6 +464,7 @@
         currentIndex = questionIdList.indexOf(id);
         getQuestion(id);
 
+
     }
     $(function () {
 //        questionIdList = JSON.parse($("#questionIds").val());
@@ -466,14 +485,14 @@
 //        });
 
         $.each(questionMetaAndIdListMap, function (key, val) {
-            var queType = metaInfoMap[key];
+            var queType = metaInfoMap[key].name;
             $.each(val, function (idx, id) {
                 var ans = answerMap[id];
                 if(!ans){
                     ans = "";
                 }
                 tableBox += "<tr queid='" + id + "'><td><a href='javascript:jumpTo(" + id + ")'>" + queType + "第" + (idx + 1) + "题" + "</a> </td><td>" + ans + "</td><td class='hide'></td></tr>"
-                selectBox += "<option value='" + idx + "'>" + queType + "第" + (idx + 1) + "题</option>"
+                selectBox += "<option queid='" + id + "' value='" + idx + "'>" + queType + "第" + (idx + 1) + "题</option>"
             })
 
         });
