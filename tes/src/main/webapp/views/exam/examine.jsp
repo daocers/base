@@ -295,8 +295,8 @@
             })
         }
 
-        $("#myanswer tbody tr").removeClass("current");
-        $("#myanswer tbody tr[queid='" + id + "']").addClass("current");
+        $("#myAnswer tbody tr").removeClass("current");
+        $("#myAnswer tbody tr[queid='" + id + "']").addClass("current");
 //        $("#current option[queid='" + id + "']").attr("selected", true);
         $("#current").val(id);
 //        $.ajax({
@@ -472,19 +472,6 @@
         //初始化答题数据
         var tableBox = "";
         var selectBox = "";
-//        $.each(questionIdList, function (idx, obj) {
-//            tableBox += "<tr queid='" + obj + "'><td><a href='javascript:jumpTo(" + obj + ")'>" + "第" + (idx + 1) + "题" + "</a> </td><td></td><td class='hide'></td></tr>"
-//            selectBox += "<option value='" + idx + "'>第" + (idx + 1) + "题</option>"
-//        });
-//        $.each(questionMap, function (key, val) {
-//            var queType = metaInfoMap.key;
-//            $.each(val, function (idx, obj) {
-//                tableBox += "<tr queid='" + obj.id + "'><td><a href='javascript:jumpTo(" + obj.id + ")'>" + queType + "第" + (idx + 1) + "题" + "</a> </td><td></td><td class='hide'></td></tr>"
-//                selectBox += "<option value='" + idx + "'>" + queType + "第" + (idx + 1) + "题</option>"
-//            })
-//
-//        });
-
         $.each(questionMetaAndIdListMap, function (key, val) {
             var queType = metaInfoMap[key].name;
             $.each(val, function (idx, id) {
@@ -509,17 +496,6 @@
             currentIndex++;
         }
         initTimer();
-//        /**
-//         * 选中执行事件
-//         */
-//        $("[name='answer']").on("ifChecked", function () {
-//            var answer = $(this).val();
-//        })
-//
-//        $("[name='answer']").on("ifUnchecked", function () {
-//            var answer = $(this).val();
-//        })
-
         $("#prevBtn").on("click", prev);
 
         $("#nextBtn").on("click", next);
@@ -539,6 +515,23 @@
         checkboxClass: 'icheckbox_square-blue',
         radioClass: 'iradio_square-blue',
         increaseArea: '20%' // optional
+    });
+
+    /**
+     * 实时更新答案
+     * */
+    $("[name='answer']").on("ifChecked", function (event) {
+        $(this).iCheck('check');
+        console.log("clicked");
+        console.log("an: ", getAnswer());
+        $("#myAnswer tr[queid='" + questionIdList[currentIndex] + "'] td:eq(1)").text(getAnswer());
+    });
+
+    $("[name='answer']").on("ifUnchecked", function (event) {
+        $(this).iCheck('uncheck');
+        console.log("clicked");
+        console.log("an: ", getAnswer());
+        $("#myAnswer tr[queid='" + questionIdList[currentIndex] + "'] td:eq(1)").text(getAnswer());
     });
 
     $("#current").on("change", function () {

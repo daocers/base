@@ -81,7 +81,7 @@ public class ExamController {
      */
     @RequestMapping("/note")
     public String toNote(String authCode, ModelMap model) {
-        Scene scene = new Scene();
+            Scene scene = new Scene();
         scene.setAuthCode(authCode);
         List<Scene> sceneList = sceneService.findByObject(scene);
         if (sceneList != null && sceneList.size() == 1) {
@@ -111,12 +111,9 @@ public class ExamController {
      */
     @RequestMapping("/exam")
     public String toExam(Scene scene, ModelMap model, HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes) throws Exception {
-
         if (scene.getId() == null) {
             throw new Exception("非法操作,没有找到对应的场次");
         }
-
-
         boolean continueFlag = true;
         scene = sceneService.findById(scene.getId());
         Date now = new Date();
@@ -144,21 +141,11 @@ public class ExamController {
             }
         }
 
-
         //不符合考试条件，跳转到考试列表页面
         if (continueFlag == false) {
             return "redirect:index.do";
         }
 
-        Integer leftMinute = 0;
-        Long left = (endTime.getTime() - now.getTime()) / 1000 / 60;
-        if (left.intValue() < scene.getDuration()) {
-            leftMinute = left.intValue();
-        } else {
-            leftMinute = scene.getDuration();
-        }
-
-        model.put("timeLeft", leftMinute / 60 + "h" + leftMinute % 60 + "m" + "0s");
 
 
         Integer userId = (Integer) BuguWebUtil.getUserId(request);
@@ -166,7 +153,7 @@ public class ExamController {
         paper.setUserId(userId);
         paper.setSceneId(scene.getId());
         List<Paper> paperList = paperService.findByObject(paper);
-        if (paperList != null && paperList.size() > 0) {
+        if (paperList != null && paperList.size() > 0) {//已经生成过试卷
             paper = paperList.get(0);
             if (paper.getStatus() == 0) {
                 Date beginAnswerTime = paper.getBeginTime();
@@ -178,46 +165,54 @@ public class ExamController {
                     Long leftSecond = (shouldEndTime.getTime() - now.getTime());
                     model.put("timeLeft", DateUtil.formatLeft(leftSecond));
                 }
-
-                Map<Integer, Question> questionMap = new HashMap<>();
-                List<Integer> idList = new ArrayList<>();
-                String content = paper.getContent();
-                Map map = JSON.parseObject(content, Map.class);
-                Iterator<Integer> keyIter = map.keySet().iterator();
-                while (keyIter.hasNext()) {
-                    Integer key = keyIter.next();
-                    List<Integer> ids = (List<Integer>) map.get(key);
-                    idList.addAll(ids);
-                }
-
-                for (Integer id : idList) {
-                    questionMap.put(id, questionService.findById(id));
-                }
-
-                Map<Integer, String> answerMap = new HashMap<>();
-                Answer obj = new Answer();
-                obj.setPaperId(paper.getId());
-                List<Answer> answers = answerService.findByObject(obj);
-                for (Answer answer : answers) {
-                    answerMap.put(answer.getQuestionId(), answer.getAnswer());
-                }
-
-                model.put("answerMap", JSON.toJSONString(answerMap));
-
-                model.put("questionMap", JSON.toJSONString(questionMap));
-                model.put("questionIdList", JSON.toJSONString(idList));
             } else if(paper.getStatus() == 3){
-                paper = null;
                 redirectAttributes.addAttribute("msg", "您已提交试卷，无法再次作答");
                 return "redirect:index.do";
             }else{
-                paper = null;
+                redirectAttributes.addAttribute("msg", "试卷状态异常，无法再次作答");
                 return "redirect:index.do";
             }
-        } else {
+        } else {//没有试卷，新生成
             paper = paperService.generatePaperForUser(scene, userId);
-            model.put("timeLeft", DateUtil.formatLeft((long) (scene.getDuration() * 60)));
+
+            Integer leftMinute = 0;
+            Long left = (endTime.getTime() - now.getTime()) / 1000;
+            if (left.intValue() < scene.getDuration()) {
+                leftMinute = left.intValue();
+            } else {
+                leftMinute = scene.getDuration();
+            }
+
+            model.put("timeLeft", leftMinute / 60 + "h" + leftMinute % 60 + "m" + "0s");
         }
+
+        Map<Integer, Question> questionMap = new HashMap<>();
+        List<Integer> idList = new ArrayList<>();
+        String content = paper.getContent();
+        Map map = JSON.parseObject(content, Map.class);
+        Iterator<Integer> keyIter = map.keySet().iterator();
+        while (keyIter.hasNext()) {
+            Integer key = keyIter.next();
+            List<Integer> ids = (List<Integer>) map.get(key);
+            idList.addAll(ids);
+        }
+
+        for (Integer id : idList) {
+            questionMap.put(id, questionService.findById(id));
+        }
+
+        Map<Integer, String> answerMap = new HashMap<>();
+        Answer obj = new Answer();
+        obj.setPaperId(paper.getId());
+        List<Answer> answers = answerService.findByObject(obj);
+        for (Answer answer : answers) {
+            answerMap.put(answer.getQuestionId(), answer.getAnswer());
+        }
+
+        model.put("answerMap", JSON.toJSONString(answerMap));
+
+        model.put("questionMap", JSON.toJSONString(questionMap));
+        model.put("questionIdList", JSON.toJSONString(idList));
         model.put("paper", paper);
         model.put("scene", scene);
 
