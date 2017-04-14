@@ -17,9 +17,10 @@ public class Consumer {
     public static void main(String[] args) throws MQClientException {
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("consumerGroup");
 //        consumer.setNamesrvAddr("10.143.108.69:9876;10.143.108.70:9876;10.143.108.71:9876");
-        consumer.setNamesrvAddr("10.143.108.83:9876;10.143.108.84:9876;10.143.108.85:9876");
+//        consumer.setNamesrvAddr("10.143.108.69:9876;10.143.108.70:9876;10.143.108.71:9876");
+        consumer.setNamesrvAddr("10.143.88.76:9876");
         consumer.setInstanceName("my-consumer" + System.currentTimeMillis());
-        consumer.subscribe("mylc", "bill || han");
+        consumer.subscribe("mylc", "pushParty");
         consumer.setVipChannelEnabled(false);
         consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
         consumer.registerMessageListener(new MessageListenerConcurrently() {

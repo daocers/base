@@ -7,6 +7,7 @@ import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
 import com.alibaba.rocketmq.client.producer.SendResult;
 import com.alibaba.rocketmq.common.message.Message;
 import com.alibaba.rocketmq.remoting.exception.RemotingException;
+import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +29,8 @@ public class Producer {
          * 因为服务器会回查这个Group下的任意一个Producer
          */
         DefaultMQProducer producer = new DefaultMQProducer("zgSystemProducer");
-        producer.setNamesrvAddr("10.143.88.73:9876;10.143.88.74:9876;10.143.88.75:9876");
+//        producer.setNamesrvAddr("10.143.88.73:9876;10.143.88.74:9876;10.143.88.75:9876");
+        producer.setNamesrvAddr("10.143.88.76:9876");
 //        producer.setNamesrvAddr("192.168.1.128:9876");
         producer.setInstanceName(String.valueOf(System.currentTimeMillis()));
         /**
@@ -49,15 +51,24 @@ public class Producer {
                  * 需要对这种情况做处理。另外，消息可能会存在发送失败的情况，失败重试由应用来处理。
                  */
                 {
-                    Map<String, String> map = new HashMap<>();
-                    map.put("result", "T");
-                    map.put("id", "154");
-                    map.put("type", "returnTicket");
-                    map.put("status", "5");
+//                    Map<String, String> map = new HashMap<>();
+//                    map.put("result", "T");
+//                    map.put("id", "154");
+//                    map.put("type", "returnTicket");
+//                    map.put("status", "5");
 
-                    Message msg = new Message("zgsystem",// topic
-                            "bill",// tag
-                            "tuipiao" + System.currentTimeMillis()/1000,// key
+
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("payAmoutn", 100040.83);
+                    map.put("amount", 99564.00);
+                    map.put("id", -100);
+                    map.put("status", 6);
+                    map.put("factknotTime", 1492095600848L);
+                    map.put("type", "productStatus");
+
+                    Message msg = new Message("mylc",// topic
+                            "pushParty",// tag
+                            "jiebiao" + System.currentTimeMillis()/1000,// key
                             JSON.toJSONString(map).getBytes());// body
                     SendResult sendResult = producer.send(msg);
                     System.out.println("发送状态" +sendResult.getSendStatus().name());

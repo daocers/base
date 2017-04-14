@@ -24,7 +24,7 @@ public class Consumer {
          * 注意：ConsumerGroupName需要由应用来保证唯一
          */
         DefaultMQPushConsumer pushConsumer = new DefaultMQPushConsumer("consumerGroupName");
-        pushConsumer.setNamesrvAddr("127.0.0.1:9876");
+        pushConsumer.setNamesrvAddr("10.143.108.83:9876;10.143.108.84:9876;10.143.108.85:9876");
 //        pushConsumer.setNamesrvAddr("192.168.1.128:9876");
         pushConsumer.setInstanceName("Consumer");
         pushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_TIMESTAMP);
@@ -34,7 +34,7 @@ public class Consumer {
              * 订阅指定topic下tags分别等于TagA或TagC或TagD
              * 两个参数：第一个参数是topic第二个参数是tags
              */
-            pushConsumer.subscribe("myTopic", "TagA || TagC || TagD");
+            pushConsumer.subscribe("mylc", "pushParty || bill || TagD");
             /**
              * 订阅指定topic下所有消息<br>
              * 注意：一个consumer对象可以订阅多个topic
@@ -46,7 +46,7 @@ public class Consumer {
                                                                 ConsumeConcurrentlyContext consumeConcurrentlyContext) {
 //                    System.out.println(Thread.currentThread().getName() + " Receive New Messages: " + msgs.size());
                     MessageExt messageExt = msgs.get(0);
-                    if("TopicTest1".equals(messageExt.getTopic())){
+                    if("mylc".equals(messageExt.getTopic())){
                         // 执行TopicTest1的消费逻辑
                         if (messageExt.getTags() != null && messageExt.getTags().equals("TagA")) {
                             // 执行TagA的消费

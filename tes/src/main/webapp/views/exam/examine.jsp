@@ -297,7 +297,8 @@
 
         $("#myanswer tbody tr").removeClass("current");
         $("#myanswer tbody tr[queid='" + id + "']").addClass("current");
-        $("#current option[queid='" + id + "']").attr("selected", true);
+//        $("#current option[queid='" + id + "']").attr("selected", true);
+        $("#current").val(id);
 //        $.ajax({
 //            url: "getQuestion.do",
 //            type: "post",
@@ -492,7 +493,7 @@
                     ans = "";
                 }
                 tableBox += "<tr queid='" + id + "'><td><a href='javascript:jumpTo(" + id + ")'>" + queType + "第" + (idx + 1) + "题" + "</a> </td><td>" + ans + "</td><td class='hide'></td></tr>"
-                selectBox += "<option queid='" + id + "' value='" + idx + "'>" + queType + "第" + (idx + 1) + "题</option>"
+                selectBox += "<option queid='" + id + "' value='" + id + "'>" + queType + "第" + (idx + 1) + "题</option>"
             })
 
         });
@@ -539,6 +540,11 @@
         radioClass: 'iradio_square-blue',
         increaseArea: '20%' // optional
     });
+
+    $("#current").on("change", function () {
+        var id = $(this).val();
+        jumpTo(id);
+    })
 
     $("#commitPaper").on("click", commitPaper);
 

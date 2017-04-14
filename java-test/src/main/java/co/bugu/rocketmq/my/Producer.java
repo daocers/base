@@ -14,7 +14,10 @@ import java.util.Scanner;
 public class Producer {
     public static void main(String[] args) throws InterruptedException, RemotingException, MQClientException, MQBrokerException {
         DefaultMQProducer producer = new DefaultMQProducer("producerGroup");
-        producer.setNamesrvAddr("114.215.142.252:9876");
+//        producer.setNamesrvAddr("114.215.142.252:9876");
+                producer.setNamesrvAddr("10.143.108.69:9876;10.143.108.70:9876;10.143.108.71:9876");
+
+        producer.setNamesrvAddr("10.143.88.76:9876");
         producer.setInstanceName("my-producer" + System.currentTimeMillis());
         producer.start();
         boolean flag = true;

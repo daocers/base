@@ -20,7 +20,7 @@
     <!--<bean class="co.bugu.data.service.impl.MQProducerConsumerService" init-method="init" destroy-method="destory">-->
         <!--<property name="nameServerAddr" value="10.143.108.69:9876;10.143.108.70:9876;10.143.108.71:9876"/>-->
         <!--<property name="topic" value="mylc"/>-->
-        <!--<property name="tag" value="bill"/>-->
+        <!--<property name="tag" value="pushParty"/>-->
         <!--<property name="producerName" value="pressureTest"/>-->
         <!--<property name="instanceName" value=""/>-->
     <!--</bean>-->
@@ -28,8 +28,8 @@
 
     <bean class="co.bugu.data.service.impl.MQProducerConsumerService" init-method="init" destroy-method="destory">
         <property name="nameServerAddr" value="10.143.88.76:9876"/>
-        <property name="topic" value="mylcTest"/>
-        <property name="tag" value="bill"/>
+        <property name="topic" value="mylc"/>
+        <property name="tag" value="pushParty"/>
         <property name="producerName" value="pressureTest"/>
         <property name="instanceName" value=""/>
     </bean>

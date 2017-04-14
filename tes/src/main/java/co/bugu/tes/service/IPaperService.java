@@ -26,7 +26,7 @@ public interface IPaperService extends IBaseService<Paper>{
     boolean generateAllPaper(Scene scene) throws Exception;
 
     //适合为开场之前添加的考试用户出题，开场之后禁止添加用户,返回试卷id
-    Integer generatePaperForUser(Scene scene, Integer userId) throws Exception;
+    Paper generatePaperForUser(Scene scene, Integer userId) throws Exception;
 
 
     Double computeScore(Map<Integer, Double> metaInfoIdScoreMap, Integer paperId);

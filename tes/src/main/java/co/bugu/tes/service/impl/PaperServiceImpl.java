@@ -92,12 +92,13 @@ public class PaperServiceImpl extends BaseServiceImpl<Paper> implements IPaperSe
      * @param sceneId
      * @param paperQuestionIdInfo
      */
-    private Integer savePaper(Integer userId, Integer sceneId, Map<Integer, Collection<Integer>> paperQuestionIdInfo) {
+    private Paper savePaper(Integer userId, Integer sceneId, Map<Integer, Collection<Integer>> paperQuestionIdInfo) {
         Paper paper = new Paper();
         paper.setUserId(userId);
         paper.setAnswerFlag(1);
         paper.setSceneId(sceneId);
         paper.setStatus(0);
+        paper.setBeginTime(new Date());
         paper.setContent(JSON.toJSONString(paperQuestionIdInfo));
 //        paper.setQuestionIds(JSON.toJSONString(paperQuestionIdInfo));
         baseDao.insert("tes.paper.insert", paper);
@@ -116,7 +117,7 @@ public class PaperServiceImpl extends BaseServiceImpl<Paper> implements IPaperSe
             }
         }
 
-        return paper.getId();
+        return paper;
     }
 
     /**
@@ -187,7 +188,7 @@ public class PaperServiceImpl extends BaseServiceImpl<Paper> implements IPaperSe
 
 
     @Override
-    public Integer generatePaperForUser(Scene scene, Integer userId) throws Exception {
+    public Paper generatePaperForUser(Scene scene, Integer userId) throws Exception {
         if (scene.getId() == null) {
             throw new Exception("场次编号不能为空");
         }
@@ -210,16 +211,16 @@ public class PaperServiceImpl extends BaseServiceImpl<Paper> implements IPaperSe
 
 
 
-        Integer paperId = null;
+        Paper paper = null;
 
         if (scene.getPaperType() == PaperType.UNIFY.getType()) {
             //统一试卷，每个人试题一致
             Map<Integer, Collection<Integer>> resQuesIds = getPaperQuestionIds(scene.getBankId(), paperPolicy);
-            paperId = savePaper(userId, scene.getId(), resQuesIds);
+            paper = savePaper(userId, scene.getId(), resQuesIds);
         } else if (scene.getPaperType() == PaperType.RANDOM.getType()) {
             //每个人都随机，都不一样
             Map<Integer, Collection<Integer>> resQuesIds = getPaperQuestionIds(scene.getBankId(), paperPolicy);
-            paperId = savePaper(userId, scene.getId(), resQuesIds);
+            paper = savePaper(userId, scene.getId(), resQuesIds);
         } else if (scene.getPaperType() == PaperType.IMPORT.getType()) {
             //教师导入试题
 //            暂未开通，后续添加
@@ -228,7 +229,7 @@ public class PaperServiceImpl extends BaseServiceImpl<Paper> implements IPaperSe
         } else if (scene.getPaperType() == PaperType.DEEPUNIFY.getType()) {
 //            深度统一，只设置需要的试题数量，随机生成试卷，每个用户统一
         }
-        return paperId;
+        return paper;
     }
 
     @Override
