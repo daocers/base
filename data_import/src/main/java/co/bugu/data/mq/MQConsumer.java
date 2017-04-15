@@ -1,11 +1,18 @@
 package co.bugu.data.mq;
 
+import co.bugu.framework.util.JedisUtil;
 import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
+import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
+import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import com.alibaba.rocketmq.client.consumer.listener.MessageListener;
+import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently;
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.consumer.ConsumeFromWhere;
+import com.alibaba.rocketmq.common.message.MessageExt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * Created by user on 2017/4/15.
@@ -20,7 +27,6 @@ public class MQConsumer {
     private String instanceName;
     private String topic;
     private String tags;
-    private MessageListener messageListener;
 
     public void init() throws MQClientException {
         consumer = new DefaultMQPushConsumer(consumerGroup);
@@ -29,7 +35,16 @@ public class MQConsumer {
         consumer.subscribe(topic, tags);
         consumer.setVipChannelEnabled(false);
         consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
-        consumer.registerMessageListener(messageListener);
+        consumer.registerMessageListener(new MessageListenerConcurrently() {
+            @Override
+            public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
+                for(MessageExt msg: msgs){
+                    logger.info("收到消息：id {}", msg.getMsgId());
+                    JedisUtil.sadd("msg_id_list", msg.getMsgId());
+                }
+                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+            }
+        });
         consumer.start();
         logger.info("mq consumer启动成功");
     }
@@ -79,11 +94,4 @@ public class MQConsumer {
         this.tags = tags;
     }
 
-    public MessageListener getMessageListener() {
-        return messageListener;
-    }
-
-    public void setMessageListener(MessageListener messageListener) {
-        this.messageListener = messageListener;
-    }
 }

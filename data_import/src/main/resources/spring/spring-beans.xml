@@ -40,10 +40,5 @@
         <property name="nameServerAddr" value="10.143.88.76:9876"/>
         <property name="topic" value="tes"/>
         <property name="tags" value="paper"/>
-        <property name="messageListener">
-            <bean class="co.bugu.data.mq.listener.TesMessageListenerConcurrently">
-
-            </bean>
-        </property>
     </bean>
 </beans>

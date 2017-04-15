@@ -30,14 +30,14 @@
         </javaModelGenerator>
 
         <sqlMapGenerator targetPackage="co.bugu.tes.dao" targetProject="D:\code\daocers\java\base/generator//generate/src/main/java/">
-        <!--<sqlMapGenerator targetPackage="data.role" targetProject="D:\code\daocers\java\base/generator//generate/src/main/java/">-->
+        <!--<sqlMapGenerator targetPackage="data.typeIn" targetProject="D:\code\daocers\java\base/generator//generate/src/main/java/">-->
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
 
 
 
 
-        <table tableName="role" domainObjectName="Role" alias=""
+        <table tableName="type_in" domainObjectName="TypeIn" alias=""
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">

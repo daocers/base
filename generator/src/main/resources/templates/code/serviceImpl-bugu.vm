@@ -65,7 +65,7 @@
 package ${mainPkg}.service.impl;
 
 import ${mainPkg}.model.${className};
-import ${mainPkg}.service.${className}Service;
+import ${mainPkg}.service.I${className}Service;
 import ${rootPkg}.framework.core.service.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 /**
