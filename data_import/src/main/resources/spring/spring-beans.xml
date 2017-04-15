@@ -9,7 +9,7 @@
 
     <bean class="co.bugu.framework.core.util.ApplicationContextUtil"/>
 
-    <!--<bean class="co.bugu.data.service.impl.MQProducerConsumerService" init-method="init" destroy-method="destory">-->
+    <!--<bean class="co.bugu.data.mq.MQProducerinit" destroy-method="destory">-->
         <!--<property name="nameServerAddr" value="10.143.108.83:9876;10.143.108.84:9876;10.143.108.85:9876"/>-->
         <!--<property name="topic" value="mylc"/>-->
         <!--<property name="tag" value="bill"/>-->
@@ -17,7 +17,7 @@
         <!--<property name="instanceName" value=""/>-->
     <!--</bean>-->
 
-    <!--<bean class="co.bugu.data.service.impl.MQProducerConsumerService" init-method="init" destroy-method="destory">-->
+    <!--<bean class="co.bugu.data.mq.MQProducerinit" destroy-method="destory">-->
         <!--<property name="nameServerAddr" value="10.143.108.69:9876;10.143.108.70:9876;10.143.108.71:9876"/>-->
         <!--<property name="topic" value="mylc"/>-->
         <!--<property name="tag" value="pushParty"/>-->
@@ -26,11 +26,24 @@
     <!--</bean>-->
 
 
-    <bean class="co.bugu.data.service.impl.MQProducerConsumerService" init-method="init" destroy-method="destory">
+    <bean class="co.bugu.data.mq.MQProducer" init-method="init" destroy-method="destory">
         <property name="nameServerAddr" value="10.143.88.76:9876"/>
-        <property name="topic" value="mylc"/>
-        <property name="tag" value="pushParty"/>
+        <property name="topic" value="tes"/>
+        <property name="tag" value="paper"/>
         <property name="producerName" value="pressureTest"/>
         <property name="instanceName" value=""/>
+    </bean>
+
+    <bean class="co.bugu.data.mq.MQConsumer" init-method="init" destroy-method="destory">
+        <property name="consumerGroup" value="TesConsumer"/>
+        <property name="instanceName" value=""/>
+        <property name="nameServerAddr" value="10.143.88.76:9876"/>
+        <property name="topic" value="tes"/>
+        <property name="tags" value="paper"/>
+        <property name="messageListener">
+            <bean class="co.bugu.data.mq.listener.TesMessageListenerConcurrently">
+
+            </bean>
+        </property>
     </bean>
 </beans>

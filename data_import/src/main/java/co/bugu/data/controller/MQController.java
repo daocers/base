@@ -1,6 +1,6 @@
 package co.bugu.data.controller;
 
-import co.bugu.data.service.impl.MQProducerConsumerService;
+import co.bugu.data.mq.MQProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ public class MQController {
     private static Logger logger = LoggerFactory.getLogger(MQController.class);
     private static Logger mqLogger = LoggerFactory.getLogger("MQ");
     @Autowired
-    MQProducerConsumerService service;
+    MQProducer service;
 
     private String body = "{\"accountBank\":\"6225880188889999\",\"accountName\":\"天津博盛保理\",\"artificialPerson\":\"张三\",\"associatedAddr\":\"\",\"associatedBusinessLicense\":\"\",\"associatedName\":\"\",\"associatedPerson\":\"\",\"bankName\":\"招商银行\",\"businessLicenseCode\":\"8888888888\",\"createTime\":1492152515000,\"delFlag\":0,\"externalRateInfo\":\"\",\"id\":34,\"modifyTime\":1492152515000,\"organizationCode\":\"88888\",\"productinfo\":\"\",\"projectinfo\":\"\",\"pushPartyAttr\":45,\"pushPartyOgrName\":\"天津博盛保理\",\"pushPartyOgrNameShort\":\"\",\"pushPartyOrgCode\":\"test123\",\"pushPartyType\":39,\"registerAddr\":\"天津\",\"remark\":\"\",\"status\":1,\"taxEnrolCode\":\"12112\",\"userId\":44}";
     @RequestMapping("/send")
@@ -41,7 +41,7 @@ public class MQController {
 class MQSendThread extends Thread {
     private Logger mqLogger = LoggerFactory.getLogger("MQ");
     private Logger logger = LoggerFactory.getLogger(MQSendThread.class);
-    private MQProducerConsumerService service;
+    private MQProducer service;
     private String body;
     private Integer count;
 
@@ -49,7 +49,7 @@ class MQSendThread extends Thread {
 
     }
 
-    public MQSendThread(MQProducerConsumerService service, String body, Integer count) {
+    public MQSendThread(MQProducer service, String body, Integer count) {
         this.service = service;
         this.body = body;
         this.count = count;

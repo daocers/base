@@ -58,7 +58,7 @@
             </div>
             <div class="input-group" style="border: 1px solid #6bff22">
                 <div class="input-group-addon">
-                    当前题目：
+                    当前试题：
                 </div>
                 <select class="form-control" id="current">
 
@@ -247,6 +247,8 @@
     }
     /*获取试题*/
     function getQuestion(id) {
+        var ans = $("#myAnswer tbody tr[queid=" + id + "] td:eq(1)").text();
+        console.log("getquetion ans: ", ans);
         var reqFlag = true;
         var question = questionMap[id];
         console.log("question: ", question);
@@ -286,11 +288,9 @@
             $("#remark").html("备注：" + remark);
         }
 
-        var ans = $("#myAnswer tbody tr[queid=" + id + "] td:eq(1)").text();
+
         if(ans && ans.length > 0){
             $.each(ans.split(""), function (idx, obj) {
-//                var metaInfoId = questionMap[id].metaInfoId;
-//                var code = metaInfoMap[metaInfoId].code;
                 $("#" + code + "-box").find("input[value='" + obj + "']").iCheck('check');
             })
         }
@@ -299,61 +299,6 @@
         $("#myAnswer tbody tr[queid='" + id + "']").addClass("current");
 //        $("#current option[queid='" + id + "']").attr("selected", true);
         $("#current").val(id);
-//        $.ajax({
-//            url: "getQuestion.do",
-//            type: "post",
-//            data: {questionId: id},
-//            success: function (data) {
-//                console.log(data);
-//                var res = JSON.parse(data);
-//                if (res.code == 0) {
-//                    var question = res.data;
-//                    var title = question.title;
-//                    var content = JSON.parse(question.content);
-//                    var remark = question.remark;
-//                    var metaInfoId = question.metaInfoId;
-//
-//
-//                    var answerCount = 0;
-//                    var buffer = '';
-//                    $.each(content, function (idx, obj) {
-//                        answerCount++;
-//                        buffer += '<li class="list-group-item">' + obj + '</li>';
-//                    });
-//
-//                    if (metaInfoMap[metaInfoId] == "single") {
-//                        $("#single-box").show();
-//                        $("#multi-box").hide();
-//                        $("#judge-box").hide();
-//                    } else if (metaInfoMap[metaInfoId] == "multi") {
-//                        $("#single-box").hide();
-//                        $("#multi-box").show();
-//                        $("#judge-box").hide();
-//                    } else if (metaInfoMap[metaInfoId] == "judge") {
-//                        $("#single-box").hide();
-//                        $("#multi-box").hide();
-//                        $("#judge-box").show();
-//                    }
-//                    $("[name='answer']").iCheck("uncheck")
-//                    $(".answer-box").find("label:gt(" + (answerCount - 1) + ")").hide();
-//                    $(".answer-box").find("label:lt(" + answerCount + ")").show();
-//                    $("#title").html(title);
-//                    $("#content").html(buffer);
-//                    if (remark) {
-//                        $("#remark").html("备注：" + remark);
-//                    }
-//                    zeroModal.closeAll();
-//                    reqFlag = true;
-//                } else {
-//                    swal("", res.msg, "warning");
-//                    reqFlag = false;
-//                }
-//            },
-//            error: function (data) {
-//                swal("", "获取试题异常，请联系管理员", "error");
-//                reqFlag = false;
-//            }
-//        });
         return reqFlag;
 
     }
@@ -376,7 +321,7 @@
                 if (res.code == 0) {
                     resFlag = true;
                     console.log("试卷提交成功");
-                    swal("试卷提交成功").then(function (isconfirm) {
+                    swal("", "试卷提交成功", "success").then(function (isconfirm) {
                         if (isconfirm) {
                             window.location.href = "/index.jsp";//页面跳转待定
                         }
@@ -462,12 +407,17 @@
     }
 
     function jumpTo(id) {
+        commitQuestion();
         currentIndex = questionIdList.indexOf(id);
         getQuestion(id);
 
 
     }
     $(function () {
+
+        $("#myAnswer a").on("click", function () {
+            return false;
+        })
 //        questionIdList = JSON.parse($("#questionIds").val());
         //初始化答题数据
         var tableBox = "";
@@ -520,17 +470,7 @@
     /**
      * 实时更新答案
      * */
-    $("[name='answer']").on("ifChecked", function (event) {
-        $(this).iCheck('check');
-        console.log("clicked");
-        console.log("an: ", getAnswer());
-        $("#myAnswer tr[queid='" + questionIdList[currentIndex] + "'] td:eq(1)").text(getAnswer());
-    });
-
-    $("[name='answer']").on("ifUnchecked", function (event) {
-        $(this).iCheck('uncheck');
-        console.log("clicked");
-        console.log("an: ", getAnswer());
+    $("[name='answer']").on("ifChanged", function (event) {
         $("#myAnswer tr[queid='" + questionIdList[currentIndex] + "'] td:eq(1)").text(getAnswer());
     });
 

@@ -1,5 +1,6 @@
 package co.bugu.tes.controller;
 
+import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.core.util.BuguWebUtil;
 import co.bugu.framework.util.DateUtil;
 import co.bugu.tes.model.*;
@@ -53,18 +54,36 @@ public class ExamController {
      * @return
      */
     @RequestMapping("/list")
-    public String list(ModelMap model, @PathVariable String type) {
-        String page = "";
-        List<Scene> sceneList = new ArrayList<>();
-        if ("new".equals(type)) {
-            sceneList = sceneService.findByObject(null);
-            page = "exam/list";
-        } else if ("his".equals(type)) {
-            sceneList = sceneService.findByObject(null);
-            page = "exam/history";
+    public String list(ModelMap model, String type, HttpServletRequest request, Integer curPage, Integer showCount) throws Exception {
+        Integer userId = (Integer) BuguWebUtil.getUserId(request);
+        if("join".equals(type)){
+            Paper obj = new Paper();
+            obj.setUserId(userId);
+            PageInfo<Paper> pageInfo = new PageInfo<>(showCount, curPage);
+            paperService.findByObject(obj, pageInfo);
+
+            PageInfo<Scene> scenePageInfo = new PageInfo<>();
+            scenePageInfo.setCurPage(pageInfo.getCurPage());
+            scenePageInfo.setCount(pageInfo.getCount());
+            scenePageInfo.setPageSize(pageInfo.getPageSize());
+            scenePageInfo.setShowCount(pageInfo.getShowCount());
+            List<Scene> sceneList = new ArrayList<>();
+            for(Paper paper : pageInfo.getData()){
+                Scene scene = sceneService.findById(paper.getSceneId());
+                sceneList.add(scene);
+            }
+            scenePageInfo.setData(sceneList);
+            model.put("pi", scenePageInfo);
+        }else if("my".equals(type)){
+            Scene scene = new Scene();
+            scene.setCreateUserId(userId);
+            PageInfo<Scene> pageInfo = new PageInfo<>(showCount, curPage);
+            sceneService.findByObject(scene, pageInfo);
+            model.put("pi", pageInfo);
+        }else{
+            model.put("err", "无效参数");
         }
-        model.put("sceneList", sceneList);
-        return page;
+        return "scene/list";
     }
 
     @RequestMapping("/index")
@@ -166,10 +185,10 @@ public class ExamController {
                     model.put("timeLeft", DateUtil.formatLeft(leftSecond));
                 }
             } else if(paper.getStatus() == 3){
-                redirectAttributes.addAttribute("msg", "您已提交试卷，无法再次作答");
+                redirectAttributes.addFlashAttribute("msg", "您已提交试卷，无法再次作答");
                 return "redirect:index.do";
             }else{
-                redirectAttributes.addAttribute("msg", "试卷状态异常，无法再次作答");
+                redirectAttributes.addFlashAttribute("msg", "试卷状态异常，无法再次作答");
                 return "redirect:index.do";
             }
         } else {//没有试卷，新生成

@@ -1,4 +1,4 @@
-package co.bugu.data.service.impl;
+package co.bugu.data.mq;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.rocketmq.client.exception.MQBrokerException;
@@ -18,8 +18,8 @@ import java.util.Random;
 /**
  * Created by user on 2017/4/12.
  */
-public class MQProducerConsumerService {
-    private Logger logger = LoggerFactory.getLogger(MQProducerConsumerService.class);
+public class MQProducer {
+    private Logger logger = LoggerFactory.getLogger(MQProducer.class);
     private DefaultMQProducer producer;
     private String nameServerAddr;
     private String topic;
