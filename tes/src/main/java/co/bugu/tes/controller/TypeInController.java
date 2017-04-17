@@ -5,6 +5,7 @@ import co.bugu.framework.util.ExcelUtil;
 import co.bugu.framework.util.JsonUtil;
 import co.bugu.tes.model.TypeIn;
 import co.bugu.tes.service.ITypeInService;
+import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller("typeIn")
 @RequestMapping("/typeIn")
@@ -63,6 +61,15 @@ public class TypeInController {
             if(id != null){
                 TypeIn typeIn = typeInService.findById(id);
                 model.put("typeIn", typeIn);
+            }else{
+                Random random = new Random();
+                List<Double> list = new ArrayList<>();
+                for(int i = 0;i < 100;i++){
+                    list.add((double)(10000 + random.nextInt(1000000000))/100);
+                }
+                TypeIn typeIn = new TypeIn();
+                typeIn.setContent(JSON.toJSONString(list));
+                model.put("typeIn", typeIn);
             }
         }catch (Exception e){
             logger.error("获取信息失败", e);
@@ -80,6 +87,7 @@ public class TypeInController {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(TypeIn typeIn, ModelMap model){
         try{
+            typeIn.setStatus(0);
             if(typeIn.getId() == null){
                 typeInService.save(typeIn);
             }else{

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class TypeInServiceImpl extends BaseServiceImpl<TypeIn> implements ITypeInService {
     @Override
     protected String getProjectName() {
-        return "data";
+        return "tes";
     }
 
 }

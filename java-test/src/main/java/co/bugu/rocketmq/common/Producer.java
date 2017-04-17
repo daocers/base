@@ -1,6 +1,7 @@
 package co.bugu.rocketmq.common;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.rocketmq.client.exception.MQBrokerException;
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
@@ -43,51 +44,54 @@ public class Producer {
             e.printStackTrace();
         }
 //        for (int i = 0; i < 3; i++) {
-            try {
-                /**
-                 * 下面这段代码表明一个Producer对象可以发送多个topic，多个tag的消息。
-                 * 注意：send方法是同步调用，只要不抛异常就标识成功。但是发送成功也可会有多种状态，<br>
-                 * 例如消息写入Master成功，但是Slave不成功，这种情况消息属于成功，但是对于个别应用如果对消息可靠性要求极高，<br>
-                 * 需要对这种情况做处理。另外，消息可能会存在发送失败的情况，失败重试由应用来处理。
-                 */
-                {
-//                    Map<String, String> map = new HashMap<>();
-//                    map.put("result", "T");
-//                    map.put("id", "154");
-//                    map.put("type", "returnTicket");
-//                    map.put("status", "5");
+        try {
+            /**
+             * 下面这段代码表明一个Producer对象可以发送多个topic，多个tag的消息。
+             * 注意：send方法是同步调用，只要不抛异常就标识成功。但是发送成功也可会有多种状态，<br>
+             * 例如消息写入Master成功，但是Slave不成功，这种情况消息属于成功，但是对于个别应用如果对消息可靠性要求极高，<br>
+             * 需要对这种情况做处理。另外，消息可能会存在发送失败的情况，失败重试由应用来处理。
+             */
+                JSONObject json = new JSONObject();
+                json.put("id", 217);
+                json.put("invest_rate", 4.6);
+                json.put("status", 3);
+                json.put("factraise_time", 1492151400000L);
+                json.put("type", "productStatus");
+                Message msg = new Message("zgsystem",// topic
+                        "bill",// tag
+                        "toufang" + System.currentTimeMillis()/1000,// key
+                        JSON.toJSONString(json).getBytes());// body
+                SendResult sendResult = producer.send(msg);
+                System.out.println("发送状态" +sendResult.getSendStatus().name());
+                System.out.println("消息id：" + sendResult.getMsgId());
+                System.out.println(sendResult);
 
+            Thread.sleep(1000);
+            JSONObject liubiao = new JSONObject();
+            liubiao.put("id", 217);
+            liubiao.put("status", 5);
+            liubiao.put("type", "productStatus");
+            msg = new Message("zgsystem",// topic
+                    "bill",// tag
+                    "liubiao" + System.currentTimeMillis() / 1000,// key
+                    JSON.toJSONString(liubiao).getBytes());// body
+            sendResult = producer.send(msg);
+            System.out.println("发送状态" + sendResult.getSendStatus().name());
+            System.out.println("消息id：" + sendResult.getMsgId());
+            System.out.println(sendResult);
 
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("payAmoutn", 100040.83);
-                    map.put("amount", 99564.00);
-                    map.put("id", -100);
-                    map.put("status", 6);
-                    map.put("factknotTime", 1492095600848L);
-                    map.put("type", "productStatus");
+            JSONObject jiebiao = new JSONObject();
+            jiebiao.put("id", null);
 
-                    Message msg = new Message("mylc",// topic
-                            "pushParty",// tag
-                            "jiebiao" + System.currentTimeMillis()/1000,// key
-                            JSON.toJSONString(map).getBytes());// body
-                    SendResult sendResult = producer.send(msg);
-                    System.out.println("发送状态" +sendResult.getSendStatus().name());
-                    System.out.println("消息id：" + sendResult.getMsgId());
-                    System.out.println(sendResult);
-                }
-
-
-                TimeUnit.MILLISECONDS.sleep(100);
-
-            } catch (MQClientException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (RemotingException e) {
-                e.printStackTrace();
-            } catch (MQBrokerException e) {
-                e.printStackTrace();
-            }
+        } catch (MQClientException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (RemotingException e) {
+            e.printStackTrace();
+        } catch (MQBrokerException e) {
+            e.printStackTrace();
+        }
 //        }
         /**
          * 应用退出时，要调用shutdown来清理资源，关闭网络连接，从MetaQ服务器上注销自己

@@ -39,7 +39,7 @@
                             </tr>
                             </thead>
                         </table>
-                        <div style="max-height: 300px; height: 300px; overflow-x: scroll;">
+                        <div style="max-height: 300px; height: 300px; overflow-x: scroll; border: 1px solid gainsboro">
                             <table class="table table-bordered  table-editable">
                                 <tbody>
 
@@ -70,11 +70,11 @@
         var buffer = "";
         if (numbers && numbers.length > 0) {
             $.each(numbers, function (idx, num) {
-                buffer += "<tr><td class='col-md-2'>" + (idx + 1) + "</td><td class='cell-edit col-md-5'><input class='form-control form-control-intable' type='number' step='0.01' ' value=' " + num + "'</td></tr>"
+                buffer += "<tr><td class='col-md-2'>" + (idx + 1) + "</td><td class='cell-edit col-md-5'><input class='form-control form-control-intable' value=' " + fmoney(num) + "'</td></tr>"
             });
         } else {
             for (var i = 0; i < 100; i++) {
-                buffer += "<tr><td class='col-md-2'>" + (i + 1) + "</td><td class='cell-edit col-md-5'><input class='form-control form-control-intable'  type='number' step='0.01'  value=''></td></tr>"
+                buffer += "<tr><td class='col-md-2'>" + (i + 1) + "</td><td class='cell-edit col-md-5'><input class='form-control form-control-intable' value=''></td></tr>"
             }
         }
 
@@ -93,6 +93,7 @@
                     console.log("return false");
                     return false;
                 }
+                num = num.replace(new RegExp(/(,)/g), "");
                 array.push(num);
             });
             if (array.length != 100) {
@@ -103,11 +104,32 @@
             console.log(JSON.stringify(array));
         })
 
-//        $("table tbody input").on("input propertychange", function () {
-//            console.log("change");
-//            var val = $(this).val();
-//            $(this).val(fmoney(val));
-//        })
+        $("table tbody input").on("blur", function () {
+            var val = $(this).val();
+            if(val){
+                if(val.indexOf(",") > -1){
+                    val = val.replace(new RegExp(/(,)/g), "");
+                }
+                var reg = val.match(/\d+\.?\d{0,2}/);
+                var txt = '';
+                if (reg != null) {
+                    txt = reg[0];
+                }
+                $(this).val(fmoney(txt));
+                $(this).parent().removeClass("has-error");
+            }else{
+                $(this).parent().addClass("has-error");
+            }
+
+        }).on("focus", function () {
+            var val = $(this).val();
+            if(val){
+                if(val.indexOf(",") > -1){
+                    val = val.replace(new RegExp(/(,)/g), "");
+                }
+                $(this).val(val).select();
+            }
+        });
     })
 
     function fmoney(s, n)

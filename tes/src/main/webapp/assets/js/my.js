@@ -32,6 +32,7 @@ $(function () {
         enableTime: true,
         enableSeconds: true,
         minuteIncrement: 1,
+        time_24hr: true,
         onChange: change,
         onClose: change
     });
