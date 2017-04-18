@@ -27,6 +27,9 @@
         <result column="bank_id" property="bankId" jdbcType="INTEGER"/>
         <result column="user_type" property="userType" jdbcType="INTEGER"/>
         <result column="choice_info" property="choiceInfo" jdbcType="VARCHAR"/>
+        <result column="total_score" property="totalScore" jdbcType="DOUBLE"/>
+        <result column="meta_score_info" property="metaScoreInfo" jdbcType="VARCHAR"/>
+        <result column="percentable" property="percentable" jdbcType="INTEGER"/>
     </resultMap>
     <sql id="scene_list">
     id, auth_code, begin_time,
@@ -37,7 +40,8 @@
     paper_type,
     reason, remark, status,
     update_time, update_user_id,
-    join_user, station_id, bank_id, user_type, choice_info
+    join_user, station_id, bank_id, user_type, choice_info,
+    total_score, meta_score_info, percentable
   </sql>
     <select id="selectById" resultMap="SceneMap" parameterType="java.lang.Integer">
         select
@@ -128,6 +132,15 @@
             <if test="choiceInfo != null">
                 choice_info,
             </if>
+            <if test="totalScore != null">
+                total_score,
+            </if>
+            <if test="metaScoreInfo != null">
+                meta_score_info,
+            </if>
+            <if test="percentable != null">
+                percentable,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -205,6 +218,15 @@
             <if test="choiceInfo != null">
                 #{choiceInfo},
             </if>
+            <if test="totalScore != null">
+                #{totalScore},
+            </if>
+            <if test="metaScoreInfo != null">
+                #{metaScoreInfo},
+            </if>
+            <if test="percentable != null">
+                #{percentable},
+            </if>
         </trim>
     </insert>
     <update id="updateById" parameterType="co.bugu.tes.model.Scene">
@@ -281,6 +303,15 @@
             </if>
             <if test="choiceInfo != null">
                 choice_info = #{choiceInfo},
+            </if>
+            <if test="totalScore != null">
+                total_score = #{totalScore},
+            </if>
+            <if test="metaScoreInfo != null">
+                meta_score_info = #{metaScoreInfo},
+            </if>
+            <if test="percentable != null">
+                percentable = #{percentable},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}

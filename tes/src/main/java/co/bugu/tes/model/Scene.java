@@ -59,6 +59,34 @@ public class Scene {
     private Integer userType;
     private String choiceInfo;
 
+    private Double totalScore;
+    private String metaScoreInfo;
+    private Integer percentable;
+
+    public Double getTotalScore() {
+        return totalScore;
+    }
+
+    public void setTotalScore(Double totalScore) {
+        this.totalScore = totalScore;
+    }
+
+    public String getMetaScoreInfo() {
+        return metaScoreInfo;
+    }
+
+    public void setMetaScoreInfo(String metaScoreInfo) {
+        this.metaScoreInfo = metaScoreInfo;
+    }
+
+    public Integer getPercentable() {
+        return percentable;
+    }
+
+    public void setPercentable(Integer percentable) {
+        this.percentable = percentable;
+    }
+
     public Integer getUserType() {
         return userType;
     }

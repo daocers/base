@@ -62,4 +62,9 @@ public interface Constant {
      * 用户权限
      * */
     String USER_AUTHORITYS = "USER_AUTHORITY_";
+
+    /**
+     * 试题答案
+     */
+    String QUESTION_ANSWER = "QUESTION_ANSWER";
 }

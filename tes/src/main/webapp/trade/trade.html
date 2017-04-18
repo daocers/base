@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>交易页面</title>
+    <link rel="stylesheet" href="/assets/css/bootstrap.css">
+    <script src="/assets/js/jquery-2.2.0.min.js"></script>
+    <script src="/assets/js/bootstrap.js"></script>
+    <style>
+        div{
+            margin-top: 30px;
+            margin-bottom: 10px;
+        }
+        select, input{
+            height: 22px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <form>
+        <div class="row">
+            <label class="col-md-2">系统</label>
+            <select name="system">
+                <option></option>
+                <option value="0">DEP建立存款账户</option>
+                <option value="1">DEP销户</option>
+            </select>
+        </div>
+        <div class="row">
+            <label class="col-md-2">现存客户号/账号</label>
+            <button type="button">查询</button>
+            <label class="col-md-2">客户号/账号</label>
+            <select name="account">
+                <option></option>
+                <option value="0">21312312312312</option>
+                <option value="1">21312312312313</option>
+                <option value="2">21312312312311</option>
+            </select>
+        </div>
+        <div class="row">
+            <label class="col-md-2">证件类型/号码</label>
+            <select name="paper">
+                <option value="51">51-居民身份证</option>
+                <option value="52">52-护照</option>
+            </select>
+            <input name="idno" type="text" value="411503198905132316">
+            <button type="button">查询</button>
+            <button type="button">开卡数量查询</button>
+            <input name="number" type="text">
+        </div>
+        <div style="height: 30px">
+
+        </div>
+        <div class="row">
+            <label class="col-md-2" style="align-content: center">产品类型</label>
+            <select name="prodType" class="col-md-2">
+                <option value="0">4101 个人人民币活期存款</option>
+                <option value="1">4101 外币账户短期存款</option>
+            </select>
+        </div>
+        <div class="row">
+            <label class="col-md-2" style="">产品子类</label>
+            <select name="subType" class="col-md-2">
+                <option value="0">0210 普通结算户</option>
+            </select>
+        </div>
+
+        <div  class="row">
+            <label class="col-md-2">货币</label>
+            <select name="bill" class="col-md-2">
+                <option></option>
+                <option value="1">人民币</option>
+                <option value="3">美元</option>
+            </select>
+        </div>
+
+        <div class="row">
+            <label class="col-md-2">合同编号</label>
+            <input type="text" name="hetong" class="col-md-2">
+            <label class="col-md-2">或者合同顺序号</label>
+            <input type="text" name="xuhao" class="col-md-2">
+        </div>
+        <div class="row">
+            <label class="col-md-2">合同类型</label>
+            <select name="htType" class="col-md-2">
+                <option></option>
+                <option value="0">短期</option>
+                <option value="1">长期</option>
+            </select>
+            <label class="col-md-2">利率执行方式</label>
+            <select type="oprType" class="col-md-2">
+                <option></option>
+                <option value="0">等额本息</option>
+                <option value="1">本金相同</option>
+            </select>
+        </div>
+
+        <div class="center-block">
+            <button type="submit">发送</button>
+            <button type="submit">关闭</button>
+        </div>
+    </form>
+</div>
+<form>
+
+</form>
+
+</body>
+</html>

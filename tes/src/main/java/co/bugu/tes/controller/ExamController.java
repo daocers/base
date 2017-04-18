@@ -3,6 +3,8 @@ package co.bugu.tes.controller;
 import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.core.util.BuguWebUtil;
 import co.bugu.framework.util.DateUtil;
+import co.bugu.framework.util.JedisUtil;
+import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.*;
 import co.bugu.tes.service.*;
 import co.bugu.websocket.WebSocketSessionUtil;
@@ -47,10 +49,12 @@ public class ExamController {
     IQuestionMetaInfoService metaInfoService;
     @Autowired
     IAnswerService answerService;
+    @Autowired
+    IPaperPolicyService paperPolicyService;
 
     /**
      * @param model
-     * @param type  type= new,待参加考试， type= his, 已参加考试
+     * @param type  type= my,我开场的， type= join, 我参加的
      * @return
      */
     @RequestMapping("/list")
@@ -74,6 +78,8 @@ public class ExamController {
             }
             scenePageInfo.setData(sceneList);
             model.put("pi", scenePageInfo);
+            model.put("paperList", pageInfo.getData());
+            return "scene/score";
         }else if("my".equals(type)){
             Scene scene = new Scene();
             scene.setCreateUserId(userId);
@@ -303,8 +309,9 @@ public class ExamController {
         json.put("code", 0);
         try {
             boolean saveAnsFlag = true;
+            Map<String, String> answerMap = null;
             try {
-                Map<String, String> answerMap = JSON.parseObject(answerInfo, HashMap.class);
+                answerMap = JSON.parseObject(answerInfo, HashMap.class);
                 answerService.savePaperAnswer(answerMap, paperId);
             } catch (Exception e) {
                 json.put("code", 1);
@@ -314,6 +321,15 @@ public class ExamController {
             }
 
             Paper paper = paperService.findById(paperId);
+            Scene scene = sceneService.findById(paper.getSceneId());
+            Map metaInfoIdScoreMap = JSON.parseObject(scene.getMetaScoreInfo(), HashMap.class);
+            Double score = paperService.computeScore(metaInfoIdScoreMap, answerMap, paperId);
+            paper.setOriginMark(score.doubleValue() + "");
+            if(scene.getPercentable().equals(0)){//百分制，需要处理
+                paper.setMark(score/Double.valueOf(scene.getTotalScore()).doubleValue() * 100 + "");
+            }else{
+                paper.setMark(paper.getOriginMark());
+            }
             paper.setId(paperId);
             if (saveAnsFlag) {
                 paper.setStatus(3);//保存成功
@@ -321,6 +337,7 @@ public class ExamController {
                 paper.setStatus(4);//保存失败
             }
             paperService.updateById(paper);
+            json.put("data", paper.getMark());
         } catch (Exception e) {
             logger.error("提交试卷信息失败", e);
             json.put("code", -1);

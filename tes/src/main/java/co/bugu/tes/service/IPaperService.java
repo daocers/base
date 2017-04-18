@@ -29,7 +29,7 @@ public interface IPaperService extends IBaseService<Paper>{
     Paper generatePaperForUser(Scene scene, Integer userId) throws Exception;
 
 
-    Double computeScore(Map<Integer, Double> metaInfoIdScoreMap, Integer paperId);
+    Double computeScore(Map<Integer, Double> metaInfoIdScoreMap, Map<String, String> answerInfo, Integer paperId);
 
 
 

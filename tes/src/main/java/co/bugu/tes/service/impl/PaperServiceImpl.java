@@ -2,14 +2,17 @@ package co.bugu.tes.service.impl;
 
 
 import co.bugu.framework.core.service.impl.BaseServiceImpl;
+import co.bugu.framework.util.JedisUtil;
 import co.bugu.tes.enums.PaperPolicyType;
 import co.bugu.tes.enums.PaperType;
+import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.*;
 import co.bugu.tes.service.IAnswerService;
 import co.bugu.tes.service.IPaperService;
 import co.bugu.tes.service.IQuestionService;
 import co.bugu.tes.util.QuestionUtil;
 import com.alibaba.fastjson.JSON;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -233,7 +236,7 @@ public class PaperServiceImpl extends BaseServiceImpl<Paper> implements IPaperSe
     }
 
     @Override
-    public Double computeScore(Map<Integer, Double> metaInfoIdScoreMap, Integer paperId) {
+    public Double computeScore(Map<Integer, Double> metaInfoIdScoreMap, Map<String, String> answerInfo, Integer paperId) {
         Paper paper = baseDao.selectOne("tes.paper.selectById", paperId);
         if(paper == null){
             return null;
@@ -248,7 +251,7 @@ public class PaperServiceImpl extends BaseServiceImpl<Paper> implements IPaperSe
                     List<Integer> questionIds = map.get(questionMetaInfoId);
                     Double score = metaInfoIdScoreMap.get(questionMetaInfoId);
                     for(Integer questionId: questionIds){
-                        boolean res = checkQuestion(questionId, paperId);
+                        boolean res = checkQuestion(questionId, paperId, answerInfo.get(questionId + ""));
                         if(res){
                             amount += score;
                         }
@@ -260,23 +263,26 @@ public class PaperServiceImpl extends BaseServiceImpl<Paper> implements IPaperSe
         return null;
     }
 
-    private boolean checkQuestion(Integer questionId, Integer paperId){
-        Answer answer = new Answer();
-        answer.setPaperId(paperId);
-        answer.setQuestionId(questionId);
-        List<Answer> list = answerService.findByObject(answer);
-        if(list == null || list.size() == 0){
+    private boolean checkQuestion(Integer questionId, Integer paperId, String yourAnswer){
+        if(StringUtils.isEmpty(yourAnswer)){
             return false;
+        }
+        String right = null;
+        List<String> ansList = JedisUtil.hmget(Constant.QUESTION_ANSWER, questionId + "");
+        if(CollectionUtils.isNotEmpty(ansList)){
+            right = ansList.get(0);
         }else{
-            answer = list.get(0);
-            Question question = questionService.findById(questionId);
-            if(question == null){
+            Answer answer = new Answer();
+            answer.setPaperId(paperId);
+            answer.setQuestionId(questionId);
+            List<Answer> list = answerService.findByObject(answer);
+            if(CollectionUtils.isEmpty(list)){
                 return false;
             }else{
-                return answer.getAnswer().equals(question.getAnswer());
+                right = list.get(0).getAnswer();
             }
-
         }
+        return right.equals(yourAnswer);
     }
 
 }

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.print.Doc;
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -208,6 +209,19 @@ public class SceneController1 {
         scene.setBankId(bankId);
         scene.setPaperPolicyId(paperPolicyId);
 
+        PaperPolicy paperPolicy = paperPolicyService.findById(paperPolicyId);
+        List<HashMap> list = JSON.parseArray(paperPolicy.getContent(), HashMap.class);
+        Map<Integer, Double> metaInfoIdScoreMap = new HashMap<>();
+        double totalScore = 0;
+        for(HashMap<String, String> map: list){
+            Integer metaInfoId = Integer.valueOf(map.get("questionMetaInfoId"));
+            Double score = Double.valueOf(map.get("score"));
+            metaInfoIdScoreMap.put(metaInfoId, score);
+            totalScore = totalScore + score.doubleValue();
+        }
+        scene.setMetaScoreInfo(JSON.toJSONString(metaInfoIdScoreMap));
+        scene.setPercentable(paperPolicy.getPercentable());
+        scene.setTotalScore(totalScore);
         sceneService.updateById(scene);
         JSONObject json = new JSONObject();
         json.put("code", 0);

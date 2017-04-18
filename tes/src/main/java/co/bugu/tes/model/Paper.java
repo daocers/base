@@ -23,6 +23,19 @@ public class Paper {
 
     private String questionIds;
 
+    /**
+     * 没有百分制之前的成绩
+     */
+    private String originMark;
+
+    public String getOriginMark() {
+        return originMark;
+    }
+
+    public void setOriginMark(String originMark) {
+        this.originMark = originMark;
+    }
+
     public String getContent() {
         return content;
     }

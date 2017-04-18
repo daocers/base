@@ -333,7 +333,7 @@ public class JedisUtil {
         return null;
     }
 
-    public static List<String> hmget(String key, String filed) {
+    public static List<String> hmget(String key, String ...filed) {
         Jedis jedis = null;
         try {
             jedis = getJedis();
