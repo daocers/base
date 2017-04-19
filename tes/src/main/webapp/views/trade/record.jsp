@@ -247,7 +247,7 @@
                     type: 'post',
                     data: {
                         fieldInfo: JSON.stringify(arr), code: code,
-                        pageUrl: $("#page").attr("src"),
+                        pageUrl: $("#page").attr("src"), bankId: bankId,
                         name: name, description: description
                     },
                     success: function (data) {
