@@ -30,14 +30,14 @@
         </javaModelGenerator>
 
         <sqlMapGenerator targetPackage="co.bugu.tes.dao" targetProject="D:\code\daocers\java\base/generator//generate/src/main/java/">
-        <!--<sqlMapGenerator targetPackage="data.typeIn" targetProject="D:\code\daocers\java\base/generator//generate/src/main/java/">-->
+        <!--<sqlMapGenerator targetPackage="tes.tradeQuestion" targetProject="D:\code\daocers\java\base/generator//generate/src/main/java/">-->
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
 
 
 
 
-        <table tableName="type_in" domainObjectName="TypeIn" alias=""
+        <table tableName="trade_question" domainObjectName="TradeQuestion" alias=""
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">

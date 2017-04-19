@@ -63,27 +63,38 @@
 
             </div>
             <div class="col-md-5">
-                <form class="form form-horizontal">
+                <form class="form form-horizontal" role="form">
                     <div class="form-group">
                         <label class="control-label col-md-3">交易名称</label>
                         <div class="col-md-9">
-                            <input type="text" name="name" class="form-control">
+                            <input type="text" name="name" class="form-control" required>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-3">交易码</label>
                         <div class="col-md-9">
-                            <input type="text" name="code" class="form-control">
+                            <input type="text" name="code" class="form-control" required>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-3">场景描述</label>
                         <div class="col-md-9">
-                            <textarea name="description" class="form-control" rows="10"></textarea>
+                            <textarea name="description" class="form-control" rows="10" required></textarea>
                         </div>
                     </div>
                     <div class="form-group">
-                        <button id="save" class="btn btn-info btn-commit col-md-offset-3">保存试题</button>
+                        <label class="control-label col-md-3">题库</label>
+                        <div class="col-md-9">
+                            <select name="bankId" class="form-control" required>
+                                <option>请选择</option>
+                                <c:forEach items="${bankList}" var="bank">
+                                    <option value="${bank.id}">${bank.name}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button id="save" type="button" class="btn btn-info btn-commit col-md-offset-3">保存试题</button>
                     </div>
                 </form>
             </div>
@@ -126,13 +137,17 @@
                 $iframe.find("input, select").each(function (idx, obj) {
                     var label = $(obj).prev().text();
                     var name = $(obj).attr("name");
-                    var val = $(obj).val();
-                    var type = $(obj).type;
-                    console.log("type: ", type);
-                    if($(obj).type == "select"){
-
+                    if (!name) {
+                        name = "";
                     }
-                    var text = $(obj).text();
+                    var val = $(obj).val();
+                    var type = obj.type;
+                    var text = "";
+                    if (type == "select-one") {
+                        text = $(obj).find("option:selected").text();
+                    } else {
+                        text = val;
+                    }
 //                console.log("label: ", label);
 //                console.log("idx: ", idx);
 //                console.log("obj: ", $(obj).val());
@@ -172,6 +187,83 @@
                         console.log("save error");
                     }
                 })
+            })
+
+            function getInfo() {
+                var arr = new Array();
+                $("#fieldInfo tbody tr").each(function (idx, obj) {
+                    var line = new Array();
+                    var $tds = $(obj).find("td");
+                    var name = $($tds[0]).html();
+                    if(!name){
+                        name = "";
+                    }
+                    var value = $($tds[1]).html();
+                    if(!value){
+                        value = "";
+                    }
+                    var label = $($tds[2]).html();
+                    if(!label){
+                        label = "";
+                    }
+
+                    var check = $($tds[4]).find("input")[0].checked;
+                    if(check){
+                        check = 0;
+                    }else {
+                        check = 1;
+                    }
+
+                    line.push(name);
+                    line.push(value);
+                    line.push(label);
+                    line.push(check);
+//                    $(obj).find("td").each(function (idx1, obj1) {
+//                        var text = $(obj1).html();
+//                        if (!text) {
+//                            text = "";
+//                        }
+//                        if (text.indexOf('checkbox') > -1) {
+//                            line.push($(obj1).find("input")[0].checked);
+//                        } else {
+//                            line.push(text)
+//                        }
+//                    })
+                    arr.push(line);
+                })
+                console.log("table info: ", JSON.stringify(arr));
+                return arr;
+            }
+
+            $("#save").on("click", function () {
+                var arr = getInfo();
+                var code = $("[name='code']").val();
+                var name = $("[name='name']").val();
+                var description = $("[name='description']").val();
+                var bankId = $("[name='bankId']").val();
+
+                $.ajax({
+                    url: 'save.do',
+                    type: 'post',
+                    data: {
+                        fieldInfo: JSON.stringify(arr), code: code,
+                        pageUrl: $("#page").attr("src"),
+                        name: name, description: description
+                    },
+                    success: function (data) {
+                        var res = JSON.parse(data);
+                        if (res.code == 0) {
+                            swal('', "保存成功", true);
+                            window.location.reload();
+                        } else {
+                            swal("保存失败", res.err, "error");
+                        }
+                    },
+                    error: function (data) {
+                        swal("", "保存失败", "error");
+                    }
+                });
+                return false;
             })
         })
 

@@ -2,6 +2,7 @@ package co.bugu.tes.service;
 
 
 import co.bugu.framework.core.service.IBaseService;
+import co.bugu.tes.model.Page;
 import co.bugu.tes.model.Trade;
 import co.bugu.framework.core.dao.PageInfo;
 
@@ -22,4 +23,5 @@ public interface ITradeService extends IBaseService<Trade>{
 //
 //    PageInfo listByObject(Trade trade, PageInfo<Trade> pageInfo) throws Exception;
 
+    int saveTradeAndPage(Trade trade, Page page);
 }

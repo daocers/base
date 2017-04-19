@@ -1,37 +1,110 @@
 package co.bugu.tes.controller;
 
+import co.bugu.framework.core.util.BuguWebUtil;
+import co.bugu.tes.model.*;
+import co.bugu.tes.service.IQuestionBankService;
+import co.bugu.tes.service.ITradeQuestionService;
 import co.bugu.tes.service.ITradeService;
+import co.bugu.tes.service.IUserService;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Controller
 @RequestMapping("/trade")
 public class TradeController {
     @Autowired
     ITradeService tradeService;
+    @Autowired
+    IUserService userService;
+    @Autowired
+    ITradeQuestionService questionService;
+    @Autowired
+    IQuestionBankService questionBankService;
 
     private static Logger logger = LoggerFactory.getLogger(TradeController.class);
 
     /**
      * 录制交易
      * 打开交易界面， 同时录入信息，记录当前交易界面的栏位信息，顺便出题一道
+     *
      * @return
      */
     @RequestMapping("/toRecord")
-    public String record(){
+    public String record(ModelMap model) {
+        List<QuestionBank> bankList = questionBankService.findByObject(null);
+//        for (List<String> list : fieldList) {
+//            String fieldName = list.get(0);
+//            String fLabel = list.get(2);
+//            String fValue = list.get(1);
+//            String fText = list.get(3);
+//            Integer checkable = list.get(4).equals("true") ? 0 : 1;
+//        }
+        model.put("bankList", bankList);
         return "trade/record";
     }
 
     @RequestMapping("/save")
-    public String saveModelAndQuestion(){
-        return null;
+    public String saveModelAndQuestion(String name, String code, String description,
+                                       String pageUrl, String fieldInfo, HttpServletRequest request) {
+        Date now = new Date();
+        Integer userId = (Integer) BuguWebUtil.getUserId(request);
+        User user = userService.findById(userId);
+        JSONObject json = new JSONObject();
+        Trade trade = new Trade();
+        trade.setName(name);
+        trade.setTradeCode(code);
+        trade.setStatus(0);
+        trade.setCreateTime(new Date());
+        trade.setBranchId(user.getBranchId());
+        trade.setDepartmentId(user.getDepartmentId());
+        trade.setCreateUserId(userId);
+        trade.setCreateTime(now);
+        trade.setUpdateTime(now);
+        trade.setUpdateUserId(userId);
+
+        Page page = new Page();
+        page.setStatus(0);
+        page.setCode(code);
+        page.setUrl(pageUrl);
+        page.setContent(fieldInfo);
+
+        tradeService.saveTradeAndPage(trade, page);
+        json.put("code", 0);
+
+
+        List<List> fieldList = JSON.parseArray(fieldInfo, List.class);
+        for (List<String> list : fieldList) {
+            list.remove(2);
+        }
+
+        TradeQuestion question = new TradeQuestion();
+        question.setDescription(description);
+        question.setAnswer(JSON.toJSONString(fieldList));
+        question.setStatus(0);
+        question.setDepartmentId(user.getDepartmentId());
+        question.setBranchId(user.getBranchId());
+        question.setCreateUserId(userId);
+        question.setUpdateUserId(userId);
+        question.setCreateTime(now);
+        question.setUpdateTime(now);
+        questionService.save(question);
+
+        return json.toJSONString();
     }
 
     @RequestMapping("/saveQuestion")
-    public String saveQuestion(){
+    public String saveQuestion() {
         return null;
     }
 }

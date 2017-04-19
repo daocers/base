@@ -2,17 +2,28 @@ package co.bugu.tes.service.impl;
 
 
 import co.bugu.framework.core.service.impl.BaseServiceImpl;
+import co.bugu.tes.model.Page;
 import co.bugu.tes.model.Trade;
 import co.bugu.tes.service.ITradeService;
-import co.bugu.framework.core.dao.BaseDao;
-import co.bugu.framework.core.dao.PageInfo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class TradeServiceImpl extends BaseServiceImpl<Trade> implements ITradeService {
+    @Override
+    public int saveTradeAndPage(Trade trade, Page page) {
+        if(trade.getId() == null){
+            baseDao.insert("tes.trade.insert", trade);
+            page.setTradeId(trade.getId());
+        }else{
+            baseDao.update("tes.trade.updateById", trade);
+        }
+        if(page.getId() == null){
+            baseDao.insert("tes.page.insert", page);
+        }else{
+            baseDao.update("tes.page.updateById", page);
+        }
+        return 1;
+    }
 //    @Autowired
 //    BaseDao baseDao;
 //

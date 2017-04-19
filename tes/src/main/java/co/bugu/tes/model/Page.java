@@ -8,7 +8,7 @@ public class Page {
 
     private String code;
 
-    private String tradeId;
+    private Integer tradeId;
 
     private Integer status;
 
@@ -18,6 +18,19 @@ public class Page {
      */
     private Integer idx;
 
+    /**
+     * 用于记录当前页面的栏位信息，包括字段的label， name， val，是否是考核字段等。
+     */
+    private String content;
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
     public Integer getIdx() {
         return idx;
     }
@@ -26,11 +39,11 @@ public class Page {
         this.idx = idx;
     }
 
-    public String getTradeId() {
+    public Integer getTradeId() {
         return tradeId;
     }
 
-    public void setTradeId(String tradeId) {
+    public void setTradeId(Integer tradeId) {
         this.tradeId = tradeId;
     }
 
