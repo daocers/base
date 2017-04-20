@@ -11,7 +11,9 @@ import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.http.auth.AUTH;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -170,6 +172,7 @@ public class AuthorityController {
                 if (param.getPath() == null) {
                     continue;
                 }
+                urlList.remove(url);
                 Authority auth = new Authority();
                 auth.setStatus(Constant.STATUS_ENABLE);
                 auth.setAction(param.getMethodName());
@@ -184,6 +187,14 @@ public class AuthorityController {
                 auth.setAcceptMethod(param.getMethod());
                 auth.setIsApi(param.getApi() ? Constant.AUTH_API_TRUE : Constant.AUTH_API_FALSE);
                 authorityService.save(auth);
+            }
+            for(String url: urlList){
+                Authority authority = new Authority();
+                authority.setUrl(url);
+                List<Authority> authorityList = authorityService.findByObject(authority);
+                if(CollectionUtils.isNotEmpty(authorityList)){
+                    authorityService.delete(authorityList.get(0));
+                }
             }
 
             Authority authority = new Authority();

@@ -253,7 +253,7 @@
                     success: function (data) {
                         var res = JSON.parse(data);
                         if (res.code == 0) {
-                            swal('', "保存成功", true);
+                            swal('', "保存成功", "success");
                             window.location.reload();
                         } else {
                             swal("保存失败", res.err, "error");

@@ -1,19 +1,17 @@
 package co.bugu.tes.controller;
 
+import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.core.util.BuguWebUtil;
 import co.bugu.framework.util.EncryptUtil;
 import co.bugu.framework.util.ExcelUtilNew;
+import co.bugu.framework.util.JsonUtil;
 import co.bugu.tes.enums.ExamStatus;
 import co.bugu.tes.enums.UserStatus;
 import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.*;
 import co.bugu.tes.service.*;
-import co.bugu.framework.core.dao.PageInfo;
-import co.bugu.framework.util.JsonUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.sun.deploy.net.proxy.pac.PACFunctions;
-import org.aspectj.weaver.NewParentTypeMunger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +26,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.text.NumberFormat;
 import java.util.*;
 
 @Controller

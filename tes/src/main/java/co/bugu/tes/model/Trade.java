@@ -8,7 +8,7 @@ import java.util.Date;
 public class Trade {
     private Integer id;
     private String name;
-    private String tradeCode;
+    private String code;
     private Integer branchId;
     private Integer departmentId;
     private Integer stationId;
@@ -17,6 +17,8 @@ public class Trade {
     private Date updateTime;
     private Integer createUserId;
     private Integer updateUserId;
+
+
 
     public Integer getId() {
         return id;
@@ -34,12 +36,12 @@ public class Trade {
         this.branchId = branchId;
     }
 
-    public String getTradeCode() {
-        return tradeCode;
+    public String getCode() {
+        return code;
     }
 
-    public void setTradeCode(String tradeCode) {
-        this.tradeCode = tradeCode;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public Date getCreateTime() {

@@ -8,15 +8,16 @@ import co.bugu.tes.service.ITradeService;
 import co.bugu.tes.service.IUserService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -55,23 +56,29 @@ public class TradeController {
     }
 
     @RequestMapping("/save")
+    @ResponseBody
     public String saveModelAndQuestion(String name, String code, String description,
-                                       String pageUrl, String fieldInfo, HttpServletRequest request) {
+                                       String pageUrl, String fieldInfo, Integer bankId, HttpServletRequest request) {
         Date now = new Date();
         Integer userId = (Integer) BuguWebUtil.getUserId(request);
         User user = userService.findById(userId);
         JSONObject json = new JSONObject();
         Trade trade = new Trade();
         trade.setName(name);
-        trade.setTradeCode(code);
+        List<Trade> tradeList = tradeService.findByObject(trade);
+        if(CollectionUtils.isNotEmpty(tradeList)){
+            trade = tradeList.get(0);
+        }else{
+            trade.setCreateTime(now);
+            trade.setCreateUserId(userId);
+        }
+        trade.setCode(code);
         trade.setStatus(0);
-        trade.setCreateTime(new Date());
         trade.setBranchId(user.getBranchId());
         trade.setDepartmentId(user.getDepartmentId());
-        trade.setCreateUserId(userId);
-        trade.setCreateTime(now);
         trade.setUpdateTime(now);
         trade.setUpdateUserId(userId);
+        trade.setStationId(user.getStationId());
 
         Page page = new Page();
         page.setStatus(0);
@@ -92,6 +99,7 @@ public class TradeController {
         question.setDescription(description);
         question.setAnswer(JSON.toJSONString(fieldList));
         question.setStatus(0);
+        question.setBankId(bankId);
         question.setDepartmentId(user.getDepartmentId());
         question.setBranchId(user.getBranchId());
         question.setCreateUserId(userId);
