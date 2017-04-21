@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -55,6 +56,17 @@ public class TradeController {
         return "trade/record";
     }
 
+    /**
+     * 保存交易模板，页面信息，顺便出题一道
+     * @param name
+     * @param code
+     * @param description
+     * @param pageUrl
+     * @param fieldInfo
+     * @param bankId
+     * @param request
+     * @return
+     */
     @RequestMapping("/save")
     @ResponseBody
     public String saveModelAndQuestion(String name, String code, String description,
@@ -111,8 +123,22 @@ public class TradeController {
         return json.toJSONString();
     }
 
+
+    /**
+     * 出题
+     * @param fieldInfo  题目信息
+     * @param tradeId   交易id
+     * @param pageId 页面id
+     * @param description 交易情景描述
+     * @param bankId  题库管理
+     * @return
+     */
     @RequestMapping("/saveQuestion")
-    public String saveQuestion() {
+    @ResponseBody
+    public String saveQuestion(String fieldInfo, Integer tradeId, Integer pageId, String description, Integer bankId) {
         return null;
     }
+
+
+
 }

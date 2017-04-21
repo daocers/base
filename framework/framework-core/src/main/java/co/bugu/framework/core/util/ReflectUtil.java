@@ -79,7 +79,7 @@ public class ReflectUtil {
                 }
                 String[] path = methodRequestMapping.value();
                 if(path.length > 0){
-                    mvcParam.setPath(mvcParam.getRootPath() + path[0]);
+                    mvcParam.setPath(path[0]);
                 }
                 RequestMethod[] requestMethods = methodRequestMapping.method();
                 if(requestMethods.length > 0){
