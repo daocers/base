@@ -30,4 +30,6 @@ public interface IAuthorityService extends IBaseService<Authority>{
 //
     void rebuildInfo(List<Authority> authorityList);
 
+    List<String> getAllController();
+
 }

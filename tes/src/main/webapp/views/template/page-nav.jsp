@@ -77,21 +77,3 @@
         </c:if>
     </ul>
 </nav>
-<%--<div class="form-inline">--%>
-<%--<label class="control-label">跳转至</label>--%>
-<%--<input id="to-page" type="number" class="form-control" min="1" max="${pi.pageSize}">--%>
-<%--<label>页</label>--%>
-<%--<button class="btn btn-primary btn-to-page" type="button">跳转</button>--%>
-<%--</div>--%>
-
-
-<%--<html>--%>
-<%--<head>--%>
-<%--<meta charset="utf-8">--%>
-<%--<title>页码导航</title>--%>
-<%--</head>--%>
-<%--<body>--%>
-
-
-<%--</body>--%>
-<%--</html>--%>

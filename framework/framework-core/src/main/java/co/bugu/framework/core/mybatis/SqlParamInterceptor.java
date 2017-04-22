@@ -52,7 +52,7 @@ public class SqlParamInterceptor implements Interceptor {
             Object paramObj = boundSql.getParameterObject();
             SqlSource targetSqlSource = getTargetDynamicSqlSource(mappedStatement, boundSql, searchParam);
             ReflectUtil.setValue(parameterHandler, "boundSql", targetSqlSource.getBoundSql(paramObj));
-
+            ReflectUtil.setValue(mappedStatement, "sqlSource", targetSqlSource);
             ThreadLocalUtil.remove();
             long end = System.currentTimeMillis();
             logger.debug("ParameterHandler 执行时长：{}毫秒", end - begin);

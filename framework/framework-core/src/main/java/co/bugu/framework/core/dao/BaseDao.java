@@ -145,24 +145,24 @@ public class BaseDao<T> extends SqlSessionDaoSupport {
 
         MappedStatement mappedStatement = this.getSqlSession().getConfiguration().getMappedStatement(statement);
         BoundSql boundSql = mappedStatement.getBoundSql(parameterObject);
-        Connection connection = this.getSqlSession().getConfiguration().getEnvironment().getDataSource().getConnection()    ;
+        Connection connection = this.getSqlSession().getConfiguration().getEnvironment().getDataSource().getConnection();
 
         String sql = boundSql.getSql();
 //        sql = sql.toLowerCase();
         String newSql = "";
 
-        if(sql.toLowerCase().contains("join")){
-            if(sql.toLowerCase().contains("order by")){
+        if (sql.toLowerCase().contains("join")) {
+            if (sql.toLowerCase().contains("order by")) {
                 newSql = sql.toLowerCase().split("order by")[0];
-            }else{
+            } else {
                 newSql = sql;
             }
-            if(newSql.endsWith(";")){
+            if (newSql.endsWith(";")) {
                 newSql = newSql.substring(0, newSql.length() - 1);
             }
 
             newSql = "select count(0) as cnt from (" + newSql + " group by 1) as tmp";
-        }else{
+        } else {
             newSql = "select count(0) as cnt from " + sql.split("from")[1];
         }
 
@@ -192,10 +192,10 @@ public class BaseDao<T> extends SqlSessionDaoSupport {
             }
 
             try {
-                if(connection != null){
+                if (connection != null) {
                     connection.close();
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 throw new Exception("关闭连接发生异常", e);
             }
         }

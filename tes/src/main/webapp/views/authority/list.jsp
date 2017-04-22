@@ -10,14 +10,45 @@
 <%@ include file="../template/header.jsp" %>
 <%@ include file="../template/menu-top.jsp" %>
 <%@ include file="../template/menu-left.jsp" %>
-<div class="" style="width:780px; vertical-align: top; display: inline-block">
-<%--<div class="container">--%>
+<%--<form class="" style="width:780px; vertical-align: top; display: inline-block">--%>
+<div class="container">
     <div class="row nav-path">
         <ol class="breadcrumb">
             <li><a href="#">首页</a></li>
             <li><a href="#" class="active">商品管理</a></li>
         </ol>
     </div>
+    <form class="form form-inline search-form" action="list.do" method="post">
+        <div class="form-group form-group-sm">
+            <label class="control-label">名称</label>
+            <input type="text" class="form-control" name="name" value="${param.name}">
+        </div>
+        <div class="form-group form-group-sm">
+            <label class="control-label">类型</label>
+            <select class="form-control" name="type">
+                <option value="-1"></option>
+                <option value="0"
+                        <c:if test="${param.type == 0}">selected</c:if>>操作权限
+                </option>
+                <option value="2"
+                        <c:if test="${param.type == 2}">selected</c:if>>菜单权限
+                </option>
+            </select>
+        </div>
+        <div class="form-group form-group-sm">
+            <label class="control-label">controller</label>
+            <select class="form-control" name="controller" value="${param.controller}">
+                <option></option>
+                <c:forEach var="con" items="${controllerList}">
+                    <c:if test="${'' != con}">
+                        <option value="${con}"
+                                <c:if test="${param.controller == con}">selected</c:if> >${con}</option>
+                    </c:if>
+                </c:forEach>
+            </select>
+        </div>
+        <button class="btn btn-sm btn-info">提交</button>
+    </form>
     <div class="row table-responsive">
         <table class="table table-bordered editable-table">
             <thead>

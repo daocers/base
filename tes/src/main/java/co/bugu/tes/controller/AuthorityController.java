@@ -13,7 +13,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.map.HashedMap;
-import org.apache.http.auth.AUTH;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +44,11 @@ public class AuthorityController {
     @RequestMapping(value = "/list")
     public String list(Authority authority, Integer curPage, Integer showCount, ModelMap model) {
         try {
+            if(authority != null && authority.getType() != null && authority.getType() == -1){
+                authority.setType(null);
+            }
+            List<String> controllerList = authorityService.getAllController();
+            model.put("controllerList", controllerList);
             PageInfo<Authority> pageInfo = new PageInfo<>(showCount, curPage);
             pageInfo = authorityService.findByObject(authority, pageInfo);
             model.put("pi", pageInfo);
@@ -55,6 +59,27 @@ public class AuthorityController {
         }
         return "authority/list";
 
+    }
+
+    @RequestMapping(value = "/add", method = RequestMethod.GET)
+    public String toAdd() {
+        return "authority/add";
+    }
+
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public String add(ModelMap model, Authority authority) {
+        try {
+            authority.setStatus(0);
+            authority.setUrl(null);
+            authority.setType(0);
+            authorityService.save(authority);
+            return "redirect:list.do";
+        } catch (Exception e) {
+            logger.error("保存失败", e);
+            model.put("err", "保存失败");
+            model.put("authority", authority);
+            return "authority/add.do";
+        }
     }
 
     /**
@@ -188,11 +213,11 @@ public class AuthorityController {
                 auth.setIsApi(param.getApi() ? Constant.AUTH_API_TRUE : Constant.AUTH_API_FALSE);
                 authorityService.save(auth);
             }
-            for(String url: urlList){
+            for (String url : urlList) {
                 Authority authority = new Authority();
                 authority.setUrl(url);
                 List<Authority> authorityList = authorityService.findByObject(authority);
-                if(CollectionUtils.isNotEmpty(authorityList)){
+                if (CollectionUtils.isNotEmpty(authorityList)) {
                     authorityService.delete(authorityList.get(0));
                 }
             }

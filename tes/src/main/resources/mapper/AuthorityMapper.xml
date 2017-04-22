@@ -165,42 +165,6 @@
         <include refid="authority_list"/>
         from authority auth
         <where>
-            <if test="id != null">
-                and id = #{id}
-            </if>
-            <if test="action != null">
-                and action = #{action,jdbcType=VARCHAR}
-            </if>
-            <if test="controller != null">
-                and controller = #{controller,jdbcType=VARCHAR}
-            </if>
-            <if test="description != null">
-                and description = #{description,jdbcType=VARCHAR}
-            </if>
-            <if test="name != null">
-                and name = #{name,jdbcType=VARCHAR}
-            </if>
-            <if test="param != null">
-                and param = #{param,jdbcType=VARCHAR}
-            </if>
-            <if test="status != null">
-                and status = #{status,jdbcType=INTEGER}
-            </if>
-            <if test="superiorId != null">
-                and superior_id = #{superiorId,jdbcType=INTEGER}
-            </if>
-            <if test="type != null">
-                and type = #{type,jdbcType=INTEGER}
-            </if>
-            <if test="url != null">
-                and url = #{url,jdbcType=VARCHAR}
-            </if>
-            <if test="acceptMethod != null">
-                and accept_method like #{acceptMethod}
-            </if>
-            <if test="isApi != null">
-                and is_api = #{isApi}
-            </if>
         </where>
         order by auth.idx
     </select>
@@ -217,5 +181,10 @@
         LEFT JOIN role_authority_x ru
         on ru.authority_id = auth.id
         where ru.role_id = #{role_id}
+    </select>
+
+
+    <select id="getAllController" resultType="string">
+        SELECT DISTINCT controller from authority order by controller
     </select>
 </mapper>

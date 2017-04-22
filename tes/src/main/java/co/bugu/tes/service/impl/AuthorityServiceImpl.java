@@ -36,6 +36,11 @@ public class AuthorityServiceImpl extends BaseServiceImpl<Authority> implements 
     }
 
     @Override
+    public List<String> getAllController() {
+        return baseDao.selectList("tes.authority.getAllController");
+    }
+
+    @Override
     public void batchUpdate(Authority authority) {
 
     }
