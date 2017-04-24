@@ -1,32 +1,32 @@
 <!DOCTYPE html>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>管理</title>
-    <%@ include file="../template/header.jsp" %>
+<%--<html lang="en">--%>
+<%--<head>--%>
+    <%--<meta charset="UTF-8">--%>
+    <%--<title>管理</title>--%>
+    <%--<%@ include file="../template/header.jsp" %>--%>
 
-    <style>
-    </style>
-    <script>
-        $(function () {
-//            $("th.cell-edit").each(function (idx, e) {
-//                console.log("e", e);
-//
-//                var index = $(e).parents("tr").find("th").index($(e));
-//                console.log("index", index);
-//                $("tr td:eq(" + index + ")").each(function (idx1, e1) {
-//                    var value = $(e1).text();
-//                    $(e1).html("<input type='text' value='" + value + "' class='form-control form-control-intable'>");
-//                });
-//            });
-//            $("td.cell-edit").each(html("<input class='form-control' value='" + $(this).val() + "'>");
+    <%--<style>--%>
+    <%--</style>--%>
+    <%--<script>--%>
+        <%--$(function () {--%>
+<%--//            $("th.cell-edit").each(function (idx, e) {--%>
+<%--//                console.log("e", e);--%>
+<%--//--%>
+<%--//                var index = $(e).parents("tr").find("th").index($(e));--%>
+<%--//                console.log("index", index);--%>
+<%--//                $("tr td:eq(" + index + ")").each(function (idx1, e1) {--%>
+<%--//                    var value = $(e1).text();--%>
+<%--//                    $(e1).html("<input type='text' value='" + value + "' class='form-control form-control-intable'>");--%>
+<%--//                });--%>
+<%--//            });--%>
+<%--//            $("td.cell-edit").each(html("<input class='form-control' value='" + $(this).val() + "'>");--%>
 
-        })
-    </script>
-</head>
-<body>
-<div class="container">
+        <%--})--%>
+    <%--</script>--%>
+<%--</head>--%>
+<%--<body>--%>
+<div class="">
     <div class="row nav-path">
         <ol class="breadcrumb">
             <li><a href="#">首页</a></li>
@@ -94,5 +94,5 @@
 <script type="javascript">
 
 </script>
-</body>
-</html>
+<%--</body>--%>
+<%--</html>--%>

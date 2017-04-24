@@ -19,6 +19,7 @@
         </ol>
     </div>
     <form class="form form-inline search-form" action="list.do" method="post">
+        <input type="hidden" name="showCount" value="${param.showCount}">
         <div class="form-group form-group-sm">
             <label class="control-label">名称</label>
             <input type="text" class="form-control" name="name" value="${param.name}">
