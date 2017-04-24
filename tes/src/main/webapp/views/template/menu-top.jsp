@@ -1,19 +1,19 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>菜单</title>
-    <style>
-        .navbar-inverse{
-            border-radius: 0px;
-        }
+<%--<!DOCTYPE html>--%>
+<%--<html lang="en">--%>
+<%--<head>--%>
+    <%--<meta charset="UTF-8">--%>
+    <%--<title>菜单</title>--%>
+    <%--<style>--%>
+        <%--.navbar-inverse{--%>
+            <%--border-radius: 0px;--%>
+        <%--}--%>
 
-    </style>
-</head>
-<body>
-<div class="menu-top">
-    <nav class="navbar navbar-inverse">
+    <%--</style>--%>
+<%--</head>--%>
+<%--<body>--%>
+<%--<div class="menu-top">--%>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
@@ -67,6 +67,6 @@
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
     </nav>
-</div>
-</body>
-</html>
+<%--</div>--%>
+<%--</body>--%>
+<%--</html>--%>
