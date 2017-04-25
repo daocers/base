@@ -1,24 +1,20 @@
 package co.bugu.framework.core.mybatis;
 
 import co.bugu.framework.core.util.ReflectUtil;
-import com.sun.org.apache.bcel.internal.generic.IDIV;
-import com.sun.org.apache.regexp.internal.RE;
-import jdk.nashorn.internal.ir.IfNode;
 import org.apache.commons.lang.StringUtils;
-import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.resultset.ResultSetHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
-import org.apache.ibatis.mapping.*;
+import org.apache.ibatis.mapping.BoundSql;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.ResultMapping;
 import org.apache.ibatis.plugin.*;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
-import org.apache.ibatis.scripting.defaults.DefaultParameterHandler;
 import org.apache.ibatis.scripting.xmltags.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Field;
-import java.sql.*;
+import java.sql.Connection;
 import java.util.*;
 
 /**

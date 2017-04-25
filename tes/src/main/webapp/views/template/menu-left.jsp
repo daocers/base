@@ -171,11 +171,11 @@
     <li>
         <div class="link"><i class="fa fa-mobile"></i>试题管理<i class="fa fa-chevron-down"></i></div>
         <ul class="submenu">
-            <li><a href="#">题型设置</a></li>
-            <li><a href="#">题目管理</a></li>
-            <li><a href="#">交易题管理</a></li>
+            <li><a href="/questionMetaInfo/list.do">题型设置</a></li>
+            <li><a href="/question/list.do">题目管理</a></li>
+            <li><a href="/tradeQuestion/list.do">交易题管理</a></li>
             <li><a href="#">知识题管理</a></li>
-            <li><a href="#">交易录制</a></li>
+            <li><a href="/trade/toRecord.do">交易录制</a></li>
             <li><a href="#">翻打凭条管理</a></li>
 
         </ul>

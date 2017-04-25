@@ -1,6 +1,7 @@
 package co.bugu.tes.controller;
 
 import co.bugu.framework.core.dao.PageInfo;
+import co.bugu.framework.core.mybatis.SearchParamUtil;
 import co.bugu.framework.util.ExcelUtil;
 import co.bugu.framework.util.JsonUtil;
 import co.bugu.framework.util.exception.TesException;
@@ -56,8 +57,13 @@ public class QuestionController {
     * @return
     */
     @RequestMapping(value = "/list")
-    public String list(Question question, Integer curPage, Integer showCount, ModelMap model){
+    public String list(Question question, Integer curPage, Integer showCount, ModelMap model, HttpServletRequest request){
         try{
+            /**
+             * 添加查询条件
+             * LK_**, EQ_***等
+             * */
+            SearchParamUtil.processSearchParam(question, request);
             PageInfo<Question> pageInfo = new PageInfo<>(showCount, curPage);
             pageInfo = questionService.findByObject(question, pageInfo);
             model.put("pi", pageInfo);
@@ -74,6 +80,7 @@ public class QuestionController {
                 bankMap.put(bank.getId(), bank.getName());
             }
             model.put("bankMap", bankMap);
+            model.put("metaInfoList", metaInfoList);
 
         }catch (Exception e){
             logger.error("获取列表失败", e);
