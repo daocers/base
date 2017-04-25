@@ -1,9 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
-    <meta charset="utf-8">
-    <title>开场设置</title>
+    <title>布谷考培|用户列表</title>
     <%@ include file="../template/header.jsp" %>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
     <%--设置开关键--%>
     <style>
         .switch-btn {
@@ -253,412 +260,381 @@
     </script>
 </head>
 <body>
-<div class="container">
-    <div class="row nav-path">
-        <ol class="breadcrumb">
-            <li><a href="#">首页</a></li>
-            <li><a href="#">考试管理</a></li>
-            <li><a href="#" class="active">考试信息录入</a></li>
-        </ol>
-    </div>
+<%@ include file="../template/menu-top.jsp" %>
 
-
-    <input id="id" type="hidden" name="id" value="${scene.id}">
-    <input type="hidden" value="${type}" id="type">
-    <input type="hidden" id="choiceInfo" value="${scene.choiceInfo}">
-
-    <div id="rootwizard">
-        <ul>
-            <li><a href="#tab1" data-toggle="tab"><span class="label">1</span> 设置参数</a></li>
-            <li><a href="#tab2" data-toggle="tab"><span class="label">2</span> 考生选择</a></li>
-            <li><a href="#tab3" data-toggle="tab"><span class="label">3</span> 生成试卷</a></li>
-            <li><a href="#tab4" data-toggle="tab"><span class="label">4</span> 场次预览</a></li>
-            <li><a href="#tab5" data-toggle="tab"><span class="label">5</span> 开场完成</a></li>
-        </ul>
-        <div class="tab-content">
-            <div class="tab-pane col-md-8" id="tab1" style="margin-left: -15px;">
-                <form class="form-horizontal" method="post" action="save.do" data-toggle="validator" role="form"
-                      id="sceneForm">
-                    <div class="form-group">
-                        <label class="control-label col-md-2">场次名称</label>
-                        <div class="col-md-10">
-                            <input class="form-control" type="text" name="name" value="${scene.name}" required>
-                            <span class="help-block with-errors"></span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-2">考试开始时间</label>
-                        <div class="col-md-10">
-                            <input class="form-control time" type="text" name="beginTime" data-min-date="today"
-                                   value="<fmt:formatDate value="${scene.beginTime}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate> ">
-                            <span class="help-block with-errors"></span>
-                        </div>
-                    </div>
-
-
-                    <div class="form-group">
-                        <label class="control-label col-md-2">考试顺延时间</label>
-                        <div class="col-md-10">
-                            <input class="form-control" type="text" name="delay" value="${scene.delay}" required>
-                            <span class="help-block with-errors">考生顺延时间内开始考试，作答时间不变。超过顺延时间，作答时间需要减去超出部分。</span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-2">作答时间</label>
-                        <div class="col-md-10">
-                            <input class="form-control" type="text" name="duration" value="${scene.duration}" required>
-                            <span class="help-block with-errors">最大答题时间，超过该时间将自动提交试卷。</span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-2">结束时间</label>
-                        <div class="col-md-10">
-                            <input class="form-control time" type="text" name="endTime"
-                                   value="<fmt:formatDate value="${scene.endTime}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate>"
-                                   disabled>
-                            <span class="help-block with-errors">超过该时间点后，所有的本场考试的试卷将会被自动提交。(根据开始时间，作答时长，顺延时间计算，不能手动输入)</span>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label col-md-2">是否允许更换试卷</label>
-                        <div class="col-md-3">
-                            <div class="switch" style="height:30px;">
-                                <input class="change-paper form-control" data-on-color="info" data-off-color="warning"
-                                       type="checkbox" name="changePaper"
-                                       data-on-text="是" data-off-text="否"
-                                       <c:if test="${scene.changePaper == 0}">checked</c:if>
-                                       value="${scene.changePaper}" onclick="this.checked?0:1"
-                                       style="height: 30px;">
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label col-md-2">试卷生成方式</label>
-                        <div class="col-md-10">
-                            <select class="form-control" name="paperType">
-                                <option value="1">随机试卷</option>
-                                <option value="2">统一试卷</option>
-                                <%--<option value="1">按策略随机</option>--%>
-                                <%--<option value="2">按策略统一</option>--%>
-                                <%--<option value="3">导入试题</option>--%>
-                                <%--<option value="4">系统随机</option>--%>
-                                <%--<option value="5">系统统一</option>--%>
-                            </select>
-                            <span class="help-block with-errors">随机方式每张试卷不相同，统一方式每张试卷相同</span>
-                        </div>
-                    </div>
-
-                    <div class="button">
-                        <button class="btn btn-warning btn-cancel" onclick="history.back();">取消</button>
-
-                        <div class="space">
-
-                        </div>
-                        <button class="btn btn-primary btn-commit" id="saveBase">下一步</button>
-
-                    </div>
-                </form>
-            </div>
-            <div class="tab-pane" id="tab2">
-
-                <div class="form-inline form-group">
-                    <div class="input-group">
-                        <label class="input-group-addon">考试人员控制方式</label>
-                        <div>
-                            <select class="form-control" id="userType" name="userType">
-                                <option value="3" <c:if test="${scene.userType == 3}">selected</c:if>>设置授权码</option>
-                                <option value="2"
-                                        <c:if test="${scene.userType == 2}">selected</c:if> disabled>我的机构
-                                </option>
-                                <option value="0"
-                                        <c:if test="${scene.userType == 0}">selected</c:if> disabled>指定机构
-                                </option>
-                                <option value="1"
-                                        <c:if test="${scene.userType == 1}">selected</c:if> disabled>指定用户
-                                </option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <span class="help-block with-errors hidden">如果考试人员较多，建议直接选择参考机构；如果少量人员考试，直接点击机构信息然后选择用户</span>
-                <span class="help-block with-errors">【设置授权码】 用户录入授权码参与考试，适用于集中性的考试</span>
-                <span class="help-block with-errors hidden">【我的机构】 我所在机构的用户均可参加，不包括下属机构</span>
-                <span class="help-block with-errors hidden">【指定机构】 指定机构下的用户可参加，不包括下属机构</span>
-                <span class="help-block with-errors hidden">【指定用户】 指定用户可参加，单击机构名称可查询用户信息，适用于少量用户考试</span>
-
-                <div class="form-inline authBox">
-                    <div class="input-group">
-                        <label class="control-label input-group-addon">授权码</label>
-                        <input class="form-control" minlength="6" maxlength="6" name="authCode" id="authCode"
-                               placeholder="请输入6位数字或字母组合" value="${scene.authCode}">
-                        <div class="input-group-btn">
-                            <button class="btn btn-info" type="button">自动生成</button>
-
-                        </div>
-                    </div>
-                </div>
-                <%--<div class="row">--%>
-                <%--<div class="col-md-4" id="tree" style="display: none;">--%>
-                <%--<div class="zTreeDemoBackground left">--%>
-                <%--<ul id="treeDemo" class="ztree"></ul>--%>
-                <%--</div>--%>
-                <%--</div>--%>
-                <%--<div class="col-md-4 choice-user" style="display: none;">--%>
-                <%--<table class="table table-bordered" id="user-container">--%>
-                <%--<thead>--%>
-                <%--<tr>--%>
-                <%--<th class="col-md-1">用户名</th>--%>
-                <%--<th class="col-md-1">姓名</th>--%>
-                <%--<th class="col-md-1"><input class="selectAll" type="checkbox"></th>--%>
-                <%--</tr>--%>
-                <%--</thead>--%>
-                <%--<tbody>--%>
-                <%--</tbody>--%>
-
-                <%--</table>--%>
-                <%--</div>--%>
-
-                <%--<div class="col-md-4  choice-user" style="display: none; overflow-y: auto; height: 300px;">--%>
-                <%--<table class="table table-bordered" id="choice-box">--%>
-                <%--<thead>--%>
-                <%--<tr>--%>
-                <%--<th>用户名</th>--%>
-                <%--<th>姓名</th>--%>
-                <%--<th>操作</th>--%>
-                <%--</tr>--%>
-                <%--</thead>--%>
-                <%--<tbody>--%>
-
-                <%--</tbody>--%>
-                <%--</table>--%>
-                <%--</div>--%>
-
-                <%--<div class="col-md-4 col-md-offset-4 choice-branch"--%>
-                <%--style="overflow-y: auto; height: 300px; display: none">--%>
-                <%--<table class="table table-bordered" id="branch-box">--%>
-                <%--<thead>--%>
-                <%--<tr>--%>
-                <%--<th>机构</th>--%>
-                <%--<th>操作</th>--%>
-                <%--</tr>--%>
-                <%--</thead>--%>
-                <%--<tbody>--%>
-
-                <%--</tbody>--%>
-                <%--</table>--%>
-                <%--</div>--%>
-                <%--</div>--%>
-
-                <div class="button" style="margin-bottom: 50px; margin-top: 30px;">
-                    <button class="btn btn-warning btn-cancel" onclick="history.back();">取消</button>
-
-                    <div class="space">
-
-                    </div>
-                    <button class="btn btn-primary btn-commit" id="saveAuthCode">下一步</button>
-
-                </div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-0 col-md-2 sidebar menu-left">
+            <%@ include file="../template/menu-left.jsp" %>
+        </div>
+        <div class="col-sm-12 col-sm-offset-0 col-md-10 col-md-offset-2 main" id="main">
+            <%--<h1 class="page-header">Dashboard</h1>--%>
+            <div class="page-header nav-path">
+                <ol class="breadcrumb">
+                    <li><a href="#">首页</a></li>
+                    <li><a href="#" class="active">用户列表</a></li>
+                </ol>
             </div>
 
-            <div class="tab-pane" id="tab3">
-                <div class="">
-                    <div class="col-md-8">
-                        <form class="form-horizontal" method="post" action="savePolicy.do" data-toggle="validator"
-                              role="form" id="policyForm">
+
+            <input id="id" type="hidden" name="id" value="${scene.id}">
+            <input type="hidden" value="${type}" id="type">
+            <input type="hidden" id="choiceInfo" value="${scene.choiceInfo}">
+
+            <div id="rootwizard">
+                <ul>
+                    <li><a href="#tab1" data-toggle="tab"><span class="label">1</span> 设置参数</a></li>
+                    <li><a href="#tab2" data-toggle="tab"><span class="label">2</span> 考生选择</a></li>
+                    <li><a href="#tab3" data-toggle="tab"><span class="label">3</span> 生成试卷</a></li>
+                    <li><a href="#tab4" data-toggle="tab"><span class="label">4</span> 场次预览</a></li>
+                    <li><a href="#tab5" data-toggle="tab"><span class="label">5</span> 开场完成</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane col-md-8" id="tab1" style="margin-left: -15px;">
+                        <form class="form-horizontal" method="post" action="save.do" data-toggle="validator" role="form"
+                              id="sceneForm">
                             <div class="form-group">
-                                <div class="input-group">
-                                    <label class="input-group-addon"
-                                           style="margin-right: 15px;">选择题库</label>
-                                    <select class="form-control" name="bankId" required>
-                                        <option value="">--请选择--</option>
-                                        <option value="0"
-                                                <c:if test="scene.bankId == 0">selected</c:if>>不限
-                                        </option>
-                                        <c:forEach items="${bankList}" var="bank">
-                                            <option value="${bank.id}"
-                                                    <c:if test="${scene.bankId == bank.id}">selected</c:if>>${bank.name}</option>
-                                        </c:forEach>
-                                    </select>
+                                <label class="control-label col-md-2">场次名称</label>
+                                <div class="col-md-10">
+                                    <input class="form-control" type="text" name="name" value="${scene.name}" required>
+                                    <span class="help-block with-errors"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">考试开始时间</label>
+                                <div class="col-md-10">
+                                    <input class="form-control time" type="text" name="beginTime" data-min-date="today"
+                                           value="<fmt:formatDate value="${scene.beginTime}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate> ">
+                                    <span class="help-block with-errors"></span>
                                 </div>
                             </div>
 
 
                             <div class="form-group">
-                                <div class="input-group">
-                                    <label class="input-group-addon" style="margin-right: 15px;">策略类型</label>
-                                    <select class="form-control" id="privaryType" required>
-                                        <option value="0">我的策略</option>
-                                        <option value="1">公共策略</option>
-                                    </select>
-                                    <button class="btn btn-default" type="button">查询</button>
-                                    <span style="margin-left: 30px; padding-bottom: 5px; margin-bottom: 5px;">没有合适策略？<a
-                                            href="/paperPolicy/edit.do">去添加</a> </span>
+                                <label class="control-label col-md-2">考试顺延时间</label>
+                                <div class="col-md-10">
+                                    <input class="form-control" type="text" name="delay" value="${scene.delay}"
+                                           required>
+                                    <span class="help-block with-errors">考生顺延时间内开始考试，作答时间不变。超过顺延时间，作答时间需要减去超出部分。</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">作答时间</label>
+                                <div class="col-md-10">
+                                    <input class="form-control" type="text" name="duration" value="${scene.duration}"
+                                           required>
+                                    <span class="help-block with-errors">最大答题时间，超过该时间将自动提交试卷。</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">结束时间</label>
+                                <div class="col-md-10">
+                                    <input class="form-control time" type="text" name="endTime"
+                                           value="<fmt:formatDate value="${scene.endTime}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate>"
+                                           disabled>
+                                    <span class="help-block with-errors">超过该时间点后，所有的本场考试的试卷将会被自动提交。(根据开始时间，作答时长，顺延时间计算，不能手动输入)</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-2">是否允许更换试卷</label>
+                                <div class="col-md-3">
+                                    <div class="switch" style="height:30px;">
+                                        <input class="change-paper form-control" data-on-color="info"
+                                               data-off-color="warning"
+                                               type="checkbox" name="changePaper"
+                                               data-on-text="是" data-off-text="否"
+                                               <c:if test="${scene.changePaper == 0}">checked</c:if>
+                                               value="${scene.changePaper}" onclick="this.checked?0:1"
+                                               style="height: 30px;">
+                                    </div>
+
                                 </div>
 
                             </div>
 
-                            <div class="" style="min-height: 300px; margin-left: -15px;">
-                                <table class="table table-bordered data-table">
-                                    <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th>名称</th>
-                                        <th>机构</th>
-                                        <th>部门</th>
-                                        <th>岗位</th>
-                                        <th>试题信息</th>
-                                        <th>题量</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <c:forEach var="policy" items="${paperPolicyList}">
-                                        <tr>
-                                            <td><input name="paperPolicyId" type="radio" value="${policy.id}"
-                                                       <c:if test="${scene.paperPolicyId == policy.id}">checked</c:if>
-                                            ></td>
-                                            <td>${policy.name}</td>
-                                            <td>${policy.branchId}</td>
-                                            <td>${policy.departmentId}</td>
-                                            <td>${policy.stationId}</td>
-                                            <td>${policy.content}</td>
-                                            <td>${policy.count}</td>
-                                        </tr>
-                                    </c:forEach>
-                                    <%--<tr>--%>
-                                    <%--<td colspan="7">请选择筛选条件！</td>--%>
-                                    <%--</tr>--%>
-                                    </tbody>
-                                </table>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">试卷生成方式</label>
+                                <div class="col-md-10">
+                                    <select class="form-control" name="paperType">
+                                        <option value="1">随机试卷</option>
+                                        <option value="2">统一试卷</option>
+                                        <%--<option value="1">按策略随机</option>--%>
+                                        <%--<option value="2">按策略统一</option>--%>
+                                        <%--<option value="3">导入试题</option>--%>
+                                        <%--<option value="4">系统随机</option>--%>
+                                        <%--<option value="5">系统统一</option>--%>
+                                    </select>
+                                    <span class="help-block with-errors">随机方式每张试卷不相同，统一方式每张试卷相同</span>
+                                </div>
                             </div>
 
                             <div class="button">
                                 <button class="btn btn-warning btn-cancel" onclick="history.back();">取消</button>
+
                                 <div class="space">
 
                                 </div>
-                                <button class="btn btn-primary btn-commit" id="savePaperPolicy">下一步</button>
-                            </div>
-                            <div class="row">
+                                <button class="btn btn-primary btn-commit" id="saveBase">下一步</button>
 
                             </div>
                         </form>
                     </div>
+                    <div class="tab-pane" id="tab2">
 
-                    <%--此处应修改为策略和题库信息的对比，符合或者不符合需要给出信息--%>
-                    <div class="col-md-4">
-                        <div class="input-group">
-                            <div class="input-group-addon">已选策略</div>
-                            <input id="paperPolicyId" value="${scene.paperPolicyId}" type="hidden"/>
-                            <input id="policy" class="form-control" readonly value="${policyName}" type="text">
+                        <div class="form-inline form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon">考试人员控制方式</label>
+                                <div>
+                                    <select class="form-control" id="userType" name="userType">
+                                        <option value="3" <c:if test="${scene.userType == 3}">selected</c:if>>设置授权码
+                                        </option>
+                                        <option value="2"
+                                                <c:if test="${scene.userType == 2}">selected</c:if> disabled>我的机构
+                                        </option>
+                                        <option value="0"
+                                                <c:if test="${scene.userType == 0}">selected</c:if> disabled>指定机构
+                                        </option>
+                                        <option value="1"
+                                                <c:if test="${scene.userType == 1}">selected</c:if> disabled>指定用户
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                <textarea id="content" class="form-control" rows="10" readonly
-                          style="background-color: beige"> </textarea>
+                        <span class="help-block with-errors hidden">如果考试人员较多，建议直接选择参考机构；如果少量人员考试，直接点击机构信息然后选择用户</span>
+                        <span class="help-block with-errors">【设置授权码】 用户录入授权码参与考试，适用于集中性的考试</span>
+                        <span class="help-block with-errors hidden">【我的机构】 我所在机构的用户均可参加，不包括下属机构</span>
+                        <span class="help-block with-errors hidden">【指定机构】 指定机构下的用户可参加，不包括下属机构</span>
+                        <span class="help-block with-errors hidden">【指定用户】 指定用户可参加，单击机构名称可查询用户信息，适用于少量用户考试</span>
+
+                        <div class="form-inline authBox">
+                            <div class="input-group">
+                                <label class="control-label input-group-addon">授权码</label>
+                                <input class="form-control" minlength="6" maxlength="6" name="authCode" id="authCode"
+                                       placeholder="请输入6位数字或字母组合" value="${scene.authCode}">
+                                <div class="input-group-btn">
+                                    <button class="btn btn-info" type="button">自动生成</button>
+
+                                </div>
+                            </div>
                         </div>
-                        <div class="input-group">
-                            <div class="input-group-btn">
-                                <button class="btn btn-success" id="checkPaperPolicy">校验策略可用性</button>
+
+                        <div class="button" style="margin-bottom: 50px; margin-top: 30px;">
+                            <button class="btn btn-warning btn-cancel" onclick="history.back();">取消</button>
+
+                            <div class="space">
 
                             </div>
-                            <input type="text" disabled id="available" value="" class="form-control">
-                        </div>
-                        <div>
-                            <button class="btn btn-danger" id="updateBank">刷新题库</button>
+                            <button class="btn btn-primary btn-commit" id="saveAuthCode">下一步</button>
+
                         </div>
                     </div>
 
+                    <div class="tab-pane" id="tab3">
+                        <div class="">
+                            <div class="col-md-8">
+                                <form class="form-horizontal" method="post" action="savePolicy.do"
+                                      data-toggle="validator"
+                                      role="form" id="policyForm">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <label class="input-group-addon"
+                                                   style="margin-right: 15px;">选择题库</label>
+                                            <select class="form-control" name="bankId" required>
+                                                <option value="">--请选择--</option>
+                                                <option value="0"
+                                                        <c:if test="scene.bankId == 0">selected</c:if>>不限
+                                                </option>
+                                                <c:forEach items="${bankList}" var="bank">
+                                                    <option value="${bank.id}"
+                                                            <c:if test="${scene.bankId == bank.id}">selected</c:if>>${bank.name}</option>
+                                                </c:forEach>
+                                            </select>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <label class="input-group-addon" style="margin-right: 15px;">策略类型</label>
+                                            <select class="form-control" id="privaryType" required>
+                                                <option value="0">我的策略</option>
+                                                <option value="1">公共策略</option>
+                                            </select>
+                                            <button class="btn btn-default" type="button">查询</button>
+                                            <span style="margin-left: 30px; padding-bottom: 5px; margin-bottom: 5px;">没有合适策略？<a
+                                                    href="/paperPolicy/edit.do">去添加</a> </span>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="" style="min-height: 300px; margin-left: -15px;">
+                                        <table class="table table-bordered data-table">
+                                            <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>名称</th>
+                                                <th>机构</th>
+                                                <th>部门</th>
+                                                <th>岗位</th>
+                                                <th>试题信息</th>
+                                                <th>题量</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <c:forEach var="policy" items="${paperPolicyList}">
+                                                <tr>
+                                                    <td><input name="paperPolicyId" type="radio" value="${policy.id}"
+                                                               <c:if test="${scene.paperPolicyId == policy.id}">checked</c:if>
+                                                    ></td>
+                                                    <td>${policy.name}</td>
+                                                    <td>${policy.branchId}</td>
+                                                    <td>${policy.departmentId}</td>
+                                                    <td>${policy.stationId}</td>
+                                                    <td>${policy.content}</td>
+                                                    <td>${policy.count}</td>
+                                                </tr>
+                                            </c:forEach>
+                                            <%--<tr>--%>
+                                            <%--<td colspan="7">请选择筛选条件！</td>--%>
+                                            <%--</tr>--%>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="button">
+                                        <button class="btn btn-warning btn-cancel" onclick="history.back();">取消</button>
+                                        <div class="space">
+
+                                        </div>
+                                        <button class="btn btn-primary btn-commit" id="savePaperPolicy">下一步</button>
+                                    </div>
+                                    <div class="row">
+
+                                    </div>
+                                </form>
+                            </div>
+
+                            <%--此处应修改为策略和题库信息的对比，符合或者不符合需要给出信息--%>
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <div class="input-group-addon">已选策略</div>
+                                    <input id="paperPolicyId" value="${scene.paperPolicyId}" type="hidden"/>
+                                    <input id="policy" class="form-control" readonly value="${policyName}" type="text">
+                                </div>
+                                <div class="form-group">
+                <textarea id="content" class="form-control" rows="10" readonly
+                          style="background-color: beige"> </textarea>
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-success" id="checkPaperPolicy">校验策略可用性</button>
+
+                                    </div>
+                                    <input type="text" disabled id="available" value="" class="form-control">
+                                </div>
+                                <div>
+                                    <button class="btn btn-danger" id="updateBank">刷新题库</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="tab4">
+                        <form action="confirm.do" method="post">
+                            <div id="preview-box">
+                                <table class="table table-responsive table-bordered preview">
+                                    <thead>基本信息</thead>
+                                    <tbody>
+                                    <tr>
+                                        <td class="col-md-2">名称</td>
+                                        <td class="col-md-4">${scene.name}</td>
+                                        <td class="col-md-2">编号</td>
+                                        <td class="col-md-4">${scene.code}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>开始时间</td>
+                                        <td><fmt:formatDate value="${scene.beginTime}"
+                                                            pattern="yyyy-MM-dd HH:mm:ss"/></td>
+                                        <td>结束时间</td>
+                                        <td><fmt:formatDate value="${scene.endTime}"
+                                                            pattern="yyyy-MM-dd HH:mm:ss"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>顺延时间（分）</td>
+                                        <td>${scene.delay}</td>
+                                        <td>考试时长（分）</td>
+                                        <td>${scene.duration}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>授权码</td>
+                                        <td>${scene.authCode}</td>
+                                        <td>是否允许换卷</td>
+                                        <td>${scene.changePaper == 0 ? "是" : "否"}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                                <table class="table table-responsive table-bordered preview">
+                                    <thead>
+                                    试卷策略信息
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td class="col-md-2">策略名称</td>
+                                        <td colspan="3">${paperPolicy.name}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-2">题量</td>
+                                        <td class="col-md-4">${paperPolicy.count}</td>
+                                        <td class="col-md-2">总分</td>
+                                        <td class="col-md-4">${paperPolicy.score}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-2">策略明细</td>
+                                        <td colspan="3">${paperPolicy.content}</td>
+                                    </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                            <div class="button">
+                                <button type="button" class="btn btn-warning" onclick="history.back();">取消</button>
+                                <div class="space">
+
+                                </div>
+                                <button class="btn btn-success" type="button" id="confirm">确定,开场</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="tab-pane" id="tab5">
+                        <div class="col-md-8">
+                            <div class="center-block" style="display: none;" id="success-box">
+                                <img src="/assets/img/success.png" height="150px" width="150px" class="img-circle">
+                                <h3>恭喜，开场成功！</h3>
+                                <a href="list.do" class="btn btn-success">确定</a>
+                            </div>
+                            <div class="center-block" style="display: none;" id="error-box">
+                                <img src="/assets/img/error.png" height="150px" width="150px" class="img-cricle">
+                                <h3>抱歉，开场失败！</h3>
+                                <h4 id="errMsg"></h4>
+                                <a href="#" class="btn btn-info">场次管理</a>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
-            <div class="tab-pane col-md-8" id="tab4">
-                <form action="confirm.do" method="post">
-                    <div id="preview-box">
-                        <table class="table table-responsive table-bordered preview">
-                            <thead>基本信息</thead>
-                            <tbody>
-                            <tr>
-                                <td class="col-md-2">名称</td>
-                                <td class="col-md-4">${scene.name}</td>
-                                <td class="col-md-2">编号</td>
-                                <td class="col-md-4">${scene.code}</td>
-                            </tr>
-                            <tr>
-                                <td>开始时间</td>
-                                <td><fmt:formatDate value="${scene.beginTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-                                <td>结束时间</td>
-                                <td><fmt:formatDate value="${scene.endTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-                            </tr>
-                            <tr>
-                                <td>顺延时间（分）</td>
-                                <td>${scene.delay}</td>
-                                <td>考试时长（分）</td>
-                                <td>${scene.duration}</td>
-                            </tr>
-                            <tr>
-                                <td>授权码</td>
-                                <td>${scene.authCode}</td>
-                                <td>是否允许换卷</td>
-                                <td>${scene.changePaper == 0 ? "是" : "否"}</td>
-                            </tr>
-                            </tbody>
-                        </table>
 
-                        <table class="table table-responsive table-bordered preview">
-                            <thead>
-                            试卷策略信息
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td class="col-md-2">策略名称</td>
-                                <td colspan="3">${paperPolicy.name}</td>
-                            </tr>
-                            <tr>
-                                <td class="col-md-2">题量</td>
-                                <td class="col-md-4">${paperPolicy.count}</td>
-                                <td class="col-md-2">总分</td>
-                                <td class="col-md-4">${paperPolicy.score}</td>
-                            </tr>
-                            <tr>
-                                <td class="col-md-2">策略明细</td>
-                                <td colspan="3">${paperPolicy.content}</td>
-                            </tr>
-                            </tbody>
-
-                        </table>
-                    </div>
-
-                    <div class="button">
-                        <button type="button" class="btn btn-warning" onclick="history.back();">取消</button>
-                        <div class="space">
-
-                        </div>
-                        <button class="btn btn-success" type="button" id="confirm">确定,开场</button>
-                    </div>
-                </form>
-            </div>
-            <div class="tab-pane" id="tab5">
-                <div class="col-md-8">
-                    <div class="center-block" style="display: none;" id="success-box">
-                        <img src="/assets/img/success.png" height="150px" width="150px" class="img-circle">
-                        <h3>恭喜，开场成功！</h3>
-                        <a href="list.do" class="btn btn-success">确定</a>
-                    </div>
-                    <div class="center-block" style="display: none;" id="error-box">
-                        <img src="/assets/img/error.png" height="150px" width="150px" class="img-cricle">
-                        <h3>抱歉，开场失败！</h3>
-                        <h4 id="errMsg"></h4>
-                        <a href="#" class="btn btn-info">场次管理</a>
-                    </div>
-                </div>
-
-            </div>
         </div>
     </div>
-
 </div>
+
+
+<%--此处必须单独写在此处，解决无法生效的问题--%>
+<script src="/assets/js/menu.js"></script>
 <script>
 
     /**
@@ -813,8 +789,8 @@
 
 
     /**
-    * 检查试卷策略是否可用
-    * */
+     * 检查试卷策略是否可用
+     * */
     $("#checkPaperPolicy").on("click", function () {
         var bankId = $("[name='bankId']").val();
         console.log("bankId: ", bankId);
@@ -898,10 +874,10 @@
             data: {id: id},
             success: function (data) {
                 var res = JSON.parse(data);
-                if(res.code == 0){
+                if (res.code == 0) {
                     $("#success-box").show();
                     $("#error-box").hide();
-                }else{
+                } else {
                     var err = res.err;
                     $("#success-box").hide();
                     $("#error-box").show();

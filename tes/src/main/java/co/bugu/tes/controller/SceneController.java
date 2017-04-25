@@ -20,15 +20,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.print.Doc;
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
 @RequestMapping("/scene")
-public class SceneController1 {
-    private static Logger logger = LoggerFactory.getLogger(SceneController1.class);
+public class SceneController {
+    private static Logger logger = LoggerFactory.getLogger(SceneController.class);
 
     @Autowired
     ISceneService sceneService;
