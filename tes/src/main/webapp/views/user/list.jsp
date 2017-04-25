@@ -10,12 +10,8 @@
     <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
     <meta name="description" content="">
     <meta name="author" content="">
-
-
 </head>
-
 <body>
-
 <%@ include file="../template/menu-top.jsp" %>
 
 <div class="container-fluid">
@@ -32,50 +28,66 @@
                 </ol>
             </div>
 
-            <div class="container-fluid">
-
+            <div class="">
+                <form class="form-inline" action="list.do">
+                    <input type="hidden" name="showCount" value="${param.showCount}">
+                    <div class="input-group input-group-sm">
+                        <div class="input-group-addon">用户名</div>
+                        <input type="text" class="form-control" name="username" value="${param.username}">
+                    </div>
+                    <div class="input-group input-group-sm">
+                        <div class="input-group-addon">姓名</div>
+                        <input type="text" class="form-control" name="name" value="${param.name}">
+                    </div>
+                    <div class="input-group-sm">
+                        <button class="btn btn-info btn-sm">查询</button>
+                    </div>
+                </form>
                 <div class=" pre-table">
+
                     <div class="pull-left form-inline">
                         <button class="btn btn-info" id="import">导入数据</button>
                         <button class="btn btn-primary" id="download">下载模板</button>
                     </div>
 
                 </div>
-                <div class="row">
-                    <table class="table table-bordered">
-                        <thead>
-                        <tr>
-                            <th><input type="checkbox" class="selectAll"></th>
-                            <th>branchId</th>
-                            <th>departmentId</th>
-                            <th>password</th>
-                            <th>stationId</th>
-                            <th>status</th>
-                            <th>username</th>
-                            <th>操作</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <c:forEach items="${pi.data}" var="user" varStatus="line">
-                            <tr>
-                                <td><input type="checkbox" objId="${user.id}"></td>
-                                <td>${user.branchId}</td>
-                                <td>${user.departmentId}</td>
-                                <td>${user.password}</td>
-                                <td>${user.stationId}</td>
-                                <td>${user.status}</td>
-                                <td>${user.username}</td>
-                                <td>
-                                    <a href="edit.do?id=${user.id}&type=detail" class="opr">详情</a>
-                                    <a href="edit.do?id=${user.id}" class="opr">修改</a>
-                                    <a href="javascript:del(${user.id})" class="opr">删除</a>
-                                </td>
-                            </tr>
-                        </c:forEach>
 
-                        </tbody>
-                    </table>
-                </div>
+
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th><input type="checkbox" class="selectAll"></th>
+                        <th>机构</th>
+                        <th>部门</th>
+                        <th>岗位</th>
+                        <th>状态</th>
+                        <th>用户名</th>
+                        <th>姓名</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach items="${pi.data}" var="user" varStatus="line">
+                        <tr>
+                            <td><input type="checkbox" objId="${user.id}"></td>
+                            <td>${branchMap.get(user.branchId)}</td>
+                            <td>${departmentMap.get(user.departmentId)}</td>
+                            <td>${stationMap.get(user.stationId)}</td>
+                            <td>${user.status == 0 ? "启用" : "禁用"}</td>
+                            <td>${user.username}</td>
+                            <td>${user.name}</td>
+                            <td>
+                                <a href="edit.do?id=${user.id}&type=detail" class="opr">详情</a>
+                                <a href="edit.do?id=${user.id}" class="opr">修改</a>
+                                <a href="javascript:del(${user.id})" class="opr">删除</a>
+                            </td>
+                        </tr>
+                    </c:forEach>
+
+                    </tbody>
+                </table>
+
+                <div class="row"></div>
 
                 <div class="after-table">
                     <div class="pull-left form-inline">

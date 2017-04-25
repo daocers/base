@@ -12,6 +12,10 @@ import co.bugu.tes.model.*;
 import co.bugu.tes.service.*;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.eventbus.DeadEvent;
+import jdk.internal.org.objectweb.asm.tree.InnerClassNode;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,25 +51,45 @@ public class UserController {
     /**
      * 列表，分页显示
      *
-     * @param user      查询数据
+     * @param username      查询数据
+     * @param name      查询数据
      * @param curPage   当前页码，从1开始
      * @param showCount 当前页码显示数目
      * @param model
      * @return
      */
     @RequestMapping(value = "/list")
-    public String list(User user, Integer curPage, Integer showCount, ModelMap model) {
+    public String list(String username, String name, Integer curPage, Integer showCount, ModelMap model) {
         try {
-//            Map<String, Object> param = new HashMap<>();
-//            param.put("LK_username", "%allen%");
-//            param.put("EQ_status", 1);
-//            ThreadLocalUtil.set(param);
-//            user.setStatus(1);
-//            user.setUsername("%allen%");
+            User user = new User();
+            if(StringUtils.isNotEmpty(username)){
+                user.setUsername(username);
+            }
+            if(StringUtils.isNotEmpty(name)){
+                user.setName(name);
+            }
             PageInfo<User> pageInfo = new PageInfo<>(showCount, curPage);
             pageInfo = userService.findByObject(user, pageInfo);
             model.put("pi", pageInfo);
             model.put("user", user);
+            List<Department> departments = departmentService.findByObject(null);
+            List<Branch> branches = branchService.findByObject(null);
+            List<Station> stations = stationService.findByObject(null);
+            Map<Integer, String> departmentMap = new HashMap<>();
+            Map<Integer, String> branchMap = new HashMap<>();
+            Map<Integer, String> stationMap = new HashMap<>();
+            for(Department department: departments){
+                departmentMap.put(department.getId(), department.getName());
+            }
+            for(Branch branch: branches){
+                branchMap.put(branch.getId(), branch.getName());
+            }
+            for(Station station: stations){
+                stationMap.put(station.getId(), station.getName());
+            }
+            model.put("departmentMap", departmentMap);
+            model.put("branchMap", branchMap);
+            model.put("stationMap", stationMap);
         } catch (Exception e) {
             logger.error("获取列表失败", e);
             model.put("errMsg", "获取列表失败");
@@ -89,7 +113,7 @@ public class UserController {
                 Profile profile = new Profile();
                 profile.setUserId(user.getId());
                 List<Profile> list = profileService.findByObject(profile);
-                if (list.size() > 1) {
+                if (list.size() != 1) {
                     logger.error("数据紊乱， userId: {}", id);
                     model.put("err", "数据有误，请联系管理员处理");
                 } else {
@@ -120,6 +144,9 @@ public class UserController {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(User user, ModelMap model) {
         try {
+            if(user.getProfile() != null){
+                user.setName(user.getProfile().getName());
+            }
             if (user.getId() == null) {
                 userService.save(user);
             } else {
@@ -184,6 +211,7 @@ public class UserController {
         profile.setExamStatus(ExamStatus.ENABLE.getStatus());
         profile.setExamStatusUpdate(new Date());
         profile.setRegistTime(new Date());
+        user.setName(profile.getName());
         user.setStatus(UserStatus.NEEDINFO.getStatus());
         String salt = EncryptUtil.getSalt(6);
         user.setSalt(salt);

@@ -19,11 +19,21 @@ public class User {
 
     private String salt;
 
+    private String name;
+
     private List<Role> roleList;
 
     private List<Authority> authorityList;
 
     private Profile profile;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getSalt() {
         return salt;

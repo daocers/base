@@ -10,9 +10,10 @@
         <result column="station_id" property="stationId" jdbcType="INTEGER"/>
         <result column="status" property="status" jdbcType="INTEGER"/>
         <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="user_list">
-        id, branch_id, department_id, password, salt, station_id, status, username
+        id, branch_id, department_id, password, salt, station_id, status, username, name
     </sql>
     <select id="selectById" resultMap="UserMap" parameterType="java.lang.Integer">
         select
@@ -52,6 +53,9 @@
             <if test="username != null">
                 username,
             </if>
+            <if test="name != null">
+                name,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -78,6 +82,9 @@
             <if test="username != null">
                 #{username,jdbcType=VARCHAR},
             </if>
+            <if test="name != null">
+                #{name, jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <update id="updateById" parameterType="co.bugu.tes.model.User">
@@ -103,6 +110,9 @@
             </if>
             <if test="username != null">
                 username = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}

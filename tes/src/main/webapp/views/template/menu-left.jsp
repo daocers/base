@@ -151,19 +151,21 @@
 </style>
 <ul id="accordion" class="accordion">
     <li>
-        <div class="link"><i class="fa fa-paint-brush"></i>系统管理<i class="fa fa-chevron-down"></i></div>
+        <div class="link">系统管理<span class=" caret" style="float: right;"></span></div>
         <ul class="submenu">
-            <li><a href="#">用户管理</a></li>
-            <li><a href="#">角色管理</a></li>
-            <li><a href="#">权限管理</a></li>
+            <li><a href="/user/list.do">用户管理</a></li>
+            <li><a href="/role/list.do">角色管理</a></li>
+            <li><a href="/authority/list.do">权限管理</a></li>
+            <li><a href="/branch/list.do">机构管理</a></li>
+            <li><a href="/department/list.do">部门管理</a></li>
         </ul>
     </li>
     <li>
-        <div class="link"><i class="fa fa-code"></i>考试管理<i class="fa fa-chevron-down"></i></div>
+        <div class="link"><i class="fa fa-code"></i>场次管理<i class="fa fa-chevron-down"></i></div>
         <ul class="submenu">
-            <li><a href="#">我参加的</a></li>
-            <li><a href="#">我创建的</a></li>
-            <li><a href="#">我要考试</a></li>
+            <li><a href="/scene/list.do?type=join">我参加的</a></li>
+            <li><a href="/scene/list.do?type=my">我创建的</a></li>
+            <li><a href="/exam/index.do">我要考试</a></li>
         </ul>
     </li>
     <li>
@@ -171,17 +173,19 @@
         <ul class="submenu">
             <li><a href="#">题型设置</a></li>
             <li><a href="#">题目管理</a></li>
-            <li><a href="#">试卷管理</a></li>
-            <li><a href="#">Otros dispositivos</a></li>
+            <li><a href="#">交易题管理</a></li>
+            <li><a href="#">知识题管理</a></li>
+            <li><a href="#">交易录制</a></li>
+            <li><a href="#">翻打凭条管理</a></li>
+
         </ul>
     </li>
-    <li>
-        <div class="link"><i class="fa fa-globe"></i>考试<i class="fa fa-chevron-down"></i></div>
+    <li><div class="link"><i class="fa fa-globe"></i>考试设置<i class="fa fa-chevron-down"></i></div>
         <ul class="submenu">
-            <li><a href="#">Google</a></li>
-            <li><a href="#">Bing</a></li>
-            <li><a href="#">Yahoo</a></li>
-            <li><a href="#">Otros buscadores</a></li>
+            <li><a href="#">试题策略管理</a></li>
+            <li><a href="#">试卷策略管理</a></li>
+            <li><a href="#">试卷管理</a></li>
+            <li><a href="#"></a></li>
         </ul>
     </li>
 </ul>
