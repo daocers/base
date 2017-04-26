@@ -37,8 +37,6 @@
 </div>
 
 
-<%--此处必须单独写在此处，解决无法生效的问题--%>
-<script src="/assets/js/menu.js"></script>
 <script></script>
 </body>
 </html>

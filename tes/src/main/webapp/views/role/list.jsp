@@ -58,27 +58,24 @@
                 </table>
             </div>
 
-                <div class="after-table">
-                    <div class="pull-left form-inline">
-                        <select class="form-control show-count">
-                            <option value="10" <c:if test="${ pi.showCount == 10 }">selected</c:if>>10</option>
-                            <option value="25" <c:if test="${ pi.showCount == 25}">selected</c:if>>25</option>
-                            <option value="50" <c:if test="${ pi.showCount == 50}">selected</c:if>>50</option>
-                        </select>
-                        <div>条/页</div>
+            <div class="after-table">
+                <div class="pull-left form-inline">
+                    <select class="form-control show-count">
+                        <option value="10" <c:if test="${ pi.showCount == 10 }">selected</c:if>>10</option>
+                        <option value="25" <c:if test="${ pi.showCount == 25}">selected</c:if>>25</option>
+                        <option value="50" <c:if test="${ pi.showCount == 50}">selected</c:if>>50</option>
+                    </select>
+                    <div>条/页</div>
 
-                    </div>
-                    <div class="pull-right">
-                        <jsp:include page="../template/page-nav.jsp"/>
-                    </div>
                 </div>
+                <div class="pull-right">
+                    <jsp:include page="../template/page-nav.jsp"/>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-
-<%--此处必须单独写在此处，解决无法生效的问题--%>
-<script src="/assets/js/menu.js"></script>
 <script></script>
 </body>
 </html>

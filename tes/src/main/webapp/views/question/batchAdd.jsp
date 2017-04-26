@@ -89,9 +89,6 @@
     </div>
 </div>
 
-
-<%--此处必须单独写在此处，解决无法生效的问题--%>
-<script src="/assets/js/menu.js"></script>
 <script>
     $(".prop-list-container").hide();
     //提交前处理信息
