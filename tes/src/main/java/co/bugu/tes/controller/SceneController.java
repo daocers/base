@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -49,8 +50,15 @@ public class SceneController {
      * @param request
      * @return
      */
-    @RequestMapping("/list")
-    public String list(Integer showCount, Integer curPage, ModelMap model, HttpServletRequest request) throws Exception {
+    @RequestMapping("/list/{type}")
+    public String list(@PathVariable String type, Integer showCount, Integer curPage, ModelMap model, HttpServletRequest request) throws Exception {
+        if("my".equals(type)){
+
+        }else if("join".equals(type)){
+
+        }else{
+            model.put("msg", "非法参数");
+        }
         Integer userId = (Integer) BuguWebUtil.getUserId(request);
         Scene scene = new Scene();
         scene.setCreateUserId(userId);
