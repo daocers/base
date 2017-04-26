@@ -1,6 +1,7 @@
 
 
 $(function () {
+    console.log("navi....")
     var Accordion = function (e, multiple) {
         this.e = e || {};
         this.multiple = multiple || false;
@@ -35,4 +36,5 @@ $(function () {
         window.location.href = url;
         return false;
     })
+
 })

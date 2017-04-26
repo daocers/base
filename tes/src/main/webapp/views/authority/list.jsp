@@ -38,7 +38,7 @@
                 <div class="input-group input-group-sm">
                     <div class="input-group-addon">类型</div>
                     <select class="form-control" name="type">
-                        <option value="-1"></option>
+                        <option value="-1">全部</option>
                         <option value="0"
                                 <c:if test="${param.type == 0}">selected</c:if>>操作权限
                         </option>
@@ -107,7 +107,7 @@
                 </table>
             </div>
 
-            <div class="row after-table">
+            <div class="after-table">
                 <div class="pull-left form-inline">
                     <select class="form-control show-count">
                         <option value="10" <c:if test="${ pi.showCount == 10 }">selected</c:if>>10</option>
@@ -128,8 +128,6 @@
 </div>
 
 
-<%--此处必须单独写在此处，解决无法生效的问题--%>
-<script src="/assets/js/menu.js"></script>
 <script type="javascript">
     $(function () {
         $("td").on("blur", ".cell-input > input", function (e) {

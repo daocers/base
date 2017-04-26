@@ -38,6 +38,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
         if (HandlerMethod.class.equals(o.getClass())) {
+            BuguWebUtil.set(request, "currentUrl", request.getServletPath());
             HandlerMethod handlerMethod = (HandlerMethod) o;
             Object controller = handlerMethod.getBean();
             Method method = handlerMethod.getMethod();

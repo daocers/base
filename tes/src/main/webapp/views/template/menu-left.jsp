@@ -180,7 +180,8 @@
 
         </ul>
     </li>
-    <li><div class="link"><i class="fa fa-globe"></i>考试设置<i class="fa fa-chevron-down"></i></div>
+    <li>
+        <div class="link"><i class="fa fa-globe"></i>考试设置<i class="fa fa-chevron-down"></i></div>
         <ul class="submenu">
             <li><a href="/questionPolicy/list.do">试题策略管理</a></li>
             <li><a href="/paperPolicy/list.do">试卷策略管理</a></li>
@@ -190,7 +191,21 @@
     </li>
 </ul>
 
-<%--</div>--%>
+<div class="hidden" id="currentUrl">
+    <%=session.getAttribute("currentUrl")%>
+</div>
 
-</body>
-</html>
+
+<%--以下的script标签不要修改位置，否则可能造成不生效--%>
+<script src="/assets/js/menu.js"></script>
+
+<script>
+    $(function () {
+        console.log("begin")
+        var cuttentUrl = $("#currentUrl").text().trim();
+        var $curLi = $("li a[href='" + cuttentUrl + "']");
+        $curLi.addClass("active");
+        $curLi.parents(".accordion > li").addClass("open");
+        $curLi.parents("ul.submenu").attr("style", "display: block;");
+    })
+</script>
