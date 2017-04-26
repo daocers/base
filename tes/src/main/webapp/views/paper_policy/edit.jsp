@@ -1,10 +1,16 @@
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<html>
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
-    <meta charset="utf-8">
-    <title>试卷策略</title>
+    <title>布谷考培|用户列表</title>
     <%@ include file="../template/header.jsp" %>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
     <style type="text/css">
         .inline {
             display: inline;
@@ -17,18 +23,24 @@
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="row nav-path">
-        <ol class="breadcrumb">
-            <li><a href="#">首页</a></li>
-            <li><a href="#">试卷策略</a></li>
-            <li><a href="#" class="active">试卷策略编辑</a></li>
-        </ol>
-    </div>
-    <input type="hidden" value="${param.type}" id="type">
+<%@ include file="../template/menu-top.jsp" %>
+
+<div class="container-fluid">
     <div class="row">
-        <div class="col-md-8">
-            <form class="form-horizontal" method="post" action="save.do" data-toggle="validator" role="form">
+        <div class="col-sm-0 col-md-2 sidebar menu-left">
+            <%@ include file="../template/menu-left.jsp" %>
+        </div>
+        <div class="col-sm-12 col-sm-offset-0 col-md-10 col-md-offset-2 main" id="main">
+            <%--<h1 class="page-header">Dashboard</h1>--%>
+            <div class="page-header nav-path">
+                <ol class="breadcrumb">
+                    <li><a href="#">首页</a></li>
+                    <li><a href="#" class="active">用户列表</a></li>
+                </ol>
+            </div>
+            <input type="hidden" value="${param.type}" id="type">
+
+            <form class="form-horizontal col-md-9" method="post" action="save.do" data-toggle="validator" role="form">
                 <input id="id" type="hidden" name="id" value="${paperPolicy.id}">
 
                 <input type="hidden" name="content" value='${paperPolicy.content}'>
@@ -137,7 +149,8 @@
                                         </select>
                                     </td>
                                     <td width="120px">
-                                        <input class="form-control form-control-intable" type="number" min="0" value="0">
+                                        <input class="form-control form-control-intable" type="number" min="0"
+                                               value="0">
                                     </td>
                                     <td width="100px">
                                         <input class="form-control form-control-intable score" type="text" value="">
@@ -187,20 +200,25 @@
                     <button class="btn btn-warning btn-cancel">取消</button>
                 </div>
             </form>
-        </div>
 
+
+        </div>
     </div>
 </div>
+
+
+<%--此处必须单独写在此处，解决无法生效的问题--%>
+<script src="/assets/js/menu.js"></script>
 <script>
     var inputFlag = false;
     $(function () {
         $("[name='selectType']").on("change", function () {
             var selectType = $(this).val();
             console.log("selectType: ", selectType);
-            if(selectType == 0){
+            if (selectType == 0) {
                 $("#policy").hide();
                 $("#common").show();
-            }else if(selectType == 1){
+            } else if (selectType == 1) {
                 $("#common").hide();
                 $("#policy").show();
             }
@@ -215,7 +233,7 @@
             var selectType = $("[name='selectType']").val();
             var oldInfo = JSON.parse(content);
 //            console.log("old: ", oldInfo);
-            if(selectType == 1){//策略模式
+            if (selectType == 1) {//策略模式
                 $.each(oldInfo, function (index, val) {
                     var questionMetaInfoId = val.questionMetaInfoId;
                     var questionPolicyId = val.questionPolicyId;
@@ -225,7 +243,7 @@
                     $("#policy tr[metaInfoId='" + questionMetaInfoId + "']").find("td:eq(3) > input").val(score);
                 })
                 getAllCountAndScore();
-            }else if(selectType == 0){
+            } else if (selectType == 0) {
                 $.each(oldInfo, function (index, val) {
                     var questionMetaInfoId = val.questionMetaInfoId;
                     var count = val.count;
@@ -267,7 +285,7 @@
                     var flag = true;
 
                     var selectType = $("[name='selectType']").val();
-                    if(selectType == 0){//普通模式
+                    if (selectType == 0) {//普通模式
                         $("#common table tbody tr").each(function (idx, e) {
                             var metaInfoId = $(e).attr("metaInfoId");
                             if (metaInfoIds.indexOf(metaInfoId) > -1) {
@@ -295,7 +313,7 @@
                                 data.push(item);
                             }
                         })
-                    }else if(selectType == 1){//策略模式
+                    } else if (selectType == 1) {//策略模式
                         $("#policy table tbody tr").each(function (idx, e) {
                             console.log("index: ", idx);
                             var metaInfoId = $(e).attr("metaInfoId");
@@ -439,11 +457,11 @@
      * */
     function getAllCountAndScore() {
         var selectType = $("[name='selectType']").val();
-        console.log("sssssss",selectType);
+        console.log("sssssss", selectType);
         var tableId = '';
-        if(selectType == 0){
+        if (selectType == 0) {
             tableId = "#common";
-        }else if(selectType == 1){
+        } else if (selectType == 1) {
             tableId = '#policy';
         }
         var totalCount = 0;

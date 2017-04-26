@@ -182,9 +182,9 @@
     </li>
     <li><div class="link"><i class="fa fa-globe"></i>考试设置<i class="fa fa-chevron-down"></i></div>
         <ul class="submenu">
-            <li><a href="#">试题策略管理</a></li>
-            <li><a href="#">试卷策略管理</a></li>
-            <li><a href="#">试卷管理</a></li>
+            <li><a href="/questionPolicy/list.do">试题策略管理</a></li>
+            <li><a href="/paperPolicy/list.do">试卷策略管理</a></li>
+            <li><a href="/paper/list.do">试卷管理</a></li>
             <li><a href="#"></a></li>
         </ul>
     </li>

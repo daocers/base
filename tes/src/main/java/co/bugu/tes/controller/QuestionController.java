@@ -81,13 +81,12 @@ public class QuestionController {
             }
             model.put("bankMap", bankMap);
             model.put("metaInfoList", metaInfoList);
-
+            model.put("questionBankList", questionBankList);
         }catch (Exception e){
             logger.error("获取列表失败", e);
             model.put("errMsg", "获取列表失败");
         }
         return "question/list";
-
     }
 
     /**

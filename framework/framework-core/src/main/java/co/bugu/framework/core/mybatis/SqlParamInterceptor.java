@@ -42,10 +42,10 @@ public class SqlParamInterceptor implements Interceptor {
         if (target instanceof ParameterHandler) {
             DefaultParameterHandler parameterHandler = (DefaultParameterHandler) target;
             MappedStatement mappedStatement = (MappedStatement) ReflectUtil.get(parameterHandler, "mappedStatement");
-            if(!needIntercept(mappedStatement)){
+            if (!needIntercept(mappedStatement)) {
                 return invocation.proceed();
             }
-            if(SqlCommandType.SELECT != mappedStatement.getSqlCommandType()){
+            if (SqlCommandType.SELECT != mappedStatement.getSqlCommandType()) {
                 return invocation.proceed();
             }
             BoundSql boundSql = (BoundSql) ReflectUtil.get(parameterHandler, "boundSql");
@@ -78,11 +78,11 @@ public class SqlParamInterceptor implements Interceptor {
 //            MappedStatement mappedStatement = (MappedStatement) invocation.getArgs()[0];
             MappedStatement mappedStatement = (MappedStatement) metaStatementHandler.getValue("delegate.mappedStatement");
 
-            if(!needIntercept(mappedStatement)){
+            if (!needIntercept(mappedStatement)) {
                 return invocation.proceed();
             }
 
-            if(SqlCommandType.SELECT != mappedStatement.getSqlCommandType()){
+            if (SqlCommandType.SELECT != mappedStatement.getSqlCommandType()) {
                 return invocation.proceed();
             }
             RoutingStatementHandler handler = (RoutingStatementHandler) target;
@@ -110,6 +110,7 @@ public class SqlParamInterceptor implements Interceptor {
 
     /**
      * 确定是否需要拦截
+     *
      * @param mappedStatement
      * @return
      */
@@ -127,8 +128,8 @@ public class SqlParamInterceptor implements Interceptor {
     @Override
     public void setProperties(Properties properties) {
         String m = (String) properties.get("method");
-        if(StringUtils.isNotEmpty(m)){
-            if(m.contains("*")){
+        if (StringUtils.isNotEmpty(m)) {
+            if (m.contains("*")) {
                 m = m.replaceAll("\\*", "\\\\S*");
             }
             method = m;
@@ -247,7 +248,7 @@ public class SqlParamInterceptor implements Interceptor {
      */
     private Map<String, Object> processSearchParam(Object paramObject) throws IllegalAccessException {
         Map<String, Object> searchParam = new HashMap<>();
-        if(paramObject == null){
+        if (paramObject == null) {
             return searchParam;
         }
         Field[] fields = paramObject.getClass().getDeclaredFields();
@@ -321,6 +322,9 @@ public class SqlParamInterceptor implements Interceptor {
 
             if ("IN".equals(relation) || "NIN".equals(relation)) {
                 res = " and " + column + " " + res + " (#{" + property + "})";
+            } else if ("LK".equals(relation)) {
+//                res = " and " + column + " " + res + "% ||#{" + property + "}|| %";
+                res = " and " + column + " " + res + " CONCAT('%', #{" + property + "} ,'%') ";
             } else {
                 res = " and " + column + " " + res + " #{" + property + "}";
             }

@@ -24,20 +24,34 @@
             <div class="page-header nav-path">
                 <ol class="breadcrumb">
                     <li><a href="#">首页</a></li>
-                    <li><a href="#" class="active">用户列表</a></li>
+                    <li><a href="#" class="active">试题列表</a></li>
                 </ol>
             </div>
 
             <form class="form-inline" action="list.do">
                 <div class="input-group input-group-sm">
                     <div class="input-group-addon">
+                        题库
+                    </div>
+                    <select class="form-control" name="EQ_questionBankId">
+                        <option value="">全部</option>
+                        <c:forEach items="${questionBankList}" var="questionBank">
+                            <option value="${questionBank.id}"
+                                    <c:if test="${questionBank.id == param.EQ_questionBankId}">selected</c:if> >
+                                    ${questionBank.name}
+                            </option>
+                        </c:forEach>
+                    </select>
+                </div>
+                <div class="input-group input-group-sm">
+                    <div class="input-group-addon">
                         题型
                     </div>
                     <select class="form-control" name="EQ_metaInfoId">
-                        <option>全部</option>
+                        <option value="">全部</option>
                         <c:forEach items="${metaInfoList}" var="metaInfo">
                             <option value="${metaInfo.id}"
-                                    <c:if test="${metaInfo.id == param.metaInfoId}">selected</c:if> >${metaInfo.name}</option>
+                                    <c:if test="${metaInfo.id == param.EQ_metaInfoId}">selected</c:if> >${metaInfo.name}</option>
                         </c:forEach>
                     </select>
                 </div>
@@ -47,6 +61,7 @@
                     </div>
                     <input type="text" name="LK_title" class="form-control" value="${param.LK_title}">
                 </div>
+
                 <div class="input-group input-group-sm">
                     <button class="btn btn-info btn-sm">查询</button>
                 </div>

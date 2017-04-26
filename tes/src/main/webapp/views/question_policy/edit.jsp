@@ -1,9 +1,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
-    <meta charset="utf-8">
-    <title>试题策略编辑</title>
+    <title>布谷考培|用户列表</title>
     <%@ include file="../template/header.jsp" %>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
     <style type="text/css">
         .opr-td {
             vertical-align: middle;
@@ -13,18 +19,24 @@
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="row nav-path">
-        <ol class="breadcrumb">
-            <li><a href="#">首页</a></li>
-            <li><a href="#">品类管理</a></li>
-            <li><a href="#" class="active">试题策略编辑</a></li>
-        </ol>
-    </div>
-    <input type="hidden" value="${param.type}" id="type">
+<%@ include file="../template/menu-top.jsp" %>
+
+<div class="container-fluid">
     <div class="row">
-        <div class="col-md-8">
-            <form class="form-horizontal" method="post" action="save.do" data-toggle="validator" role="form">
+        <div class="col-sm-0 col-md-2 sidebar menu-left">
+            <%@ include file="../template/menu-left.jsp" %>
+        </div>
+        <div class="col-sm-12 col-sm-offset-0 col-md-10 col-md-offset-2 main" id="main">
+            <%--<h1 class="page-header">Dashboard</h1>--%>
+            <div class="page-header nav-path">
+                <ol class="breadcrumb">
+                    <li><a href="#">首页</a></li>
+                    <li><a href="#" class="active">用户列表</a></li>
+                </ol>
+            </div>
+
+
+            <form class="form-horizontal col-md-9" method="post" action="save.do" data-toggle="validator" role="form">
                 <input id="id" type="hidden" name="id" value="${questionPolicy.id}">
 
                 <div class="form-group">
@@ -136,9 +148,12 @@
                 </div>
             </form>
         </div>
-
     </div>
 </div>
+
+
+<%--此处必须单独写在此处，解决无法生效的问题--%>
+<script src="/assets/js/menu.js"></script>
 <script>
     $("body").on("click", ".del-row", function () {
         console.log($("tbody").find("tr").length);
@@ -271,7 +286,7 @@
 
     var lineHtml;
     $("#addLine").click(function () {
-        if($(".table-editable").find("tbody tr:last td").length == 1){
+        if ($(".table-editable").find("tbody tr:last td").length == 1) {
             return false;
         }
         lineHtml = $(".table-editable").find("tbody tr:last").html().replace("input-warning", "");

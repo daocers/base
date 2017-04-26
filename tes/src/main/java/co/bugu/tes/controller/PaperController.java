@@ -1,11 +1,21 @@
 package co.bugu.tes.controller;
 
+import co.bugu.framework.core.mybatis.SearchInterceptor;
+import co.bugu.framework.core.mybatis.SearchParamUtil;
+import co.bugu.framework.core.mybatis.ThreadLocalUtil;
 import co.bugu.framework.util.exception.TesException;
 import co.bugu.tes.model.Paper;
+import co.bugu.tes.model.Scene;
+import co.bugu.tes.model.User;
 import co.bugu.tes.service.IPaperService;
 import co.bugu.tes.service.IQuestionPolicyService;
 import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.util.JsonUtil;
+import co.bugu.tes.service.ISceneService;
+import co.bugu.tes.service.IUserService;
+import com.sun.org.apache.regexp.internal.RE;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +25,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/paper")
 public class PaperController {
     @Autowired
     IPaperService paperService;
+    @Autowired
+    IUserService userService;
+    @Autowired
+    ISceneService sceneService;
 
     @Autowired
     IQuestionPolicyService questionPolicyService;
@@ -36,12 +53,53 @@ public class PaperController {
     * @return
     */
     @RequestMapping(value = "/list")
-    public String list(Paper paper, Integer curPage, Integer showCount, ModelMap model){
+    public String list(Paper paper, String username, String sceneName, Integer curPage,
+                       Integer showCount, ModelMap model, HttpServletRequest request){
         try{
+            Integer userId = null;
+            if(StringUtils.isNotEmpty(username)){
+                User user = new User();
+                user.setUsername(username);
+                List<User> userList = userService.findByObject(user);
+                if(CollectionUtils.isNotEmpty(userList)){
+                    userId = userList.get(0).getId();
+                }else{
+                    userId = -1;//不存在该用户
+                }
+            }
+            Integer sceneId = null;
+            if(StringUtils.isNotEmpty(sceneName)){
+                Scene scene = new Scene();
+                scene.setName(sceneName);
+                List<Scene> sceneList = sceneService.findByObject(scene);
+                if(CollectionUtils.isNotEmpty(sceneList)){
+                    sceneId = sceneList.get(0).getId();
+                }else{
+                    sceneId = -1;
+                }
+            }
+            SearchParamUtil.processSearchParam(paper, request);
+            Map<String, Object> map = ThreadLocalUtil.get();
+            if(userId != null){
+                map.put("EQ_userId", userId);
+                paper.setUserId(userId);
+            }
+            if(sceneId != null){
+                map.put("EQ_sceneId", sceneId);
+                paper.setSceneId(sceneId);
+            }
+            ThreadLocalUtil.set(map);
             PageInfo<Paper> pageInfo = new PageInfo<>(showCount, curPage);
             pageInfo = paperService.findByObject(paper, pageInfo);
             model.put("pi", pageInfo);
             model.put("paper", paper);
+            Map<Integer, String> statusMap = new HashMap<>();
+            statusMap.put(0,"正常");
+            statusMap.put(1, "未作答");
+            statusMap.put(2, "作废");
+            statusMap.put(3, "已交卷");
+            statusMap.put(4, "提交失败");
+            model.put("statusMap", statusMap);
         }catch (Exception e){
             logger.error("获取列表失败", e);
             model.put("errMsg", "获取列表失败");

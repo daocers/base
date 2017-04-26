@@ -1,22 +1,33 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="../template/header.jsp" %>
-<html>
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
+    <title>布谷考培|用户列表</title>
+    <%@ include file="../template/header.jsp" %>
     <meta charset="utf-8">
-    <title>试卷管理</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
 </head>
 <body>
-<div class="container">
-    <div class="row nav-path">
-        <ol class="breadcrumb">
-            <li><a href="#">首页</a></li>
-            <li><a href="#">试卷管理</a></li>
-            <li><a href="#" class="active">试卷管理</a></li>
-        </ol>
-    </div>
-    <input type="hidden" value="${type}" id="type">
+<%@ include file="../template/menu-top.jsp" %>
+
+<div class="container-fluid">
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-sm-0 col-md-2 sidebar menu-left">
+            <%@ include file="../template/menu-left.jsp" %>
+        </div>
+        <div class="col-sm-12 col-sm-offset-0 col-md-10 col-md-offset-2 main" id="main">
+            <%--<h1 class="page-header">Dashboard</h1>--%>
+            <div class="page-header nav-path">
+                <ol class="breadcrumb">
+                    <li><a href="#">首页</a></li>
+                    <li><a href="#" class="active">用户列表</a></li>
+                </ol>
+            </div>
+
             <form class="form-horizontal" method="post" action="save.do" data-toggle="validator" role="form">
                 <input id="id" type="hidden" name="id" value="${paper.id}">
 
@@ -71,43 +82,43 @@
                 </div>
                 <table class="table table-bordered table-condensed">
                     <thead>
-                        <tr>
-                            <th>题型</th>
-                            <th>题目</th>
-                            <th>最佳答案</th>
-                            <th>作答记录</th>
-                            <th>得分</th>
-                        </tr>
+                    <tr>
+                        <th>题型</th>
+                        <th>题目</th>
+                        <th>最佳答案</th>
+                        <th>作答记录</th>
+                        <th>得分</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>单选</td>
-                            <td>我国最大的商业银行是？</td>
-                            <td>A</td>
-                            <td>A</td>
-                            <td>2</td>
-                        </tr>
-                        <tr>
-                            <td>单选</td>
-                            <td>我国最大的商业银行是？</td>
-                            <td>A</td>
-                            <td>A</td>
-                            <td>2</td>
-                        </tr>
-                        <tr>
-                            <td>单选</td>
-                            <td>我国最大的商业银行是？</td>
-                            <td>A</td>
-                            <td>A</td>
-                            <td>2</td>
-                        </tr>
-                        <tr>
-                            <td>单选</td>
-                            <td>我国最大的商业银行是？</td>
-                            <td>A</td>
-                            <td>A</td>
-                            <td>2</td>
-                        </tr>
+                    <tr>
+                        <td>单选</td>
+                        <td>我国最大的商业银行是？</td>
+                        <td>A</td>
+                        <td>A</td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <td>单选</td>
+                        <td>我国最大的商业银行是？</td>
+                        <td>A</td>
+                        <td>A</td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <td>单选</td>
+                        <td>我国最大的商业银行是？</td>
+                        <td>A</td>
+                        <td>A</td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <td>单选</td>
+                        <td>我国最大的商业银行是？</td>
+                        <td>A</td>
+                        <td>A</td>
+                        <td>2</td>
+                    </tr>
                     </tbody>
                 </table>
 
@@ -119,12 +130,15 @@
                     <button class="btn btn-warning btn-cancel">取消</button>
                 </div>
             </form>
-        </div>
 
+
+        </div>
     </div>
 </div>
-<script>
 
-</script>
+
+<%--此处必须单独写在此处，解决无法生效的问题--%>
+<script src="/assets/js/menu.js"></script>
+<script></script>
 </body>
 </html>

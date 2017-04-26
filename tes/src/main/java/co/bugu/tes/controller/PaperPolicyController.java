@@ -1,6 +1,7 @@
 package co.bugu.tes.controller;
 
 import co.bugu.framework.core.dao.PageInfo;
+import co.bugu.framework.core.mybatis.SearchParamUtil;
 import co.bugu.framework.core.mybatis.ThreadLocalUtil;
 import co.bugu.framework.core.util.BuguWebUtil;
 import co.bugu.framework.util.JsonUtil;
@@ -38,7 +39,7 @@ public class PaperPolicyController {
     @Autowired
     IUserService userService;
     @Autowired
-    IPaperPolicyService paperpolicyService;
+    IPaperPolicyService paperPolicyService;
     @Autowired
     IQuestionMetaInfoService questionMetaInfoService;
     @Autowired
@@ -48,19 +49,20 @@ public class PaperPolicyController {
 
     /**
     * 列表，分页显示
-    * @param paperpolicy  查询数据
+    * @param paperPolicy  查询数据
     * @param curPage 当前页码，从1开始
     * @param showCount 当前页码显示数目
     * @param model
     * @return
     */
     @RequestMapping(value = "/list")
-    public String list(PaperPolicy paperpolicy, Integer curPage, Integer showCount, ModelMap model){
+    public String list(PaperPolicy paperPolicy, Integer curPage, Integer showCount, ModelMap model, HttpServletRequest request){
         try{
+            SearchParamUtil.processSearchParam(paperPolicy, request);
             PageInfo<PaperPolicy> pageInfo = new PageInfo<>(showCount, curPage);
-            pageInfo = paperpolicyService.findByObject(paperpolicy, pageInfo);
+            pageInfo = paperPolicyService.findByObject(paperPolicy, pageInfo);
             model.put("pi", pageInfo);
-            model.put("paperPolicy", paperpolicy);
+            model.put("paperPolicy", paperPolicy);
         }catch (Exception e){
             logger.error("获取列表失败", e);
             model.put("errMsg", "获取列表失败");
@@ -80,7 +82,7 @@ public class PaperPolicyController {
         try{
             List<QuestionMetaInfo> questionMetaInfoList = questionMetaInfoService.findByObject(null);
             model.put("questionMetaInfoList", questionMetaInfoList);
-            PaperPolicy paperpolicy = paperpolicyService.findById(id);
+            PaperPolicy paperpolicy = paperPolicyService.findById(id);
             if(paperpolicy == null){
                 paperpolicy = new PaperPolicy();
                 SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmm");
@@ -118,44 +120,44 @@ public class PaperPolicyController {
 
     /**
     * 保存结果，根据是否带有id来表示更新或者新增
-    * @param paperpolicy
+    * @param paperPolicy
      * @param questionMetaInfoId   题型id
     * @param model
     * @return
     */
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public String save(PaperPolicy paperpolicy, int[] questionMetaInfoId, ModelMap model, HttpServletRequest request, RedirectAttributes redirectAttributes){
+    public String save(PaperPolicy paperPolicy, int[] questionMetaInfoId, ModelMap model, HttpServletRequest request, RedirectAttributes redirectAttributes){
         try{
             Integer userId = (Integer) BuguWebUtil.get(request, Constant.SESSION_USER_ID);
             User user = new User();
 //            User user = JedisUtil.getJson(Constant.USER_INFO_PREFIX + userId, User.class);
             if(user != null){
-                paperpolicy.setUpdateTime(new Date());
-                paperpolicy.setCreateUserId(userId);
-                paperpolicy.setUpdateUserId(userId);
-                paperpolicy.setDepartmentId(user.getDepartmentId());
-                paperpolicy.setStationId(user.getStationId());
-                paperpolicy.setBranchId(user.getBranchId());
+                paperPolicy.setUpdateTime(new Date());
+                paperPolicy.setCreateUserId(userId);
+                paperPolicy.setUpdateUserId(userId);
+                paperPolicy.setDepartmentId(user.getDepartmentId());
+                paperPolicy.setStationId(user.getStationId());
+                paperPolicy.setBranchId(user.getBranchId());
             }else{
                 logger.error("获取用户信息失败， 用户id: {}", userId);
                 redirectAttributes.addFlashAttribute("err", "用户信息异常");
-                redirectAttributes.addFlashAttribute(paperpolicy);
+                redirectAttributes.addFlashAttribute(paperPolicy);
                 return "redirect:edit.do";
             }
-            paperpolicy.setStatus(0);
-            if(paperpolicy.getPercentable() == null){
-                paperpolicy.setPercentable(1);
+            paperPolicy.setStatus(0);
+            if(paperPolicy.getPercentable() == null){
+                paperPolicy.setPercentable(1);
             }
-            paperpolicy.setQuestionMetaInfoId(JSON.toJSONString(questionMetaInfoId));
-            if(paperpolicy.getId() == null){
-                paperpolicy.setCreateTime(new Date());
-                paperpolicyService.save(paperpolicy);
+            paperPolicy.setQuestionMetaInfoId(JSON.toJSONString(questionMetaInfoId));
+            if(paperPolicy.getId() == null){
+                paperPolicy.setCreateTime(new Date());
+                paperPolicyService.save(paperPolicy);
             }else{
-                paperpolicyService.updateById(paperpolicy);
+                paperPolicyService.updateById(paperPolicy);
             }
         }catch (Exception e){
             logger.error("保存失败", e);
-            redirectAttributes.addFlashAttribute("paperpolicy", paperpolicy);
+            redirectAttributes.addFlashAttribute("paperPolicy", paperPolicy);
             redirectAttributes.addFlashAttribute("err", "保存试卷策略失败");
             return "redirect:edit.do";
         }
@@ -178,10 +180,10 @@ public class PaperPolicyController {
                 map.put("EQ_privaryType", 0);
                 map.put("NEQ_branchId", user.getBranchId());
                 ThreadLocalUtil.set(map);
-                list = paperpolicyService.findByObject(null);
+                list = paperPolicyService.findByObject(null);
             }else{// 等于1时候为私有
                 paperPolicy.setBranchId(user.getBranchId());
-                list = paperpolicyService.findByObject(paperPolicy);
+                list = paperPolicyService.findByObject(paperPolicy);
             }
             return JsonUtil.toJsonString(list);
         }catch (Exception e){
@@ -199,7 +201,7 @@ public class PaperPolicyController {
     @ResponseBody
     public String delete(PaperPolicy paperpolicy){
         try{
-            paperpolicyService.delete(paperpolicy);
+            paperPolicyService.delete(paperpolicy);
             return "0";
         }catch (Exception e){
             logger.error("删除失败", e);
@@ -216,7 +218,7 @@ public class PaperPolicyController {
     @RequestMapping("/getPolicyInfo")
     @ResponseBody
     public String getPolicyInfo(Integer id){
-        PaperPolicy policy = paperpolicyService.findById(id);
+        PaperPolicy policy = paperPolicyService.findById(id);
         String content = policy.getContent();
         if(StringUtils.isNotEmpty(content)){
             StringBuilder stringBuilder = new StringBuilder();

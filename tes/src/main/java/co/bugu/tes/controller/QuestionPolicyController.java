@@ -1,5 +1,6 @@
 package co.bugu.tes.controller;
 
+import co.bugu.framework.core.mybatis.SearchParamUtil;
 import co.bugu.tes.model.Property;
 import co.bugu.tes.model.PropertyItem;
 import co.bugu.tes.model.QuestionMetaInfo;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -27,7 +29,7 @@ import java.util.*;
 @RequestMapping("/questionPolicy")
 public class QuestionPolicyController {
     @Autowired
-    IQuestionPolicyService questionpolicyService;
+    IQuestionPolicyService questionPolicyService;
     @Autowired
     IQuestionMetaInfoService questionMetaInfoService;
     @Autowired
@@ -37,14 +39,14 @@ public class QuestionPolicyController {
 
     /**
     * 列表，分页显示
-    * @param questionpolicy  查询数据
+    * @param questionPolicy  查询数据
     * @param curPage 当前页码，从1开始
     * @param showCount 当前页码显示数目
     * @param model
     * @return
     */
     @RequestMapping(value = "/list")
-    public String list(QuestionPolicy questionpolicy, Integer curPage, Integer showCount, ModelMap model){
+    public String list(QuestionPolicy questionPolicy, Integer curPage, Integer showCount, ModelMap model, HttpServletRequest request){
         try{
             List<QuestionMetaInfo> questionMetaInfoList = questionMetaInfoService.findByObject(null);
             model.put("questionMetaInfoList", questionMetaInfoList);
@@ -53,8 +55,10 @@ public class QuestionPolicyController {
             for(PropertyItem item: propertyItemList){
                 map.put(item.getId(), item.getName());
             }
+            //多个查询，必须使用一次初始化一次，避免上个查询清空了ThreadLocal
+            SearchParamUtil.processSearchParam(questionPolicy, request);
             PageInfo<QuestionPolicy> pageInfo = new PageInfo<>(showCount, curPage);
-            pageInfo = questionpolicyService.findByObject(questionpolicy, pageInfo);
+            pageInfo = questionPolicyService.findByObject(questionPolicy, pageInfo);
             if(pageInfo.getData() != null){
                 for(QuestionPolicy policy : pageInfo.getData()){
                     String content = policy.getContent();
@@ -97,7 +101,7 @@ public class QuestionPolicyController {
                 String code = format.format(new Date());
                 questionPolicy.setCode(code);
             }else{//修改
-                questionPolicy = questionpolicyService.findById(id);
+                questionPolicy = questionPolicyService.findById(id);
                 String content = questionPolicy.getContent();
                 if(content != null && !content.equals("")){
                     List<List<Integer>> contentList = JSON.parseObject(content, List.class);
@@ -191,9 +195,9 @@ public class QuestionPolicyController {
             questionpolicy.setUpdateTime(new Date());
             questionpolicy.setUpdateUserId(0);
             if(questionpolicy.getId() == null){
-                questionpolicyService.save(questionpolicy);
+                questionPolicyService.save(questionpolicy);
             }else{
-                questionpolicyService.updateById(questionpolicy);
+                questionPolicyService.updateById(questionpolicy);
             }
         }catch (Exception e){
             logger.error("保存失败", e);
@@ -213,7 +217,7 @@ public class QuestionPolicyController {
     @ResponseBody
     public String listAll(QuestionPolicy questionpolicy){
         try{
-            List<QuestionPolicy> list = questionpolicyService.findByObject(questionpolicy);
+            List<QuestionPolicy> list = questionPolicyService.findByObject(questionpolicy);
             return JsonUtil.toJsonString(list);
         }catch (Exception e){
             logger.error("获取全部列表失败", e);
@@ -230,7 +234,7 @@ public class QuestionPolicyController {
     @ResponseBody
     public String delete(QuestionPolicy questionpolicy){
         try{
-            questionpolicyService.delete(questionpolicy);
+            questionPolicyService.delete(questionpolicy);
             return "0";
         }catch (Exception e){
             logger.error("删除失败", e);

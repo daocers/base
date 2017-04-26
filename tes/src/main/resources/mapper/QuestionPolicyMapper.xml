@@ -166,9 +166,7 @@
         <include refid="questionPolicy_list"/>
         from question_policy ques_policy
         <where>
-            <if test="questionMetaInfoId != null">
-                question_meta_info_id = #{questionMetaInfoId}
-            </if>
+
         </where>
     </select>
 </mapper>

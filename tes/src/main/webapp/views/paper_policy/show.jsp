@@ -1,25 +1,34 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="../template/header.jsp" %>
-<html>
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
+    <title>布谷考培|用户列表</title>
+    <%@ include file="../template/header.jsp" %>
     <meta charset="utf-8">
-    <title>品类编辑</title>
-    <style type="text/css">
-
-    </style>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
 </head>
 <body>
-<div class="container">
-    <div class="row nav-path">
-        <ol class="breadcrumb">
-            <li><a href="#">首页</a></li>
-            <li><a href="#">品类管理</a></li>
-            <li><a href="#" class="active">品类编辑</a></li>
-        </ol>
-    </div>
-    <input type="hidden" value="${type}" id="type">
+<%@ include file="../template/menu-top.jsp" %>
+
+<div class="container-fluid">
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-sm-0 col-md-2 sidebar menu-left">
+            <%@ include file="../template/menu-left.jsp" %>
+        </div>
+        <div class="col-sm-12 col-sm-offset-0 col-md-10 col-md-offset-2 main" id="main">
+            <%--<h1 class="page-header">Dashboard</h1>--%>
+            <div class="page-header nav-path">
+                <ol class="breadcrumb">
+                    <li><a href="#">首页</a></li>
+                    <li><a href="#" class="active">用户列表</a></li>
+                </ol>
+            </div>
+
+
             <form class="form-horizontal" method="post" action="save.do" data-toggle="validator" role="form">
                 <input id="id" type="hidden" name="id" value="${paperpolicy.id}">
 
@@ -100,26 +109,31 @@
                         <span class="help-block with-errors">提示信息</span>
                     </div>
                 </div>
+                <input type="hidden" value="${type}" id="type">
 
                 <div class="form-group">
                     <label class="control-label col-md-2">试题策略</label>
                     <div class="col-md-10 table-responsive">
                         <table class="table table-bordered">
                             <thead>
-                                <tr>
-                                    <th>题型</th>
-                                    <th>试题策略</th>
-                                    <th>题量</th>
-                                    <th>分值</th>
-                                </tr>
+                            <tr>
+                                <th>题型</th>
+                                <th>试题策略</th>
+                                <th>题量</th>
+                                <th>分值</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td><select><option>请选择</option></select></td>
-                                    <td><select><option>请选择</option></select></td>
-                                    <td>10</td>
-                                    <td>1</td>
-                                </tr>
+                            <tr>
+                                <td><select>
+                                    <option>请选择</option>
+                                </select></td>
+                                <td><select>
+                                    <option>请选择</option>
+                                </select></td>
+                                <td>10</td>
+                                <td>1</td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
@@ -133,12 +147,14 @@
                     <button class="btn btn-warning btn-cancel">取消</button>
                 </div>
             </form>
-        </div>
 
+        </div>
     </div>
 </div>
-<script>
 
-</script>
+
+<%--此处必须单独写在此处，解决无法生效的问题--%>
+<script src="/assets/js/menu.js"></script>
+<script></script>
 </body>
 </html>
