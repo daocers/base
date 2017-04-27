@@ -44,8 +44,9 @@
     <!--拦截所有请求-->
     <mvc:interceptors>
         <mvc:interceptor>
-            <mvc:mapping path="/*.*"/>
-            <mvc:mapping path="/*/*.*"/>
+            <!--<mvc:mapping path="/*.*"/>-->
+            <!--<mvc:mapping path="/*/*.*"/>-->
+            <mvc:mapping path="/**"/>
             <mvc:exclude-mapping path="/login.do"/>
             <mvc:exclude-mapping path="/signIn.do"/>
             <mvc:exclude-mapping path="/signOut.do"/>

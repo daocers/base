@@ -1,10 +1,14 @@
 package co.bugu.tes.controller;
 
+import co.bugu.framework.core.mybatis.SearchParamUtil;
+import co.bugu.framework.core.mybatis.ThreadLocalUtil;
+import co.bugu.framework.core.util.BuguWebUtil;
 import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.Authority;
 import co.bugu.tes.model.Role;
 import co.bugu.tes.service.IAuthorityService;
 import co.bugu.tes.service.IRoleService;
+import co.bugu.tes.service.IUserService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -16,11 +20,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +35,8 @@ public class RoleController {
     IRoleService roleService;
     @Autowired
     IAuthorityService authorityService;
+    @Autowired
+    IUserService userService;
 
     private static Logger logger = LoggerFactory.getLogger(RoleController.class);
 
@@ -45,8 +49,9 @@ public class RoleController {
     * @return
     */
     @RequestMapping(value = "/list")
-    public String list(Role role, Integer curPage, Integer showCount, ModelMap model){
+    public String list(Role role, Integer curPage, Integer showCount, ModelMap model, HttpServletRequest request){
         try{
+            SearchParamUtil.processSearchParam(role, request);
             PageInfo<Role> pageInfo = new PageInfo<>(showCount, curPage);
             pageInfo = roleService.findByObject(role, pageInfo);
             model.put("pi", pageInfo);
@@ -57,6 +62,18 @@ public class RoleController {
         }
         return "role/list";
 
+    }
+
+    @RequestMapping("/index/{type}")
+    public String index(@PathVariable String type, ModelMap modelMap, HttpServletRequest request){
+        if("student".equals(type)){
+            Integer userId = (Integer) BuguWebUtil.getUserId(request);
+
+        }else if("teacher".equals(type)){
+
+        }else if("admin".equals("type")){
+
+        }
     }
 
     /**

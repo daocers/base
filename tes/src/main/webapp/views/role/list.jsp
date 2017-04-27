@@ -28,6 +28,16 @@
                 </ol>
             </div>
 
+            <form class="form-inline" action="list.do">
+                <div class="input-group input-group-sm">
+                    <div class="input-group-addon">
+                        角色名称
+                    </div>
+                    <input type="text" class="form-control" name="LK_name" value="${param.LK_name}">
+                </div>
+                <button class="btn btn-info btn-sm">查询</button>
+            </form>
+
             <div class="table-responsive">
                 <table class="table table-bordered">
                     <thead>

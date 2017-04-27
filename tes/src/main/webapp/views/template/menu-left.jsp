@@ -163,8 +163,8 @@
     <li>
         <div class="link"><i class="fa fa-code"></i>场次管理<i class="fa fa-chevron-down"></i></div>
         <ul class="submenu">
-            <li><a href="/scene/list.do?type=join">我参加的</a></li>
-            <li><a href="/scene/list.do?type=my">我创建的</a></li>
+            <li><a href="/scene/list/join.do">我参加的</a></li>
+            <li><a href="/scene/list/my.do">我创建的</a></li>
             <li><a href="/exam/index.do">我要考试</a></li>
         </ul>
     </li>

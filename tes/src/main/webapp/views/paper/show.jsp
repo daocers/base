@@ -28,7 +28,7 @@
                 </ol>
             </div>
 
-            <form action="list.do" class="form-inline">
+            <form action="pageInfo.do" class="form-inline">
                 <div class="input-group input-group-sm">
                     <div class="input-group-addon">
                         用户名
@@ -60,29 +60,24 @@
                 <thead>
                 <tr>
                     <th><input type="checkbox" class="selectAll"></th>
-                    <th>是否作答</th>
-                    <th>考试答题时间</th>
-                    <th>最后修改</th>
-                    <th>最终得分</th>
-                    <th>场次</th>
-                    <th>状态</th>
-                    <th>用户</th>
+                    <th>我的答案</th>
+                    <th>结果</th>
+                    <th>得分</th>
+                    <th>答题时剩余时间</th>
                     <th>操作</th>
                 </tr>
                 </thead>
                 <tbody>
-                <c:forEach items="${pi.data}" var="paper" varStatus="line">
+                <c:forEach items="${pi.data}" var="answer" varStatus="line">
                     <tr>
-                        <td><input type="checkbox" objId="${paper.id}"></td>
-                        <td>${paper.answerFlag == 0 ? "未作答" : "已作答"}</td>
-                        <td><fmt:formatDate value="${paper.beginTime}" pattern="yyyy-MM-dd HH:mm"></fmt:formatDate></td>
-                        <td><fmt:formatDate value="${paper.endTime}" pattern="yyyy-MM-dd HH:mm"></fmt:formatDate></td>
-                        <td>${paper.mark}</td>
-                        <td>${paper.sceneId}</td>
-                        <td>${statusMap.get(paper.status)}</td>
-                        <td>${paper.userId}</td>
+                        <td><input type="checkbox" objId="${answer.id}"></td>
+                        <td>${answer.answer}</td>
+                        <td>${answer.result}</td>
+                        <td>${answer.score}</td>
+                        <td>${answer.timeLeft}</td>
                         <td>
-                            <%--<a href="edit.do?id=${paper.id}&type=detail" class="opr">详情</a>--%>
+                            <a href="javascript:showQuestion(${answer.questionId}" class="opr">查看题目</a>
+                                <%--<a href="edit.do?id=${paper.id}&type=detail" class="opr">详情</a>--%>
                             <a href="paperInfo.do?paperId=${paper.id}" class="opr">作答信息</a>
                             <a href="edit.do?id=${paper.id}" class="opr">修改</a>
                             <a href="javascript:del(${paper.id})" class="opr">删除</a>

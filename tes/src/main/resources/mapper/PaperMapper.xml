@@ -129,7 +129,7 @@
                 question_ids = #{questionIds},
             </if>
             <if test="content != null">
-                 content = #{content},
+                content = #{content},
             </if>
             <if test="originMark != null">
                 origin_mark = #{originMark}

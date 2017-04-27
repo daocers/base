@@ -43,6 +43,8 @@ public class SceneController {
     IQuestionMetaInfoService questionMetaInfoService;
     @Autowired
     IQuestionPolicyService questionPolicyService;
+    @Autowired
+    IPaperService paperService;
 
     /**
      * 我开场的考试
@@ -52,21 +54,33 @@ public class SceneController {
      */
     @RequestMapping("/list/{type}")
     public String list(@PathVariable String type, Integer showCount, Integer curPage, ModelMap model, HttpServletRequest request) throws Exception {
+        Integer userId = (Integer) BuguWebUtil.getUserId(request);
+
         if("my".equals(type)){
-
+            Scene scene = new Scene();
+            scene.setCreateUserId(userId);
+            PageInfo<Scene> pageInfo = new PageInfo<>(showCount, curPage);
+            pageInfo = sceneService.findByObject(scene, pageInfo);
+            model.put("pi", pageInfo);
+            return "scene/list";
         }else if("join".equals(type)){
-
+            Paper paper = new Paper();
+            paper.setUserId(userId);
+            PageInfo<Paper> pageInfo = new PageInfo<>(showCount, curPage);
+            paperService.findByObject(paper, pageInfo);
+            List<Scene> sceneList = new ArrayList<>();
+            for(Paper item: pageInfo.getData()){
+                Integer sceneId = item.getSceneId();
+                Scene scene = sceneService.findById(sceneId);
+                sceneList.add(scene);
+            }
+            model.put("pi", pageInfo);
+            model.put("sceneList", sceneList);
+            return "scene/join";
         }else{
             model.put("msg", "非法参数");
+            return "redirect:/index.do";
         }
-        Integer userId = (Integer) BuguWebUtil.getUserId(request);
-        Scene scene = new Scene();
-        scene.setCreateUserId(userId);
-        PageInfo<Scene> pageInfo = new PageInfo<>(showCount, curPage);
-        pageInfo = sceneService.findByObject(scene, pageInfo);
-        model.put("pi", pageInfo);
-        return "scene/list";
-
     }
 
     @RequestMapping("/index")
