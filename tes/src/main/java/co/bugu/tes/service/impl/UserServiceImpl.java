@@ -136,4 +136,14 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
         }
         return authorityList;
     }
+
+    @Override
+    public boolean hasRole(Integer userId, String... role) {
+        return getRoleList(userId).contains(role);
+    }
+
+    @Override
+    public boolean hasAuthority(Integer userId, String... authority) {
+        return getAuthorityList(userId).contains(authority);
+    }
 }

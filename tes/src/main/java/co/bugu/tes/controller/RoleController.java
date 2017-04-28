@@ -74,6 +74,7 @@ public class RoleController {
         }else if("admin".equals("type")){
 
         }
+        return "index/index";
     }
 
     /**

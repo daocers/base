@@ -17,4 +17,8 @@ public interface IUserService extends IBaseService<User> {
 
     List<String> getAuthorityList(Integer userId);
 
+    boolean hasRole(Integer userId, String... role);
+
+    boolean hasAuthority(Integer userId, String... authority);
+
 }

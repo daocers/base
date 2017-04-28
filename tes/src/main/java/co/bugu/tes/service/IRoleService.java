@@ -3,7 +3,6 @@ package co.bugu.tes.service;
 
 import co.bugu.framework.core.service.IBaseService;
 import co.bugu.tes.model.Role;
-import co.bugu.framework.core.dao.PageInfo;
 
 import java.util.List;
 import java.util.Map;
