@@ -1,66 +1,79 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
-    <meta charset="utf-8">
-    <title>数字录入编辑</title>
+    <title>布谷考培|用户列表</title>
     <%@ include file="../template/header.jsp" %>
-
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
 </head>
 <body>
-<div class="container">
-    <div class="row nav-path">
-        <ol class="breadcrumb">
-            <li><a href="#">首页</a></li>
-            <li><a href="#">数字录入</a></li>
-            <li><a href="#" class="active">编辑</a></li>
-        </ol>
-    </div>
-    <input type="hidden" value="${type}" id="type">
+<%@ include file="../template/menu-top.jsp" %>
+
+<div class="container-fluid">
     <div class="row">
-        <div class="col-md-8">
-            <form class="form-horizontal" method="post" action="save.do" data-toggle="validator" role="form">
-                <input id="id" type="hidden" name="id" value="${typeIn.id}">
-
-                <div class="form-group">
-                    <label class="control-label col-md-2">凭条名称</label>
-                    <div class="col-md-10">
-                        <input class="form-control" type="text" name="name" value="${typeIn.name}" required>
-                        <span class="help-block with-errors">输入凭条名称，便于记忆</span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-md-2">凭条内容</label>
-                    <div class="col-md-10">
-                        <table class="table table-bordered  table-editable">
-                            <thead>
-                            <tr>
-                                <td class="col-md-2">序号</td>
-                                <td class="col-md-5">数字</td>
-                            </tr>
-                            </thead>
-                        </table>
-                        <div style="max-height: 300px; height: 300px; overflow-x: scroll; border: 1px solid gainsboro">
-                            <table class="table table-bordered  table-editable">
-                                <tbody>
-
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <input class="form-control" type="hidden" name="content" value="${typeIn.content}" required>
-                    </div>
-                </div>
-
-                <div class="button pull-right">
-                    <button class="btn btn-primary btn-commit">保存</button>
-                    <div class="space">
-
-                    </div>
-                    <button class="btn btn-warning btn-cancel">取消</button>
-                </div>
-            </form>
+        <div class="col-sm-0 col-md-2 sidebar menu-left">
+            <%@ include file="../template/menu-left.jsp" %>
         </div>
+        <div class="col-sm-12 col-sm-offset-0 col-md-10 col-md-offset-2 main" id="main">
+            <%--<h1 class="page-header">Dashboard</h1>--%>
+            <div class="page-header nav-path">
+                <ol class="breadcrumb">
+                    <li><a href="#">首页</a></li>
+                    <li><a href="#" class="active">试题列表</a></li>
+                </ol>
+            </div>
 
+
+
+                <form class="form-horizontal" method="post" action="save.do" data-toggle="validator" role="form">
+                    <input id="id" type="hidden" name="id" value="${typeIn.id}">
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2">凭条名称</label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" name="name" value="${typeIn.name}" required>
+                            <span class="help-block with-errors">输入凭条名称，便于记忆</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">凭条内容</label>
+                        <div class="col-md-10">
+                            <table class="table table-bordered  table-editable">
+                                <thead>
+                                <tr>
+                                    <td class="col-md-2">序号</td>
+                                    <td class="col-md-5">数字</td>
+                                </tr>
+                                </thead>
+                            </table>
+                            <div style="max-height: 300px; height: 300px; overflow-x: scroll; border: 1px solid gainsboro">
+                                <table class="table table-bordered  table-editable">
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <input class="form-control" type="hidden" name="content" value="${typeIn.content}" required>
+                        </div>
+                    </div>
+
+                    <div class="button pull-right">
+                        <button class="btn btn-primary btn-commit">保存</button>
+                        <div class="space">
+
+                        </div>
+                        <button class="btn btn-warning btn-cancel">取消</button>
+                    </div>
+                </form>
+
+
+        </div>
     </div>
 </div>
 <script>
