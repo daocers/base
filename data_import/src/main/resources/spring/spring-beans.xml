@@ -26,13 +26,13 @@
     <!--</bean>-->
 
 
-    <bean class="co.bugu.data.mq.MQProducer" init-method="init" destroy-method="destory">
-        <property name="nameServerAddr" value="10.143.88.76:9876"/>
-        <property name="topic" value="tes"/>
-        <property name="tag" value="paper"/>
-        <property name="producerName" value="pressureTest"/>
-        <property name="instanceName" value=""/>
-    </bean>
+    <!--<bean class="co.bugu.data.mq.MQProducer" init-method="init" destroy-method="destory">-->
+        <!--<property name="nameServerAddr" value="10.143.88.76:9876"/>-->
+        <!--<property name="topic" value="tes"/>-->
+        <!--<property name="tag" value="paper"/>-->
+        <!--<property name="producerName" value="pressureTest"/>-->
+        <!--<property name="instanceName" value=""/>-->
+    <!--</bean>-->
 
     <!--<bean class="co.bugu.data.mq.MQConsumer" init-method="init" destroy-method="destory">-->
         <!--<property name="consumerGroup" value="TesConsumer"/>-->

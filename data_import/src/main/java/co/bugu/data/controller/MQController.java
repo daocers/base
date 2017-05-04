@@ -21,32 +21,34 @@ import java.io.UnsupportedEncodingException;
 public class MQController {
     private static Logger logger = LoggerFactory.getLogger(MQController.class);
     private static Logger mqLogger = LoggerFactory.getLogger("MQ");
-    @Autowired
-    MQProducer service;
+//    @Autowired
+//    MQProducer service;
     @Autowired
     MQOrderlyProducer producer;
 
-    private String body = "{\"accountBank\":\"6225880188889999\",\"accountName\":\"天津博盛保理\",\"artificialPerson\":\"张三\",\"associatedAddr\":\"\",\"associatedBusinessLicense\":\"\",\"associatedName\":\"\",\"associatedPerson\":\"\",\"bankName\":\"招商银行\",\"businessLicenseCode\":\"8888888888\",\"createTime\":1492152515000,\"delFlag\":0,\"externalRateInfo\":\"\",\"id\":34,\"modifyTime\":1492152515000,\"organizationCode\":\"88888\",\"productinfo\":\"\",\"projectinfo\":\"\",\"pushPartyAttr\":45,\"pushPartyOgrName\":\"天津博盛保理\",\"pushPartyOgrNameShort\":\"\",\"pushPartyOrgCode\":\"test123\",\"pushPartyType\":39,\"registerAddr\":\"天津\",\"remark\":\"\",\"status\":1,\"taxEnrolCode\":\"12112\",\"userId\":44}";
-    @RequestMapping("/send")
-    @ResponseBody
-    public String send(Integer threadCount, Integer perCount) {
-        if (threadCount == null || threadCount == 0) {
-            threadCount = 1;
-        }
-        if (perCount == null || perCount == 0) {
-            perCount = 1;
-        }
+    //    private String body = "{\"accountBank\":\"6225880188889999\",\"accountName\":\"天津博盛保理\",\"artificialPerson\":\"张三\",\"associatedAddr\":\"\",\"associatedBusinessLicense\":\"\",\"associatedName\":\"\",\"associatedPerson\":\"\",\"bankName\":\"招商银行\",\"businessLicenseCode\":\"8888888888\",\"createTime\":1492152515000,\"delFlag\":0,\"externalRateInfo\":\"\",\"id\":34,\"modifyTime\":1492152515000,\"organizationCode\":\"88888\",\"productinfo\":\"\",\"projectinfo\":\"\",\"pushPartyAttr\":45,\"pushPartyOgrName\":\"天津博盛保理\",\"pushPartyOgrNameShort\":\"\",\"pushPartyOrgCode\":\"test123\",\"pushPartyType\":39,\"registerAddr\":\"天津\",\"remark\":\"\",\"status\":1,\"taxEnrolCode\":\"12112\",\"userId\":44}";
+    private String body = "info ";
 
-        for (int i = 0; i < threadCount; i++) {
-            new MQSendThread(service, body, perCount).start();
-        }
-        return null;
-    }
+//    @RequestMapping("/send")
+//    @ResponseBody
+//    public String send(Integer threadCount, Integer perCount) {
+//        if (threadCount == null || threadCount == 0) {
+//            threadCount = 1;
+//        }
+//        if (perCount == null || perCount == 0) {
+//            perCount = 1;
+//        }
+//
+//        for (int i = 0; i < threadCount; i++) {
+//            new MQSendThread(service, body, perCount).start();
+//        }
+//        return null;
+//    }
 
     @RequestMapping("/sendOrderly")
     @ResponseBody
     public String sendOrderly(String body, String tag, Integer orderId) throws InterruptedException, RemotingException, MQClientException, MQBrokerException, UnsupportedEncodingException {
-        for(int i = 0; i<100; i++){
+        for (int i = 0; i < 100; i++) {
             orderId = i % 10;
             producer.sendMsg(body + " " + i, tag, orderId);
         }

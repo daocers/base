@@ -26,15 +26,16 @@ public class Consumer {
         DefaultMQPushConsumer pushConsumer = new DefaultMQPushConsumer("consumerGroupName");
         pushConsumer.setNamesrvAddr("10.143.88.73:9876;10.143.88.74:9876;10.143.88.75:9876");
 //        pushConsumer.setNamesrvAddr("192.168.1.128:9876");
-        pushConsumer.setInstanceName("Consumer");
+        pushConsumer.setInstanceName("Consumer" + System.currentTimeMillis());
         pushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_TIMESTAMP);
         pushConsumer.setVipChannelEnabled(false);
+        pushConsumer.setConsumeMessageBatchMaxSize(10);
         try {
             /**
              * 订阅指定topic下tags分别等于TagA或TagC或TagD
              * 两个参数：第一个参数是topic第二个参数是tags
              */
-            pushConsumer.subscribe("mylc", "pushParty || bill || TagD");
+            pushConsumer.subscribe("aaaaa", "TagA1 || TagC1 || TagD1");
             /**
              * 订阅指定topic下所有消息<br>
              * 注意：一个consumer对象可以订阅多个topic
@@ -44,26 +45,31 @@ public class Consumer {
                 @Override
                 public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs,
                                                                 ConsumeConcurrentlyContext consumeConcurrentlyContext) {
-//                    System.out.println(Thread.currentThread().getName() + " Receive New Messages: " + msgs.size());
-                    MessageExt messageExt = msgs.get(0);
-                    if("mylc".equals(messageExt.getTopic())){
-                        // 执行TopicTest1的消费逻辑
-                        if (messageExt.getTags() != null && messageExt.getTags().equals("TagA")) {
-                            // 执行TagA的消费
-                            System.out.println(new String(messageExt.getBody()));
-                        }else if(messageExt.getTags() != null && messageExt.getTags().equals("TagB")){
-                            System.out.println(new String(messageExt.getBody()));
-                        }else if(messageExt.getTags() != null && messageExt.getTags().equals("TagC")) {
-                            System.out.println(new String(messageExt.getBody()));
-                        }
-                    }else if("TopicTest2".equals(messageExt.getTopic())){
-                        System.out.println(new String(messageExt.getBody()));
+
+                    for(MessageExt msg: msgs){
+                        System.out.println( "content: " + new String(msg.getBody()) + " " + msg);
+
                     }
-                    System.out.println("接收到消息：id为 " + messageExt.getMsgId());
+//                    System.out.println(Thread.currentThread().getName() + " Receive New Messages: " + msgs.size());
+//                    if("mylc1".equals(messageExt.getTopic())){
+//                        // 执行TopicTest1的消费逻辑
+//                        if (messageExt.getTags() != null && messageExt.getTags().equals("TagA")) {
+//                            // 执行TagA的消费
+//                            System.out.println(new String(messageExt.getBody()));
+//                        }else if(messageExt.getTags() != null && messageExt.getTags().equals("TagB")){
+//                            System.out.println(new String(messageExt.getBody()));
+//                        }else if(messageExt.getTags() != null && messageExt.getTags().equals("TagC")) {
+//                            System.out.println(new String(messageExt.getBody()));
+//                        }
+//                    }else if("TopicTest2".equals(messageExt.getTopic())){
+//                        System.out.println(new String(messageExt.getBody()));
+//                    }
+//                    System.out.println("接收到消息：id为 " + messageExt.getMsgId());
+//                    System.out.println("接收到消息：" + messageExt);
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
             });
-        } catch (MQClientException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         /**

@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class Producer {
     public static void main(String[] args) throws IOException {
-        String content = "{\"data\":{\"billType\":55,\"billTypeName\":\"银行承兑汇票\",\"contractTemplate\":1,\"contractUrl\":\"http://file.gomemyc.com/v5/file/download?fileName=f41b6e4e1e0ec331206999c050400adc\",\"createTime\":1493777870000,\"delFlag\":0,\"expiringDate\":1498406400000,\"ext\":\"{\\\"acceptanceBank\\\":\\\"句容农商行\\\"}\",\"extMap\":{\"acceptanceBank\":\"句容农商行\"},\"extendDeadline\":3,\"extendExpiringDate\":1498665600000,\"id\":272,\"incrementAmount\":1.00,\"issueAmount\":99334.00,\"maxInvestAmount\":0.00,\"maxInvestNum\":0,\"maxInvestTotalAmount\":0.00,\"modifyTime\":1493790211000,\"newOrOldType\":0,\"newOrOldTypeStr\":\"资产提供方\",\"nterestMode\":78,\"planAnnualYield\":4.60,\"productCode\":\"PJCP20170503000002\",\"productDeadline\":52,\"productDesc\":\"\\r\\n\n" +
+        String content = "{\"data\":{\"billType\":55,\"billTypeName\":\"银行承兑汇票\",\"contractTemplate\":1,\"contractUrl\":\"http://file.gomemyc.com/v5/file/download?fileName=f07b52ed1bedaffeab67f33f7c9364d0\",\"createTime\":1493890749000,\"delFlag\":0,\"expiringDate\":1498752000000,\"ext\":\"{\\\"acceptanceBank\\\":\\\"江南农村商业银行\\\"}\",\"extMap\":{\"acceptanceBank\":\"江南农村商业银行\"},\"extendDeadline\":3,\"extendExpiringDate\":1499184000000,\"id\":282,\"incrementAmount\":1.00,\"issueAmount\":99279.00,\"maxInvestAmount\":0.00,\"maxInvestNum\":0,\"maxInvestTotalAmount\":0.00,\"modifyTime\":1493891181000,\"newOrOldType\":0,\"newOrOldTypeStr\":\"资产提供方\",\"nterestMode\":78,\"planAnnualYield\":5.50,\"productCode\":\"PJCP20170504000010\",\"productDeadline\":53,\"productDesc\":\"\\r\\n\n" +
                 "\\r\\n\n" +
                 "\\r\\n\n" +
                 "\\\"\\\"\n" +
@@ -43,19 +43,19 @@ public class Producer {
                 "\\r\\n\n" +
                 "承兑银行\n" +
                 "\\r\\n\\r\\n\n" +
-                "句容农商行\n" +
+                "江南农村商业银行\n" +
                 "\\r\\n\n" +
                 "\\r\\n\\r\\n\n" +
                 "\\r\\n\n" +
                 "起息日期\n" +
                 "\\r\\n\\r\\n\n" +
-                "2017-05-05\n" +
+                "2017-05-08\n" +
                 "\\r\\n\n" +
                 "\\r\\n\\r\\n\n" +
                 "\\r\\n\n" +
                 "到期日期\n" +
                 "\\r\\n\\r\\n\n" +
-                "2017-06-26\n" +
+                "2017-06-30\n" +
                 "\\r\\n\n" +
                 "\\r\\n\\r\\n\n" +
                 "\\r\\n\n" +
@@ -73,7 +73,7 @@ public class Producer {
                 "\\r\\n\n" +
                 "募集时间\n" +
                 "\\r\\n\\r\\n\n" +
-                "2017-05-03至2017-05-04\n" +
+                "2017-05-04至2017-05-07\n" +
                 "\\r\\n\n" +
                 "\\r\\n\\r\\n\n" +
                 "\\r\\n\n" +
@@ -112,7 +112,7 @@ public class Producer {
                 " \n" +
                 "\\r\\n\\r\\n\n" +
                 "平台免责声明：美易理财作为交易服务平台进行信息发布，不对任何投资人及/或任何交易提供任何担保,无论是明示、默示或法定的。美易理财平台提供的各种信息及资料仅供参考,投资人应依其独立判断做出决策。投资人据此进行投资交易的,产生的投资风险由投资人自行承担。\n" +
-                "\\r\\n\",\"productName\":\"美票宝-17050302\",\"productType\":1,\"productTypeStr\":\"票据\",\"pushPartyId\":119,\"raiseEndDate\":1493827200000,\"raiseStartDate\":1493740800000,\"refundSource\":2,\"refundSourceStr\":\"债权人还款\",\"startBidAmount\":1000.00,\"status\":1,\"statusStr\":\"已推送\",\"valueDate\":1493913600000},\"type\":\"sendProduct\"}";
+                "\\r\\n\",\"productName\":\"美票宝-17050410\",\"productType\":1,\"productTypeStr\":\"票据\",\"pushPartyId\":119,\"raiseEndDate\":1494086400000,\"raiseStartDate\":1493827200000,\"refundSource\":2,\"refundSourceStr\":\"债权人还款\",\"startBidAmount\":1000.00,\"status\":1,\"statusStr\":\"已推送\",\"valueDate\":1494172800000},\"type\":\"sendProduct\"}";
         Logger logger = LoggerFactory.getLogger(Producer.class);
         /**
          * 一个应用创建一个Producer，由应用来维护此对象，可以设置为全局对象或者单例<br>
@@ -148,14 +148,14 @@ public class Producer {
 //                json.put("status", 3);
 //                json.put("factraise_time", 1492151400000L);
 //                json.put("type", "productStatus");
-                Message msg = new Message("mylc",// topic
-                        "bill",// tag
-                        "send" + System.currentTimeMillis()/1000,// key
-                        content.getBytes());// body
-                SendResult sendResult = producer.send(msg);
-                System.out.println("发送状态" +sendResult.getSendStatus().name());
-                System.out.println("消息id：" + sendResult.getMsgId());
-                System.out.println(sendResult);
+            Message msg = new Message("mylc",// topic
+                    "bill",// tag
+                    "send" + System.currentTimeMillis() / 1000,// key
+                    content.getBytes());// body
+            SendResult sendResult = producer.send(msg);
+            System.out.println("发送状态" + sendResult.getSendStatus().name());
+            System.out.println("消息id：" + sendResult.getMsgId());
+            System.out.println(sendResult);
 
 //            Thread.sleep(1000);
 //            JSONObject liubiao = new JSONObject();

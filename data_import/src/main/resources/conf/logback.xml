@@ -5,7 +5,7 @@
     <!-- 定义参数 -->
     <property name="log.lever" value="debug" />
     <property name="log.maxHistory" value="30" />
-    <property name="log.filePath" value="/logs/data"></property>
+    <property name="log.filePath" value="/logs/mq"></property>
     <property name="log.pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50}:%L - %msg%n" />
 
     <!-- 控制台设置 -->
@@ -85,31 +85,11 @@
         </filter>
     </appender>
 
-    <appender name="MQ" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <!-- 文件路径 -->
-        <file>${log.filePath}/MQ.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- 文件名称 -->
-            <fileNamePattern>${log.filePath}/error/MQ.%d{yyyy-MM-dd}.log.gz
-            </fileNamePattern>
-            <!-- 文件最大保存历史数量 -->
-            <MaxHistory>${log.maxHistory}</MaxHistory>
-        </rollingPolicy>
-        <encoder>
-            <pattern>${log.pattern}</pattern>
-        </encoder>
-    </appender>
-
     <!-- 生产环境用info -->
     <logger name="co.bugu" level="${log.lever}">
-        <appender-ref ref="consoleAppender"/>
         <appender-ref ref="debugAppender" />
         <appender-ref ref="infoAppender" />
         <appender-ref ref="errorAppender" />
-    </logger>
-
-    <logger name="MQ" level="debug">
-        <appender-ref ref="MQ"/>
     </logger>
 
     <root level="debug">
