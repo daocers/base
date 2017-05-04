@@ -1,10 +1,9 @@
 package co.bugu.data.mq;
 
-import co.bugu.framework.util.JedisUtil;
 import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
-import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
-import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
-import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently;
+import com.alibaba.rocketmq.client.consumer.listener.ConsumeOrderlyContext;
+import com.alibaba.rocketmq.client.consumer.listener.ConsumeOrderlyStatus;
+import com.alibaba.rocketmq.client.consumer.listener.MessageListenerOrderly;
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.consumer.ConsumeFromWhere;
 import com.alibaba.rocketmq.common.message.MessageExt;
@@ -16,8 +15,8 @@ import java.util.List;
 /**
  * Created by user on 2017/4/15.
  */
-public class MQConsumer {
-    private Logger logger = LoggerFactory.getLogger(MQConsumer.class);
+public class MQOrderlyConsumer {
+    private Logger logger = LoggerFactory.getLogger(MQOrderlyConsumer.class);
 
     DefaultMQPushConsumer consumer = null;
 
@@ -33,15 +32,16 @@ public class MQConsumer {
         consumer.setInstanceName("my-consumer" + System.currentTimeMillis());
         consumer.subscribe(topic, tags);
         consumer.setVipChannelEnabled(false);
-        consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
-        consumer.registerMessageListener(new MessageListenerConcurrently() {
+        consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
+        consumer.registerMessageListener(new MessageListenerOrderly() {
             @Override
-            public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
+            public ConsumeOrderlyStatus consumeMessage(List<MessageExt> msgs, ConsumeOrderlyContext context) {
+                context.setAutoCommit(true);
                 for (MessageExt msg : msgs) {
-                    logger.info("收到消息：id {}, 消息体：{}", new String[]{msg.getMsgId(), new String(msg.getBody())});
-                    JedisUtil.sadd("msg_id_list", msg.getMsgId());
+                    logger.info("收到消息，消息体：{}", new String(msg.getBody()));
+                    logger.info("消息内容 : " + msg.toString());
                 }
-                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                return ConsumeOrderlyStatus.SUCCESS;
             }
         });
         consumer.start();

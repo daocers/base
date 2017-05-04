@@ -1,12 +1,18 @@
 package co.bugu.data.controller;
 
+import co.bugu.data.mq.MQOrderlyProducer;
 import co.bugu.data.mq.MQProducer;
+import com.alibaba.rocketmq.client.exception.MQBrokerException;
+import com.alibaba.rocketmq.client.exception.MQClientException;
+import com.alibaba.rocketmq.remoting.exception.RemotingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.io.UnsupportedEncodingException;
 
 /**
  * Created by user on 2017/4/12.
@@ -17,6 +23,8 @@ public class MQController {
     private static Logger mqLogger = LoggerFactory.getLogger("MQ");
     @Autowired
     MQProducer service;
+    @Autowired
+    MQOrderlyProducer producer;
 
     private String body = "{\"accountBank\":\"6225880188889999\",\"accountName\":\"天津博盛保理\",\"artificialPerson\":\"张三\",\"associatedAddr\":\"\",\"associatedBusinessLicense\":\"\",\"associatedName\":\"\",\"associatedPerson\":\"\",\"bankName\":\"招商银行\",\"businessLicenseCode\":\"8888888888\",\"createTime\":1492152515000,\"delFlag\":0,\"externalRateInfo\":\"\",\"id\":34,\"modifyTime\":1492152515000,\"organizationCode\":\"88888\",\"productinfo\":\"\",\"projectinfo\":\"\",\"pushPartyAttr\":45,\"pushPartyOgrName\":\"天津博盛保理\",\"pushPartyOgrNameShort\":\"\",\"pushPartyOrgCode\":\"test123\",\"pushPartyType\":39,\"registerAddr\":\"天津\",\"remark\":\"\",\"status\":1,\"taxEnrolCode\":\"12112\",\"userId\":44}";
     @RequestMapping("/send")
@@ -33,6 +41,16 @@ public class MQController {
             new MQSendThread(service, body, perCount).start();
         }
         return null;
+    }
+
+    @RequestMapping("/sendOrderly")
+    @ResponseBody
+    public String sendOrderly(String body, String tag, Integer orderId) throws InterruptedException, RemotingException, MQClientException, MQBrokerException, UnsupportedEncodingException {
+        for(int i = 0; i<100; i++){
+            orderId = i % 10;
+            producer.sendMsg(body + " " + i, tag, orderId);
+        }
+        return "good";
     }
 
 

@@ -34,11 +34,27 @@
         <property name="instanceName" value=""/>
     </bean>
 
-    <bean class="co.bugu.data.mq.MQConsumer" init-method="init" destroy-method="destory">
-        <property name="consumerGroup" value="TesConsumer"/>
-        <property name="instanceName" value=""/>
-        <property name="nameServerAddr" value="10.143.88.76:9876"/>
+    <!--<bean class="co.bugu.data.mq.MQConsumer" init-method="init" destroy-method="destory">-->
+        <!--<property name="consumerGroup" value="TesConsumer"/>-->
+        <!--<property name="instanceName" value=""/>-->
+        <!--<property name="nameServerAddr" value="10.143.88.76:9876"/>-->
+        <!--<property name="topic" value="tes"/>-->
+        <!--<property name="tags" value="paper"/>-->
+    <!--</bean>-->
+
+    <bean class="co.bugu.data.mq.MQOrderlyProducer" init-method="init" destroy-method="destory">
+        <property name="nameServerAddr" value="10.143.88.73:9876;10.143.88.74:9876;10.143.88.75:9876"/>
         <property name="topic" value="tes"/>
-        <property name="tags" value="paper"/>
+        <!--<property name="tag" value="paper"/>-->
+        <property name="producerName" value="pressureTest"/>
+        <property name="instanceName" value=""/>
+    </bean>
+
+    <bean class="co.bugu.data.mq.MQOrderlyConsumer" init-method="init" destroy-method="destory">
+        <property name="consumerGroup" value="TesConsumer"/>
+        <property name="instanceName" value="consumer"/>
+        <property name="nameServerAddr" value="10.143.88.73:9876;10.143.88.74:9876;10.143.88.75:9876"/>
+        <property name="topic" value="tes"/>
+        <property name="tags" value="dog"/>
     </bean>
 </beans>

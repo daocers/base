@@ -1,4 +1,4 @@
-package co.bugu.rocketmq.orderly;
+package co.bugu.rocketmq.demo.orderly;
 
 import com.alibaba.rocketmq.client.exception.MQBrokerException;
 import com.alibaba.rocketmq.client.exception.MQClientException;
@@ -20,47 +20,36 @@ import java.util.List;
 public class ProducerOrderly {
     public static void main(String[] args) throws MQClientException, RemotingException, InterruptedException, MQBrokerException, IOException {
         try {
-            DefaultMQProducer producer = new DefaultMQProducer("please_rename_unique_group_name");
+            DefaultMQProducer producer = new DefaultMQProducer("producer_group_orderly_1");
 
-            producer.setNamesrvAddr("192.168.1.128:9876");
+            producer.setNamesrvAddr("10.143.88.73:9876;10.143.88.74:9876;10.143.88.75:9876");
 
             producer.start();
 
-            String[] tags = new String[] { "TagA", "TagC", "TagD" };
+            String[] tags = new String[]{"cat", "dog", "pig"};
 
             Date date = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String dateStr = sdf.format(date);
             for (int i = 0; i < 10; i++) {
+                int orderId = i % 2;
+                String tag = tags[i % tags.length];
                 // 加个时间后缀
-                String body = dateStr + " Hello RocketMQ " + i;
-                Message msg = new Message("topic1", "tag1", "KEY" + i, body.getBytes());
-
-//                SendResult sendResult = producer.send(msg, new MessageQueueSelector() {
-//                    @Override
-//                    public MessageQueue select(List<MessageQueue> mqs, Message msg, Object arg) {
-//                        Integer id = (Integer) arg;
-//                        return mqs.get(id);
-//                    }
-//                }, 0);//0是队列的下标
+                String body = dateStr + " Hello RocketMQ " + orderId + " " + i;
+                Message msg = new Message("tes", "dog", "KEY " + tag, body.getBytes());
 
                 SendResult sendResult = producer.send(msg, new MessageQueueSelector() {
                     @Override
-                    public MessageQueue select(List<MessageQueue> list, Message message, Object o) {
-                        return list.get((Integer) o);
+                    public MessageQueue select(List<MessageQueue> list, Message message, Object arg) {
+                        Integer index = (Integer) arg;
+                        return list.get(index % list.size());
                     }
-                }, 1);
-                System.out.println(sendResult + ", body:" + body);
+                }, orderId);
+                System.out.println("发送结果：" + ", body:" + body + sendResult);
             }
 
             producer.shutdown();
-        } catch (MQClientException e) {
-            e.printStackTrace();
-        } catch (RemotingException e) {
-            e.printStackTrace();
-        } catch (MQBrokerException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         System.in.read();
