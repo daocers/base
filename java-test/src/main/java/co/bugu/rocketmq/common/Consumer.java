@@ -24,7 +24,7 @@ public class Consumer {
          * 注意：ConsumerGroupName需要由应用来保证唯一
          */
         DefaultMQPushConsumer pushConsumer = new DefaultMQPushConsumer("consumerGroupName");
-        pushConsumer.setNamesrvAddr("10.143.108.83:9876;10.143.108.84:9876;10.143.108.85:9876");
+        pushConsumer.setNamesrvAddr("10.143.88.73:9876;10.143.88.74:9876;10.143.88.75:9876");
 //        pushConsumer.setNamesrvAddr("192.168.1.128:9876");
         pushConsumer.setInstanceName("Consumer");
         pushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_TIMESTAMP);
