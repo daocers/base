@@ -10,7 +10,6 @@ import com.alibaba.rocketmq.common.message.MessageExt;
 
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -21,7 +20,8 @@ public class ConsumerOrderly {
     public static void main(String[] args) throws MQClientException {
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("please_rename_unique_group_name_3");
 //        consumer.setNamesrvAddr("10.143.88.73:9876;10.143.88.74:9876;10.143.88.75:9876");
-        consumer.setNamesrvAddr("127.0.0.1:9876");
+//        consumer.setNamesrvAddr("127.0.0.1:9876");
+        consumer.setNamesrvAddr("192.168.1.128:9876");
         /**
          * 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费<br>
          * 如果非第一次启动，那么按照上次消费的位置继续消费
@@ -29,7 +29,8 @@ public class ConsumerOrderly {
         consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
 
         consumer.subscribe("aaaaa", "TagA1 || TagC1 || TagD1");
-
+//        consumer.setClientIP("192.168.1.3");
+        consumer.setPullBatchSize(10);
         consumer.registerMessageListener(new MessageListenerOrderly() {
 
             Random random = new Random();

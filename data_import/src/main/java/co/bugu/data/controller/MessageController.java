@@ -29,4 +29,13 @@ public class MessageController {
         producer.sendMsg("good", "dog", 1);
         return "good";
     }
+
+    @ResponseBody
+    @RequestMapping("/testNull")
+    public String test(){
+        String name = null;
+        name.length();
+        return "good";
+    }
+
 }

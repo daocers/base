@@ -21,8 +21,8 @@ public class ProducerOrderly {
             DefaultMQProducer producer = new DefaultMQProducer("please_rename_unique_group_name");
 
 //            producer.setNamesrvAddr("10.143.88.73:9876;10.143.88.74:9876;10.143.88.75:9876");
-            producer.setNamesrvAddr("127.0.0.1:9876");
-
+//            producer.setNamesrvAddr("127.0.0.1:9876");
+            producer.setNamesrvAddr("192.168.1.128:9876");
             producer.start();
 
             String[] tags = new String[] { "TagA1", "TagC1", "TagD1" };
@@ -32,7 +32,7 @@ public class ProducerOrderly {
             String dateStr = sdf.format(date);
             for (int i = 0; i < 10; i++) {
                 // 加个时间后缀
-                String body = dateStr + " Hello RocketMQ " + i;
+                String body = dateStr + " message " + i;
                 Message msg = new Message("aaaaa", tags[i % tags.length], "KEY" + i, body.getBytes());
 
                 SendResult sendResult = producer.send(msg, new MessageQueueSelector() {
@@ -43,7 +43,7 @@ public class ProducerOrderly {
                     }
                 }, 0);//0是队列的下标
 
-                System.out.println(sendResult + ", body:" + body);
+                System.out.println("body:" + body + " " + sendResult);
             }
 
             producer.shutdown();

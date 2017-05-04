@@ -16,6 +16,30 @@
     </appender>
 
     <!-- DEBUG -->
+    <appender name="dailyAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 文件路径 -->
+        <file>${log.filePath}/daily.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 文件名称 -->
+            <fileNamePattern>${log.filePath}/daily/daily.%d{yyyy-MM-dd}.log.gz
+            </fileNamePattern>
+            <!-- 文件最大保存历史数量 -->
+            <MaxHistory>${log.maxHistory}</MaxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+        <!--<filter class="ch.qos.logback.classic.filter.LevelFilter">-->
+        <!--<level>DEBUG</level>-->
+        <!--<onMatch>ACCEPT</onMatch>-->
+        <!--<onMismatch>DENY</onMismatch>-->
+        <!--</filter>-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+    </appender>
+
+    <!-- DEBUG -->
     <appender name="debugAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- 文件路径 -->
         <file>${log.filePath}/debug.log</file>
@@ -30,9 +54,9 @@
             <pattern>${log.pattern}</pattern>
         </encoder>
         <!--<filter class="ch.qos.logback.classic.filter.LevelFilter">-->
-            <!--<level>DEBUG</level>-->
-            <!--<onMatch>ACCEPT</onMatch>-->
-            <!--<onMismatch>DENY</onMismatch>-->
+        <!--<level>DEBUG</level>-->
+        <!--<onMatch>ACCEPT</onMatch>-->
+        <!--<onMismatch>DENY</onMismatch>-->
         <!--</filter>-->
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>DEBUG</level>
@@ -54,9 +78,9 @@
             <pattern>${log.pattern}</pattern>
         </encoder>
         <!--<filter class="ch.qos.logback.classic.filter.LevelFilter">-->
-            <!--<level>INFO</level>-->
-            <!--<onMatch>ACCEPT</onMatch>-->
-            <!--<onMismatch>DENY</onMismatch>-->
+        <!--<level>INFO</level>-->
+        <!--<onMatch>ACCEPT</onMatch>-->
+        <!--<onMismatch>DENY</onMismatch>-->
         <!--</filter>-->
 
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
@@ -94,5 +118,6 @@
 
     <root level="debug">
         <appender-ref ref="consoleAppender" />
+        <appender-ref ref="dailyAppender" />
     </root>
 </configuration>
