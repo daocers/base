@@ -151,44 +151,132 @@
 </style>
 <ul id="accordion" class="accordion">
     <li>
-        <div class="link">系统管理<span class=" caret" style="float: right;"></span></div>
+        <div class="link">权限管理<span class=" caret" style="float: right;"></span></div>
         <ul class="submenu">
-            <li><a href="/user/list.do">用户管理</a></li>
-            <li><a href="/role/list.do">角色管理</a></li>
-            <li><a href="/authority/list.do">权限管理</a></li>
-            <li><a href="/branch/list.do">机构管理</a></li>
-            <li><a href="/department/list.do">部门管理</a></li>
+            <li><a href="/authority/list.do">权限列表</a></li>
+            <li><a href="/authority/manage.do">权限管理</a></li>
+            <li><a href="/authority/init.do">权限初始化</a></li>
         </ul>
     </li>
     <li>
-        <div class="link"><i class="fa fa-code"></i>场次管理<i class="fa fa-chevron-down"></i></div>
+        <div class="link">机构管理 <span class=" caret" style="float: right;"></span></div>
         <ul class="submenu">
+            <li><a href="/branch/list.do">机构列表</a></li>
+            <li><a href="/branch/manage.do">机构管理</a></li>
+        </ul>
+    </li>
+    <li>
+        <div class="link"> 部门管理<span class=" caret" style="float: right;"></span></div>
+        <ul class="submenu">
+            <li><a href="/department/list.do"> 部门列表</a></li>
+            <li><a href="/department/edit.do"> 添加部门</a></li>
+        </ul>
+    </li>
+    <li>
+        <div class="link"> 考试管理<span class=" caret" style="float: right;"></span></div>
+        <ul class="submenu">
+            <li><a href="/exam/index.do">我要考试</a></li>
+            <li><a href="/paper/list.do">试卷管理</a></li>
+        </ul>
+    </li>
+    <li>
+        <div class="link">试卷策略管理<span class=" caret" style="float: right;"></span></div>
+        <ul class="submenu">
+            <li><a href="/paperPolicy/list.do"> 试卷策略管理</a></li>
+            <li><a href="/paperPolicy/edit.do"> 新增</a></li>
+        </ul>
+    </li>
+    <li>
+        <div class="link">试题属性管理 <span class=" caret" style="float: right;"></span></div>
+        <ul class="submenu">
+            <li><a href="/property/list.do">属性列表 </a></li>
+            <li><a href="/property/edit.do"> 新增属性</a></li>
+        </ul>
+    </li>
+    <li>
+        <div class="link">题库管理 <span class=" caret" style="float: right;"></span></div>
+        <ul class="submenu">
+            <li><a href="/questionBank/list.do">题库列表 </a></li>
+            <li><a href="/questionBank/edit.do"> 新增题库</a></li>
+        </ul>
+    </li>
+    <li>
+        <div class="link"> 试题管理<span class=" caret" style="float: right;"></span></div>
+        <ul class="submenu">
+            <li><a href="/question/list.do">试题列表 </a></li>
+            <li><a href="/question/edit.do"> 新增试题</a></li>
+            <li><a href="/question/batchAdd.do"> 批量添加</a></li>
+            <%--<li><a href="/question/downModel.do"> 模板下载</a></li>--%>
+            <li><a href="/tradeQuestion/edit.do"> 交易试题录制</a></li>
+            <li><a href="/typeIn/edit.do"> 新增凭条</a></li>
+            <li><a href="/typeIn/list.do"> 凭条列表</a></li>
+
+        </ul>
+    </li>
+    <li>
+        <div class="link">题型管理 <span class=" caret" style="float: right;"></span></div>
+        <ul class="submenu">
+            <li><a href="/questionMetaInfo/list.do">题型列表</a></li>
+            <li><a href="/questionMetaInfo/edit.do">题型添加 </a></li>
+        </ul>
+    </li>
+    <li>
+        <div class="link">试题策略管理 <span class=" caret" style="float: right;"></span></div>
+        <ul class="submenu">
+            <li><a href="/questionPolicy/list.do"> 试题策略列表</a></li>
+            <li><a href="/questionPolicy/edit.do"> 试题策略添加</a></li>
+        </ul>
+    </li>
+    <li>
+        <div class="link">角色管理 <span class=" caret" style="float: right;"></span></div>
+        <ul class="submenu">
+            <li><a href="/role/list.do"> 角色列表</a></li>
+            <li><a href="/role/edit.do">新增角色 </a></li>
+        </ul>
+    </li>
+    <li>
+        <div class="link">场次管理 <span class=" caret" style="float: right;"></span></div>
+        <ul class="submenu">
+            <li><a href="/scene/index.do">开场 </a></li>
             <li><a href="/scene/list/join.do">我参加的</a></li>
             <li><a href="/scene/list/my.do">我创建的</a></li>
             <li><a href="/exam/index.do">我要考试</a></li>
         </ul>
     </li>
     <li>
-        <div class="link"><i class="fa fa-mobile"></i>试题管理<i class="fa fa-chevron-down"></i></div>
+        <div class="link">岗位管理 <span class=" caret" style="float: right;"></span></div>
         <ul class="submenu">
-            <li><a href="/questionMetaInfo/list.do">题型设置</a></li>
-            <li><a href="/question/list.do">题目管理</a></li>
-            <li><a href="/tradeQuestion/list.do">交易题管理</a></li>
-            <li><a href="#">知识题管理</a></li>
-            <li><a href="/trade/toRecord.do">交易录制</a></li>
-            <li><a href="#">翻打凭条管理</a></li>
-
+            <li><a href="/station/list.do"> 岗位列表</a></li>
+            <li><a href="/station/edit.do">新增岗位 </a></li>
         </ul>
     </li>
     <li>
-        <div class="link"><i class="fa fa-globe"></i>考试设置<i class="fa fa-chevron-down"></i></div>
+        <div class="link">交易管理 <span class=" caret" style="float: right;"></span></div>
         <ul class="submenu">
-            <li><a href="/questionPolicy/list.do">试题策略管理</a></li>
-            <li><a href="/paperPolicy/list.do">试卷策略管理</a></li>
-            <li><a href="/paper/list.do">试卷管理</a></li>
-            <li><a href="#"></a></li>
+            <li><a href="/trade/list.do"> 交易列表</a></li>
+            <li><a href="/trade/toRecord.do">录制交易 </a></li>
         </ul>
     </li>
+    <li>
+        <div class="link">用户管理 <span class=" caret" style="float: right;"></span></div>
+        <ul class="submenu">
+            <li><a href="/user/list.do"> 用户列表</a></li>
+            <li><a href="/user/edit.do">修改用户 </a></li>
+            <%--<li><a href="/user/resetPassword.do">重置密码 </a></li>--%>
+            <li><a href="/user/toChangePassword.do">修改密码 </a></li>
+            <li><a href="/user/toRegister.do">注册 </a></li>
+            <li><a href="/user/download.do">下载用户模板 </a></li>
+            <li><a href="/user/batchAdd.do">批量添加 </a></li>
+        </ul>
+    </li>
+    <li>
+        <div class="link">角色管理 <span class=" caret" style="float: right;"></span></div>
+        <ul class="submenu">
+            <li><a href="/role/list.do"> 角色列表</a></li>
+            <li><a href="/role/edit.do">新增角色 </a></li>
+        </ul>
+    </li>
+
 </ul>
 
 <div class="hidden" id="currentUrl">
