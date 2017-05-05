@@ -43,6 +43,7 @@ public class ConsumerOrderlyServiceImpl {
                     try {
                         String msgId = message.getMsgId();
                         received.add(msgId);
+                        logger.info("done ：" + received.size());
                         String body = new String(message.getBody(), "utf-8");
                         String topic = message.getTopic();
                         String tag = message.getTags();
@@ -52,7 +53,6 @@ public class ConsumerOrderlyServiceImpl {
                     }
                 }
 //                logger.info("*******************");
-                logger.info("已处理消息：" + received.size() + "条");
                 return ConsumeOrderlyStatus.SUCCESS;
             }
         });
