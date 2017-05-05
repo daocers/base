@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:annotation-config></context:annotation-config>
+    <context:component-scan base-package="co.bugu.mq.service"/>
+
+    <bean class="co.bugu.framework.core.util.ApplicationContextUtil"/>
+
+
+    <bean class="com.alibaba.rocketmq.client.producer.DefaultMQProducer" destroy-method="shutdown">
+        <property name="namesrvAddr" value="${namesrvAddr}"/>
+        <property name="producerGroup" value="${producerGroup}"/>
+        <property name="instanceName" value="ins-web"/>
+        <property name="clientIP" value="${clientIP}"/>
+        <property name="maxMessageSize" value="10"/>
+        <property name="vipChannelEnabled" value="false"/>
+    </bean>
+    
+    <bean class="com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer" destroy-method="shutdown">
+        <property name="namesrvAddr" value="${namesrvAddr}"/>
+        <property name="consumerGroup" value="${consumerGroup}"/>
+        <property name="instanceName" value="ins-web"/>
+        <property name="clientIP" value="${clientIP}"/>
+        <property name="vipChannelEnabled" value="false"/>
+        <property name="consumeMessageBatchMaxSize" value="10"/>
+        <property name="subscription">
+            <map>
+                <entry key="user" value="a || b || c"/>
+                <entry key="paper" value="dog || cat"/>
+            </map>
+        </property>
+    </bean>
+</beans>

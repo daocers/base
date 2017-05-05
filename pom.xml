@@ -32,6 +32,7 @@
         <module>mq-test</module>
         <module>data_import</module>
         <module>dbGen</module>
+        <module>mq</module>
 
     </modules>
     <dependencies>

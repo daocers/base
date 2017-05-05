@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class Producer {
     public static void main(String[] args) throws IOException {
-        String content = "{\"data\":{\"billType\":55,\"billTypeName\":\"银行承兑汇票\",\"contractTemplate\":1,\"contractUrl\":\"http://file.gomemyc.com/v5/file/download?fileName=f07b52ed1bedaffeab67f33f7c9364d0\",\"createTime\":1493890749000,\"delFlag\":0,\"expiringDate\":1498752000000,\"ext\":\"{\\\"acceptanceBank\\\":\\\"江南农村商业银行\\\"}\",\"extMap\":{\"acceptanceBank\":\"江南农村商业银行\"},\"extendDeadline\":3,\"extendExpiringDate\":1499184000000,\"id\":282,\"incrementAmount\":1.00,\"issueAmount\":99279.00,\"maxInvestAmount\":0.00,\"maxInvestNum\":0,\"maxInvestTotalAmount\":0.00,\"modifyTime\":1493891181000,\"newOrOldType\":0,\"newOrOldTypeStr\":\"资产提供方\",\"nterestMode\":78,\"planAnnualYield\":5.50,\"productCode\":\"PJCP20170504000010\",\"productDeadline\":53,\"productDesc\":\"\\r\\n\n" +
+        String content = "{\"data\":{\"billType\":55,\"billTypeName\":\"银行承兑汇票\",\"contractTemplate\":1,\"contractUrl\":\"http://file.gomemyc.com/v5/file/download?fileName=f275d7500a5509d82ed20daa2aee9e34\",\"createTime\":1493965119000,\"delFlag\":0,\"expiringDate\":1499356800000,\"ext\":\"{\\\"acceptanceBank\\\":\\\"江苏银行\\\"}\",\"extMap\":{\"acceptanceBank\":\"江苏银行\"},\"extendDeadline\":3,\"extendExpiringDate\":1499788800000,\"id\":308,\"incrementAmount\":1.00,\"issueAmount\":99184.00,\"maxInvestAmount\":0.00,\"maxInvestNum\":0,\"maxInvestTotalAmount\":0.00,\"modifyTime\":1493965348000,\"newOrOldType\":0,\"newOrOldTypeStr\":\"资产提供方\",\"nterestMode\":78,\"planAnnualYield\":5.50,\"productCode\":\"PJCP20170505000024\",\"productDeadline\":60,\"productDesc\":\"\\r\\n\n" +
                 "\\r\\n\n" +
                 "\\r\\n\n" +
                 "\\\"\\\"\n" +
@@ -43,7 +43,7 @@ public class Producer {
                 "\\r\\n\n" +
                 "承兑银行\n" +
                 "\\r\\n\\r\\n\n" +
-                "江南农村商业银行\n" +
+                "江苏银行\n" +
                 "\\r\\n\n" +
                 "\\r\\n\\r\\n\n" +
                 "\\r\\n\n" +
@@ -55,7 +55,7 @@ public class Producer {
                 "\\r\\n\n" +
                 "到期日期\n" +
                 "\\r\\n\\r\\n\n" +
-                "2017-06-30\n" +
+                "2017-07-07\n" +
                 "\\r\\n\n" +
                 "\\r\\n\\r\\n\n" +
                 "\\r\\n\n" +
@@ -73,7 +73,7 @@ public class Producer {
                 "\\r\\n\n" +
                 "募集时间\n" +
                 "\\r\\n\\r\\n\n" +
-                "2017-05-04至2017-05-07\n" +
+                "2017-05-05至2017-05-07\n" +
                 "\\r\\n\n" +
                 "\\r\\n\\r\\n\n" +
                 "\\r\\n\n" +
@@ -112,9 +112,12 @@ public class Producer {
                 " \n" +
                 "\\r\\n\\r\\n\n" +
                 "平台免责声明：美易理财作为交易服务平台进行信息发布，不对任何投资人及/或任何交易提供任何担保,无论是明示、默示或法定的。美易理财平台提供的各种信息及资料仅供参考,投资人应依其独立判断做出决策。投资人据此进行投资交易的,产生的投资风险由投资人自行承担。\n" +
-                "\\r\\n\",\"productName\":\"美票宝-17050410\",\"productType\":1,\"productTypeStr\":\"票据\",\"pushPartyId\":119,\"raiseEndDate\":1494086400000,\"raiseStartDate\":1493827200000,\"refundSource\":2,\"refundSourceStr\":\"债权人还款\",\"startBidAmount\":1000.00,\"status\":1,\"statusStr\":\"已推送\",\"valueDate\":1494172800000},\"type\":\"sendProduct\"}";
-        Logger logger = LoggerFactory.getLogger(Producer.class);
-        /**
+                "\\r\\n\",\"productName\":\"美票宝-17050524\",\"productType\":1,\"productTypeStr\":\"票据\",\"pushPartyId\":119,\"raiseEndDate\":1494086400000,\"raiseStartDate\":1493913600000,\"refundSource\":2,\"refundSourceStr\":\"债权人还款\",\"startBidAmount\":1000.00,\"status\":1,\"statusStr\":\"已推送\",\"valueDate\":1494172800000},\"type\":\"sendProduct\"}";
+
+
+
+
+                /**
          * 一个应用创建一个Producer，由应用来维护此对象，可以设置为全局对象或者单例<br>
          * 注意：ProducerGroupName需要由应用来保证唯一<br>
          * ProducerGroup这个概念发送普通的消息时，作用不大，但是发送分布式事务消息时，比较关键，
