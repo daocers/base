@@ -24,19 +24,19 @@ public class CyclicBarrierTest {
 
         System.out.println("到齐了，开始。");
 
-//        MyRunnable9 runnable9 = new MyRunnable9(barrier);
-//        new Thread(runnable9).start();
-//        new Thread(runnable9).start();
-//        new Thread(runnable9).start();
-//        new Thread(runnable9).start();
-//        new Thread(runnable9).start();
-//        new Thread(runnable9).start();
-//        new Thread(runnable9).start();
-//        new Thread(runnable9).start();
-//        new Thread(runnable9).start();
-//        new Thread(runnable9).start();
-//        barrier.await();
-//        System.out.println("干完活，结束。");
+        MyRunnable9 runnable9 = new MyRunnable9(barrier);
+        new Thread(runnable9).start();
+        new Thread(runnable9).start();
+        new Thread(runnable9).start();
+        new Thread(runnable9).start();
+        new Thread(runnable9).start();
+        new Thread(runnable9).start();
+        new Thread(runnable9).start();
+        new Thread(runnable9).start();
+        new Thread(runnable9).start();
+        new Thread(runnable9).start();
+        barrier.await();
+        System.out.println("干完活，结束。");
 
     }
 }

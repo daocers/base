@@ -6,7 +6,6 @@ import com.alibaba.rocketmq.client.producer.SendResult;
 import com.alibaba.rocketmq.common.message.Message;
 import com.alibaba.rocketmq.common.message.MessageQueue;
 
-import javax.swing.plaf.TabbedPaneUI;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,8 +21,8 @@ public class ProducerOrderly {
             DefaultMQProducer producer = new DefaultMQProducer("producer-group-1");
 
 //            producer.setNamesrvAddr("10.143.88.73:9876;10.143.88.74:9876;10.143.88.75:9876");
-            producer.setNamesrvAddr("127.0.0.1:9876");
-//            producer.setNamesrvAddr("192.168.1.128:9876");
+//            producer.setNamesrvAddr("127.0.0.1:9876");
+            producer.setNamesrvAddr("192.168.1.128:9876");
             producer.start();
 
             String[] userTags = new String[]{"a", "b", "c"};
@@ -32,7 +31,7 @@ public class ProducerOrderly {
             Date date = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String dateStr = sdf.format(date);
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 1000; i++) {
                 // 加个时间后缀
                 String body = dateStr + " message " + i;
                 String topic = i % 2 == 0 ? "user" : "paper";

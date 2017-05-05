@@ -1,7 +1,5 @@
 package co.bugu.mq.service.impl;
 
-import ch.qos.logback.core.ConsoleAppender;
-import co.bugu.framework.util.DateUtil;
 import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
 import com.alibaba.rocketmq.client.consumer.listener.ConsumeOrderlyContext;
 import com.alibaba.rocketmq.client.consumer.listener.ConsumeOrderlyStatus;
@@ -15,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.UnsupportedEncodingException;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -24,12 +21,12 @@ import java.util.Set;
  * Created by user on 2017/5/5.
  */
 @Service
-public class ConsumeOrderlyServiceImpl {
+public class ConsumerOrderlyServiceImpl {
     volatile Set<String> received =new HashSet<>();
     @Autowired
     DefaultMQPushConsumer consumer;
 
-    private Logger logger = LoggerFactory.getLogger(ConsumeOrderlyServiceImpl.class);
+    private Logger logger = LoggerFactory.getLogger(ConsumerOrderlyServiceImpl.class);
 
     /**
      * 初始化之前执行
@@ -40,7 +37,8 @@ public class ConsumeOrderlyServiceImpl {
         consumer.registerMessageListener(new MessageListenerOrderly() {
             @Override
             public ConsumeOrderlyStatus consumeMessage(List<MessageExt> list, ConsumeOrderlyContext consumeOrderlyContext) {
-                logger.info("顺序消费，开始接收消息：{}", new Date());
+                consumeOrderlyContext.setAutoCommit(true);
+//                logger.info("顺序消费，开始接收消息：{}", new Date());
                 for(MessageExt message: list){
                     try {
                         String msgId = message.getMsgId();

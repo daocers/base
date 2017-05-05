@@ -1,13 +1,14 @@
 package co.bugu.mq.service.impl;
 
 import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
-import com.alibaba.rocketmq.client.consumer.listener.*;
+import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
+import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
+import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently;
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.message.MessageExt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.UnsupportedEncodingException;
@@ -17,12 +18,12 @@ import java.util.List;
 /**
  * Created by user on 2017/5/5.
  */
-@Service
+//@Service
 public class ConsumerConcurrentlyServiceImpl {
     @Autowired
     DefaultMQPushConsumer consumer;
 
-    private Logger logger = LoggerFactory.getLogger(ConsumeOrderlyServiceImpl.class);
+    private Logger logger = LoggerFactory.getLogger(ConsumerOrderlyServiceImpl.class);
 
     /**
      * 初始化之前执行
