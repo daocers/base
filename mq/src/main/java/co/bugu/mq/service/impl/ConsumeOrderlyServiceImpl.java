@@ -36,6 +36,7 @@ public class ConsumeOrderlyServiceImpl {
      */
     @PostConstruct
     private void init() throws MQClientException {
+        consumer.setConsumerGroup(consumer.getConsumerGroup() + "-orderly");
         consumer.registerMessageListener(new MessageListenerOrderly() {
             @Override
             public ConsumeOrderlyStatus consumeMessage(List<MessageExt> list, ConsumeOrderlyContext consumeOrderlyContext) {
@@ -47,12 +48,12 @@ public class ConsumeOrderlyServiceImpl {
                         String body = new String(message.getBody(), "utf-8");
                         String topic = message.getTopic();
                         String tag = message.getTags();
-                        logger.info("顺序消费，接收到消息：topic: {}, tag: {}, body: {}", new String[]{topic, tag, body});
+//                        logger.info("顺序消费，接收到消息：topic: {}, tag: {}, body: {}", new String[]{topic, tag, body});
                     } catch (UnsupportedEncodingException e) {
-                        logger.info("顺序消费，接收消息失败：", e);
+//                        logger.info("顺序消费，接收消息失败：", e);
                     }
                 }
-                logger.info("*******************");
+//                logger.info("*******************");
                 logger.info("已处理消息：" + received.size() + "条");
                 return ConsumeOrderlyStatus.SUCCESS;
             }

@@ -48,7 +48,9 @@ public class ProducerOrderly {
                 SendResult sendResult = producer.send(msg, new MessageQueueSelector() {
                     @Override
                     public MessageQueue select(List<MessageQueue> mqs, Message msg, Object arg) {
-                        Integer id = arg.hashCode();
+
+                        Integer id = Math.abs(arg.hashCode());
+                        System.out.println(id);
                         return mqs.get(id % mqs.size());
                     }
                 }, body);//0是队列的下标

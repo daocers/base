@@ -18,7 +18,7 @@ import java.util.List;
  * Created by user on 2017/5/5.
  */
 @Service
-public class ConsumerConcurentlyServiceImpl {
+public class ConsumerConcurrentlyServiceImpl {
     @Autowired
     DefaultMQPushConsumer consumer;
 
@@ -29,6 +29,8 @@ public class ConsumerConcurentlyServiceImpl {
      */
     @PostConstruct
     private void init() throws MQClientException {
+        consumer.setConsumerGroup(consumer.getConsumerGroup() + "-concurrently");
+
         consumer.registerMessageListener(new MessageListenerConcurrently() {
             @Override
             public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> list, ConsumeConcurrentlyContext consumeConcurrentlyContext) {

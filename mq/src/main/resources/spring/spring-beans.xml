@@ -19,13 +19,13 @@
         <property name="vipChannelEnabled" value="false"/>
     </bean>
     
-    <bean class="com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer" destroy-method="shutdown">
+    <bean class="com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer" destroy-method="shutdown" scope="prototype">
         <property name="namesrvAddr" value="${namesrvAddr}"/>
         <property name="consumerGroup" value="${consumerGroup}"/>
         <property name="instanceName" value="ins-web"/>
         <property name="clientIP" value="${clientIP}"/>
         <property name="vipChannelEnabled" value="false"/>
-        <property name="consumeMessageBatchMaxSize" value="10"/>
+        <!--<property name="consumeMessageBatchMaxSize" value="10"/>-->
         <property name="subscription">
             <map>
                 <entry key="user" value="a || b || c"/>
