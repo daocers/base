@@ -109,6 +109,36 @@
         </filter>
     </appender>
 
+    <appender name="send" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 文件路径 -->
+        <file>${log.filePath}/send.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 文件名称 -->
+            <fileNamePattern>${log.filePath}/send/send.%d{yyyy-MM-dd}.log.gz
+            </fileNamePattern>
+            <!-- 文件最大保存历史数量 -->
+            <MaxHistory>${log.maxHistory}</MaxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="consume" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 文件路径 -->
+        <file>${log.filePath}/consume.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 文件名称 -->
+            <fileNamePattern>${log.filePath}/consume/consume.%d{yyyy-MM-dd}.log.gz
+            </fileNamePattern>
+            <!-- 文件最大保存历史数量 -->
+            <MaxHistory>${log.maxHistory}</MaxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+    </appender>
+
     <!-- 生产环境用info -->
     <logger name="co.bugu" level="${log.lever}">
         <appender-ref ref="debugAppender" />
@@ -122,6 +152,13 @@
         <appender-ref ref="errorAppender" />
     </logger>
 
+    <logger name="send" level="info">
+        <appender-ref ref="send"/>
+    </logger>
+
+    <logger name="consume" level="info">
+        <appender-ref ref="consume"/>
+    </logger>
     <root level="debug">
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="dailyAppender" />

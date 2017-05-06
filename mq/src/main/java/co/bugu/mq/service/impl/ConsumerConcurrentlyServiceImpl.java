@@ -35,7 +35,7 @@ public class ConsumerConcurrentlyServiceImpl {
         consumer.registerMessageListener(new MessageListenerConcurrently() {
             @Override
             public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> list, ConsumeConcurrentlyContext consumeConcurrentlyContext) {
-                logger.info("集群消费，开始接收消息：{}", new Date());
+//                logger.info("集群消费，开始接收消息：{}", new Date());
                 for (MessageExt message : list) {
                     try {
                         String body = new String(message.getBody(), "utf-8");

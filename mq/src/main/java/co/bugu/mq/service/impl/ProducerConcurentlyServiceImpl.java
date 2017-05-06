@@ -17,7 +17,7 @@ import javax.annotation.PostConstruct;
 /**
  * Created by user on 2017/5/5.
  */
-@Service
+//@Service
 public class ProducerConcurentlyServiceImpl implements IProducerService {
     private Logger logger = LoggerFactory.getLogger(ProducerConcurentlyServiceImpl.class);
     @Autowired

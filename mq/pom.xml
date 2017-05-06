@@ -9,6 +9,7 @@
 
     <artifactId>mq</artifactId>
     <packaging>war</packaging>
+    <version>1.0</version>
 
     <name>mq</name>
     <url>http://maven.apache.org</url>

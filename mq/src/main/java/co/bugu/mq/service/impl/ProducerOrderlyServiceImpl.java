@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 
 /**
@@ -21,22 +22,30 @@ import java.util.List;
  */
 @Service
 public class ProducerOrderlyServiceImpl implements IProducerService {
-    private Logger logger = LoggerFactory.getLogger(ProducerOrderlyServiceImpl.class);
+    //    private Logger logger = LoggerFactory.getLogger(ProducerOrderlyServiceImpl.class);
+    private Logger logger = LoggerFactory.getLogger("send");
     @Autowired
     DefaultMQProducer producer;
 
+    @PostConstruct
+    public void init() throws MQClientException {
+        producer.setProducerGroup(producer.getProducerGroup() + "-orderly");
+        producer.start();
+    }
+
     @Override
     public SendResult send(String topic, String tags, String body, String key) throws InterruptedException, RemotingException, MQClientException, MQBrokerException {
+        String name = producer.getInstanceName();
         SendResult result = producer.send(new Message(topic, tags, key, body.getBytes()), new MessageQueueSelector() {
             @Override
             public MessageQueue select(List<MessageQueue> list, Message message, Object o) {
-                Integer index = o.hashCode();
-                return list.get(index % list.size());
+                Integer hashCode = Math.abs(o.hashCode());
+                return list.get(hashCode % list.size());
             }
         }, key);
 
-        logger.info("发送消息：{}， {}， {}， {}", new String[]{topic, tags, body, key});
-        logger.info("发送结果： {}", result);
+//        logger.info("发送消息：{}， {}， {}， {}", new String[]{topic, tags, body, key});
+        logger.info("发送结果：" + name + " {}", result);
         return result;
 
 

@@ -1,5 +1,6 @@
 package co.bugu.mq.service.impl;
 
+import co.bugu.mq.Constant;
 import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
 import com.alibaba.rocketmq.client.consumer.listener.ConsumeOrderlyContext;
 import com.alibaba.rocketmq.client.consumer.listener.ConsumeOrderlyStatus;
@@ -22,28 +23,32 @@ import java.util.Set;
  */
 @Service
 public class ConsumerOrderlyServiceImpl {
-    volatile Set<String> received =new HashSet<>();
     @Autowired
     DefaultMQPushConsumer consumer;
 
-    private Logger logger = LoggerFactory.getLogger(ConsumerOrderlyServiceImpl.class);
+    private Logger logger = LoggerFactory.getLogger("consume");
+//    private Logger logger = LoggerFactory.getLogger(ConsumerOrderlyServiceImpl.class);
 
     /**
      * 初始化之前执行
      */
     @PostConstruct
     private void init() throws MQClientException {
+        Set<String> consumeList = Constant.getConsumeSet();
+        final String name = consumer.getInstanceName();
         consumer.setConsumerGroup(consumer.getConsumerGroup() + "-orderly");
         consumer.registerMessageListener(new MessageListenerOrderly() {
             @Override
             public ConsumeOrderlyStatus consumeMessage(List<MessageExt> list, ConsumeOrderlyContext consumeOrderlyContext) {
                 consumeOrderlyContext.setAutoCommit(true);
 //                logger.info("顺序消费，开始接收消息：{}", new Date());
-                for(MessageExt message: list){
+                for (MessageExt message : list) {
                     try {
                         String msgId = message.getMsgId();
-                        received.add(msgId);
-                        logger.info("done ：" + received.size());
+                        if(!consumeList.contains(msgId)){
+                            logger.info(name + " " + message);
+                            consumeList.add(msgId);
+                        }
                         String body = new String(message.getBody(), "utf-8");
                         String topic = message.getTopic();
                         String tag = message.getTags();

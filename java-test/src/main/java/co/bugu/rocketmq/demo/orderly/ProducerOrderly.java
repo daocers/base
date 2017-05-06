@@ -22,15 +22,15 @@ public class ProducerOrderly {
             DefaultMQProducer producer = new DefaultMQProducer("producer-group-1");
 
 //            producer.setNamesrvAddr("10.143.88.73:9876;10.143.88.74:9876;10.143.88.75:9876");
-//            producer.setNamesrvAddr("127.0.0.1:9876");
-            producer.setNamesrvAddr("192.168.1.128:9876");
+            producer.setNamesrvAddr("127.0.0.1:9876");
+//            producer.setNamesrvAddr("192.168.1.128:9876");
             producer.start();
 
             String[] userTags = new String[]{"a", "b", "c"};
             String[] paperTags = new String[]{"cat", "dog"};
 
             Random random = new Random();
-            for (int i = 0; i < 100000; i++) {
+            for (int i = 0; i < 10000; i++) {
 
                 Date date = new Date();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -63,7 +63,7 @@ public class ProducerOrderly {
                 if(!sendResult.getSendStatus().equals(SendStatus.SEND_OK)){
                     System.out.println("发送失败； " + sendResult);
                 }
-//                System.out.println("body:" + body + " " + sendResult);
+                System.out.println("body:" + body + " " + sendResult);
                 Thread.sleep(random.nextInt(2));
             }
 

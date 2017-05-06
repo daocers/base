@@ -13,17 +13,17 @@
     <bean class="com.alibaba.rocketmq.client.producer.DefaultMQProducer" destroy-method="shutdown">
         <property name="namesrvAddr" value="${namesrvAddr}"/>
         <property name="producerGroup" value="${producerGroup}"/>
-        <property name="instanceName" value="ins-web"/>
-        <property name="clientIP" value="${clientIP}"/>
-        <property name="maxMessageSize" value="10"/>
+        <property name="instanceName" value="${producer-instanceName}"/>
+        <!--<property name="clientIP" value="${clientIP}"/>-->
+        <!--<property name="maxMessageSize" value="10"/>-->
         <property name="vipChannelEnabled" value="false"/>
     </bean>
     
     <bean class="com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer" destroy-method="shutdown" scope="prototype">
         <property name="namesrvAddr" value="${namesrvAddr}"/>
         <property name="consumerGroup" value="${consumerGroup}"/>
-        <property name="instanceName" value="ins-web"/>
-        <property name="clientIP" value="${clientIP}"/>
+        <property name="instanceName" value="${consumer-instanceName}"/>
+        <!--<property name="clientIP" value="${clientIP}"/>-->
         <property name="vipChannelEnabled" value="false"/>
         <!--<property name="consumeMessageBatchMaxSize" value="10"/>-->
         <property name="subscription">
