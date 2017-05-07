@@ -10,18 +10,16 @@ import com.alibaba.rocketmq.common.message.MessageExt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.UnsupportedEncodingException;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 /**
  * Created by user on 2017/5/5.
  */
-@Service
+//@Service
 public class ConsumerOrderlyServiceImpl {
     @Autowired
     DefaultMQPushConsumer consumer;

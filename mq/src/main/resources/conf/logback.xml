@@ -146,6 +146,10 @@
         <appender-ref ref="errorAppender" />
     </logger>
 
+    <logger level="error">
+        <appender-ref ref="errorAppender"/>
+    </logger>
+
     <logger name="java" level="${log.lever}">
         <appender-ref ref="debugAppender" />
         <appender-ref ref="infoAppender" />

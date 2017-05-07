@@ -6,19 +6,20 @@ import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently;
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.message.MessageExt;
+import com.alibaba.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.UnsupportedEncodingException;
-import java.util.Date;
 import java.util.List;
 
 /**
  * Created by user on 2017/5/5.
  */
-//@Service
+@Service
 public class ConsumerConcurrentlyServiceImpl {
     @Autowired
     DefaultMQPushConsumer consumer;
@@ -31,7 +32,7 @@ public class ConsumerConcurrentlyServiceImpl {
     @PostConstruct
     private void init() throws MQClientException {
         consumer.setConsumerGroup(consumer.getConsumerGroup() + "-concurrently");
-
+        consumer.setMessageModel(MessageModel.BROADCASTING);
         consumer.registerMessageListener(new MessageListenerConcurrently() {
             @Override
             public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> list, ConsumeConcurrentlyContext consumeConcurrentlyContext) {
