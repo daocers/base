@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Created by user on 2017/5/5.
  */
-@Service
+//@Service
 public class ConsumerConcurrentlyServiceImpl {
     @Autowired
     DefaultMQPushConsumer consumer;

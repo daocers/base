@@ -110,7 +110,7 @@
     </appender>
 
     <!-- 生产环境用info -->
-    <logger name="co.bugu" level="${log.lever}">
+    <logger level="${log.lever}">
         <appender-ref ref="debugAppender" />
         <appender-ref ref="infoAppender" />
         <appender-ref ref="errorAppender" />

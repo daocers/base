@@ -22,7 +22,8 @@ public class ConsumerOrderly {
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("consumer-group-2-orderly");
 //        consumer.setNamesrvAddr("10.143.88.73:9876;10.143.88.74:9876;10.143.88.75:9876");
 //        consumer.setNamesrvAddr("127.0.0.1:9876");
-        consumer.setNamesrvAddr("192.168.1.128:9876");
+//        consumer.setNamesrvAddr("192.168.1.128:9876");
+        consumer.setNamesrvAddr("10.152.4.83:9876");
         /**
          * 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费<br>
          * 如果非第一次启动，那么按照上次消费的位置继续消费
