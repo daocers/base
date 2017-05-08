@@ -31,7 +31,7 @@ public class ProducerCommon {
 
         producer.start();
 
-        for(int i = 0; i < 100000; i++){
+        for(int i = 0; i < 10; i++){
             SendResult result = producer.send(new Message(topic, tags, key, body.getBytes()));
             if(!result.getSendStatus().equals(SendStatus.SEND_OK)){
                 System.out.println("发送失败：" + result);
