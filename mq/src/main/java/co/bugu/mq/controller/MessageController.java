@@ -144,4 +144,16 @@ public class MessageController {
         }).start();
         return "开始消息";
     }
+    @ResponseBody
+    @RequestMapping("/sendSingle")
+    public String sendSingle(){
+        try{
+            SendResult sendResult = producerOrderlyService.send("user",
+                    "a", "dfadfadsfasdlkfjasdlkfjalsfdffdsfasdfadsfafadsfasdfdafa", System.currentTimeMillis() + "");
+            logger.info("发送结果：" + sendResult);
+        }catch (Exception e){
+            logger.error("失败", e);
+        }
+        return new Date().toString();
+    }
 }

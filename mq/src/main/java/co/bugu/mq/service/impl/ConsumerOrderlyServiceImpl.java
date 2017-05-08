@@ -10,6 +10,7 @@ import com.alibaba.rocketmq.common.message.MessageExt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.UnsupportedEncodingException;
@@ -19,7 +20,7 @@ import java.util.Set;
 /**
  * Created by user on 2017/5/5.
  */
-//@Service
+@Service
 public class ConsumerOrderlyServiceImpl {
     @Autowired
     DefaultMQPushConsumer consumer;
@@ -50,6 +51,7 @@ public class ConsumerOrderlyServiceImpl {
                         String body = new String(message.getBody(), "utf-8");
                         String topic = message.getTopic();
                         String tag = message.getTags();
+//                        logger.info("顺序消费：" + message);
 //                        logger.info("顺序消费，接收到消息：topic: {}, tag: {}, body: {}", new String[]{topic, tag, body});
                     } catch (UnsupportedEncodingException e) {
 //                        logger.info("顺序消费，接收消息失败：", e);
