@@ -7,6 +7,7 @@ import com.alibaba.rocketmq.client.consumer.listener.ConsumeOrderlyStatus;
 import com.alibaba.rocketmq.client.consumer.listener.MessageListenerOrderly;
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.message.MessageExt;
+import org.apache.commons.validator.Msg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,7 @@ public class ConsumerOrderlyServiceImpl {
                 for (MessageExt message : list) {
                     try {
                         String msgId = message.getMsgId();
-                        if(!consumeList.contains(msgId)){
+                        if (!consumeList.contains(msgId)) {
                             logger.info(name + " " + message);
                             consumeList.add(msgId);
                         }

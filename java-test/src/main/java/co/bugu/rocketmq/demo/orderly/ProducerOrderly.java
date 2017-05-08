@@ -22,7 +22,7 @@ public class ProducerOrderly {
             DefaultMQProducer producer = new DefaultMQProducer("producer-group-1");
 
 //            producer.setNamesrvAddr("10.143.88.73:9876;10.143.88.74:9876;10.143.88.75:9876");
-            producer.setNamesrvAddr("127.0.0.1:9876");
+            producer.setNamesrvAddr("10.152.4.83:9876");
 //            producer.setNamesrvAddr("192.168.1.128:9876");
             producer.start();
 

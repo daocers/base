@@ -15,28 +15,31 @@ import java.util.Random;
  */
 public class ProducerCommon {
     public static void main(String[] args) throws MQClientException, RemotingException, InterruptedException, MQBrokerException {
-        Integer successCount = 0;
+        String producerGroup = "common-group";
+        String instance = "producer-ins-1";
+        String namesrvAddr = "0.152.4.83:9876;10.152.4.86:9876";
+        String key = "key1";
+        String body = "i am the test message.";
+        String topic = "user";
+        String tags = "a";
+
         DefaultMQProducer producer = new DefaultMQProducer();
-        producer.setProducerGroup("producer-group-1");
-        producer.setInstanceName("producer-ins-1");
-//        producer.setClientIP("127.0.0.1");
+        producer.setProducerGroup(producerGroup);
+        producer.setInstanceName(instance);
         producer.setVipChannelEnabled(false);
-        producer.setNamesrvAddr("127.0.0.1:9876");
-        producer.setCreateTopicKey("paper");
+        producer.setNamesrvAddr(namesrvAddr);
 
         producer.start();
-        Random random = new Random();
 
-        for(int i = 0 ; i < 1; i++){
-            Thread.sleep(random.nextInt(10));
-            String[] tags = new String[]{"dog", "cat"};
-            SendResult result = producer.send(new Message("paper", tags[i % 2], "key" + i, ("message body " + i).getBytes()));
-            System.out.println(result);
-            if(result.getSendStatus().equals(SendStatus.SEND_OK)){
-                successCount++;
+        for(int i = 0; i < 10; i++){
+            SendResult result = producer.send(new Message(topic, tags, key, body.getBytes()));
+            if(!result.getSendStatus().equals(SendStatus.SEND_OK)){
+                System.out.println("发送失败：" + result);
+
             }
+
         }
-        System.out.println("发送成功：" + successCount + "条");
+
         producer.shutdown();
     }
 }

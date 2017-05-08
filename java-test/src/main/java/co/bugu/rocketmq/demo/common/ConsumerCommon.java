@@ -23,7 +23,7 @@ public class ConsumerCommon {
 
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer();
         consumer.setConsumerGroup("consumer-group-1");
-        consumer.setNamesrvAddr("127.0.0.1:9876");
+        consumer.setNamesrvAddr("0.152.4.83:9876;10.152.4.86:9876");
         consumer.setInstanceName("consumer-ins-1");
         consumer.setConsumeMessageBatchMaxSize(10);
 //        consumer.setClientIP("127.0.0.1");
@@ -33,7 +33,7 @@ public class ConsumerCommon {
         consumer.registerMessageListener(new MessageListenerConcurrently() {
             @Override
             public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> list, ConsumeConcurrentlyContext consumeConcurrentlyContext) {
-                System.out.println("收到消息：");
+//                System.out.println("收到消息：");
                 for(MessageExt msg: list){
                     String info = new String(msg.getBody());
                     System.out.println("收到消息：" + info + " " +  msg);
