@@ -1,5 +1,6 @@
 package co.bugu.rocketmq.group.orderly;
 
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.rocketmq.client.exception.MQBrokerException;
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
@@ -21,16 +22,25 @@ public class Producer {
         producer.setNamesrvAddr(Config.namesrvAddr);
         producer.setInstanceName(Config.producerInstance);
         producer.start();
+//        JSONObject json = new JSONObject();
+//        json.put("type", "cancelProduct");
+//        json.put("result", "T");
+//        json.put("id", "27143");
+
+        JSONObject json = new JSONObject();
+        json.put("status", "11");
+        json.put("id", "27143");
+        json.put("type", "productStatus");
 
         Long now = System.currentTimeMillis();
-        SendResult sendResult = producer.send(new Message(Config.topic, "a", now + "",
-                "fadfadfadfadsfkjalsdfjldaskfjdla".getBytes()), new MessageQueueSelector() {
+        SendResult sendResult = producer.send(new Message(Config.topic, "bill", now + "",
+                json.toJSONString().getBytes()), new MessageQueueSelector() {
             @Override
             public MessageQueue select(List<MessageQueue> list, Message message, Object o) {
 
-                return list.get((int) ((Long) o % list.size()));
+                return list.get(Integer.valueOf((String)o)%list.size());
             }
-        }, now);
+        }, json.get("id"));
         System.out.println("发送结果：" + sendResult);
         producer.shutdown();
     }
