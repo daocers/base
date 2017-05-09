@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class Producer {
     public static void main(String[] args) throws IOException {
-        String content = "{\"data\":{\"billType\":55,\"billTypeName\":\"银行承兑汇票\",\"contractTemplate\":1,\"contractUrl\":\"http://file.gomemyc.com/v5/file/download?fileName=1f921b1eb743252796eab7b035162cba\",\"createTime\":1494225157000,\"delFlag\":0,\"expiringDate\":1499270400000,\"ext\":\"{\\\"acceptanceBank\\\":\\\"上海浦东发展银行\\\"}\",\"extMap\":{\"acceptanceBank\":\"上海浦东发展银行\"},\"extendDeadline\":3,\"extendExpiringDate\":1499702400000,\"id\":319,\"incrementAmount\":1.00,\"issueAmount\":79132.00,\"maxInvestAmount\":0.00,\"maxInvestNum\":0,\"maxInvestTotalAmount\":0.00,\"modifyTime\":1494225299000,\"newOrOldType\":0,\"newOrOldTypeStr\":\"资产提供方\",\"nterestMode\":78,\"planAnnualYield\":5.50,\"productCode\":\"PJCP20170508000010\",\"productDeadline\":57,\"productDesc\":\"\\r\\n\n" +
+        String content = "{\"data\":{\"billType\":55,\"billTypeName\":\"银行承兑汇票\",\"contractTemplate\":1,\"contractUrl\":\"http://file.gomemyc.com/v5/file/download?fileName=0406dc21e2f338bdb10b095e1feb7354\",\"createTime\":1494307331000,\"delFlag\":0,\"expiringDate\":1496937600000,\"ext\":\"{\\\"acceptanceBank\\\":\\\"中国农业银行\\\"}\",\"extMap\":{\"acceptanceBank\":\"中国农业银行\"},\"extendDeadline\":3,\"extendExpiringDate\":1497369600000,\"id\":329,\"incrementAmount\":1.00,\"issueAmount\":49802.00,\"maxInvestAmount\":0.00,\"maxInvestNum\":0,\"maxInvestTotalAmount\":0.00,\"modifyTime\":1494312980000,\"newOrOldType\":0,\"newOrOldTypeStr\":\"资产提供方\",\"nterestMode\":78,\"planAnnualYield\":5.50,\"productCode\":\"PJCP20170509000010\",\"productDeadline\":29,\"productDesc\":\"\\r\\n\n" +
                 "\\r\\n\n" +
                 "\\r\\n\n" +
                 "\\\"\\\"\n" +
@@ -43,19 +43,19 @@ public class Producer {
                 "\\r\\n\n" +
                 "承兑银行\n" +
                 "\\r\\n\\r\\n\n" +
-                "上海浦东发展银行\n" +
+                "中国农业银行\n" +
                 "\\r\\n\n" +
                 "\\r\\n\\r\\n\n" +
                 "\\r\\n\n" +
                 "起息日期\n" +
                 "\\r\\n\\r\\n\n" +
-                "2017-05-10\n" +
+                "2017-05-11\n" +
                 "\\r\\n\n" +
                 "\\r\\n\\r\\n\n" +
                 "\\r\\n\n" +
                 "到期日期\n" +
                 "\\r\\n\\r\\n\n" +
-                "2017-07-06\n" +
+                "2017-06-09\n" +
                 "\\r\\n\n" +
                 "\\r\\n\\r\\n\n" +
                 "\\r\\n\n" +
@@ -73,7 +73,7 @@ public class Producer {
                 "\\r\\n\n" +
                 "募集时间\n" +
                 "\\r\\n\\r\\n\n" +
-                "2017-05-08至2017-05-09\n" +
+                "2017-05-09至2017-05-10\n" +
                 "\\r\\n\n" +
                 "\\r\\n\\r\\n\n" +
                 "\\r\\n\n" +
@@ -112,7 +112,10 @@ public class Producer {
                 " \n" +
                 "\\r\\n\\r\\n\n" +
                 "平台免责声明：美易理财作为交易服务平台进行信息发布，不对任何投资人及/或任何交易提供任何担保,无论是明示、默示或法定的。美易理财平台提供的各种信息及资料仅供参考,投资人应依其独立判断做出决策。投资人据此进行投资交易的,产生的投资风险由投资人自行承担。\n" +
-                "\\r\\n\",\"productName\":\"美票宝-17050810\",\"productType\":1,\"productTypeStr\":\"票据\",\"pushPartyId\":119,\"raiseEndDate\":1494259200000,\"raiseStartDate\":1494172800000,\"refundSource\":2,\"refundSourceStr\":\"债权人还款\",\"startBidAmount\":1000.00,\"status\":1,\"statusStr\":\"已推送\",\"valueDate\":1494345600000},\"type\":\"sendProduct\"}";
+                "\\r\\n\",\"productName\":\"美票宝-17050910\",\"productType\":1,\"productTypeStr\":\"票据\",\"pushPartyId\":119,\"raiseEndDate\":1494345600000,\"raiseStartDate\":1494259200000,\"refundSource\":2,\"refundSourceStr\":\"债权人还款\",\"startBidAmount\":1000.00,\"status\":1,\"statusStr\":\"已推送\",\"valueDate\":1494432000000},\"type\":\"sendProduct\"}";
+
+
+
 
 
                 /**

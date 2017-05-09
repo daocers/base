@@ -22,7 +22,7 @@ public class ProducerOrderly {
             DefaultMQProducer producer = new DefaultMQProducer("producer-group-1");
 
 //            producer.setNamesrvAddr("10.143.88.73:9876;10.143.88.74:9876;10.143.88.75:9876");
-            producer.setNamesrvAddr("10.152.4.83:9876");
+            producer.setNamesrvAddr("10.152.4.83:9876;10.152.4.86:9876");
 //            producer.setNamesrvAddr("192.168.1.128:9876");
             producer.start();
 
@@ -30,7 +30,7 @@ public class ProducerOrderly {
             String[] paperTags = new String[]{"cat", "dog"};
 
             Random random = new Random();
-            for (int i = 0; i < 10000; i++) {
+            for (int i = 0; i < 1; i++) {
 
                 Date date = new Date();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

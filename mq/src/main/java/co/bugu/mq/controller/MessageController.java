@@ -22,8 +22,8 @@ import java.util.*;
 /**
  * Created by user on 2017/5/5.
  */
-@Controller
-@RequestMapping("/mq")
+//@Controller
+//@RequestMapping("/mq")
 public class MessageController {
     private Logger logger = LoggerFactory.getLogger(MessageController.class);
     @Autowired

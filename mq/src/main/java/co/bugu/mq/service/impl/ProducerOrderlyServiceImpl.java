@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Created by user on 2017/5/5.
  */
-@Service
+//@Service
 public class ProducerOrderlyServiceImpl implements IProducerService {
     //    private Logger logger = LoggerFactory.getLogger(ProducerOrderlyServiceImpl.class);
     private Logger logger = LoggerFactory.getLogger("send");

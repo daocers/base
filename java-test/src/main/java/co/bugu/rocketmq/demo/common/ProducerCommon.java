@@ -17,7 +17,7 @@ public class ProducerCommon {
     public static void main(String[] args) throws MQClientException, RemotingException, InterruptedException, MQBrokerException {
         String producerGroup = "common-group";
         String instance = "producer-ins-1";
-        String namesrvAddr = "0.152.4.83:9876;10.152.4.86:9876";
+        String namesrvAddr = "10.152.4.83:9876;10.152.4.86:9876";
         String key = "key1";
         String body = "i am the test message.";
         String topic = "user";
@@ -31,7 +31,7 @@ public class ProducerCommon {
 
         producer.start();
 
-        for(int i = 0; i < 10; i++){
+        for(int i = 0; i < 1; i++){
             SendResult result = producer.send(new Message(topic, tags, key, body.getBytes()));
             if(!result.getSendStatus().equals(SendStatus.SEND_OK)){
                 System.out.println("发送失败：" + result);
