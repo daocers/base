@@ -28,9 +28,10 @@
         <!--<property name="consumeMessageBatchMaxSize" value="10"/>-->
         <property name="subscription">
             <map>
-                <entry key="user" value="a || b || c"/>
-                <entry key="paper" value="dog || cat"/>
-                <entry key="mylc" value="*"/>
+                <!--<entry key="user" value="a || b || c"/>-->
+                <!--<entry key="paper" value="dog || cat"/>-->
+                <entry key="topic-test" value="*"/>
+                <!--<entry key="mylc" value="*"/>-->
             </map>
         </property>
     </bean>

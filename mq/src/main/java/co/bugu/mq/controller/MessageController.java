@@ -22,8 +22,8 @@ import java.util.*;
 /**
  * Created by user on 2017/5/5.
  */
-//@Controller
-//@RequestMapping("/mq")
+@Controller
+@RequestMapping("/mq")
 public class MessageController {
     private Logger logger = LoggerFactory.getLogger(MessageController.class);
     @Autowired
@@ -148,7 +148,7 @@ public class MessageController {
     @RequestMapping("/sendSingle")
     public String sendSingle(){
         try{
-            SendResult sendResult = producerOrderlyService.send("user",
+            SendResult sendResult = producerOrderlyService.send("topic-test",
                     "a", "dfadfadsfasdlkfjasdlkfjalsfdffdsfasdfadsfafadsfasdfdafa", System.currentTimeMillis() + "");
             logger.info("发送结果：" + sendResult);
         }catch (Exception e){

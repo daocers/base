@@ -20,7 +20,7 @@ public class ProducerCommon {
         String namesrvAddr = "10.152.4.83:9876;10.152.4.86:9876";
         String key = "key1";
         String body = "i am the test message.";
-        String topic = "user";
+        String topic = "que";
         String tags = "a";
 
         DefaultMQProducer producer = new DefaultMQProducer();

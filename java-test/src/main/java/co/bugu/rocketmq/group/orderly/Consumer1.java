@@ -23,10 +23,12 @@ public class Consumer1 {
         consumer.setConsumeMessageBatchMaxSize(10);
         consumer.setNamesrvAddr(Config.namesrvAddr);
         consumer.subscribe(Config.topic, Config.tags);
+        consumer.setMessageModel(MessageModel.BROADCASTING);
         consumer.registerMessageListener(new MessageListenerOrderly() {
             @Override
-            public ConsumeOrderlyStatus consumeMessage(List<MessageExt> list, ConsumeOrderlyContext consumeOrderlyContext) {
-                consumeOrderlyContext.setAutoCommit(true);
+            public ConsumeOrderlyStatus consumeMessage(List<MessageExt> list,
+                                                       ConsumeOrderlyContext context) {
+                context.setAutoCommit(true);
                 for (MessageExt message : list) {
                     System.out.println(message);
                 }
