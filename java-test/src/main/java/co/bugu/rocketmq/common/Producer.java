@@ -1,28 +1,20 @@
 package co.bugu.rocketmq.common;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.rocketmq.client.exception.MQBrokerException;
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
 import com.alibaba.rocketmq.client.producer.SendResult;
 import com.alibaba.rocketmq.common.message.Message;
 import com.alibaba.rocketmq.remoting.exception.RemotingException;
-import org.apache.commons.collections.map.HashedMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by user on 2017/2/17.
  */
 public class Producer {
     public static void main(String[] args) throws IOException {
-        String content = "{\"data\":{\"billType\":55,\"billTypeName\":\"银行承兑汇票\",\"contractTemplate\":1,\"contractUrl\":\"http://file.gomemyc.com/v5/file/download?fileName=0406dc21e2f338bdb10b095e1feb7354\",\"createTime\":1494307331000,\"delFlag\":0,\"expiringDate\":1496937600000,\"ext\":\"{\\\"acceptanceBank\\\":\\\"中国农业银行\\\"}\",\"extMap\":{\"acceptanceBank\":\"中国农业银行\"},\"extendDeadline\":3,\"extendExpiringDate\":1497369600000,\"id\":329,\"incrementAmount\":1.00,\"issueAmount\":49802.00,\"maxInvestAmount\":0.00,\"maxInvestNum\":0,\"maxInvestTotalAmount\":0.00,\"modifyTime\":1494312980000,\"newOrOldType\":0,\"newOrOldTypeStr\":\"资产提供方\",\"nterestMode\":78,\"planAnnualYield\":5.50,\"productCode\":\"PJCP20170509000010\",\"productDeadline\":29,\"productDesc\":\"\\r\\n\n" +
+        String content = "{\"data\":{\"billType\":55,\"billTypeName\":\"银行承兑汇票\",\"contractTemplate\":1,\"contractUrl\":\"http://file.gomemyc.com/v5/file/download?fileName=d16a5af523e28452350084c3f90de4bd\",\"createTime\":1494398884000,\"delFlag\":0,\"expiringDate\":1496592000000,\"ext\":\"{\\\"acceptanceBank\\\":\\\"浙江桐乡民泰村镇银行\\\"}\",\"extMap\":{\"acceptanceBank\":\"浙江桐乡民泰村镇银行\"},\"extendDeadline\":3,\"extendExpiringDate\":1496851200000,\"id\":339,\"incrementAmount\":1.00,\"issueAmount\":99658.00,\"maxInvestAmount\":0.00,\"maxInvestNum\":0,\"maxInvestTotalAmount\":0.00,\"modifyTime\":1494400415000,\"newOrOldType\":0,\"newOrOldTypeStr\":\"资产提供方\",\"nterestMode\":78,\"planAnnualYield\":5.50,\"productCode\":\"PJCP20170510000014\",\"productDeadline\":25,\"productDesc\":\"\\r\\n\n" +
                 "\\r\\n\n" +
                 "\\r\\n\n" +
                 "\\\"\\\"\n" +
@@ -43,7 +35,7 @@ public class Producer {
                 "\\r\\n\n" +
                 "承兑银行\n" +
                 "\\r\\n\\r\\n\n" +
-                "中国农业银行\n" +
+                "浙江桐乡民泰村镇银行\n" +
                 "\\r\\n\n" +
                 "\\r\\n\\r\\n\n" +
                 "\\r\\n\n" +
@@ -55,13 +47,13 @@ public class Producer {
                 "\\r\\n\n" +
                 "到期日期\n" +
                 "\\r\\n\\r\\n\n" +
-                "2017-06-09\n" +
+                "2017-06-05\n" +
                 "\\r\\n\n" +
                 "\\r\\n\\r\\n\n" +
                 "\\r\\n\n" +
                 "起投金额\n" +
                 "\\r\\n\\r\\n\n" +
-                "1000元\n" +
+                "1000.00元\n" +
                 "\\r\\n\n" +
                 "\\r\\n\\r\\n\n" +
                 "\\r\\n\n" +
@@ -73,7 +65,7 @@ public class Producer {
                 "\\r\\n\n" +
                 "募集时间\n" +
                 "\\r\\n\\r\\n\n" +
-                "2017-05-09至2017-05-10\n" +
+                "2017-05-10至2017-05-10\n" +
                 "\\r\\n\n" +
                 "\\r\\n\\r\\n\n" +
                 "\\r\\n\n" +
@@ -112,7 +104,14 @@ public class Producer {
                 " \n" +
                 "\\r\\n\\r\\n\n" +
                 "平台免责声明：美易理财作为交易服务平台进行信息发布，不对任何投资人及/或任何交易提供任何担保,无论是明示、默示或法定的。美易理财平台提供的各种信息及资料仅供参考,投资人应依其独立判断做出决策。投资人据此进行投资交易的,产生的投资风险由投资人自行承担。\n" +
-                "\\r\\n\",\"productName\":\"美票宝-17050910\",\"productType\":1,\"productTypeStr\":\"票据\",\"pushPartyId\":119,\"raiseEndDate\":1494345600000,\"raiseStartDate\":1494259200000,\"refundSource\":2,\"refundSourceStr\":\"债权人还款\",\"startBidAmount\":1000.00,\"status\":1,\"statusStr\":\"已推送\",\"valueDate\":1494432000000},\"type\":\"sendProduct\"}";
+                "\\r\\n\",\"productName\":\"美票宝-17051010\",\"productType\":1,\"productTypeStr\":\"票据\",\"pushPartyId\":119,\"raiseEndDate\":1494345600000,\"raiseStartDate\":1494345600000,\"refundSource\":2,\"refundSourceStr\":\"债权人还款\",\"startBidAmount\":1000.00,\"status\":1,\"statusStr\":\"已推送\",\"valueDate\":1494432000000},\"type\":\"sendProduct\"}";
+
+
+
+
+
+
+
 
 
 
