@@ -61,14 +61,14 @@
 //
 //        }
 //
-//        function doSend(message) {
-//            echo_websocket.send(message);
-//            writeToScreen("Sent message: " + message);
+//        function doSend(name) {
+//            echo_websocket.send(name);
+//            writeToScreen("Sent name: " + name);
 //        }
-//        function writeToScreen(message) {
+//        function writeToScreen(name) {
 //            var pre = document.createElement("p");
 //            pre.style.wordWrap = "break-word";
-//            pre.innerHTML = message;
+//            pre.innerHTML = name;
 //            output.appendChild(pre);
 //        }
 //        window.addEventListener("load", init, false);
@@ -79,7 +79,7 @@
 <div style="text-align: left;">
     <form action="">
         <input onclick="send_echo()" value="send websocket request" type="button">
-        <input id="textID" name="message" value="Hello world, Web Sockets" type="text">
+        <input id="textID" name="name" value="Hello world, Web Sockets" type="text">
         <br>
     </form>
     <form class="form form-horizontal">

@@ -17,7 +17,7 @@
                 <ul class="errors">
                     <li>An error has occurred</li>
                     <li>Exception: ${exception}</li>
-                    <li>Message: ${message}</li>
+                    <li>Message: ${name}</li>
                     <li>Path: ${path}</li>
                 </ul>
             </g:else>

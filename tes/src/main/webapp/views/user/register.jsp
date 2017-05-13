@@ -32,7 +32,7 @@
                 </ol>
             </div>
             <div class="container-fluid">
-                <form class="form-horizontal" method="post" action="register.do" data-toggle="validator" role="form">
+                <form class="form-horizontal col-md-8" method="post" action="register.do" data-toggle="validator" role="form">
 
                     <div class="form-group">
                         <label class="control-label col-md-2">姓名</label>

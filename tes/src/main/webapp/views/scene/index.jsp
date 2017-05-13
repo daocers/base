@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <title>布谷考培|用户列表</title>
+    <title>布谷考培|场次列表</title>
     <%@ include file="../template/header.jsp" %>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -614,7 +614,7 @@
                             <div class="center-block" style="display: none;" id="success-box">
                                 <img src="/assets/img/success.png" height="150px" width="150px" class="img-circle">
                                 <h3>恭喜，开场成功！</h3>
-                                <a href="list.do" class="btn btn-success">确定</a>
+                                <a href="list/my.do" class="btn btn-success">确定</a>
                             </div>
                             <div class="center-block" style="display: none;" id="error-box">
                                 <img src="/assets/img/error.png" height="150px" width="150px" class="img-cricle">

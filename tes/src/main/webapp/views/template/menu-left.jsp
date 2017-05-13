@@ -35,6 +35,7 @@
 
     ul.accordion {
         list-style-type: none;
+        overflow-y: hidden;;
     }
 
     /** =======================
@@ -120,7 +121,7 @@
 
     .submenu li {
         /*padding-left: 20px;*/
-        border-bottom: 1px solid whitesmoke;
+        border-bottom: 1px solid #f5f1f5;
     }
 
     .submenu li:last-child {

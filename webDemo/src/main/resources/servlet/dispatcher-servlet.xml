@@ -22,11 +22,11 @@
     </bean>
 
     <mvc:annotation-driven>
-        <mvc:message-converters register-defaults="true">
+        <mvc:name-converters register-defaults="true">
             <bean class="org.springframework.http.converter.StringHttpMessageConverter">
                 <constructor-arg value="UTF-8" />
             </bean>
-        </mvc:message-converters>
+        </mvc:name-converters>
     </mvc:annotation-driven>
 
 

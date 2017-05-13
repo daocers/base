@@ -33,11 +33,11 @@
     </bean>
 
     <mvc:annotation-driven conversion-service="conversionService">
-        <mvc:message-converters register-defaults="true">
+        <mvc:name-converters register-defaults="true">
             <bean class="org.springframework.http.converter.StringHttpMessageConverter">
                 <constructor-arg value="UTF-8" />
             </bean>
-        </mvc:message-converters>
+        </mvc:name-converters>
     </mvc:annotation-driven>
 
 
@@ -71,10 +71,10 @@
     <!--</bean>-->
 
     <!--<mvc:annotation-driven>-->
-        <!--<mvc:message-converters register-defaults="true">-->
+        <!--<mvc:name-converters register-defaults="true">-->
             <!--<ref bean="stringHttpMessageConverter" />-->
             <!--&lt;!&ndash;<ref bean="mappingJackson2HttpMessageConverter" />&ndash;&gt;-->
-        <!--</mvc:message-converters>-->
+        <!--</mvc:name-converters>-->
         <!--<mvc:argument-resolvers>-->
             <!--<bean class="co.bugu.framework.core.util.DateConverter"/>-->
         <!--</mvc:argument-resolvers>-->

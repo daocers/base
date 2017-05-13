@@ -61,14 +61,14 @@
 //
 //        }
 //
-//        function doSend(message) {
-//            echo_websocket.send(message);
-//            writeToScreen("Sent message: " + message);
+//        function doSend(name) {
+//            echo_websocket.send(name);
+//            writeToScreen("Sent name: " + name);
 //        }
-//        function writeToScreen(message) {
+//        function writeToScreen(name) {
 //            var pre = document.createElement("p");
 //            pre.style.wordWrap = "break-word";
-//            pre.innerHTML = message;
+//            pre.innerHTML = name;
 //            output.appendChild(pre);
 //        }
 //        window.addEventListener("load", init, false);

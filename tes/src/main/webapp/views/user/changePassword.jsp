@@ -33,7 +33,7 @@
             </div>
 
             <div class="container-fluid">
-                <form class="form-horizontal" method="post" data-toggle="validator" role="form">
+                <form class="form-horizontal col-md-8" method="post" data-toggle="validator" role="form">
                     <div class="form-group">
                         <label class="control-label col-md-2">旧密码</label>
                         <div class="col-md-10">

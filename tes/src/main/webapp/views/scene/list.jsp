@@ -101,9 +101,9 @@
                                 </c:if>
                             </td>
                             <td>
-                                <a href="index.do?id=${scene.id}&type=detail" class="opr">详情</a>
-                                <a href="index.do?id=${scene.id}" class="opr">修改</a>
-                                <a href="javascript:del(${scene.id})" class="opr">删除</a>
+                                <a href="/scene/index.do?id=${scene.id}&type=detail" class="opr">详情</a>
+                                <a href="/scene/index.do?id=${scene.id}" class="opr">修改</a>
+                                <%--<a href="javascript:del(${scene.id})" class="opr">删除</a>--%>
                             </td>
                         </tr>
                     </c:forEach>
