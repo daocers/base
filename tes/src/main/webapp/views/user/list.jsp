@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@taglib prefix="tes" uri="WEB-INF/tes.tld" %>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -79,7 +80,10 @@
                             <td>
                                 <a href="edit.do?id=${user.id}&type=detail" class="opr">详情</a>
                                 <a href="edit.do?id=${user.id}" class="opr">修改</a>
-                                <a href="javascript:del(${user.id})" class="opr">删除</a>
+                                <tes:hasPromission name="admin">
+                                    <a href="javascript:del(${user.id})" class="opr">删除</a>
+                                </tes:hasPromission>
+
                             </td>
                         </tr>
                     </c:forEach>

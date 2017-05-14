@@ -4,6 +4,7 @@ import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.core.util.BuguWebUtil;
 import co.bugu.framework.util.DateUtil;
 import co.bugu.framework.util.JedisUtil;
+import co.bugu.tes.enums.SceneStatus;
 import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.*;
 import co.bugu.tes.service.*;
@@ -108,6 +109,7 @@ public class ExamController {
     public String toNote(String authCode, ModelMap model) {
             Scene scene = new Scene();
         scene.setAuthCode(authCode);
+        scene.setStatus(SceneStatus.BEGIN.getStatus());//查找已经开场的场次
         List<Scene> sceneList = sceneService.findByObject(scene);
         if (sceneList != null && sceneList.size() == 1) {
             scene = sceneList.get(0);

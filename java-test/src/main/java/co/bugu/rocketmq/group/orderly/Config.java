@@ -5,8 +5,8 @@ package co.bugu.rocketmq.group.orderly;
  */
 public interface Config {
 //    String namesrvAddr = "10.151.37.40:9876;10.151.37.41:9876;10.151.37.42:9876";
-    String namesrvAddr = "10.152.4.83:9876";
-    String topic = "que";
+    String namesrvAddr = "10.143.108.83:9876;10.143.108.84:9876;10.143.108.85:9876";
+    String topic = "mylc";
     String tags = "bill";
     String consumerGroup = "consumer-group";
     String producerGroup = "producer-group";

@@ -28,9 +28,11 @@ public class Producer {
 //        json.put("id", "27143");
 
         JSONObject json = new JSONObject();
-        json.put("status", "11");
-        json.put("id", "27143");
-        json.put("type", "productStatus");
+//        json.put("status", "11");
+//        json.put("id", "27143");
+//        json.put("type", "productStatus");
+        json.put("id", 27010);
+        json.put("type", "returnTicket");
 
         Long now = System.currentTimeMillis();
         SendResult sendResult = producer.send(new Message(Config.topic, "bill", now + "",
@@ -38,9 +40,9 @@ public class Producer {
             @Override
             public MessageQueue select(List<MessageQueue> list, Message message, Object o) {
 
-                return list.get(Integer.valueOf((String)o)%list.size());
+                return list.get(Integer.valueOf((Integer) o)%list.size());
             }
-        }, json.get("id"));
+        }, json.getInteger("id"));
         System.out.println("发送结果：" + sendResult);
         producer.shutdown();
     }

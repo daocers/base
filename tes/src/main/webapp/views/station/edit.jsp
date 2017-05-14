@@ -28,7 +28,7 @@
                 </ol>
             </div>
 
-            <form class="form-horizontal" method="post" action="save.do" data-toggle="validator" role="form">
+            <form class="form-horizontal col-md-8" method="post" action="save.do" data-toggle="validator" role="form">
                 <input id="id" type="hidden" name="id" value="${station.id}">
                 <div class="form-group">
                     <label class="control-label col-md-2">岗位名称</label>

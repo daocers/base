@@ -33,6 +33,7 @@
         <module>data_import</module>
         <module>dbGen</module>
         <module>mq</module>
+        <module>dubbo</module>
 
     </modules>
     <dependencies>
