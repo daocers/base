@@ -16,9 +16,9 @@
         <attribute>
             <name>name</name>
             <fragment>true</fragment>
-            <required>true</required>
             <rtexprvalue>true</rtexprvalue>
-            <type>java.lang.Boolean</type>
+            <required>true</required>
+            <type>java.lang.String</type>
         </attribute>
     </tag>
 
@@ -31,7 +31,7 @@
             <fragment>true</fragment>
             <rtexprvalue>true</rtexprvalue>
             <required>true</required>
-            <type>java.lang.Boolean</type>
+            <type>java.lang.String</type>
         </attribute>
     </tag>
 

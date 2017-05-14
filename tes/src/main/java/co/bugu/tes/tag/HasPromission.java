@@ -1,7 +1,6 @@
 package co.bugu.tes.tag;
 
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -18,12 +17,13 @@ public class HasPromission extends SimpleTagSupport {
     StringWriter writer = new StringWriter();
     @Override
     public void doTag() throws JspException, IOException {
-        if(name != null){
-            JspWriter out = getJspContext().getOut();
-            out.println(name);
-        }else{
-            getJspBody().invoke(writer);
-            getJspContext().getOut().println(writer.toString());
-        }
+//        if(name != null){
+//            JspWriter out = getJspContext().getOut();
+//            out.println(name);
+//        }else{
+//
+//        }
+        getJspBody().invoke(writer);
+        getJspContext().getOut().println(writer.toString());
     }
 }

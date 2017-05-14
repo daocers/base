@@ -3,7 +3,12 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                     http://www.springframework.org/schema/beans/spring-beans.xsd
+                     http://www.springframework.org/schema/context
+                     http://www.springframework.org/schema/context/spring-context.xsd
+                     http://www.springframework.org/schema/mvc
+                     http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
 
     <!--用于时间日期绑定-->
     <mvc:annotation-driven conversion-service="conversionService"/>
@@ -32,13 +37,7 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
-    <mvc:annotation-driven conversion-service="conversionService">
-        <mvc:name-converters register-defaults="true">
-            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
-                <constructor-arg value="UTF-8" />
-            </bean>
-        </mvc:name-converters>
-    </mvc:annotation-driven>
+
 
 
     <!--拦截所有请求-->
@@ -53,6 +52,21 @@
             <bean class="co.bugu.tes.interceptor.AuthInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
+
+
+    <!--<mvc:annotation-driven conversion-service="conversionService">-->
+        <!--<mvc:name-converters register-defaults="true">-->
+            <!--<bean class="org.springframework.http.converter.StringHttpMessageConverter">-->
+                <!--<constructor-arg value="UTF-8" />-->
+            <!--</bean>-->
+        <!--</mvc:name-converters>-->
+    <!--</mvc:annotation-driven>-->
+
+    <mvc:annotation-driven>
+        <mvc:message-converters register-defaults="true">
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter"/>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
 
     <!--<mvc:interceptors>-->
         <!--<mvc:interceptor>-->
