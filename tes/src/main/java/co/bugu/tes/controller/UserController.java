@@ -12,9 +12,6 @@ import co.bugu.tes.model.*;
 import co.bugu.tes.service.*;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.eventbus.DeadEvent;
-import jdk.internal.org.objectweb.asm.tree.InnerClassNode;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -230,6 +227,14 @@ public class UserController {
             file.transferTo(tarFile);
             List<List<String>> data = ExcelUtilNew.getData(tarFile);
             logger.error("数据： {}", data);
+            List<Branch> banchList = branchService.findByObject(null);
+            List<Department> departmentList = departmentService.findByObject(null);
+            List<Station> stationList = stationService.findByObject(null);
+            Map<String, Integer> banchMap = new HashMap<>();
+            for (Branch branch: banchList){
+                banchMap.put(branch.getName(), branch.getId());
+            }
+            Map<String, Integer> depa
             tarFile.delete();
         } catch (Exception e) {
             e.printStackTrace();

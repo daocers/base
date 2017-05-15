@@ -2,14 +2,13 @@ package co.bugu.tes.service.impl;
 
 
 import co.bugu.framework.core.service.impl.BaseServiceImpl;
+import co.bugu.framework.util.JedisUtil;
 import co.bugu.framework.util.exception.TesException;
 import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.Branch;
 import co.bugu.tes.service.IBranchService;
-import co.bugu.framework.core.dao.BaseDao;
-import co.bugu.framework.core.dao.PageInfo;
+import com.alibaba.dubbo.common.utils.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -108,6 +107,19 @@ public class BranchServiceImpl extends BaseServiceImpl<Branch> implements IBranc
         }
 
 
+    }
+
+    @Override
+    public Map<String, Integer> getBranchMap() {
+        Map<String, Integer> map = new HashMap<>();
+        List<Branch> list = baseDao.selectList("tes.branch.findByObject", null);
+        if(CollectionUtils.isNotEmpty(list)){
+            for(Branch branch: list){
+                map.put(branch.getName(), branch.getId());
+            }
+        }
+        JedisUtil.zadd();
+        return null;
     }
 
 
