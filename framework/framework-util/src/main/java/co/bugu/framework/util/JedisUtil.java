@@ -288,7 +288,7 @@ public class JedisUtil {
 	            jedis.rpush(item);
             }
         }catch (Exception e){
-	        logger.error("jedis pushList 异常");
+	        logger.error("jedis pushList 异常", e);
         }finally {
             release(jedis);
         }

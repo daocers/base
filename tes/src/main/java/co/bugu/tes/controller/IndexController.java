@@ -51,7 +51,7 @@ public class IndexController {
             for (Cookie cookie : cookies) {
                 String name = cookie.getName();
                 if (name.equals("rememberMe")) {
-                    model.put("rememberMe", 0);
+                    model.put("rememberMe", cookie.getValue());
                 }
                 if ("username".equals(name)) {
                     model.put("username", cookie.getValue());
@@ -64,18 +64,6 @@ public class IndexController {
 
     @RequestMapping("/index")
     public String index(HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session = request.getSession();
-        String username = session.getAttribute("username").toString();
-        String rememberMe = session.getAttribute("rememberMe").toString();
-        if (StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(rememberMe)) {
-            Cookie cookie = new Cookie("username", session.getAttribute("username").toString());
-            Cookie remCookie = new Cookie("rememberMe", session.getAttribute("rememberMe").toString());
-            Integer max = 3600 * 24 * 7;
-            remCookie.setMaxAge(max);
-            cookie.setMaxAge(max);
-            response.addCookie(cookie);
-            response.addCookie(remCookie);
-        }
         return "index/index";
     }
 
@@ -110,6 +98,19 @@ public class IndexController {
                         WebUtils.setSessionAttribute(request, "username", username);
                         WebUtils.setSessionAttribute(request, "rememberMe", rememberMe);
                     }
+
+                    Cookie remCookie = new Cookie("rememberMe", "0");
+                    Cookie userCookie = new Cookie("username", username);
+
+                    Integer maxAge = -1;
+                    if(0 == rememberMe){
+                        maxAge = 3600 * 24 * 7;//cookie保存一周;
+                    }
+                    remCookie.setMaxAge(maxAge);
+                    userCookie.setMaxAge(maxAge);
+
+                    response.addCookie(remCookie);
+                    response.addCookie(userCookie);
                     return "0";
                 } else {
                     return "3";//密码不正确
