@@ -148,8 +148,8 @@
                 <div class="lr_ok">
                     <a tabindex="5" class="a"
                        href="https://login.51job.com/forgetpwd.php?lang=c&from_domain=i&source=&url=http%3A%2F%2Fwww.51job.com%2F">忘记密码？</a>
-                    <input tabIndex="4" type="checkbox" name="rememberMe" id="rememberMe" checked="true">
-                    <label for="rememberMe">自动登录</label>
+                    <input tabIndex="4" type="checkbox" name="rememberMe" id="rememberMe" ${rememberMe == 0 ? "checked" : ""}>
+                    <label for="rememberMe">记住我</label>
                 </div>
                 <div class="btnbox">
                     <button tabIndex="6" type='button' class="p_but" id="login_btn" tabindex="10">登 录</button>
@@ -196,7 +196,7 @@
             $.ajax({
                 url: "/signIn.do",
                 type: "post",
-                data: {username: username, password: password, rememberMe: $("#rememberMe").attr("checked") ? 0 : 1},
+                data: {username: username, password: password, rememberMe: $("#rememberMe").prop("checked") ? 0 : 1},
                 success: function (data) {
                     if(data == 0){
                         //登陆成功，跳转页面

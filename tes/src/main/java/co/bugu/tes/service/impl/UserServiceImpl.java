@@ -11,11 +11,13 @@ import co.bugu.tes.model.User;
 import co.bugu.tes.service.IUserService;
 import com.alibaba.fastjson.JSON;
 import com.rabbitmq.tools.json.JSONUtil;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -108,7 +110,8 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
             logger.error("jedis获取列表失败");
 
         }
-        if(roleList == null || roleList.size() == 0){
+        if(CollectionUtils.isEmpty(roleList)){
+            roleList = new ArrayList<>();
             List<Role> list = baseDao.selectList("tes.role.selectRoleByUser", userId);
             for(Role role: list){
                 roleList.add(role.getCode());
@@ -125,6 +128,10 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
             authorityList = JedisUtil.lrange(Constant.USER_AUTHORITYS + userId);
         }catch (Exception e){
             logger.error("jedis获取列表失败");
+
+        }
+        if(CollectionUtils.isEmpty(authorityList)){
+            authorityList = new ArrayList<>();
             List<Role> list = baseDao.selectList("tes.role.selectRoleByUser", userId);
             for(Role role: list){
                 List<Authority> authorities = baseDao.selectList("tes.authority.selectAuthorityByRole", role.getId());
@@ -139,11 +146,11 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
 
     @Override
     public boolean hasRole(Integer userId, String... role) {
-        return getRoleList(userId).contains(role);
+        return getRoleList(userId).containsAll(Arrays.asList(role));
     }
 
     @Override
     public boolean hasAuthority(Integer userId, String... authority) {
-        return getAuthorityList(userId).contains(authority);
+        return getAuthorityList(userId).containsAll(Arrays.asList(authority));
     }
 }
