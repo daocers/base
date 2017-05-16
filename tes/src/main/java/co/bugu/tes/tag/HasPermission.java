@@ -15,7 +15,7 @@ import java.io.StringWriter;
 /**
  * Created by user on 2017/5/13.
  */
-public class HasPromission extends SimpleTagSupport {
+public class HasPermission extends SimpleTagSupport {
     IUserService userService = ApplicationContextUtil.getBean(IUserService.class);
     private String name;
     public void setName(String name){

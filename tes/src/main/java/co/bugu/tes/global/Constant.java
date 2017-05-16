@@ -67,4 +67,10 @@ public interface Constant {
      * 试题答案
      */
     String QUESTION_ANSWER = "QUESTION_ANSWER";
+
+    String BRANCH_INFO = "BRANCH_INFO";
+
+    String DEPARTMENT_INFO = "DEPARTMENT_INFO";
+
+    String STATION_INFO = "STATION_INFO";
 }

@@ -33,8 +33,8 @@ public class JedisUtil {
             logger.error("[redis配置文件加载失败]", e);
         }
 
-        try{
-            JedisPoolConfig config =  new JedisPoolConfig();
+        try {
+            JedisPoolConfig config = new JedisPoolConfig();
             config.setMaxIdle(Integer.parseInt(properties.getProperty("redis.maxIdle")));
             config.setMaxTotal(Integer.parseInt(properties.getProperty("redis.maxTotal")));
             config.setMaxWaitMillis(Integer.parseInt(properties.getProperty("redis.maxWaitMillis")));
@@ -46,107 +46,109 @@ public class JedisUtil {
                     Integer.parseInt(properties.getProperty("redis.timeout", "5000")),
                     properties.getProperty("redis.password"),
                     Integer.parseInt(properties.getProperty("redis.db")));
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("[初始化jedisPool失败]", e);
             pool = null;
         }
     }
 
-    public static void release(Jedis jedis){
-        if(jedis != null){
+    public static void release(Jedis jedis) {
+        if (jedis != null) {
             jedis.close();
         }
     }
+
     public static void set(String key, String value) {
         Jedis jedis = null;
         try {
             jedis = pool.getResource();
             jedis.set(key, value);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("[jedis异常] set", e);
-        }finally {
+        } finally {
             release(jedis);
         }
     }
-    
+
     /**
-	 * @Description: 存放set类型
-	 * @param key
-	 * @param value
-	 */
-	public static void sadd(String key, String value) {
-		Jedis jedis = null;
+     * @param key
+     * @param value
+     * @Description: 存放set类型
+     */
+    public static void sadd(String key, String value) {
+        Jedis jedis = null;
         try {
             jedis = pool.getResource();
             jedis.sadd(key, value);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("[jedis异常] set", e);
-        }finally {
+        } finally {
             release(jedis);
         }
-	}
+    }
 
 
-	/**
-	 * @Title: sexists
-	 * @Description: set中是否存在指定元素
-	 * @param key
-	 * @param value
-	 * @return boolean
-	 */
-	public static boolean sexists(String key, String value){
-		Jedis jedis = null;
-		boolean flag = false;
+    /**
+     * @param key
+     * @param value
+     * @return boolean
+     * @Title: sexists
+     * @Description: set中是否存在指定元素
+     */
+    public static boolean sexists(String key, String value) {
+        Jedis jedis = null;
+        boolean flag = false;
         try {
             jedis = pool.getResource();
             flag = jedis.sismember(key, value);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("[jedis异常] set", e);
-        }finally {
+        } finally {
             release(jedis);
         }
-		return flag;
-	}
-	
-	public static void srem(String key, String...value){
-		Jedis jedis = null;
+        return flag;
+    }
+
+    public static void srem(String key, String... value) {
+        Jedis jedis = null;
         try {
             jedis = pool.getResource();
             jedis.srem(key, value);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("[jedis异常] set", e);
-        }finally {
+        } finally {
             release(jedis);
         }
-	}
+    }
 
-	public static Set<String> getAllOfSet(String key){
-	    Jedis jedis = null;
-	    try{
-	        jedis = pool.getResource();
-	        return jedis.smembers(key);
-        }catch (Exception e){
-	        logger.error("smembers 异常", e);
-	        return null;
-        }finally {
+    public static Set<String> getAllOfSet(String key) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.smembers(key);
+        } catch (Exception e) {
+            logger.error("smembers 异常", e);
+            return null;
+        } finally {
             release(jedis);
         }
     }
 
     /**
      * 获取set长度
+     *
      * @param key
      * @return
      */
-	public static Long scard(String key){
-	    Jedis jedis = null;
-	    try{
-	        jedis = pool.getResource();
-	        return jedis.scard(key);
-        }catch (Exception e){
-	        logger.error("scard 异常", e);
-	        return null;
-        }finally {
+    public static Long scard(String key) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.scard(key);
+        } catch (Exception e) {
+            logger.error("scard 异常", e);
+            return null;
+        } finally {
             release(jedis);
         }
     }
@@ -156,10 +158,10 @@ public class JedisUtil {
         try {
             jedis = pool.getResource();
             return jedis.get(key);
-        }catch (Exception e){            
+        } catch (Exception e) {
             logger.error("[jedis异常] get", e);
             return null;
-        }finally {
+        } finally {
             release(jedis);
         }
     }
@@ -280,16 +282,16 @@ public class JedisUtil {
         }
     }
 
-    public static void pushList(String key, List<String> value){
-	    Jedis jedis = null;
-	    try{
-	        jedis = getJedis();
-	        for(String item: value){
-	            jedis.rpush(item);
+    public static void pushList(String key, List<String> value) {
+        Jedis jedis = null;
+        try {
+            jedis = getJedis();
+            for (String item : value) {
+                jedis.rpush(item);
             }
-        }catch (Exception e){
-	        logger.error("jedis pushList 异常", e);
-        }finally {
+        } catch (Exception e) {
+            logger.error("jedis pushList 异常", e);
+        } finally {
             release(jedis);
         }
     }
@@ -307,15 +309,15 @@ public class JedisUtil {
         }
     }
 
-    public static List<String> getList(String key){
-	    Jedis jedis = null;
-	    try{
-	        jedis = getJedis();
-	        return jedis.lrange(key, 0, -1);
-        }catch (Exception e){
-	        logger.error("jedis lrange 异常", e);
-	        return null;
-        }finally {
+    public static List<String> getList(String key) {
+        Jedis jedis = null;
+        try {
+            jedis = getJedis();
+            return jedis.lrange(key, 0, -1);
+        } catch (Exception e) {
+            logger.error("jedis lrange 异常", e);
+            return null;
+        } finally {
             release(jedis);
         }
     }
@@ -333,7 +335,7 @@ public class JedisUtil {
         return null;
     }
 
-    public static List<String> hmget(String key, String ...filed) {
+    public static List<String> hmget(String key, String... filed) {
         Jedis jedis = null;
         try {
             jedis = getJedis();
@@ -419,6 +421,7 @@ public class JedisUtil {
 
     /**
      * 设置过期时间, 单位为秒
+     *
      * @param key
      * @param secondes
      * @return
@@ -459,7 +462,6 @@ public class JedisUtil {
     }
 
 
-
     public static Map<String, String> getValueMap(Object obj) {
         Map<String, String> map = new HashMap<String, String>();
         Field[] fields = obj.getClass().getDeclaredFields();
@@ -489,21 +491,21 @@ public class JedisUtil {
     }
 
 
-
     public static void set(byte[] key, byte[] value) {
-        Jedis jedis= null;
-        try{
+        Jedis jedis = null;
+        try {
             jedis = getJedis();
             jedis.set(key, value);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("[jedis调用异常]", e);
-        }finally {
+        } finally {
             release(jedis);
         }
     }
 
     /**
      * 将实体类放入到redis上
+     *
      * @param key
      * @param object
      */
@@ -522,6 +524,7 @@ public class JedisUtil {
 
     /**
      * 获取保存的json对象，适用于没有implement Serializable的对象
+     *
      * @param key
      * @param clazz
      * @param <T>
@@ -543,42 +546,44 @@ public class JedisUtil {
 
     /**
      * 删除指定的key
+     *
      * @param key 需要删除的key，可以使用模糊查询等
      */
     public static void delKeysLike(String key) throws TesException {
         Jedis jedis = null;
-        try{
+        try {
             jedis = pool.getResource();
             Set<String> keys = jedis.keys(key);
             String[] tar = keys.toArray(new String[keys.size()]);
             jedis.del(tar);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("jedis getKeyLike 异常", e);
             throw new TesException("Jedis操作失败", e);
-        }finally {
+        } finally {
             release(jedis);
         }
     }
 
     /**
      * 查找对应的key
+     *
      * @param key
      * @return
      * @throws TesException
      */
     public static Set<String> keysLike(String key) throws TesException {
         Jedis jedis = null;
-        try{
-            if(!key.endsWith("*")){
+        try {
+            if (!key.endsWith("*")) {
                 key = key + "*";
             }
             jedis = pool.getResource();
             Set<String> keys = jedis.keys(key);
             return keys;
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("jedis keysLike 异常", e);
             throw new TesException("jedis操作失败", e);
-        }finally {
+        } finally {
             release(jedis);
         }
     }
@@ -586,20 +591,21 @@ public class JedisUtil {
 
     /**
      * 获取交集的数量
+     *
      * @param keys
      * @return
      * @throws TesException
      */
     public static int sinterForSize(String... keys) throws TesException {
         Jedis jedis = null;
-        try{
+        try {
             jedis = pool.getResource();
             Set<String> set = jedis.sinter(keys);
             return set.size();
-        }catch (Exception e ){
+        } catch (Exception e) {
             logger.error("jedis sinter异常", e);
             throw new TesException("jedis操作失败", e);
-        }finally {
+        } finally {
             release(jedis);
         }
     }
@@ -607,21 +613,91 @@ public class JedisUtil {
 
     /**
      * 获取交集
+     *
      * @param keys
      * @return
      * @throws TesException
      */
     public static Set<String> sinterForObj(String... keys) throws TesException {
         Jedis jedis = null;
-        try{
-            jedis =pool.getResource();
+        try {
+            jedis = pool.getResource();
             Set<String> set = jedis.sinter(keys);
             return set;
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("jedis sinter异常", e);
             throw new TesException("jedis操作失败", e);
-        }finally {
+        } finally {
             release(jedis);
         }
     }
+
+
+    public static void hSet(String key, String field, String val) {
+        Jedis jedis = null;
+        try {
+            jedis = getJedis();
+            jedis.hset(key, field, val);
+        } catch (Exception e) {
+            logger.error("hSet 失败", e);
+        } finally {
+            release(jedis);
+        }
+    }
+
+    public static void hmSet(String key, Map<String, String> map) {
+        Jedis jedis = null;
+        try {
+            jedis = getJedis();
+            jedis.hmset(key, map);
+        } catch (Exception e) {
+            logger.error("hmset 失败", e);
+        } finally {
+            release(jedis);
+        }
+    }
+
+    public static String hGet(String key, String field) {
+        String res = "";
+        Jedis jedis = null;
+        try {
+            jedis = getJedis();
+            res = jedis.hget(key, field);
+        } catch (Exception e) {
+            logger.error("hGet 失败", e);
+        } finally {
+            release(jedis);
+        }
+        return res;
+    }
+
+    public static List<String> hmGet(String key, String... field) {
+        List<String> res = null;
+        Jedis jedis = null;
+        try {
+            jedis = getJedis();
+            res = jedis.hmget(key, field);
+        } catch (Exception e) {
+            logger.error("hmGet 失败", e);
+        } finally {
+            release(jedis);
+        }
+        return res;
+    }
+
+    public static Map<String, String> hGetAll(String key){
+        Jedis jedis = null;
+        try{
+            jedis = getJedis();
+            jedis.hgetAll(
+
+
+
+
+
+
+            )
+        }
+    }
+
 }

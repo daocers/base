@@ -110,16 +110,17 @@ public class BranchServiceImpl extends BaseServiceImpl<Branch> implements IBranc
     }
 
     @Override
-    public Map<String, Integer> getBranchMap() {
-        Map<String, Integer> map = new HashMap<>();
+    public Map<String, String> getBranchMap() {
+        JedisUti
+        Map<String, String> map = new HashMap<>();
         List<Branch> list = baseDao.selectList("tes.branch.findByObject", null);
         if(CollectionUtils.isNotEmpty(list)){
             for(Branch branch: list){
-                map.put(branch.getName(), branch.getId());
+                map.put(branch.getName(), branch.getId() + "");
             }
         }
-        JedisUtil.zadd();
-        return null;
+        JedisUtil.hmset(Constant.BRANCH_INFO, map);
+        return map;
     }
 
 

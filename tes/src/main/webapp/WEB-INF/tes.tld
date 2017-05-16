@@ -24,7 +24,7 @@
 
     <tag>
         <name>hasPromission</name>
-        <tag-class>co.bugu.tes.tag.HasPromission</tag-class>
+        <tag-class>co.bugu.tes.tag.HasPermission</tag-class>
         <body-content>scriptless</body-content>
         <attribute>
             <name>name</name>

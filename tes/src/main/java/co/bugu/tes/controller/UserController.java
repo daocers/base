@@ -227,14 +227,7 @@ public class UserController {
             file.transferTo(tarFile);
             List<List<String>> data = ExcelUtilNew.getData(tarFile);
             logger.error("数据： {}", data);
-            List<Branch> banchList = branchService.findByObject(null);
-            List<Department> departmentList = departmentService.findByObject(null);
-            List<Station> stationList = stationService.findByObject(null);
-            Map<String, Integer> banchMap = new HashMap<>();
-            for (Branch branch: banchList){
-                banchMap.put(branch.getName(), branch.getId());
-            }
-            Map<String, Integer> depa
+            Map<String, String> banchMap = branchService.getBranchMap();
             tarFile.delete();
         } catch (Exception e) {
             e.printStackTrace();
