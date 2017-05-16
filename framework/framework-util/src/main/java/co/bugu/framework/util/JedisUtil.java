@@ -686,18 +686,18 @@ public class JedisUtil {
     }
 
     public static Map<String, String> hGetAll(String key){
+        Map<String, String> map = null;
         Jedis jedis = null;
         try{
             jedis = getJedis();
-            jedis.hgetAll(
-
-
-
-
-
-
-            )
+            map = jedis.hgetAll(key);
+        }catch (Exception e){
+            logger.error("hGetAll 失败",e);
+        }finally {
+            release(jedis);
         }
+        return map;
+
     }
 
 }

@@ -31,7 +31,10 @@ public class Consumer {
             public ConsumeOrderlyStatus consumeMessage(List<MessageExt> list, ConsumeOrderlyContext consumeOrderlyContext) {
                 consumeOrderlyContext.setAutoCommit(true);
                 for(MessageExt message: list){
+                    String body = new String(message.getBody());
+                    System.out.println(body);
                     System.out.println(message);
+                    System.out.println("*****************");
                 }
                 return ConsumeOrderlyStatus.SUCCESS;
             }
