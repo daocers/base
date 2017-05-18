@@ -133,10 +133,15 @@ public class JedisUtil {
         }
     }
 
-    public static void sss(String key){
+
+    /**
+     * 字符操作
+     * */
+    public static void set(String key, String value){
         Jedis jedis = null;
         try{
             jedis = getJedis();
+            jedis.set(key, value);
         }catch (Exception e){
             logger.error("jedis  异常", e);
 
@@ -145,7 +150,7 @@ public class JedisUtil {
         }
     }
 
-    public static void sss(String key){
+    public static String get(String key){
         Jedis jedis = null;
         try{
             jedis = getJedis();
