@@ -12,7 +12,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <html>
 <head>
-    <link href="/assets/css/bootstrap.css" rel="stylesheet" >
+    <link href="/assets/css/bootstrap.css" rel="stylesheet">
     <script src="/assets/js/jquery-2.2.0.min.js"></script>
     <script src="/assets/js/bootstrap.js"></script>
     <script src="/assets/js/bugu.extend.js"></script>
@@ -23,12 +23,12 @@
     <link href="/assets/css/jquery.filer.css" type="text/css" rel="stylesheet"/>
     <link href="/assets/css/jquery.filer-dragdropbox-theme.css" type="text/css" rel="stylesheet"/>
     <script src="/assets/js/jquery.filer.js"></script>
-    
+
     <link href="/assets/css/kacha-table-editable.css" rel="stylesheet"/>
     <script src="/assets/js/bugu.editable-table.js"></script>
 
     <script src="/assets/js/eModal.js"></script>
-    
+
     <%--<script src="/assets/js/bootstrap-datetimepicker.min.js"></script>--%>
     <%--<script src="/assets/js/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>--%>
     <%--<link href="/assets/css/bootstrap-datetimepicker.min.css" rel="stylesheet" >--%>
@@ -73,7 +73,7 @@
     <script src="/assets/js/timer.jquery.min.js"></script>
 
 
-<%--自定义的js和css，因为依赖其他js，故放在最后--%>
+    <%--自定义的js和css，因为依赖其他js，故放在最后--%>
     <link href="/assets/css/my.css" rel="stylesheet">
     <script src="/assets/js/page-nav.js"></script>
     <script src="/assets/js/my.js"></script>
@@ -112,14 +112,30 @@
     </script>
 </head>
 <body>
+<div class="hide" id="type">
+    ${param.type}
+</div>
 
-    <div class="hide" id="err">
-        ${err}
-    </div>
-    <div class="hide" id="msg">
-        ${msg}
-    </div>
+<div class="hide" id="err">
+    ${err}
+</div>
+<div class="hide" id="msg">
+    ${msg}
+</div>
 
-
+<script>
+    $(function () {
+        var type = $("#type").text().trim();
+        if (type == "detail") {
+            console.log("detail begin")
+            // $("input").attr("readonly", true);
+            // $("select").attr("readonly", true);
+            // $("button").attr("disabled", "disabled");
+            // $(".time").attr("disabled", "disabled");
+            // $(".date").attr("disabled", "disabled");
+            $(".date, .time, button, select, checkbox, raddio, input").attr("disabled", "disabled");
+        }
+    })
+</script>
 </body>
 </html>

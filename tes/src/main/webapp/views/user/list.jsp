@@ -49,6 +49,8 @@
                     <div class="pull-left form-inline">
                         <button class="btn btn-info" id="import">导入数据</button>
                         <button class="btn btn-primary" id="download">下载模板</button>
+                        <div style="display: inline-block; width: 80px;"></div>
+                        <a href="edit.do" class="btn btn-success">添加用户</a>
                     </div>
 
                 </div>
@@ -58,12 +60,12 @@
                     <thead>
                     <tr>
                         <th><input type="checkbox" class="selectAll"></th>
+                        <th>用户名</th>
+                        <th>姓名</th>
                         <th>机构</th>
                         <th>部门</th>
                         <th>岗位</th>
                         <th>状态</th>
-                        <th>用户名</th>
-                        <th>姓名</th>
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -71,12 +73,12 @@
                     <c:forEach items="${pi.data}" var="user" varStatus="line">
                         <tr>
                             <td><input type="checkbox" objId="${user.id}"></td>
+                            <td>${user.username}</td>
+                            <td>${user.name}</td>
                             <td>${branchMap.get(user.branchId)}</td>
                             <td>${departmentMap.get(user.departmentId)}</td>
                             <td>${stationMap.get(user.stationId)}</td>
                             <td>${user.status == 0 ? "启用" : "禁用"}</td>
-                            <td>${user.username}</td>
-                            <td>${user.name}</td>
                             <td>
                                 <a href="edit.do?id=${user.id}&type=detail" class="opr">详情</a>
                                 <a href="edit.do?id=${user.id}" class="opr">修改</a>

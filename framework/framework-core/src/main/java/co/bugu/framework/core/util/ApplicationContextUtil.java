@@ -16,6 +16,11 @@ public class ApplicationContextUtil implements ApplicationContextAware {
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         logger.debug("****************开始********************");
+        logger.debug("debug");
+        logger.info("info");
+        logger.warn("warning");
+        logger.error("error");
+        logger.trace("trace");
         ApplicationContextUtil.context = applicationContext;
     }
 

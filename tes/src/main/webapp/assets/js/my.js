@@ -42,15 +42,7 @@ $(function () {
     }
 
     // console.log("detail， 开始禁用")
-    var type = $("#type").val();
-    if (type == "detail") {
-        // $("input").attr("readonly", true);
-        // $("select").attr("readonly", true);
-        // $("button").attr("disabled", "disabled");
-        // $(".time").attr("disabled", "disabled");
-        // $(".date").attr("disabled", "disabled");
-        $(".date, .time, button, select, checkbox, raddio, input").attr("disabled", "disabled");
-    }
+
 });
 
 

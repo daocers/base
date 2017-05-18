@@ -9,8 +9,6 @@ import co.bugu.tes.model.Profile;
 import co.bugu.tes.model.Role;
 import co.bugu.tes.model.User;
 import co.bugu.tes.service.IUserService;
-import com.alibaba.fastjson.JSON;
-import com.rabbitmq.tools.json.JSONUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -33,6 +32,20 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
         JedisUtil.setJson(Constant.USER_INFO_PREFIX + user.getId(), user);
         return 1;
     }
+
+    @Override
+    public int delete(User record) {
+        Profile profile = new Profile();
+        profile.setUserId(record.getId());
+        List<Profile> profiles = baseDao.selectList("tes.profile.findByObject", profile);
+        if(CollectionUtils.isNotEmpty(profiles)){
+            for(Profile p: profiles){
+                baseDao.delete("tes.profile.deleteById", p);
+            }
+        }
+        return baseDao.delete("tes.user.deleteById", record);
+    }
+
 
     @Override
     public int updateById(User user) {
@@ -52,14 +65,24 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
 
     @Override
     public void batchAdd(List<User> userList) {
+        for(User user: userList){
+            baseDao.insert("tes.user.insert", user);
+            Profile profile = user.getProfile();
+            profile.setName(user.getName());
+            profile.setUserId(user.getId());
+            profile.setRegistTime(new Date());
+            baseDao.insert("tes.profile.insert", profile);
+        }
 
     }
 
     @Override
-    public User findById(Integer id) {;
+    public User findById(Integer id) {
         try{
             User user = JedisUtil.getJson(Constant.USER_INFO_PREFIX + id, User.class);
-            return user;
+            if(user != null){
+                return user;
+            }
         }catch (Exception e){
             logger.error("查询redis失败", e);
         }

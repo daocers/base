@@ -35,11 +35,11 @@ function del(id) {
             if(data == "0"){
                 $("input[objid=" + id + "]").parents("tr").remove();
             }else{
-                alert("删除失败");
+                swal("", "warning", "删除失败");
             }
         },
         error: function () {
-            alert("请求删除失败");
+            swal("", "error", "请求失败");
         }
     });
     return false;

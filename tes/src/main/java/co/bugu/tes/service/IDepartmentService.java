@@ -6,6 +6,7 @@ import co.bugu.tes.model.Department;
 import co.bugu.framework.core.dao.PageInfo;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IDepartmentService extends IBaseService<Department>{
 //    int save(Department department);
@@ -23,4 +24,6 @@ public interface IDepartmentService extends IBaseService<Department>{
 //    PageInfo listByObject(Department department, PageInfo<Department> pageInfo) throws Exception;
 
     void batchAdd(List<Department> departmentList);
+
+    Map<String, String> getDepartmentMap();
 }

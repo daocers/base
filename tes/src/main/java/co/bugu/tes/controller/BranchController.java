@@ -228,6 +228,22 @@ public class BranchController {
         return "branch/manage";
     }
 
+    @RequestMapping("/getBranchInfo")
+    @ResponseBody
+    public String getBranchInfo(ModelMap model){
+        List<Branch> branchList = branchService.findByObject(null);
+        JSONArray array = new JSONArray();
+        for(Branch branch: branchList){
+            JSONObject json = new JSONObject();
+            json.put("id", branch.getId());
+            json.put("cId", branch.getId());
+            json.put("level", branch.getLevel());
+            json.put("name", branch.getName());
+            json.put("pId", branch.getSuperiorId());
+            array.add(json);
+        }
+        return array.toString();
+    }
 
     /**
      * 异步请求 删除

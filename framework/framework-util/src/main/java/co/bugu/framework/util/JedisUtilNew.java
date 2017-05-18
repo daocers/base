@@ -15,11 +15,10 @@ import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-
 /**
- * Created by daocers on 2016/5/23.
+ * Created by user on 2017/5/17.
  */
-public class JedisUtil {
+public class JedisUtilNew {
     private static Logger logger = LoggerFactory.getLogger(JedisUtil.class);
 
     private static JedisPool pool;

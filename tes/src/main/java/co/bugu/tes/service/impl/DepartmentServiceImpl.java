@@ -2,20 +2,41 @@ package co.bugu.tes.service.impl;
 
 
 import co.bugu.framework.core.service.impl.BaseServiceImpl;
+import co.bugu.framework.util.JedisUtil;
+import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.Department;
 import co.bugu.tes.service.IDepartmentService;
 import co.bugu.framework.core.dao.BaseDao;
 import co.bugu.framework.core.dao.PageInfo;
+import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
-public class DepartmentServiceImpl extends BaseServiceImpl<Department> implements IDepartmentService {
+public class
+DepartmentServiceImpl extends BaseServiceImpl<Department> implements IDepartmentService {
     @Override
     public void batchAdd(List<Department> departmentList) {
 
+    }
+
+    @Override
+    public Map<String, String> getDepartmentMap() {
+        Map<String, String> map = JedisUtil.hgetall(Constant.DEPARTMENT_INFO);
+        if(MapUtils.isNotEmpty(map)){
+            return map;
+        }else{
+            map = new HashMap<>();
+            List<Department>  departments = baseDao.selectList("tes.department.findByObject", null);
+            for(Department department: departments){
+                map.put(department.getName(), department.getId() + "");
+            }
+        }
+        return map;
     }
 //    @Autowired
 //    BaseDao baseDao;

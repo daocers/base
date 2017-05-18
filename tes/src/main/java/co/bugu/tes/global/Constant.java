@@ -73,4 +73,9 @@ public interface Constant {
     String DEPARTMENT_INFO = "DEPARTMENT_INFO";
 
     String STATION_INFO = "STATION_INFO";
+
+
+    String DEFAULT_PASSWORD = "888888";
+
+    String DEFALUT_SALT = "ABC";
 }

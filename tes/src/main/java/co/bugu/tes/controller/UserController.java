@@ -48,7 +48,7 @@ public class UserController {
     /**
      * 列表，分页显示
      *
-     * @param username      查询数据
+     * @param username  查询数据
      * @param name      查询数据
      * @param curPage   当前页码，从1开始
      * @param showCount 当前页码显示数目
@@ -59,10 +59,10 @@ public class UserController {
     public String list(String username, String name, Integer curPage, Integer showCount, ModelMap model) {
         try {
             User user = new User();
-            if(StringUtils.isNotEmpty(username)){
+            if (StringUtils.isNotEmpty(username)) {
                 user.setUsername(username);
             }
-            if(StringUtils.isNotEmpty(name)){
+            if (StringUtils.isNotEmpty(name)) {
                 user.setName(name);
             }
             PageInfo<User> pageInfo = new PageInfo<>(showCount, curPage);
@@ -75,13 +75,13 @@ public class UserController {
             Map<Integer, String> departmentMap = new HashMap<>();
             Map<Integer, String> branchMap = new HashMap<>();
             Map<Integer, String> stationMap = new HashMap<>();
-            for(Department department: departments){
+            for (Department department : departments) {
                 departmentMap.put(department.getId(), department.getName());
             }
-            for(Branch branch: branches){
+            for (Branch branch : branches) {
                 branchMap.put(branch.getId(), branch.getName());
             }
-            for(Station station: stations){
+            for (Station station : stations) {
                 stationMap.put(station.getId(), station.getName());
             }
             model.put("departmentMap", departmentMap);
@@ -105,25 +105,33 @@ public class UserController {
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String toEdit(Integer id, ModelMap model) {
         try {
-            User user = userService.findById(id);
-            if (user != null) {
-                Profile profile = new Profile();
-                profile.setUserId(user.getId());
-                List<Profile> list = profileService.findByObject(profile);
-                if (list.size() != 1) {
-                    logger.error("数据紊乱， userId: {}", id);
-                    model.put("err", "数据有误，请联系管理员处理");
-                } else {
-                    user.setProfile(list.get(0));
+            if (id != null) {
+                User user = userService.findById(id);
+                if (user != null) {
+                    Profile profile = new Profile();
+                    profile.setUserId(user.getId());
+                    List<Profile> list = profileService.findByObject(profile);
+                    if (list.size() != 1) {
+                        logger.error("数据紊乱， userId: {}", id);
+                        model.put("err", "数据有误，请联系管理员处理");
+                    } else {
+                        user.setProfile(list.get(0));
+                    }
+                    if(user.getBranchId() != null){
+                        Branch branch = branchService.findById(user.getBranchId());
+                        model.put("branchName", branch.getName());
+                    }
                 }
+                model.put("user", user);
+
             }
-            model.put("user", user);
+
             List<Department> departmentList = departmentService.findByObject(null);
             List<Station> stationList = stationService.findByObject(null);
-            List<Branch> branchList = branchService.findByObject(null);
+//            List<Branch> branchList = branchService.findByObject(null);
             model.put("departmentList", departmentList);
             model.put("stationList", stationList);
-            model.put("branchList", branchList);
+
         } catch (Exception e) {
             logger.error("获取信息失败", e);
             model.put("errMsg", "获取信息失败");
@@ -139,21 +147,26 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public String save(User user, ModelMap model) {
+    public String save(User user, ModelMap model, RedirectAttributes redirectAttributes) {
         try {
-            if(user.getProfile() != null){
+            if (user.getProfile() != null) {
                 user.setName(user.getProfile().getName());
             }
             if (user.getId() == null) {
+                user.setStatus(0);
+                user.setSalt(Constant.DEFALUT_SALT);
+                user.setPassword(EncryptUtil.md5(Constant.DEFAULT_PASSWORD + Constant.DEFALUT_SALT));
                 userService.save(user);
             } else {
                 userService.updateById(user);
             }
         } catch (Exception e) {
             logger.error("保存失败", e);
-            model.put("user", user);
-            model.put("errMsg", "保存失败");
-            return "user/edit";
+            redirectAttributes.addFlashAttribute("user", user);
+            redirectAttributes.addFlashAttribute("err", "保存用户失败");
+//            model.put("user", user);
+            model.put("err", "保存失败");
+            return "redirect:edit.do";
         }
         return "redirect:list.do";
     }
@@ -169,7 +182,7 @@ public class UserController {
     public String listAll(User user) {
         try {
             List<User> list = userService.findByObject(user);
-            for(User u: list){
+            for (User u : list) {
                 u.setProfile(profileService.findByUserId(u.getId()));
             }
             return JsonUtil.toJsonString(list);
@@ -216,21 +229,53 @@ public class UserController {
         user.setPassword(finalPass);
         userService.save(user);
         redirectAttributes.addAttribute("id", user.getId());
-        return "redirect:edit.do";
+        return "redirect:/login.do";
     }
 
     @RequestMapping("/batchAdd")
-    public String batchAdd(MultipartFile file) {
+    public String batchAdd(MultipartFile file, RedirectAttributes redirectAttributes) {
         try {
             String fileName = file.getOriginalFilename();
             File tarFile = new File(fileName);
             file.transferTo(tarFile);
             List<List<String>> data = ExcelUtilNew.getData(tarFile);
-            logger.error("数据： {}", data);
-            Map<String, String> banchMap = branchService.getBranchMap();
             tarFile.delete();
+
+            logger.debug("数据： {}", data);
+            Map<String, String> branchMap = branchService.getBranchMap();
+            Map<String, String> departmentMap = departmentService.getDepartmentMap();
+            Map<String, String> stationMap = stationService.getStationMap();
+
+            data.remove(0);//删除标题
+
+            List<User> userList = new ArrayList<>();
+            for (List<String> line : data) {
+                String username = line.get(0);
+                String name = line.get(1);
+                String idNo = line.get(2);
+                String branchName = branchMap.get(line.get(3));
+                String departName = departmentMap.get(line.get(4));
+                String stationName = stationMap.get(line.get(5));
+                User user = new User();
+                user.setUsername(username);
+                user.setName(name);
+                user.setStatus(0);
+
+                user.setSalt(Constant.DEFALUT_SALT);
+                user.setPassword(EncryptUtil.md5(Constant.DEFAULT_PASSWORD + Constant.DEFALUT_SALT));
+                user.setDepartmentId(StringUtils.isEmpty(departName) ? null : Integer.parseInt(departName));
+                user.setStationId(StringUtils.isEmpty(stationName) ? null : Integer.parseInt(stationName));
+                user.setBranchId(StringUtils.isEmpty(branchName) ? null : Integer.parseInt(branchName));
+                Profile profile = new Profile();
+                profile.setIdNo(idNo);
+                user.setProfile(profile);
+                userList.add(user);
+            }
+            userService.batchAdd(userList);
+            redirectAttributes.addFlashAttribute("msg", "批量导入用户成功");
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("批量导入用户失败", e);
+            redirectAttributes.addFlashAttribute("err", "批量导入用户失败");
         }
 
         return "redirect:list.do";
@@ -249,15 +294,16 @@ public class UserController {
 
     /**
      * 根据结构id选择考试人员
+     *
      * @param branchInfo
      * @return
      */
     @RequestMapping("/getUsers")
     @ResponseBody
-    public String getUserForScene(String branchInfo){
+    public String getUserForScene(String branchInfo) {
         List<User> res = new ArrayList<>();
         List<Integer> branchIds = JSON.parseArray(branchInfo, Integer.class);
-        for(Integer id: branchIds){
+        for (Integer id : branchIds) {
             User user = new User();
             user.setBranchId(id);
             List<User> users = userService.findByObject(user);
@@ -268,11 +314,13 @@ public class UserController {
 
 
     @RequestMapping("/toChangePassword")
-    public String toChangePassword(){
+    public String toChangePassword() {
         return "user/changePassword";
     }
+
     /**
      * 修改密码
+     *
      * @param oldPassword
      * @param password
      * @param request
@@ -280,11 +328,11 @@ public class UserController {
      */
     @RequestMapping("/changePassword")
     @ResponseBody
-    public String changePassword(String oldPassword, String password, HttpServletRequest request){
+    public String changePassword(String oldPassword, String password, HttpServletRequest request) {
         JSONObject json = new JSONObject();
         Integer userId = (Integer) BuguWebUtil.getUserId(request);
         User user = userService.findById(userId);
-        if(EncryptUtil.md5(oldPassword + user.getSalt()).equals(user.getPassword())){
+        if (EncryptUtil.md5(oldPassword + user.getSalt()).equals(user.getPassword())) {
             String salt = EncryptUtil.getSalt(5);
             String newPassword = EncryptUtil.md5(password + salt);
             user.setSalt(salt);
@@ -292,7 +340,7 @@ public class UserController {
             userService.updateById(user);
             json.put("code", 0);
             BuguWebUtil.remove(request, Constant.SESSION_USER_ID);
-        }else{
+        } else {
             json.put("code", -1);
             json.put("err", "旧密码错误");
         }
@@ -302,7 +350,7 @@ public class UserController {
 
     @RequestMapping("/resetPassword")
     @ResponseBody
-    public String resetPassword(Integer userId, ModelMap model){
+    public String resetPassword(Integer userId, ModelMap model) {
         Random random = new Random();
         Integer code = random.nextInt(100) + 100;
         String newPassword = "password" + code;

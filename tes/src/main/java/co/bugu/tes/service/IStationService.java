@@ -6,6 +6,7 @@ import co.bugu.tes.model.Station;
 import co.bugu.framework.core.dao.PageInfo;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IStationService extends IBaseService<Station>{
 //    int save(Station station);
@@ -22,4 +23,5 @@ public interface IStationService extends IBaseService<Station>{
 //
 //    PageInfo listByObject(Station station, PageInfo<Station> pageInfo) throws Exception;
 
+    Map<String, String> getStationMap();
 }

@@ -8,6 +8,7 @@ import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.Branch;
 import co.bugu.tes.service.IBranchService;
 import com.alibaba.dubbo.common.utils.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,7 @@ public class BranchServiceImpl extends BaseServiceImpl<Branch> implements IBranc
     /**
      * 更新操作，如果更新过上级机构，则级联更新该机构下属的所有机构的level
      * 不建议操作，牵扯太多，容易对已有数据造成灾难性影响。
+     *
      * @param data
      * @throws TesException
      */
@@ -40,29 +42,28 @@ public class BranchServiceImpl extends BaseServiceImpl<Branch> implements IBranc
 //        return 0;
 //
 //    }
-
     @Override
     public void batchAdd(List<List<String>> data) throws TesException {
-        for(int i = 0; i < data.size(); i++){
+        for (int i = 0; i < data.size(); i++) {
             List<String> line = data.get(i);
             String code = line.get(0);
             String name = line.get(1);
             String superCode = line.get(2);
             String address = line.get(3);
-            if(StringUtils.isEmpty(code)){
+            if (StringUtils.isEmpty(code)) {
                 throw new TesException("第" + i + "行机构编码不能为空。");
             }
-            if(StringUtils.isEmpty(name)){
+            if (StringUtils.isEmpty(name)) {
                 throw new TesException("第" + (i + 1) + "行机构名称不能为空。");
             }
-            if(StringUtils.isEmpty(superCode)){
+            if (StringUtils.isEmpty(superCode)) {
                 throw new TesException("第" + (i + 1) + "行上级机构不能为空，如果该机构为总行，上级机构请填入【0】。");
             }
         }
 
         //            保存基本信息
         Map<String, Integer> codeIdInfo = new HashMap();
-        for(List<String> line: data){
+        for (List<String> line : data) {
             String name = line.get(1);
             String code = line.get(0);
             String address = line.get(3);
@@ -85,18 +86,18 @@ public class BranchServiceImpl extends BaseServiceImpl<Branch> implements IBranc
         Map<String, Integer> codeLevelInfo = getCodeLevelInfo(data);
 
 //            保存级联关系
-        for(List<String> line : data){
+        for (List<String> line : data) {
             String code = line.get(0);
             String superiorCode = line.get(2);
             Branch branch = new Branch();
             branch.setCode(code);
             branch.setId(codeIdInfo.get(code));
             branch.setLevel(codeLevelInfo.get(code));
-            if(codeIdInfo.get(superiorCode) == null){
+            if (codeIdInfo.get(superiorCode) == null) {
                 Branch record = new Branch();
                 record.setCode(superiorCode);
                 record = baseDao.selectOne("tes.branch.findByObject", record);
-                if(record != null){
+                if (record != null) {
                     codeIdInfo.put(superiorCode, record.getId());
                 }
             }
@@ -111,11 +112,14 @@ public class BranchServiceImpl extends BaseServiceImpl<Branch> implements IBranc
 
     @Override
     public Map<String, String> getBranchMap() {
-        JedisUti
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = JedisUtil.hgetall(Constant.BRANCH_INFO);
+        if(MapUtils.isNotEmpty(map)){
+            return map;
+        }
+        map = new HashMap<>();
         List<Branch> list = baseDao.selectList("tes.branch.findByObject", null);
-        if(CollectionUtils.isNotEmpty(list)){
-            for(Branch branch: list){
+        if (CollectionUtils.isNotEmpty(list)) {
+            for (Branch branch : list) {
                 map.put(branch.getName(), branch.getId() + "");
             }
         }
@@ -126,40 +130,41 @@ public class BranchServiceImpl extends BaseServiceImpl<Branch> implements IBranc
 
     /**
      * 根据解析的excel获取对应的level
+     *
      * @param data
      * @return
      */
     private Map<String, Integer> getCodeLevelInfo(List<List<String>> data) throws TesException {
         boolean flag = true;
         Map<String, Integer> codeLevelInfo = new HashMap<>();
-        while(flag){
+        while (flag) {
             flag = false;
-            for(List<String> line: data){
+            for (List<String> line : data) {
                 String code = line.get(0);
                 String superiorCode = line.get(2);
 
 //                该code已经处理
-                if(codeLevelInfo.containsKey(code)){
+                if (codeLevelInfo.containsKey(code)) {
                     continue;
                 }
 
-                if(superiorCode.equals("")){
+                if (superiorCode.equals("")) {
                     codeLevelInfo.put(code, Constant.BRANCH_LEVEL_TOP);
                     flag = true;
                 }
 
-                if(codeLevelInfo.containsKey(superiorCode)){
+                if (codeLevelInfo.containsKey(superiorCode)) {
                     codeLevelInfo.put(code, codeLevelInfo.get(superiorCode) + 1);
                     flag = true;
                 }
-                if(!codeLevelInfo.containsKey(superiorCode)){
+                if (!codeLevelInfo.containsKey(superiorCode)) {
                     Branch branch = new Branch();
                     branch.setCode(superiorCode);
                     List<Branch> list = baseDao.selectList("tes.branch.findByObject", branch);
-                    if(list != null && list.size() == 1){
+                    if (list != null && list.size() == 1) {
                         codeLevelInfo.put(code, list.get(0).getLevel() + 1);
                         flag = true;
-                    }else{
+                    } else {
                         throw new TesException("数据异常：没有找到对应的机构信息，机构码：" + superiorCode);
                     }
                 }

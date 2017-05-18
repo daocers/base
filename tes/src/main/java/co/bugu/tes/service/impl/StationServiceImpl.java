@@ -2,17 +2,35 @@ package co.bugu.tes.service.impl;
 
 
 import co.bugu.framework.core.service.impl.BaseServiceImpl;
+import co.bugu.framework.util.JedisUtil;
+import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.Station;
 import co.bugu.tes.service.IStationService;
 import co.bugu.framework.core.dao.BaseDao;
 import co.bugu.framework.core.dao.PageInfo;
+import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class StationServiceImpl extends BaseServiceImpl<Station> implements IStationService {
+    @Override
+    public Map<String, String> getStationMap() {
+        Map<String, String> map = JedisUtil.hgetall(Constant.STATION_INFO);
+        if(MapUtils.isNotEmpty(map)){
+            return map;
+        }
+        map = new HashMap<>();
+        List<Station> stations = baseDao.selectList("tes.station.findByObject", null);
+        for(Station station: stations){
+            map.put(station.getName(), station.getId() + "");
+        }
+        return map;
+    }
 //    @Autowired
 //    BaseDao baseDao;
 //
