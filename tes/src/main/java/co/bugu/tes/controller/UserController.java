@@ -351,20 +351,13 @@ public class UserController {
     @RequestMapping("/resetPassword")
     @ResponseBody
     public String resetPassword(Integer userId, ModelMap model) {
-        Random random = new Random();
-        Integer code = random.nextInt(100) + 100;
-        String newPassword = "password" + code;
-        String salt = EncryptUtil.getSalt(5);
-        newPassword = EncryptUtil.md5(newPassword + salt);
         User user = new User();
         user.setId(userId);
-        user.setSalt(salt);
-        user.setPassword(newPassword);
+        user.setSalt(Constant.DEFALUT_SALT);
+        user.setPassword(EncryptUtil.md5(Constant.DEFAULT_PASSWORD + Constant.DEFALUT_SALT));
         userService.updateById(user);
-        model.put("password", newPassword);
         JSONObject json = new JSONObject();
         json.put("code", 0);
-        json.put("data", newPassword);
         return json.toJSONString();
     }
 }

@@ -83,8 +83,11 @@
                                 <a href="edit.do?id=${user.id}&type=detail" class="opr">详情</a>
                                 <a href="edit.do?id=${user.id}" class="opr">修改</a>
                                 <tes:hasRole name="admin">
-                                    <a href="javascript:del(${user.id})" class="opr">删除</a>
                                 </tes:hasRole>
+                                <tes:hasPermission name="user_delete">
+                                    <a href="javascript:del(${user.id})" class="opr">删除</a>
+                                </tes:hasPermission>
+                                <a href="javascript:resetPassword(${user.id})" class="opr">重置密码</a>
 
                             </td>
                         </tr>
@@ -147,6 +150,38 @@
                         window.location.href = "download.do";
                     })
                 })
+
+                function resetPassword(id) {
+                    swal({
+                        title: "确定要重置密码？",
+                        text: "密码将会重置为‘888888’，重置完毕请立即更新密码",
+                        type: "warning",
+                        showCancelButton: true,
+                    }).then(function (isConfirm) {
+                        if(isConfirm === true){
+                            $.ajax({
+                                type: 'post',
+                                data: {userId: id},
+                                url: 'resetPassword.do',
+                                success: function (data) {
+                                    var res = JSON.parse(data);
+                                    if(res.code == 0){
+                                        swal("", "重置密码成功", "success");
+                                    }else{
+                                        swal("", "重置密码失败", "error");
+                                    }
+                                    return false;
+                                },
+                                error: function () {
+                                    swal("", "请求失败", "error");
+                                    return false;
+                                }
+                            })
+                        }
+                        return false;
+                    });
+                    return false;
+                }
 
                 function downloadModel() {
                     window.location.href = 'download.do';

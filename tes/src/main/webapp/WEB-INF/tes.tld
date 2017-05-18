@@ -23,7 +23,7 @@
     </tag>
 
     <tag>
-        <name>hasPromission</name>
+        <name>hasPermission</name>
         <tag-class>co.bugu.tes.tag.HasPermission</tag-class>
         <body-content>scriptless</body-content>
         <attribute>

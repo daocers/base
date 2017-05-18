@@ -1,6 +1,5 @@
-package co.bugu.framework.util;
+package co.bugu.framework.core.util;
 
-import co.bugu.framework.util.exception.TesException;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import org.slf4j.Logger;
@@ -15,9 +14,8 @@ import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-
 /**
- * Created by daocers on 2016/5/23.
+ * Created by user on 2017/5/17.
  */
 public class JedisUtil {
     private static Logger logger = LoggerFactory.getLogger(JedisUtil.class);
@@ -38,6 +36,7 @@ public class JedisUtil {
             config.setMaxIdle(Integer.parseInt(properties.getProperty("redis.maxIdle")));
             config.setMaxTotal(Integer.parseInt(properties.getProperty("redis.maxTotal")));
             config.setMaxWaitMillis(Integer.parseInt(properties.getProperty("redis.maxWaitMillis")));
+
             pool = new JedisPool(config, properties.getProperty("redis.host"),
                     Integer.parseInt(properties.getProperty("redis.port", "6379")),
                     Integer.parseInt(properties.getProperty("redis.timeout", "5000")),
@@ -51,12 +50,121 @@ public class JedisUtil {
 
     /**
      * 释放资源
+     * @param jedis
      */
     public static void release(Jedis jedis) {
         if (jedis != null) {
             jedis.close();
         }
     }
+
+    /**
+     * 获取Jedis实例
+     * @return
+     */
+    public static Jedis getJedis() {
+        try {
+            if (pool != null) {
+                Jedis Jedis = pool.getResource();
+                return Jedis;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            logger.error("jedis 异常", e);
+            return null;
+        }
+    }
+
+
+/**===========================================*/
+/** key 操作*/
+
+
+    public static void del(String key){
+        Jedis jedis = null;
+        try{
+            jedis = getJedis();
+            jedis.del(key);
+        }catch (Exception e){
+            logger.error("jedis  异常", e);
+        }finally {
+            release(jedis);
+        }
+    }
+
+
+    public static Boolean exists(String key){
+        Jedis jedis = null;
+        try{
+            jedis = getJedis();
+            return jedis.exists(key);
+        }catch (Exception e){
+            logger.error("jedis  异常", e);
+            return null;
+        }finally {
+            release(jedis);
+        }
+    }
+
+    public static Long expire(String key, Integer seconds){
+        Jedis jedis = null;
+        try{
+            jedis = getJedis();
+            return jedis.expire(key, seconds);
+        }catch (Exception e){
+            logger.error("jedis  异常", e);
+            return null;
+        }finally {
+            release(jedis);
+        }
+    }
+
+    public static Set<String> keys(String pattern){
+        Jedis jedis = null;
+        try{
+            jedis = getJedis();
+            return jedis.keys(pattern);
+        }catch (Exception e){
+            logger.error("jedis  异常", e);
+            return null;
+        }finally {
+            release(jedis);
+        }
+    }
+
+    public static void sss(String key){
+        Jedis jedis = null;
+        try{
+            jedis = getJedis();
+        }catch (Exception e){
+            logger.error("jedis  异常", e);
+
+        }finally {
+            release(jedis);
+        }
+    }
+
+    public static void sss(String key){
+        Jedis jedis = null;
+        try{
+            jedis = getJedis();
+        }catch (Exception e){
+            logger.error("jedis  异常", e);
+
+        }finally {
+            release(jedis);
+        }
+    }
+
+
+
+
+
+
+
+
+
 
     public static void set(String key, String value) {
         Jedis jedis = null;
@@ -289,8 +397,7 @@ public class JedisUtil {
 //            for (String item : value) {
 //                jedis.rpush(item);
 //            }
-            String[] arr = value.toArray(new String[value.size()]);
-            jedis.rpush(key, arr);
+            jedis.rpush(key, value.toArray(new String[value.size()]));
         } catch (Exception e) {
             logger.error("jedis pushList 异常", e);
         } finally {
@@ -444,24 +551,6 @@ public class JedisUtil {
     }
 
 
-    /**
-     * 获取Jedis实例
-     *
-     * @return
-     */
-    public static Jedis getJedis() {
-        try {
-            if (pool != null) {
-                Jedis Jedis = pool.getResource();
-                return Jedis;
-            } else {
-                return null;
-            }
-        } catch (Exception e) {
-            logger.error("jedis 异常", e);
-            return null;
-        }
-    }
 
 
     public static Map<String, String> getValueMap(Object obj) {

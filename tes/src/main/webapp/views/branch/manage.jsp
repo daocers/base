@@ -35,65 +35,69 @@
 
                 <input type="hidden" value="${param.type}" id="type">
 
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="zTree left">
                         <ul id="tree" class="ztree"></ul>
                     </div>
+                    <div class="form-group">
+                        <button class="btn btn-info" id="submit">保存</button>
+                        <button class="btn btn-warning" onclick="history.back();">取消</button>
+                    </div>
                 </div>
-                <div class="col-md-6 col-md-offset-1">
+                <%--<div class="col-md-6 col-md-offset-1">--%>
 
-                    <form class="form-horizontal" method="post" action="save.do" data-toggle="validator" role="form">
-                        <input type="hidden" name="id" value="${branch.id}">
-                        <input type="hidden" id="id">
-                        <input id="superiorId" type="hidden" name="superiorId">
-                        <input id="level" type="hidden" name="level">
-                        <div class="form-group">
-                            <label class="control-label col-md-3">机构名称</label>
-                            <div class="col-md-9">
-                                <input class="form-control" type="text" name="name" value="${branch.name}" required>
-                                <span class="help-block">分行、支行、网点或者分理处的具体名称</span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-md-3">机构编码</label>
-                            <div class="col-md-9">
-                                <input class="form-control" type="text" name="code" value="${branch.code}" required>
-                                <span class="help-block with-errors">如果已经赋值，请谨慎修改</span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-md-3">机构地址</label>
-                            <div class="col-md-9">
-                                <input class="form-control" type="text" name="address" value="${branch.address}"
-                                       maxlength="100">
-                                <span class="help-block with-errors"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-md-3">状态</label>
-                            <div class="col-md-9">
-                                <select class="form-control" name="status">
-                                    <option value="0"
-                                            <c:if test="${branch.status == 0}">selected</c:if> >正常
-                                    </option>
-                                    <option value="1"
-                                            <c:if test="${branch.status == 1}">selected</c:if> >禁用
-                                    </option>
-                                </select>
-                                <%--<input class="form-control" type="text" name="status" value="${branch.status}" required>--%>
-                                <span class="help-block"></span>
-                            </div>
-                        </div>
+                    <%--<form class="form-horizontal" method="post"  data-toggle="validator" role="form" id="form-box">--%>
+                        <%--<input type="hidden" name="id" value="${branch.id}">--%>
+                        <%--<input type="hidden" id="id">--%>
+                        <%--<input id="superiorId" type="hidden" name="superiorId">--%>
+                        <%--<input id="level" type="hidden" name="level">--%>
+                        <%--<div class="form-group">--%>
+                            <%--<label class="control-label col-md-3">机构名称</label>--%>
+                            <%--<div class="col-md-9">--%>
+                                <%--<input class="form-control" type="text" name="name" value="${branch.name}" required>--%>
+                                <%--<span class="help-block">分行、支行、网点或者分理处的具体名称</span>--%>
+                            <%--</div>--%>
+                        <%--</div>--%>
+                        <%--<div class="form-group">--%>
+                            <%--<label class="control-label col-md-3">机构编码</label>--%>
+                            <%--<div class="col-md-9">--%>
+                                <%--<input class="form-control" type="text" name="code" value="${branch.code}" required>--%>
+                                <%--<span class="help-block with-errors">如果已经赋值，请谨慎修改</span>--%>
+                            <%--</div>--%>
+                        <%--</div>--%>
+                        <%--<div class="form-group">--%>
+                            <%--<label class="control-label col-md-3">机构地址</label>--%>
+                            <%--<div class="col-md-9">--%>
+                                <%--<input class="form-control" type="text" name="address" value="${branch.address}"--%>
+                                       <%--maxlength="100">--%>
+                                <%--<span class="help-block with-errors"></span>--%>
+                            <%--</div>--%>
+                        <%--</div>--%>
+                        <%--<div class="form-group">--%>
+                            <%--<label class="control-label col-md-3">状态</label>--%>
+                            <%--<div class="col-md-9">--%>
+                                <%--<select class="form-control" name="status">--%>
+                                    <%--<option value="0"--%>
+                                            <%--<c:if test="${branch.status == 0}">selected</c:if> >正常--%>
+                                    <%--</option>--%>
+                                    <%--<option value="1"--%>
+                                            <%--<c:if test="${branch.status == 1}">selected</c:if> >禁用--%>
+                                    <%--</option>--%>
+                                <%--</select>--%>
+                                <%--&lt;%&ndash;<input class="form-control" type="text" name="status" value="${branch.status}" required>&ndash;%&gt;--%>
+                                <%--<span class="help-block"></span>--%>
+                            <%--</div>--%>
+                        <%--</div>--%>
 
-                        <div class="button pull-right">
-                            <button class="btn btn-primary btn-commit">保存</button>
-                            <div class="space">
+                        <%--<div class="button pull-right">--%>
+                            <%--<button class="btn btn-primary btn-commit" type="submit">保存</button>--%>
+                            <%--<div class="space">--%>
 
-                            </div>
-                            <button class="btn btn-warning btn-cancel" onclick="return false;">取消</button>
-                        </div>
-                    </form>
-                </div>
+                            <%--</div>--%>
+                            <%--<button class="btn btn-warning btn-cancel" onclick="return false;">取消</button>--%>
+                        <%--</div>--%>
+                    <%--</form>--%>
+                <%--</div>--%>
 
 
         </div>
@@ -350,45 +354,45 @@
      * @param treeNode
      */
     function onClick(e, treeId, treeNode) {
-        zeroModal.loading(3);
-        console.log(treeNode)
-        var id = treeNode.cId;
-        $("input[name='superiorId']").val(treeNode.pId);
-        $("#id").val(treeNode.id);
-        if(!id){//新建的
-            $("input[name='id']").val("");
-            $("input[name='name']").val(treeNode.name);
-            $("input[name='address']").val("");
-            $("input[name='code']").val("");
-        }else{//修改原有的
-            $.ajax({
-                url: 'edit.do',
-                type: "get",
-                data: {id: id},
-                success: function (data) {
-                    console.log("data: ", data);
-                    var res = JSON.parse(data);
-                    if(res.code == 0){
-                        var info = res.data;
-                        $("input[name='id']").val(info.id);
-                        $("input[name='name']").val(info.name);
-                        $("input[name='address']").val(info.address);
-                        $("input[name='code']").val(info.code);
-                        $("select[name='status']").val(info.status);
-                        zeroModal.closeAll();
-                    }else{
-                        zeroModal.closeAll();
-                        swal("", "获取机构详情失败", "error");
-                    }
-                    return false;
-                },
-                error: function (data) {
-                    zeroModal.closeAll();
-                    swal("", "服务错误", data.msg);
-                    return false;
-                }
-            });
-        }
+//        zeroModal.loading(3);
+//        console.log(treeNode)
+//        var id = treeNode.cId;
+//        $("input[name='superiorId']").val(treeNode.pId);
+//        $("#id").val(treeNode.id);
+//        if(!id){//新建的
+//            $("input[name='id']").val("");
+//            $("input[name='name']").val(treeNode.name);
+//            $("input[name='address']").val("");
+//            $("input[name='code']").val("");
+//        }else{//修改原有的
+//            $.ajax({
+//                url: 'edit.do',
+//                type: "get",
+//                data: {id: id},
+//                success: function (data) {
+//                    console.log("data: ", data);
+//                    var res = JSON.parse(data);
+//                    if(res.code == 0){
+//                        var info = res.data;
+//                        $("input[name='id']").val(info.id);
+//                        $("input[name='name']").val(info.name);
+//                        $("input[name='address']").val(info.address);
+//                        $("input[name='code']").val(info.code);
+//                        $("select[name='status']").val(info.status);
+//                        zeroModal.closeAll();
+//                    }else{
+//                        zeroModal.closeAll();
+//                        swal("", "获取机构详情失败", "error");
+//                    }
+//                    return false;
+//                },
+//                error: function (data) {
+//                    zeroModal.closeAll();
+//                    swal("", "服务错误", data.msg);
+//                    return false;
+//                }
+//            });
+//        }
 
     };
 
@@ -418,36 +422,74 @@
 </SCRIPT>
 <script type="text/javascript">
     $(function () {
-        $(".btn-commit").on("click", function () {
-            $(this).attr("disabled", true);
+        $("#submit").on("click", function () {
             zeroModal.loading(3);
-            $("form").validator('validate');
+            var zTree = $.fn.zTree.getZTreeObj("tree");
+            var nodes = zTree.transformToArray(zTree.getNodes());
+            var arr = new Array();
+            $.each(nodes, function (index, node) {
+                var id = node.id;
+                var name = node.name;
+                var level = node.level;
+                var pid = node.pId;
+                arr.push({id: id, pId: pid, level: level, name: name});
+            })
             $.ajax({
-                url: 'save.do',
+                url: "update.do",
                 type: 'post',
-                data: $("form").serialize(),
+                data: {info: JSON.stringify(arr)},
                 success: function (data) {
                     var res = JSON.parse(data);
                     if(res.code == 0){
-                        var zTree = $.fn.zTree.getZTreeObj("tree");
-                        var node = zTree.getNodeByParam("id", $("#id").val());
-                        if(node){
-                            node.id = res.data;
-                            node.cId = res.data;
-                        }
-                        swal("", "保存成功", "info");
-                        $("input").val("");
+                        swal("", "更新成功", "success");
+                    }else{
+                        swal("", res.msg, "error");
                     }
+                    zeroModal.closeAll();
                 },
-                error: function (data) {
-                    var res = JSON.parse(data);
-                    swal("", res.msg, "error");
+                error: function () {
+                    swal("", "请求失败", "error");
+                    zeroModal.closeAll();
                 }
-            });
-            zeroModal.closeAll();
-            $(this).removeAttr("disabled");
-            return false;
+            })
+//            console.log(nodes);
         });
+
+//        $("#form-box").on("valid.bs.validator", function (event) {
+//            console.log("event: ", event.result);
+//            console.log("校验功过")
+//            zeroModal.loading(3);
+//            $.ajax({
+//                url: 'save.do',
+//                type: 'post',
+//                data: $("form").serialize(),
+//                success: function (data) {
+//                    var res = JSON.parse(data);
+//                    if(res.code == 0){
+//                        var zTree = $.fn.zTree.getZTreeObj("tree");
+//                        var node = zTree.getNodeByParam("id", $("#id").val());
+//                        if(node){
+//                            node.id = res.data;
+//                            node.cId = res.data;
+//                        }
+//                        swal("", "保存成功", "info");
+//                        $("input").val("");
+//                        $(this).hide();
+//                    }
+//                    zeroModal.closeAll();
+//                },
+//                error: function (data) {
+//                    var res = JSON.parse(data);
+//                    zeroModal.closeAll();
+//                    swal("", res.msg, "error");
+//                }
+//            });
+//            return false;
+//        })
+//        $(".btn-commit").on("click", function () {
+//            $(this).attr("disabled", true);
+//
+//        });
     });
 </script>
 </body>

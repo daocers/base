@@ -4,6 +4,7 @@ import co.bugu.framework.core.dao.BaseDao;
 import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.core.service.IBaseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import redis.clients.jedis.Jedis;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -37,7 +38,9 @@ public class BaseServiceImpl<T> implements IBaseService<T> {
 
     @Override
     public int save(T record) {
-        return baseDao.insert(nameSpace + "insert", record);
+        int num = baseDao.insert(nameSpace + "insert", record);
+
+        return num;
     }
 
     @Override

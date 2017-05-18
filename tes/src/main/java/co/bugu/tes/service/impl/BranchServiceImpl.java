@@ -8,6 +8,8 @@ import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.Branch;
 import co.bugu.tes.service.IBranchService;
 import com.alibaba.dubbo.common.utils.CollectionUtils;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
@@ -125,6 +127,40 @@ public class BranchServiceImpl extends BaseServiceImpl<Branch> implements IBranc
         }
         JedisUtil.hmset(Constant.BRANCH_INFO, map);
         return map;
+    }
+
+    @Override
+    public void updateAll(JSONArray array) {
+        for (int i = 0; i < array.size(); i++) {
+            JSONObject obj = array.getJSONObject(i);
+            Integer id = obj.getInteger("id");
+            Integer pId = obj.getInteger("pId");
+            Integer level = obj.getInteger("level");
+            String name = obj.getString("name");
+            Branch branch = baseDao.selectOne("tes.branch.selectById", id);
+            if(branch == null){
+                branch = new Branch();
+                branch.setId(id);
+                branch.setStatus(0);
+                branch.setSuperiorId(pId);
+                branch.setCreateTime(new Date());
+                branch.setLevel(level);
+                branch.setUpdateTime(branch.getCreateTime());
+                branch.setName(name);
+                baseDao.insert("tes.branch.insert", branch);
+//                branchService.save(branch);
+            }else{
+                if(branch.getLevel() == level && branch.getName().equals(name) && branch.getSuperiorId() == pId){
+                    continue;
+                }else{
+                    branch.setSuperiorId(pId);
+                    branch.setLevel(level);
+                    branch.setName(name);
+//                    branchService.updateById(branch);
+                    baseDao.update("tes.branch.updateById", branch);
+                }
+            }
+        }
     }
 
 

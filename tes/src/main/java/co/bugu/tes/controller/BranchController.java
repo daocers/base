@@ -4,12 +4,15 @@ import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.util.ExcelUtilNew;
 import co.bugu.framework.util.JsonUtil;
 import co.bugu.tes.enums.BranchLevel;
+import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.Branch;
 import co.bugu.tes.model.User;
 import co.bugu.tes.service.IBranchService;
 import co.bugu.tes.service.IUserService;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Controller("/branchController/v1")
 @RequestMapping("/branch")
@@ -39,21 +43,22 @@ public class BranchController {
     private static Logger logger = LoggerFactory.getLogger(BranchController.class);
 
     /**
-    * 列表，分页显示
-    * @param branch  查询数据
-    * @param curPage 当前页码，从1开始
-    * @param showCount 当前页码显示数目
-    * @param model
-    * @return
-    */
+     * 列表，分页显示
+     *
+     * @param branch    查询数据
+     * @param curPage   当前页码，从1开始
+     * @param showCount 当前页码显示数目
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/list")
-    public String list(HttpServletRequest request, Branch branch, Integer curPage, Integer showCount, ModelMap model){
-        try{
+    public String list(HttpServletRequest request, Branch branch, Integer curPage, Integer showCount, ModelMap model) {
+        try {
             PageInfo<Branch> pageInfo = new PageInfo<>(showCount, curPage);
             pageInfo = branchService.findByObject(branch, pageInfo);
             model.put("pi", pageInfo);
             model.put("branch", branch);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("获取列表失败", e);
             model.put("errMsg", "获取列表失败");
         }
@@ -62,32 +67,33 @@ public class BranchController {
     }
 
     /**
-    * 查询数据后跳转到对应的编辑页面
-    * @param id 查询数据，一般查找id
-    * @param model
-    * @return
-    */
+     * 查询数据后跳转到对应的编辑页面
+     *
+     * @param id    查询数据，一般查找id
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     @ResponseBody
-    public String toEdit(Integer id, ModelMap model){
+    public String toEdit(Integer id, ModelMap model) {
         JSONObject json = new JSONObject();
-        try{
+        try {
             Branch record = new Branch();
             record.setLevel(BranchLevel.ZONGHANG.getLevel());
             List<Branch> branchList = branchService.findByObject(record);
             model.put("branchList", branchList);
             Branch branch = branchService.findById(id);
-            if(branch != null){
-                if(branch.getSuperiorId() != null){
+            if (branch != null) {
+                if (branch.getSuperiorId() != null) {
                     Branch superior = branchService.findById(branch.getSuperiorId());
-                    if(superior != null){
+                    if (superior != null) {
                         branch.setSuperiorName(superior.getName());
                     }
                 }
             }
             json.put("code", 0);
             json.put("data", branch);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("获取信息失败", e);
             model.put("errMsg", "获取信息失败");
             json.put("code", -1);
@@ -97,28 +103,29 @@ public class BranchController {
     }
 
     /**
-    * 保存结果，根据是否带有id来表示更新或者新增
-    * @param branch
-    * @param model
-    * @return
-    */
+     * 保存结果，根据是否带有id来表示更新或者新增
+     *
+     * @param branch
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-    public String save(Branch branch, ModelMap model){
+    public String save(Branch branch, ModelMap model) {
         JSONObject json = new JSONObject();
-        try{
+        try {
             Date now = new Date();
             branch.setUpdateTime(now);
-            if(branch.getId() == null){
+            if (branch.getId() == null) {
                 branch.setCreateTime(now);
                 branchService.save(branch);
-            }else{
+            } else {
                 branchService.updateById(branch);
             }
             json.put("code", 0);
             json.put("id", branch.getId());
 
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("保存失败", e);
             json.put("code", -2);
             json.put("msg", "服务错误");
@@ -127,17 +134,18 @@ public class BranchController {
     }
 
     /**
-    * 异步请求 获取全部
-    * @param branch 查询条件
-    * @return
-    */
+     * 异步请求 获取全部
+     *
+     * @param branch 查询条件
+     * @return
+     */
     @RequestMapping(value = "/listAll")
     @ResponseBody
-    public String listAll(Branch branch){
-        try{
+    public String listAll(Branch branch) {
+        try {
             List<Branch> list = branchService.findByObject(branch);
             return JsonUtil.toJsonString(list);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("获取全部列表失败", e);
             return "-1";
         }
@@ -212,10 +220,10 @@ public class BranchController {
 
 
     @RequestMapping("/manage")
-    public String toManage(ModelMap model){
+    public String toManage(ModelMap model) {
         List<Branch> branchList = branchService.findByObject(null);
         JSONArray array = new JSONArray();
-        for(Branch branch: branchList){
+        for (Branch branch : branchList) {
             JSONObject json = new JSONObject();
             json.put("id", branch.getId());
             json.put("cId", branch.getId());
@@ -230,10 +238,10 @@ public class BranchController {
 
     @RequestMapping("/getBranchInfo")
     @ResponseBody
-    public String getBranchInfo(ModelMap model){
+    public String getBranchInfo(ModelMap model) {
         List<Branch> branchList = branchService.findByObject(null);
         JSONArray array = new JSONArray();
-        for(Branch branch: branchList){
+        for (Branch branch : branchList) {
             JSONObject json = new JSONObject();
             json.put("id", branch.getId());
             json.put("cId", branch.getId());
@@ -247,34 +255,50 @@ public class BranchController {
 
     /**
      * 异步请求 删除
+     *
      * @param branch id
      * @return
      */
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
-    public String delete(Branch branch){
+    public String delete(Branch branch) {
         JSONObject json = new JSONObject();
 
-        try{
+        try {
             //如果有关联用户，禁止删除
             User user = new User();
             user.setBranchId(branch.getId());
             List<User> users = userService.findByObject(user);
-            if(users != null && users.size() > 0){
+            if (users != null && users.size() > 0) {
                 json.put("code", -1);
                 json.put("msg", "该机构下有用户，不能删除，请先处理用户信息。");
-            }else{
+            } else {
                 json.put("code", 0);
                 json.put("msg", "");
             }
             branchService.delete(branch);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("删除失败", e);
             json.put("code", -2);
             json.put("msg", "服务器错误");
-        }finally {
+        } finally {
             return json.toString();
         }
+    }
+
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @ResponseBody
+    public String updateAll(String info) {
+        JSONObject json = new JSONObject();
+        if (StringUtils.isEmpty(info)) {
+            json.put("code", -1);
+            json.put("msg", "机构信息为空");
+        } else {
+            JSONArray array = JSON.parseArray(info);
+            branchService.updateAll(array);
+            json.put("code", 0);
+        }
+        return json.toJSONString();
     }
 
 }

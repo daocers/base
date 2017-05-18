@@ -4,6 +4,7 @@ package co.bugu.tes.service;
 import co.bugu.framework.core.service.IBaseService;
 import co.bugu.framework.util.exception.TesException;
 import co.bugu.tes.model.Branch;
+import com.alibaba.fastjson.JSONArray;
 
 import java.util.List;
 import java.util.Map;
@@ -28,4 +29,6 @@ public interface IBranchService extends IBaseService<Branch>{
     void batchAdd(List<List<String>> data) throws TesException;
 
     Map<String, String> getBranchMap();
+
+    void updateAll(JSONArray array);
 }
