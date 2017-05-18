@@ -154,9 +154,10 @@ public class JedisUtil {
         Jedis jedis = null;
         try{
             jedis = getJedis();
+            return jedis.get(key);
         }catch (Exception e){
             logger.error("jedis  异常", e);
-
+            return null;
         }finally {
             release(jedis);
         }
