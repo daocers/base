@@ -3,6 +3,9 @@ package co.bugu.framework.core.service.impl;
 import co.bugu.framework.core.dao.BaseDao;
 import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.core.service.IBaseService;
+import co.bugu.framework.core.util.JedisUtil;
+import co.bugu.framework.core.util.ReflectUtil;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import redis.clients.jedis.Jedis;
 
@@ -25,7 +28,6 @@ public class BaseServiceImpl<T> implements IBaseService<T> {
         Type[] types = type.getActualTypeArguments();
         String simpleName = ((Class)types[0]).getSimpleName();
         nameSpace = getProjectName() + "." + simpleName.substring(0,1).toLowerCase() + simpleName.substring(1) + ".";
-        
     }
 
     /**
@@ -38,23 +40,53 @@ public class BaseServiceImpl<T> implements IBaseService<T> {
 
     @Override
     public int save(T record) {
+        String key = JedisUtil.getKey(record);
+        if(StringUtils.isNotEmpty(key)){
+            JedisUtil.del(key);
+        }
         int num = baseDao.insert(nameSpace + "insert", record);
-
+        if(StringUtils.isNotEmpty(key)){
+            JedisUtil.setJson(key, record);
+        }
         return num;
     }
 
     @Override
     public int updateById(T record) {
-        return baseDao.update(nameSpace + "updateById", record);
+        String key = JedisUtil.getKey(record);
+        if(StringUtils.isNotEmpty(key)){
+            JedisUtil.del(key);
+        }
+        int num = baseDao.update(nameSpace + "updateById", record);
+        if(StringUtils.isNotEmpty(key)){
+            JedisUtil.setJson(key, record);
+        }
+        return num;
     }
 
     @Override
     public int delete(T record) {
+        String key = JedisUtil.getKey(record);
+        if(StringUtils.isNotEmpty(key)){
+            JedisUtil.del(key);
+        }
         return baseDao.delete(nameSpace + "deleteById", record);
     }
 
     @Override
     public T findById(Integer id) {
+        ParameterizedType parameterizedType = (ParameterizedType) this.getClass().getGenericSuperclass();
+        String type = parameterizedType.getActualTypeArguments()[0].getTypeName();
+        String key = type + "_" + id;
+        T res = null;
+        try {
+            res = JedisUtil.getJson(key, (Class<T>) Class.forName(type));
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        if(res != null){
+            return res;
+        }
         return baseDao.selectOne(nameSpace + "selectById", id);
     }
 
@@ -75,5 +107,4 @@ public class BaseServiceImpl<T> implements IBaseService<T> {
 //        return pageInfo;
         return findByObject(record, pageInfo);
     }
-
 }

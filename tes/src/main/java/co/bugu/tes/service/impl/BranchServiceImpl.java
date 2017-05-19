@@ -148,7 +148,6 @@ public class BranchServiceImpl extends BaseServiceImpl<Branch> implements IBranc
                 branch.setUpdateTime(branch.getCreateTime());
                 branch.setName(name);
                 baseDao.insert("tes.branch.insert", branch);
-//                branchService.save(branch);
             }else{
                 if(branch.getLevel() == level && branch.getName().equals(name) && branch.getSuperiorId() == pId){
                     continue;
@@ -156,7 +155,6 @@ public class BranchServiceImpl extends BaseServiceImpl<Branch> implements IBranc
                     branch.setSuperiorId(pId);
                     branch.setLevel(level);
                     branch.setName(name);
-//                    branchService.updateById(branch);
                     baseDao.update("tes.branch.updateById", branch);
                 }
             }

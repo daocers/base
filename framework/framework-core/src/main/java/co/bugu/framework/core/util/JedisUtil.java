@@ -50,6 +50,7 @@ public class JedisUtil {
 
     /**
      * 释放资源
+     *
      * @param jedis
      */
     public static void release(Jedis jedis) {
@@ -60,6 +61,7 @@ public class JedisUtil {
 
     /**
      * 获取Jedis实例
+     *
      * @return
      */
     public static Jedis getJedis() {
@@ -78,57 +80,59 @@ public class JedisUtil {
 
 
 /**===========================================*/
-/** key 操作*/
+    /**
+     * key 操作
+     */
 
 
-    public static void del(String key){
+    public static void del(String key) {
         Jedis jedis = null;
-        try{
+        try {
             jedis = getJedis();
             jedis.del(key);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("jedis  异常", e);
-        }finally {
+        } finally {
             release(jedis);
         }
     }
 
 
-    public static Boolean exists(String key){
+    public static Boolean exists(String key) {
         Jedis jedis = null;
-        try{
+        try {
             jedis = getJedis();
             return jedis.exists(key);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("jedis  异常", e);
             return null;
-        }finally {
+        } finally {
             release(jedis);
         }
     }
 
-    public static Long expire(String key, Integer seconds){
+    public static Long expire(String key, Integer seconds) {
         Jedis jedis = null;
-        try{
+        try {
             jedis = getJedis();
             return jedis.expire(key, seconds);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("jedis  异常", e);
             return null;
-        }finally {
+        } finally {
             release(jedis);
         }
     }
 
-    public static Set<String> keys(String pattern){
+    public static Set<String> keys(String pattern) {
         Jedis jedis = null;
-        try{
+        try {
             jedis = getJedis();
             return jedis.keys(pattern);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("jedis  异常", e);
             return null;
-        }finally {
+        } finally {
             release(jedis);
         }
     }
@@ -136,132 +140,15 @@ public class JedisUtil {
 
     /**
      * 字符操作
-     * */
-    public static void set(String key, String value){
-        Jedis jedis = null;
-        try{
-            jedis = getJedis();
-            jedis.set(key, value);
-        }catch (Exception e){
-            logger.error("jedis  异常", e);
-
-        }finally {
-            release(jedis);
-        }
-    }
-
-    public static String get(String key){
-        Jedis jedis = null;
-        try{
-            jedis = getJedis();
-            return jedis.get(key);
-        }catch (Exception e){
-            logger.error("jedis  异常", e);
-            return null;
-        }finally {
-            release(jedis);
-        }
-    }
-
-
-
-
-
-
-
-
-
-
+     */
     public static void set(String key, String value) {
         Jedis jedis = null;
         try {
-            jedis = pool.getResource();
+            jedis = getJedis();
             jedis.set(key, value);
         } catch (Exception e) {
-            logger.error("[jedis异常] set", e);
-        } finally {
-            release(jedis);
-        }
-    }
+            logger.error("jedis  异常", e);
 
-    /**
-     * @param key
-     * @param value
-     * @Description: 存放set类型
-     */
-    public static void sadd(String key, String value) {
-        Jedis jedis = null;
-        try {
-            jedis = pool.getResource();
-            jedis.sadd(key, value);
-        } catch (Exception e) {
-            logger.error("[jedis异常] set", e);
-        } finally {
-            release(jedis);
-        }
-    }
-
-
-    /**
-     * @param key
-     * @param value
-     * @return boolean
-     * @Title: sexists
-     * @Description: set中是否存在指定元素
-     */
-    public static boolean sexists(String key, String value) {
-        Jedis jedis = null;
-        boolean flag = false;
-        try {
-            jedis = pool.getResource();
-            flag = jedis.sismember(key, value);
-        } catch (Exception e) {
-            logger.error("[jedis异常] set", e);
-        } finally {
-            release(jedis);
-        }
-        return flag;
-    }
-
-    public static void srem(String key, String... value) {
-        Jedis jedis = null;
-        try {
-            jedis = pool.getResource();
-            jedis.srem(key, value);
-        } catch (Exception e) {
-            logger.error("[jedis异常] set", e);
-        } finally {
-            release(jedis);
-        }
-    }
-
-    public static Set<String> getAllOfSet(String key) {
-        Jedis jedis = null;
-        try {
-            jedis = pool.getResource();
-            return jedis.smembers(key);
-        } catch (Exception e) {
-            logger.error("smembers 异常", e);
-            return null;
-        } finally {
-            release(jedis);
-        }
-    }
-
-    /**
-     * 获取set长度
-     *
-     * @param key
-     * @return
-     */
-    public static Long scard(String key) {
-        Jedis jedis = null;
-        try {
-            jedis = pool.getResource();
-            return jedis.scard(key);
-        } catch (Exception e) {
-            logger.error("scard 异常", e);
-            return null;
         } finally {
             release(jedis);
         }
@@ -270,15 +157,520 @@ public class JedisUtil {
     public static String get(String key) {
         Jedis jedis = null;
         try {
-            jedis = pool.getResource();
+            jedis = getJedis();
             return jedis.get(key);
         } catch (Exception e) {
-            logger.error("[jedis异常] get", e);
-            return null;
+            logger.error("jedis  异常", e);
+        } finally {
+            release(jedis);
+        }
+        return null;
+    }
+
+    public static List<String> mGet(String... key) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.mget(key);
+        } catch (Exception e) {
+            logger.error("[jedis异常] set", e);
+        } finally {
+            release(jedis);
+        }
+        return null;
+    }
+
+    public static Long incrBy(String key, int add) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.incrBy(key, add);
+        } catch (Exception e) {
+            logger.error("[jedis异常] set", e);
+        } finally {
+            release(jedis);
+        }
+        return null;
+    }
+
+
+    public static Long decrBy(String key, int minus) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.decrBy(key, minus);
+        } catch (Exception e) {
+            logger.error("[jedis异常] set", e);
+        } finally {
+            release(jedis);
+        }
+        return null;
+    }
+
+    /**
+     * key 不存在的时候设置key的值，成功返回1，失败返回0
+     */
+    public static Boolean setNX(String key, String value) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.setnx(key, value) == 1;
+        } catch (Exception e) {
+            logger.error("jedis setNx 异常", e);
+        } finally {
+            release(jedis);
+        }
+        return null;
+    }
+
+
+    /***
+     *
+     * hash 操作
+     * */
+
+    public static Long hDel(String key, String... field) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.hdel(key, field);
+        } catch (Exception e) {
+            logger.error("[jedis异常] set", e);
+        } finally {
+            release(jedis);
+        }
+        return null;
+    }
+
+    public static Long hSet(String key, String field, String value) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.hset(key, field, value);
+        } catch (Exception e) {
+            logger.error("[jedis异常] set", e);
+        } finally {
+            release(jedis);
+        }
+        return null;
+    }
+
+    public static String hGet(String key, String field) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.hget(key, field);
+        } catch (Exception e) {
+            logger.error("[jedis异常] set", e);
+        } finally {
+            release(jedis);
+        }
+        return null;
+    }
+
+    /**
+     * hash 获取全部数据
+     *
+     * @param key
+     * @return
+     */
+    public static Map<String, String> hGetAll(String key) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.hgetAll(key);
+        } catch (Exception e) {
+            logger.error("[jedis异常] set", e);
+        } finally {
+            release(jedis);
+        }
+        return null;
+    }
+
+    /**
+     * 获取多个值
+     *
+     * @param key
+     * @param field
+     * @return
+     */
+    public static List<String> hmGet(String key, String... field) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.hmget(key, field);
+        } catch (Exception e) {
+            logger.error("[jedis异常] set", e);
+        } finally {
+            release(jedis);
+        }
+        return null;
+    }
+
+    /**
+     * hash  设置
+     *
+     * @param key
+     * @param data
+     * @return
+     */
+    public static Boolean hmSet(String key, Map<String, String> data) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.hmset(key, data).equals("OK");
+        } catch (Exception e) {
+            logger.error("[jedis异常] set", e);
+        } finally {
+            release(jedis);
+        }
+        return null;
+    }
+
+
+    /***
+     * list 操作
+     *
+     * */
+
+    /**
+     * 返回list长度
+     *
+     * @param key
+     * @return
+     */
+    public static Long lLen(String key) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.llen(key);
+        } catch (Exception e) {
+            logger.error("[jedis异常] set", e);
+        } finally {
+            release(jedis);
+        }
+        return null;
+    }
+
+    /**
+     * 移除列表第一个元素
+     *
+     * @param key
+     * @return
+     */
+    public static String lPop(String key) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.lpop(key);
+        } catch (Exception e) {
+            logger.error("[jedis异常] set", e);
+        } finally {
+            release(jedis);
+        }
+        return null;
+    }
+
+    /**
+     * 向列表头部插入值
+     * 列表不存在的时候会创建
+     *
+     * @param key
+     * @param field
+     * @return
+     */
+    public static Long lPush(String key, String... field) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.lpush(key, field);
+        } catch (Exception e) {
+            logger.error("[jedis异常] set", e);
+        } finally {
+            release(jedis);
+        }
+        return null;
+    }
+
+    /**
+     * 从列表尾部添加数据
+     *
+     * @param key
+     * @param field
+     * @return
+     */
+    public static Long rPush(String key, String... field) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.rpush(key, field);
+        } catch (Exception e) {
+            logger.error("[jedis异常] set", e);
+        } finally {
+            release(jedis);
+        }
+        return null;
+    }
+
+    /**
+     * 向列表头部插入值
+     * 列表不存在的时候操作无效
+     *
+     * @param key
+     * @param field
+     * @return
+     */
+    public static Long lPushX(String key, String... field) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.lpushx(key, field);
+        } catch (Exception e) {
+            logger.error("[jedis异常] set", e);
+        } finally {
+            release(jedis);
+        }
+        return null;
+    }
+
+    /**
+     * 为已存在的list添加元素，如果不存在，操作无效
+     *
+     * @param key
+     * @param field
+     * @return
+     */
+    public static Long rPushX(String key, String... field) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.rpushx(key, field);
+        } catch (Exception e) {
+            logger.error("[jedis异常] set", e);
+        } finally {
+            release(jedis);
+        }
+        return null;
+    }
+
+    /**
+     * 获取列表指定位置的元素
+     *
+     * @param key
+     * @param
+     * @return
+     */
+    public static List<String> lRange(String key, int begin, int end) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.lrange(key, begin, end);
+        } catch (Exception e) {
+            logger.error("[jedis异常] set", e);
+        } finally {
+            release(jedis);
+        }
+        return null;
+    }
+
+    /**
+     * 获取全部的list元素
+     *
+     * @param key
+     * @return
+     */
+    public static List<String> getAllList(String key) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.lrange(key, 0, -1);
+        } catch (Exception e) {
+            logger.error("jedis 异常", e);
+        } finally {
+            release(jedis);
+        }
+        return null;
+    }
+
+    /**
+     * 设置第index个元素的值为value
+     *
+     * @param key
+     * @param index
+     * @return
+     */
+    public static String lSet(String key, Integer index, String value) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.lset(key, index, value);
+        } catch (Exception e) {
+            logger.error("[jedis异常] set", e);
+        } finally {
+            release(jedis);
+        }
+        return null;
+    }
+
+
+    /******
+     *  set 操作
+     *
+     * */
+
+    /**
+     * 添加元素
+     *
+     * @param key
+     * @param value
+     * @return
+     */
+    public static Long sAdd(String key, String... value) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.sadd(key, value);
+        } catch (Exception e) {
+            logger.error("[jedis异常] set", e);
+        } finally {
+            release(jedis);
+        }
+        return null;
+    }
+
+    /**
+     * 获取集合的成员数量
+     */
+    public static Long sCard(String key) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.scard(key);
+        } catch (Exception e) {
+            logger.error("[jedis异常] set", e);
+        } finally {
+            release(jedis);
+        }
+        return null;
+    }
+
+    /**
+     * 求集合差集
+     * key 的顺序会影响最后的结果
+     * 返回前一个set中未在后一个set出现的元素
+     *
+     * @param key
+     * @return
+     */
+    public static Set<String> sDiff(String... key) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.sdiff(key);
+        } catch (Exception e) {
+            logger.error("[jedis异常] set", e);
+        } finally {
+            release(jedis);
+        }
+        return null;
+    }
+
+
+    /**
+     * 求交集
+     *
+     * @param key
+     * @return
+     */
+    public static Set<String> sInter(String... key) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.sinter(key);
+        } catch (Exception e) {
+            logger.error("[jedis异常] set", e);
+        } finally {
+            release(jedis);
+        }
+        return null;
+    }
+
+
+    /**
+     * 是否是set成员
+     *
+     * @param key
+     * @param field
+     * @return
+     */
+    public static Boolean sIsMembers(String key, String field) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.sismember(key, field);
+        } catch (Exception e) {
+            logger.error("[jedis异常] set", e);
+        } finally {
+            release(jedis);
+        }
+        return null;
+    }
+
+    /**
+     * 随机返回指定数量的元素
+     *
+     * @param key
+     * @param count
+     * @return
+     */
+    public static List<String> sRandMember(String key, Integer count) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.srandmember(key, count);
+        } catch (Exception e) {
+            logger.error("jedis 异常", e);
+        } finally {
+            release(jedis);
+        }
+        return null;
+    }
+
+    /**
+     * 移除set中的字段
+     *
+     * @param key
+     * @param field
+     * @return
+     */
+    public static Long sRem(String key, String... field) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.srem(key, field);
+        } catch (Exception e) {
+            logger.error("[jedis异常] set", e);
+        } finally {
+            release(jedis);
+        }
+        return null;
+    }
+
+    /**
+     * 将在redis的安装目录中创建dump.rdb文件
+     */
+    public static void save() {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            jedis.save();
+        } catch (Exception e) {
+            logger.error("jedis save 失败", e);
         } finally {
             release(jedis);
         }
     }
+
 
     public static void putObject(String key, Object obj) {
         Jedis jedis = null;
@@ -291,273 +683,6 @@ public class JedisUtil {
             release(jedis);
         }
     }
-
-
-    public static Map<String, String> getMap(String key) {
-        Jedis jedis = null;
-        try {
-            jedis = getJedis();
-            return jedis.hgetAll(key);
-        } catch (Exception e) {
-            logger.error("[jedis 异常] getObject", e);
-        } finally {
-            release(jedis);
-        }
-        return null;
-    }
-
-    public static void del(String key) {
-        Jedis jedis = null;
-        try {
-            jedis = getJedis();
-            jedis.del(key);
-        } catch (Exception e) {
-            logger.error("[jedis 异常] del", e);
-        } finally {
-            release(jedis);
-        }
-    }
-
-
-    public static Long incr(String key) {
-        Jedis jedis = null;
-        try {
-            jedis = getJedis();
-            return jedis.incr(key);
-        } catch (Exception e) {
-            logger.error("jedis 异常", e);
-            return 0L;
-        } finally {
-            release(jedis);
-        }
-    }
-
-    public static Long incrby(String key, Long num) {
-        Jedis jedis = null;
-        try {
-            jedis = getJedis();
-            return jedis.incrBy(key, num);
-        } catch (Exception e) {
-            logger.error("jedis 异常", e);
-            return 0L;
-        } finally {
-            release(jedis);
-        }
-    }
-
-
-    public static Boolean exists(String key) {
-        Jedis jedis = null;
-        boolean exists = false;
-        try {
-            jedis = getJedis();
-            exists = jedis.exists(key);
-        } catch (Exception e) {
-            logger.error("jedis 异常", e);
-        } finally {
-            release(jedis);
-        }
-        return exists;
-    }
-
-    public static void decrby(String key, Long num) {
-        Jedis jedis = null;
-        try {
-            jedis = getJedis();
-            jedis.decrBy(key, num);
-        } catch (Exception e) {
-            logger.error("jedis 异常", e);
-        } finally {
-            release(jedis);
-        }
-    }
-
-    public static void decr(String key) {
-        Jedis jedis = null;
-        try {
-            jedis = getJedis();
-            jedis.decr(key);
-        } catch (Exception e) {
-            logger.error("jedis 异常", e);
-        } finally {
-            release(jedis);
-        }
-    }
-
-    public static void push(String key, String value) {
-        Jedis jedis = null;
-        try {
-            jedis = getJedis();
-            jedis.lpush(key, value);
-        } catch (Exception e) {
-            logger.error("jedis 异常", e);
-        } finally {
-            release(jedis);
-        }
-    }
-
-    public static void pushList(String key, List<String> value) {
-        Jedis jedis = null;
-        try {
-            jedis = getJedis();
-//            for (String item : value) {
-//                jedis.rpush(item);
-//            }
-            jedis.rpush(key, value.toArray(new String[value.size()]));
-        } catch (Exception e) {
-            logger.error("jedis pushList 异常", e);
-        } finally {
-            release(jedis);
-        }
-    }
-
-
-    public static void lrem(String key, String value) {
-        Jedis jedis = null;
-        try {
-            jedis = getJedis();
-            jedis.lrem(key, 1, value);
-        } catch (Exception e) {
-            logger.error("jedis 异常", e);
-        } finally {
-            release(jedis);
-        }
-    }
-
-    public static List<String> getList(String key) {
-        Jedis jedis = null;
-        try {
-            jedis = getJedis();
-            return jedis.lrange(key, 0, -1);
-        } catch (Exception e) {
-            logger.error("jedis lrange 异常", e);
-            return null;
-        } finally {
-            release(jedis);
-        }
-    }
-
-    public static Map<String, String> hgetall(String key) {
-        Jedis jedis = null;
-        try {
-            jedis = getJedis();
-            return jedis.hgetAll(key);
-        } catch (Exception e) {
-            logger.error("jedis 异常", e);
-        } finally {
-            release(jedis);
-        }
-        return null;
-    }
-
-    public static List<String> hmget(String key, String... filed) {
-        Jedis jedis = null;
-        try {
-            jedis = getJedis();
-            return jedis.hmget(key, filed);
-        } catch (Exception e) {
-            logger.error("jedis 异常", e);
-        } finally {
-            release(jedis);
-        }
-        return null;
-    }
-
-    public static void hmset(String key, Map<String, String> maps) {
-        Jedis jedis = null;
-        try {
-            jedis = getJedis();
-            jedis.hmset(key, maps);
-        } catch (Exception e) {
-            logger.error("jedis 异常", e);
-        } finally {
-            release(jedis);
-        }
-    }
-
-
-    public static List<String> lrange(String key) {
-        Jedis jedis = null;
-        try {
-            jedis = getJedis();
-            List<String> list = jedis.lrange(key, 0, -1);
-            return list;
-        } catch (Exception e) {
-            logger.error("jedis 异常", e);
-        } finally {
-            release(jedis);
-        }
-        return null;
-    }
-
-
-    public static Set<String> zrange(String key, long start, long end) {
-        Jedis jedis = null;
-        try {
-            jedis = getJedis();
-            Set<String> objs = jedis.zrange(key, start, end);
-            return objs;
-        } catch (Exception e) {
-            logger.error("jedis 异常", e);
-        } finally {
-            release(jedis);
-        }
-        return null;
-    }
-
-    public static int zadd(String key, Map<String, Double> maps) {
-        int res = 0;
-        Jedis jedis = null;
-        try {
-            jedis = getJedis();
-            jedis.zadd(key, maps);
-            res = 1;
-        } catch (Exception e) {
-            logger.error("jedis 异常", e);
-        } finally {
-            release(jedis);
-        }
-        return res;
-    }
-
-    public static Set<String> zrevrange(String key, long start, long end) {
-        Jedis jedis = null;
-        try {
-            jedis = getJedis();
-            Set<String> objs = jedis.zrevrange(key, start, end);
-            return objs;
-        } catch (Exception e) {
-            logger.error("jedis 异常", e);
-        } finally {
-            release(jedis);
-        }
-        return null;
-    }
-
-    /**
-     * 设置过期时间, 单位为秒
-     *
-     * @param key
-     * @param secondes
-     * @return
-     */
-    public static int expire(String key, int secondes) {
-        int res = 0;
-        Jedis jedis = null;
-        try {
-            jedis = getJedis();
-            jedis.expire(key, secondes);
-            res = 1;
-        } catch (Exception e) {
-            logger.error("jedis 异常", e);
-        } finally {
-            release(jedis);
-        }
-        return res;
-    }
-
-
-
 
     public static Map<String, String> getValueMap(Object obj) {
         Map<String, String> map = new HashMap<String, String>();
@@ -587,19 +712,6 @@ public class JedisUtil {
         return map;
     }
 
-
-    public static void set(byte[] key, byte[] value) {
-        Jedis jedis = null;
-        try {
-            jedis = getJedis();
-            jedis.set(key, value);
-        } catch (Exception e) {
-            logger.error("[jedis调用异常]", e);
-        } finally {
-            release(jedis);
-        }
-    }
-
     /**
      * 将实体类放入到redis上
      *
@@ -616,6 +728,29 @@ public class JedisUtil {
             logger.error("jedis setJson异常", e);
         } finally {
             release(jedis);
+        }
+    }
+
+    public static void setJson(Object object) {
+        Jedis jedis = null;
+        try {
+            String res = JSON.toJSONStringWithDateFormat(object, "yyyy-MM-dd HH:mm:ss:sss", SerializerFeature.PrettyFormat);
+            jedis = pool.getResource();
+            jedis.set(getKey(object), res);
+        } catch (Exception e) {
+            logger.error("jedis setJson异常", e);
+        } finally {
+            release(jedis);
+        }
+    }
+
+    public static String getKey(Object obj) {
+        try{
+            String key = obj.getClass().getName() + "_" + ReflectUtil.get(obj, "id");
+            return key;
+        }catch (Exception e){
+            logger.error("获取缓存key失败", e);
+            return null;
         }
     }
 
@@ -646,7 +781,7 @@ public class JedisUtil {
      *
      * @param key 需要删除的key，可以使用模糊查询等
      */
-    public static void delKeysLike(String key) throws TesException {
+    public static void delKeysLike(String key) {
         Jedis jedis = null;
         try {
             jedis = pool.getResource();
@@ -655,20 +790,19 @@ public class JedisUtil {
             jedis.del(tar);
         } catch (Exception e) {
             logger.error("jedis getKeyLike 异常", e);
-            throw new TesException("Jedis操作失败", e);
         } finally {
             release(jedis);
         }
     }
 
     /**
-     * 查找对应的key
+     * 删除指定类型的key
      *
      * @param key
      * @return
-     * @throws TesException
+     * @throws
      */
-    public static Set<String> keysLike(String key) throws TesException {
+    public static Set<String> keysLike(String key) {
         Jedis jedis = null;
         try {
             if (!key.endsWith("*")) {
@@ -679,10 +813,10 @@ public class JedisUtil {
             return keys;
         } catch (Exception e) {
             logger.error("jedis keysLike 异常", e);
-            throw new TesException("jedis操作失败", e);
         } finally {
             release(jedis);
         }
+        return null;
     }
 
 
@@ -691,110 +825,21 @@ public class JedisUtil {
      *
      * @param keys
      * @return
-     * @throws TesException
+     * @throws
      */
-    public static int sinterForSize(String... keys) throws TesException {
+    public static Long sinterForSize(String... keys) {
         Jedis jedis = null;
         try {
             jedis = pool.getResource();
-            Set<String> set = jedis.sinter(keys);
-            return set.size();
+            String tmpKey = "tmp-key" + keys.hashCode() + System.currentTimeMillis();
+            Long res = jedis.sinterstore(tmpKey, keys);
+            jedis.expire(tmpKey, 10);
+            return res;
         } catch (Exception e) {
             logger.error("jedis sinter异常", e);
-            throw new TesException("jedis操作失败", e);
         } finally {
             release(jedis);
         }
+        return null;
     }
-
-
-    /**
-     * 获取交集
-     *
-     * @param keys
-     * @return
-     * @throws TesException
-     */
-    public static Set<String> sinterForObj(String... keys) throws TesException {
-        Jedis jedis = null;
-        try {
-            jedis = pool.getResource();
-            Set<String> set = jedis.sinter(keys);
-            return set;
-        } catch (Exception e) {
-            logger.error("jedis sinter异常", e);
-            throw new TesException("jedis操作失败", e);
-        } finally {
-            release(jedis);
-        }
-    }
-
-
-    public static void hSet(String key, String field, String val) {
-        Jedis jedis = null;
-        try {
-            jedis = getJedis();
-            jedis.hset(key, field, val);
-        } catch (Exception e) {
-            logger.error("hSet 失败", e);
-        } finally {
-            release(jedis);
-        }
-    }
-
-    public static void hmSet(String key, Map<String, String> map) {
-        Jedis jedis = null;
-        try {
-            jedis = getJedis();
-            jedis.hmset(key, map);
-        } catch (Exception e) {
-            logger.error("hmset 失败", e);
-        } finally {
-            release(jedis);
-        }
-    }
-
-    public static String hGet(String key, String field) {
-        String res = "";
-        Jedis jedis = null;
-        try {
-            jedis = getJedis();
-            res = jedis.hget(key, field);
-        } catch (Exception e) {
-            logger.error("hGet 失败", e);
-        } finally {
-            release(jedis);
-        }
-        return res;
-    }
-
-    public static List<String> hmGet(String key, String... field) {
-        List<String> res = null;
-        Jedis jedis = null;
-        try {
-            jedis = getJedis();
-            res = jedis.hmget(key, field);
-        } catch (Exception e) {
-            logger.error("hmGet 失败", e);
-        } finally {
-            release(jedis);
-        }
-        return res;
-    }
-
-    public static Map<String, String> hGetAll(String key) {
-        Map<String, String> map = null;
-        Jedis jedis = null;
-        try {
-            jedis = getJedis();
-            map = jedis.hgetAll(key);
-        } catch (Exception e) {
-            logger.error("hGetAll 失败", e);
-        } finally {
-            release(jedis);
-        }
-        return map;
-
-    }
-
 }
