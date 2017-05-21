@@ -68,8 +68,8 @@
                     <th>编码</th>
                     <th>岗位名称</th>
                     <th>岗位描述</th>
-                    <th>部门</th>
-                    <th>机构id</th>
+                    <th>创建部门</th>
+                    <th>创建机构</th>
                     <th>创建时间</th>
                     <th>更新时间</th>
                     <th>操作</th>
@@ -82,8 +82,8 @@
                         <td>${station.code}</td>
                         <td>${station.name}</td>
                         <td>${station.description}</td>
-                        <td>${station.departmentId}</td>
-                        <td>${station.branchId}</td>
+                        <td>${deptMap.get(station.departmentId)}</td>
+                        <td>${branchMap.get(station.branchId)}</td>
                         <td><fmt:formatDate value="${station.createTime}"
                                             pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate></td>
                         <td><fmt:formatDate value="${station.updateTime}"

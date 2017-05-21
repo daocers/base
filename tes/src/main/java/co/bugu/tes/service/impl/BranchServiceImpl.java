@@ -113,8 +113,8 @@ public class BranchServiceImpl extends BaseServiceImpl<Branch> implements IBranc
     }
 
     @Override
-    public Map<String, String> getBranchMap() {
-        Map<String, String> map = JedisUtil.hgetall(Constant.BRANCH_INFO);
+    public Map<String, String> getBranchNameIdMap() {
+        Map<String, String> map = JedisUtil.hgetall(Constant.BRANCH_NAME_ID_INFO);
         if(MapUtils.isNotEmpty(map)){
             return map;
         }
@@ -125,10 +125,26 @@ public class BranchServiceImpl extends BaseServiceImpl<Branch> implements IBranc
                 map.put(branch.getName(), branch.getId() + "");
             }
         }
-        JedisUtil.hmset(Constant.BRANCH_INFO, map);
+        JedisUtil.hmset(Constant.BRANCH_NAME_ID_INFO, map);
         return map;
     }
 
+    @Override
+    public Map<String, String> getBranchIdNameMap() {
+        Map<String, String> map = JedisUtil.hgetall(Constant.BRANCH_ID_NAME_INFO);
+        if(MapUtils.isNotEmpty(map)){
+            return map;
+        }
+        map = new HashMap<>();
+        List<Branch> list = baseDao.selectList("tes.branch.findByObject", null);
+        if (CollectionUtils.isNotEmpty(list)) {
+            for (Branch branch : list) {
+                map.put(branch.getId() + "", branch.getName());
+            }
+        }
+        JedisUtil.hmset(Constant.BRANCH_ID_NAME_INFO, map);
+        return map;
+    }
     @Override
     public void updateAll(JSONArray array) {
         for (int i = 0; i < array.size(); i++) {

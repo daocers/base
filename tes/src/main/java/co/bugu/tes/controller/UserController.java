@@ -242,8 +242,8 @@ public class UserController {
             tarFile.delete();
 
             logger.debug("数据： {}", data);
-            Map<String, String> branchMap = branchService.getBranchMap();
-            Map<String, String> departmentMap = departmentService.getDepartmentMap();
+            Map<String, String> branchMap = branchService.getBranchNameIdMap();
+            Map<String, String> departmentMap = departmentService.getDepartmentNameIdMap();
             Map<String, String> stationMap = stationService.getStationMap();
 
             data.remove(0);//删除标题

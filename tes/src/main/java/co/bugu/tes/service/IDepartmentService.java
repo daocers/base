@@ -3,7 +3,6 @@ package co.bugu.tes.service;
 
 import co.bugu.framework.core.service.IBaseService;
 import co.bugu.tes.model.Department;
-import co.bugu.framework.core.dao.PageInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -25,5 +24,6 @@ public interface IDepartmentService extends IBaseService<Department>{
 
     void batchAdd(List<Department> departmentList);
 
-    Map<String, String> getDepartmentMap();
+    Map<String, String> getDepartmentNameIdMap();
+    Map<String, String> getDepartmentIdNameMap();
 }

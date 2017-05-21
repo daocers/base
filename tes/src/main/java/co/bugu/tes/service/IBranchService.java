@@ -28,7 +28,8 @@ public interface IBranchService extends IBaseService<Branch>{
 
     void batchAdd(List<List<String>> data) throws TesException;
 
-    Map<String, String> getBranchMap();
+    Map<String, String> getBranchNameIdMap();
+    Map<String, String> getBranchIdNameMap();
 
     void updateAll(JSONArray array);
 }

@@ -15,10 +15,11 @@
         <result column="accept_method" property="acceptMethod" jdbcType="VARCHAR"/>
         <result column="is_api" property="isApi" jdbcType="INTEGER"/>
         <result column="idx" property="idx" jdbcType="INTEGER"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="authority_list">
     id, action, controller, description, name, param, status, superior_id, type,
-    url, accept_method, is_api, idx
+    url, accept_method, is_api, idx, code
   </sql>
     <select id="selectById" resultMap="AuthorityMap" parameterType="java.lang.Integer">
         select
@@ -73,6 +74,9 @@
             <if test="idx != null">
                 idx,
             </if>
+            <if test="code != null">
+                code,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -114,6 +118,9 @@
             <if test="idx != null">
                 #{idx},
             </if>
+            <if test="code != null">
+                #{code},
+            </if>
         </trim>
     </insert>
     <update id="updateById" parameterType="co.bugu.tes.model.Authority">
@@ -154,6 +161,9 @@
             </if>
             <if test="idx != null">
                 idx = #{idx},
+            </if>
+            <if test="code != null">
+                code = #{code},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}

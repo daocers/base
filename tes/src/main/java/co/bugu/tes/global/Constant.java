@@ -78,4 +78,6 @@ public interface Constant {
     String DEFAULT_PASSWORD = "888888";
 
     String DEFALUT_SALT = "ABC";
+    String BRANCH_NAME_ID_INFO = "BRANCH_NAME_ID_INFO";
+    String BRANCH_ID_NAME_INFO = "BRANCH_ID_NAME_INFO";
 }

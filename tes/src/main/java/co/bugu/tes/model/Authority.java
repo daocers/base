@@ -11,6 +11,8 @@ public class Authority {
 
     private String name;
 
+    private String code;
+
     private String param;
 
     private Integer status;
@@ -81,6 +83,15 @@ public class Authority {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getParam() {

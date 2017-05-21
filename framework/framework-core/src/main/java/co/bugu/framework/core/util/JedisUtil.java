@@ -98,6 +98,20 @@ public class JedisUtil {
     }
 
 
+    public static void delObj(Object obj){
+        Jedis jedis = null;
+        try {
+            jedis = getJedis();
+            String key = obj.getClass().getName() + "_" + ReflectUtil.get(obj, "id");
+            jedis.del(key);
+        } catch (Exception e) {
+            logger.error("jedis delObj 失败", e);
+        }finally {
+            release(jedis);
+        }
+
+    }
+
     public static Boolean exists(String key) {
         Jedis jedis = null;
         try {
@@ -380,6 +394,9 @@ public class JedisUtil {
      * @return
      */
     public static Long lPush(String key, String... field) {
+        if(field == null || field.length == 0){
+            return null;
+        }
         Jedis jedis = null;
         try {
             jedis = pool.getResource();
@@ -400,6 +417,9 @@ public class JedisUtil {
      * @return
      */
     public static Long rPush(String key, String... field) {
+        if(field == null || field.length == 0){
+            return null;
+        }
         Jedis jedis = null;
         try {
             jedis = pool.getResource();
@@ -421,6 +441,9 @@ public class JedisUtil {
      * @return
      */
     public static Long lPushX(String key, String... field) {
+        if(field == null || field.length == 0){
+            return null;
+        }
         Jedis jedis = null;
         try {
             jedis = pool.getResource();
@@ -441,6 +464,9 @@ public class JedisUtil {
      * @return
      */
     public static Long rPushX(String key, String... field) {
+        if(field == null || field.length == 0){
+            return null;
+        }
         Jedis jedis = null;
         try {
             jedis = pool.getResource();

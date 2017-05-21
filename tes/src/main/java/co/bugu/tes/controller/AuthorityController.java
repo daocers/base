@@ -194,6 +194,8 @@ public class AuthorityController {
                 if (urlList.contains(url)) {
                     continue;
                 }
+
+//              跳过菜单权限
                 if (param.getPath() == null) {
                     continue;
                 }
@@ -209,6 +211,8 @@ public class AuthorityController {
 
                 auth.setType(Constant.AUTH_TYPE_MENU);
                 auth.setUrl(param.getRootPath() + param.getPath());
+                auth.setCode(getCodeFromUrl(auth.getUrl()) +
+                        (StringUtils.isEmpty(param.getMethod()) ? "" : "_" + param.getMethod().toUpperCase()));
                 auth.setAcceptMethod(param.getMethod());
                 auth.setIsApi(param.getApi() ? Constant.AUTH_API_TRUE : Constant.AUTH_API_FALSE);
                 authorityService.save(auth);
@@ -249,6 +253,23 @@ public class AuthorityController {
             logger.error("初始化工程内的信息失败", e);
         }
         return "redirect:list.do";
+    }
+
+    private static String getCodeFromUrl(String url) {
+        if(StringUtils.isEmpty(url)){
+            return "";
+        }else{
+            url = url.toUpperCase();
+            if(url.startsWith("/")){
+                url = url.substring(1, url.length());
+            }
+            return url.replaceAll("/", "_");
+        }
+    }
+
+    public static void main(String[] args){
+        String url = "/tes/role/get.do";
+        System.out.println(getCodeFromUrl(url));
     }
 
     /**

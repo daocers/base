@@ -1,6 +1,5 @@
 package co.bugu.framework.core.util;
 
-import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,12 +50,15 @@ public class ReflectUtil {
      */
     public static List<MvcParam> getAnnotationInfo(String packageName){
         List<MvcParam> res = new ArrayList<>();
+//        获取当前包下的所有类
         Set<Class<?>> classes = getClasses(packageName);
         for(Class<?> cla : classes){
+//            扫描当前类是否有controller注解，没有就略过
             Controller con = cla.getAnnotation(Controller.class);
             if(con == null){
                 continue;
             }
+//            当前类是否有requestMapping注解
             RequestMapping requestMapping = cla.getDeclaredAnnotation(RequestMapping.class);
             if(requestMapping == null){
                 continue;

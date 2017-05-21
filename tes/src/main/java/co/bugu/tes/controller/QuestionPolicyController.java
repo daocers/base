@@ -50,6 +50,14 @@ public class QuestionPolicyController {
         try{
             List<QuestionMetaInfo> questionMetaInfoList = questionMetaInfoService.findByObject(null);
             model.put("questionMetaInfoList", questionMetaInfoList);
+
+
+            Map<Integer, String> questionMetaInfoMap = new HashMap<>();
+            for(QuestionMetaInfo quesInfo: questionMetaInfoList){
+                questionMetaInfoMap.put(quesInfo.getId(), quesInfo.getName());
+            }
+            model.put("questionMetaInfoMap", questionMetaInfoMap);
+
             List<PropertyItem> propertyItemList = propertyItemService.findByObject(null);
             Map<Integer, String> map = new HashMap<>();
             for(PropertyItem item: propertyItemList){

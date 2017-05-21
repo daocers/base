@@ -40,7 +40,7 @@
 
             </div>
             <div class="page-container">
-                <iframe id="page" src="trade.html" seamless="seamless" style="border-right: none;min-width: 900px;">
+                <iframe id="page" src="trade.html" seamless="seamless" style="border-right: none;min-width: 900px; width: auto;">
 
                 </iframe>
             </div>

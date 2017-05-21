@@ -77,7 +77,7 @@
                         <td><input type="checkbox" objId="${questionPolicy.id}"></td>
                         <td>${questionPolicy.name}</td>
                         <td>${questionPolicy.code}</td>
-                        <td>${questionPolicy.questionMetaInfoId}</td>
+                        <td>${questionMetaInfoMap.get(questionPolicy.questionMetaInfoId)}</td>
                         <td>${questionPolicy.content}</td>
                         <td>${questionPolicy.count}</td>
                         <td><fmt:formatDate value="${questionPolicy.updateTime}"

@@ -33,9 +33,9 @@
                 <thead>
                 <tr>
                     <th><input type="checkbox" class="selectAll"></th>
-                    <th>name</th>
-                    <th>content</th>
-                    <th>status</th>
+                    <th>名称</th>
+                    <th>凭条详情</th>
+                    <th>状态</th>
                     <th>操作</th>
                 </tr>
                 </thead>
@@ -45,7 +45,7 @@
                         <td><input type="checkbox" objId="${typeIn.id}"></td>
                         <td>${typeIn.name}</td>
                         <td>${typeIn.content}</td>
-                        <td>${typeIn.status}</td>
+                        <td>${typeIn.status == 0 ? "正常" : "禁用"}</td>
                         <td>
                             <a href="edit.do?id=${typeIn.id}&type=detail" class="opr">详情</a>
                             <a href="edit.do?id=${typeIn.id}" class="opr">修改</a>

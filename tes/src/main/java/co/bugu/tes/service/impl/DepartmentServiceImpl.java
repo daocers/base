@@ -6,10 +6,7 @@ import co.bugu.framework.util.JedisUtil;
 import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.Department;
 import co.bugu.tes.service.IDepartmentService;
-import co.bugu.framework.core.dao.BaseDao;
-import co.bugu.framework.core.dao.PageInfo;
 import org.apache.commons.collections.MapUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -25,7 +22,7 @@ DepartmentServiceImpl extends BaseServiceImpl<Department> implements IDepartment
     }
 
     @Override
-    public Map<String, String> getDepartmentMap() {
+    public Map<String, String> getDepartmentNameIdMap() {
         Map<String, String> map = JedisUtil.hgetall(Constant.DEPARTMENT_INFO);
         if(MapUtils.isNotEmpty(map)){
             return map;
@@ -38,6 +35,23 @@ DepartmentServiceImpl extends BaseServiceImpl<Department> implements IDepartment
         }
         return map;
     }
+
+    @Override
+    public Map<String, String> getDepartmentIdNameMap() {
+        Map<String, String> map = JedisUtil.hgetall(Constant.DEPARTMENT_INFO);
+        if(MapUtils.isNotEmpty(map)){
+            return map;
+        }else{
+            map = new HashMap<>();
+            List<Department>  departments = baseDao.selectList("tes.department.findByObject", null);
+            for(Department department: departments){
+                map.put(department.getId() + "", department.getName());
+            }
+        }
+        return map;
+    }
+
+
 //    @Autowired
 //    BaseDao baseDao;
 //

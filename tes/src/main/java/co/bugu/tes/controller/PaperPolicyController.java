@@ -129,8 +129,7 @@ public class PaperPolicyController {
     public String save(PaperPolicy paperPolicy, int[] questionMetaInfoId, ModelMap model, HttpServletRequest request, RedirectAttributes redirectAttributes){
         try{
             Integer userId = (Integer) BuguWebUtil.get(request, Constant.SESSION_USER_ID);
-            User user = new User();
-//            User user = JedisUtil.getJson(Constant.USER_INFO_PREFIX + userId, User.class);
+            User user = userService.findById(userId);
             if(user != null){
                 paperPolicy.setUpdateTime(new Date());
                 paperPolicy.setCreateUserId(userId);

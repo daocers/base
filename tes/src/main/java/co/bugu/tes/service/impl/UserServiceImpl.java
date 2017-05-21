@@ -2,7 +2,8 @@ package co.bugu.tes.service.impl;
 
 
 import co.bugu.framework.core.service.impl.BaseServiceImpl;
-import co.bugu.framework.util.JedisUtil;
+//import co.bugu.framework.util.JedisUtil;
+import co.bugu.framework.core.util.JedisUtil;
 import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.Authority;
 import co.bugu.tes.model.Profile;
@@ -14,10 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class UserServiceImpl extends BaseServiceImpl<User> implements IUserService {
@@ -29,12 +27,14 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
             user.getProfile().setUserId(user.getId());
             baseDao.insert("tes.profile.insert", user.getProfile());
         }
-        JedisUtil.setJson(Constant.USER_INFO_PREFIX + user.getId(), user);
+        JedisUtil.setJson(user);
+//        JedisUtil.setJson(Constant.USER_INFO_PREFIX + user.getId(), user);
         return 1;
     }
 
     @Override
     public int delete(User record) {
+        JedisUtil.delObj(record);
         Profile profile = new Profile();
         profile.setUserId(record.getId());
         List<Profile> profiles = baseDao.selectList("tes.profile.findByObject", profile);
@@ -59,7 +59,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
                 baseDao.update("tes.profile.updateById", profile);
             }
         }
-        JedisUtil.setJson(Constant.USER_INFO_PREFIX + user.getId(), user);
+        JedisUtil.setJson(user);
         return 1;
     }
 
@@ -116,8 +116,8 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
                         }
                     }
                 }
-                JedisUtil.pushList(Constant.USER_ROLES + id, roleList);
-                JedisUtil.pushList(Constant.USER_AUTHORITYS + id, authList);
+                JedisUtil.rPush(Constant.USER_ROLES + id, roleList.toArray(new String[roleList.size()]));
+                JedisUtil.rPush(Constant.USER_AUTHORITYS + id, authList.toArray(new String[authList.size()]));
             }
         }
         JedisUtil.setJson(Constant.USER_INFO_PREFIX + id, user);
@@ -128,7 +128,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
     public List<String> getRoleList(Integer userId) {
         List<String> roleList = new ArrayList<>();
         try{
-            roleList = JedisUtil.lrange(Constant.USER_ROLES + userId);
+            roleList = JedisUtil.getAllList(Constant.USER_ROLES + userId);
         }catch (Exception e){
             logger.error("jedis获取列表失败");
 
@@ -139,7 +139,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
             for(Role role: list){
                 roleList.add(role.getCode());
             }
-            JedisUtil.pushList(Constant.USER_ROLES + userId, roleList);
+            JedisUtil.rPush(Constant.USER_ROLES + userId, roleList.toArray(new String[roleList.size()]));
         }
         return roleList;
     }
@@ -148,7 +148,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
     public List<String> getAuthorityList(Integer userId) {
         List<String> authorityList = new ArrayList<>();
         try{
-            authorityList = JedisUtil.lrange(Constant.USER_AUTHORITYS + userId);
+            authorityList = JedisUtil.getAllList(Constant.USER_AUTHORITYS + userId);
         }catch (Exception e){
             logger.error("jedis获取列表失败");
 
@@ -162,7 +162,8 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
                     authorityList.add(authority.getId() +"");
                 }
             }
-            JedisUtil.pushList(Constant.USER_AUTHORITYS + userId, authorityList);
+            JedisUtil.rPush(Constant.USER_AUTHORITYS + userId, authorityList.toArray(new String[authorityList.size()]));
+//            JedisUtil.pushList(Constant.USER_AUTHORITYS + userId, authorityList);
         }
         return authorityList;
     }

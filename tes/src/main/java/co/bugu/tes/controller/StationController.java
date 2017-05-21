@@ -9,7 +9,6 @@ import co.bugu.tes.model.Station;
 import co.bugu.tes.service.IBranchService;
 import co.bugu.tes.service.IDepartmentService;
 import co.bugu.tes.service.IStationService;
-import co.bugu.tes.service.IUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/station")
@@ -48,6 +48,11 @@ public class StationController {
     public String list(Station station, Integer curPage, Integer showCount, ModelMap model, HttpServletRequest request) {
         try {
             SearchParamUtil.processSearchParam(station, request);
+
+            Map<String, String> deptMap = departmentService.getDepartmentIdNameMap();
+            Map<String, String> branchMap = branchService.getBranchIdNameMap();
+            model.put("deptMap", deptMap);
+            model.put("branchMap", branchMap);
 
             PageInfo<Station> pageInfo = new PageInfo<>(showCount, curPage);
             pageInfo = stationService.findByObject(station, pageInfo);
