@@ -16,19 +16,26 @@
             cursor: pointer;
         }
         .menu-item{
+            display: inline-block;
+            margin: 20px;
             padding: 15px;
             border: 1px solid white;
-            background-color: #78c9ff;
+            border-radius: 5px;
+            width: 280px;
+            background-color: #ade4ff;
         }
         .menu-item .top .left{
             display: inline-block;
-            width: 160px;
+            width: 130px;
             vertical-align: bottom;
             font-size: 24px;
             padding-left: 10px;
+            line-height: 64px;
         }
         .menu-item .top .right{
             display: inline-block;
+            width: 64px;
+            height: 64px;
         }
         .menu-item .bottom{
             height: 35px;
@@ -49,13 +56,29 @@
             <%@ include file="../template/menu-left.jsp" %>
         </div>
         <div class="col-sm-12 col-sm-offset-0 col-md-10 col-md-offset-2 main" id="main">
+            <a href="/scene/index.do">
+                <div class="menu-item">
+                    <div class="top">
+                        <div class="left">
+                            开场设置
+                        </div>
+                        <div class="right">
+                            <img src="/assets/img/setting.png" class="right">
+                        </div>
+                    </div>
+                    <div class="bottom">
+                        设置场次参数，组织考试
+                    </div>
+                </div>
+            </a>
+
             <div class="menu-item col-md-3">
                 <div class="top">
                     <div class="left">
-                        开场
+                        添加信息
                     </div>
                     <div class="right">
-                        <img src="K线图.png">
+                        <img src="/assets/img/setting.png" class="right">
                     </div>
                 </div>
 
@@ -69,21 +92,7 @@
                         添加信息
                     </div>
                     <div class="right">
-                        <img src="K线图.png">
-                    </div>
-                </div>
-
-                <div class="bottom">
-                    添加信息发的离开发发达懒
-                </div>
-            </div>
-            <div class="menu-item col-md-3">
-                <div class="top">
-                    <div class="left">
-                        添加信息
-                    </div>
-                    <div class="right">
-                        <img src="K线图.png">
+                        <img src="/assets/img/setting.png" class="right">
                     </div>
                 </div>
 

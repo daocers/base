@@ -69,7 +69,7 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="false" style="height: 50px; padding: 9px;"> <span class="person-center"></span>
-                        <img src="/assets/img/head-off.png"> <span class="caret"></span></a>
+                        <img src="/assets/img/head-off.png">&nbsp;&nbsp;${sessionScope.username}&nbsp; <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="#">账户设置</a></li>
                         <li><a href="#">我的布谷</a></li>

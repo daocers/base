@@ -406,7 +406,7 @@ public class UserController {
     public String setRole(Integer id, String roleId){
         JSONObject res = new JSONObject();
         try{
-            User user = userService.findFullById(id);
+//            User user = userService.findFullById(id);
             userService.updateRole(id, JSON.parseArray(roleId, Integer.class));
             res.put("code", 0);
         }catch (Exception e){
