@@ -2,6 +2,7 @@ package co.bugu.tes.service;
 
 
 import co.bugu.framework.core.service.IBaseService;
+import co.bugu.tes.model.Role;
 import co.bugu.tes.model.User;
 import co.bugu.framework.core.dao.PageInfo;
 
@@ -20,5 +21,8 @@ public interface IUserService extends IBaseService<User> {
     boolean hasRole(Integer userId, String... role);
 
     boolean hasAuthority(Integer userId, String... authority);
+
+    boolean updateRole(Integer userId, List<Integer> rolesNew);
+
 
 }

@@ -44,7 +44,7 @@ public class AuthorityController {
     @RequestMapping(value = "/list")
     public String list(Authority authority, Integer curPage, Integer showCount, ModelMap model) {
         try {
-            if(authority != null && authority.getType() != null && authority.getType() == -1){
+            if (authority != null && authority.getType() != null && authority.getType() == -1) {
                 authority.setType(null);
             }
             List<String> controllerList = authorityService.getAllController();
@@ -180,74 +180,89 @@ public class AuthorityController {
     public String init(ModelMap model) {
         try {
             List<Authority> authorities = authorityService.findByObject(null);
-            List<String> urlList = new ArrayList<>();
-            for (Authority auth : authorities) {
-                urlList.add(auth.getUrl());
-            }
+            List<String> codeList = new ArrayList<>();
 
+            Map<String, Integer> authCodeIdMap = new HashMap<>();
+            for (Authority a : authorities) {
+                codeList.add(a.getCode());
+                authCodeIdMap.put(a.getCode(), a.getId());
+            }
             List<MvcParam> list = ReflectUtil.getAnnotationInfo(AuthorityController.class.getPackage().getName());
 
             Set<String> controllerSet = new HashSet<>();
             for (MvcParam param : list) {
                 controllerSet.add(param.getControllerName());
-                String url = param.getRootPath() + param.getPath();
-                if (urlList.contains(url)) {
-                    continue;
-                }
+            }
 
-//              跳过菜单权限
-                if (param.getPath() == null) {
-                    continue;
-                }
-                urlList.remove(url);
+
+            /**
+             * 处理菜单权限外层容器的增删改
+             * */
+            for (String ctrler : controllerSet) {
+                String code = ctrler.toUpperCase();
+
                 Authority auth = new Authority();
+                auth.setStatus(Constant.STATUS_ENABLE);
+                auth.setController(ctrler);
+                auth.setType(Constant.AUTH_TYPE_BOX);
+                auth.setCode(code);
+
+
+                auth.setIsApi(Constant.AUTH_API_FALSE);
+                if (authCodeIdMap.containsKey(code)) {
+                    auth.setId(authCodeIdMap.get(code));
+                    authorityService.updateById(auth);
+                } else {
+                    auth.setName(ctrler);
+                    auth.setDescription(code + "菜单");
+                    authorityService.save(auth);
+                    authCodeIdMap.put(code, auth.getId());
+                }
+            }
+
+            /**
+             * 处理菜单权限
+             * */
+            for (MvcParam param : list) {
+                String method = StringUtils.isEmpty(param.getMethod()) ? "" : param.getMethod().toUpperCase();
+                String url = param.getRootPath() + param.getPath();
+                String code = getCodeFromUrl(url) + (StringUtils.isEmpty(method) ? "" : "_" + method);
+                String parentCode = param.getControllerName().toUpperCase();
+
+
+                Authority auth = new Authority();
+                auth.setSuperiorId(authCodeIdMap.get(parentCode));
                 auth.setStatus(Constant.STATUS_ENABLE);
                 auth.setAction(param.getMethodName());
                 auth.setController(param.getControllerName());
                 auth.setDescription("");
-                auth.setName("");
+                auth.setName(code);
                 auth.setParam(null);
-                auth.setSuperiorId(null);
-
                 auth.setType(Constant.AUTH_TYPE_MENU);
-                auth.setUrl(param.getRootPath() + param.getPath());
-                auth.setCode(getCodeFromUrl(auth.getUrl()) +
-                        (StringUtils.isEmpty(param.getMethod()) ? "" : "_" + param.getMethod().toUpperCase()));
-                auth.setAcceptMethod(param.getMethod());
+                auth.setUrl(url);
+                auth.setCode(code);
+                auth.setAcceptMethod(method);
                 auth.setIsApi(param.getApi() ? Constant.AUTH_API_TRUE : Constant.AUTH_API_FALSE);
-                authorityService.save(auth);
-            }
-            for (String url : urlList) {
-                Authority authority = new Authority();
-                authority.setUrl(url);
-                List<Authority> authorityList = authorityService.findByObject(authority);
-                if (CollectionUtils.isNotEmpty(authorityList)) {
-                    authorityService.delete(authorityList.get(0));
+
+                if (authCodeIdMap.containsKey(code)) {
+                    auth.setId(authCodeIdMap.get(code));
+                    authorityService.updateById(auth);
+                } else {
+                    authorityService.save(auth);
                 }
+                codeList.remove(code);
             }
 
-            Authority authority = new Authority();
-            authority.setType(Constant.AUTH_TYPE_BOX);
-            authorities = authorityService.findByObject(authority);
-            List<String> controllerList = new ArrayList<>();
-            for (Authority auth : authorities) {
-                controllerList.add(auth.getController());
+            /**
+             * 删除系统中不存在的权限信息
+             * */
+            for (String item : codeList) {
+                Integer id = authCodeIdMap.get(item);
+                Authority authority = new Authority();
+                authority.setId(id);
+                authorityService.delete(authority);
             }
-            for (String con : controllerSet) {
-                if (controllerList.contains(con)) {
-                    continue;
-                }
-                Authority auth = new Authority();
-                auth.setStatus(Constant.STATUS_ENABLE);
-                auth.setController(con);
-                auth.setType(Constant.AUTH_TYPE_BOX);
-                auth.setName("");
-                auth.setDescription("");
-                auth.setIsApi(Constant.AUTH_API_FALSE);
-                authorityService.save(auth);
-                auth.setSuperiorId(auth.getId());
-                authorityService.batchUpdate(auth);
-            }
+
 
         } catch (Exception e) {
             logger.error("初始化工程内的信息失败", e);
@@ -256,18 +271,18 @@ public class AuthorityController {
     }
 
     private static String getCodeFromUrl(String url) {
-        if(StringUtils.isEmpty(url)){
+        if (StringUtils.isEmpty(url)) {
             return "";
-        }else{
+        } else {
             url = url.toUpperCase();
-            if(url.startsWith("/")){
+            if (url.startsWith("/")) {
                 url = url.substring(1, url.length());
             }
             return url.replaceAll("/", "_");
         }
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         String url = "/tes/role/get.do";
         System.out.println(getCodeFromUrl(url));
     }

@@ -46,7 +46,12 @@ public class RoleServiceImpl extends BaseServiceImpl<Role> implements IRoleServi
         }
     }
 
-//    @Override
+    @Override
+    public List<Role> selectRoleByUser(Integer userId) {
+        return baseDao.selectList("tes.role.selectRoleByUser", userId);
+    }
+
+    //    @Override
 //    public int delete(Role role) {
 //        return baseDao.delete("tes.role.deleteById", role);
 //    }

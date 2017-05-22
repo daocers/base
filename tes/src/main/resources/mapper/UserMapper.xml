@@ -124,4 +124,11 @@
         <include refid="user_list"/>
         from user
     </select>
+
+    <insert id="addUserRoleX" parameterType="map">
+        insert into user_role_x(user_id, role_id) values (#{userId}, #{roleId})
+    </insert>
+    <insert id="deleteUserRoleX" parameterType="map">
+        DELETE from user_role_x where user_id = #{userId} and role_id = #{roleId}
+    </insert>
 </mapper>

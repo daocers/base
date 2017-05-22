@@ -12,6 +12,7 @@ import co.bugu.tes.model.*;
 import co.bugu.tes.service.*;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,8 @@ import java.util.*;
 public class UserController {
     @Autowired
     IUserService userService;
+    @Autowired
+    IRoleService roleService;
     @Autowired
     IProfileService profileService;
     @Autowired
@@ -69,6 +72,18 @@ public class UserController {
             pageInfo = userService.findByObject(user, pageInfo);
             model.put("pi", pageInfo);
             model.put("user", user);
+
+            List<String> checkedRole = new ArrayList<>();
+            for(User u: pageInfo.getData()){
+                List<Role> list = roleService.selectRoleByUser(u.getId());
+                StringBuffer buffer = new StringBuffer();
+                for(Role role: list){
+                    buffer.append(role.getName()).append(" ");
+                }
+                checkedRole.add(buffer.toString());
+            }
+            model.put("checkedRole", checkedRole);
+
             List<Department> departments = departmentService.findByObject(null);
             List<Branch> branches = branchService.findByObject(null);
             List<Station> stations = stationService.findByObject(null);
@@ -87,6 +102,8 @@ public class UserController {
             model.put("departmentMap", departmentMap);
             model.put("branchMap", branchMap);
             model.put("stationMap", stationMap);
+            List<Role> roleList = roleService.findByObject(null);
+            model.put("roleList", roleList);
         } catch (Exception e) {
             logger.error("获取列表失败", e);
             model.put("errMsg", "获取列表失败");
@@ -360,4 +377,45 @@ public class UserController {
         json.put("code", 0);
         return json.toJSONString();
     }
+
+    @RequestMapping("/getRole")
+    @ResponseBody
+    public String getRole(Integer id){
+        JSONObject res = new JSONObject();
+        try{
+            User user = userService.findFullById(id);
+            List<Role> hasRole = user.getRoleList();
+            List<Integer> has = new ArrayList<>();
+            if(CollectionUtils.isNotEmpty(hasRole)){
+                for(Role role: hasRole){
+                    has.add(role.getId());
+                }
+                res.put("has", has);
+            }
+            res.put("code", 0);
+        }catch (Exception e){
+            logger.error("获取用户角色信息失败", e);
+            res.put("code", -1);
+            res.put("err", "获取用户角色信息失败");
+        }
+        return res.toJSONString();
+    }
+
+    @RequestMapping(value = "/setRole", method = RequestMethod.POST)
+    @ResponseBody
+    public String setRole(Integer id, String roleId){
+        JSONObject res = new JSONObject();
+        try{
+            User user = userService.findFullById(id);
+            userService.updateRole(id, JSON.parseArray(roleId, Integer.class));
+            res.put("code", 0);
+        }catch (Exception e){
+            logger.error("设置用户角色失败", e);
+            res.put("code", -1);
+            res.put("err", "设置用户角色失败");
+        }
+        return res.toJSONString();
+    }
+
+
 }

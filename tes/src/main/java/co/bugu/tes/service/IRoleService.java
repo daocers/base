@@ -28,4 +28,6 @@ public interface IRoleService extends IBaseService<Role>{
 //
 //    PageInfo listByObject(Role role, PageInfo<Role> pageInfo) throws Exception;
 
+    List<Role> selectRoleByUser(Integer userId);
+
 }

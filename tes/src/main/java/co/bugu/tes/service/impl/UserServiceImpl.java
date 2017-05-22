@@ -79,20 +79,23 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
     @Override
     public User findById(Integer id) {
         try{
-            User user = JedisUtil.getJson(Constant.USER_INFO_PREFIX + id, User.class);
+            User user = JedisUtil.getJson(getKeyFromClassAndId(id, User.class), User.class);
             if(user != null){
                 return user;
             }
         }catch (Exception e){
             logger.error("查询redis失败", e);
         }
+        /**
+         * 由于此处查询数据不全，所以不做缓存更新
+         * */
         return baseDao.selectOne("tes.user.selectById", id);
     }
 
     @Override
     public User findFullById(Integer id) {
         try{
-            User user = JedisUtil.getJson(Constant.USER_INFO_PREFIX + id, User.class);
+            User user = JedisUtil.getJson(getKeyFromClassAndId(id, User.class), User.class);
             if(user != null){
                 return user;
             }
@@ -102,7 +105,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
         User user = baseDao.selectOne("tes.user.selectById", id);
         if(user != null){
             List<Role> roles = baseDao.selectList("tes.role.selectRoleByUser", user.getId());
-            if(roles != null && roles.size() > 0){
+            if(CollectionUtils.isNotEmpty(roles)){
                 user.setRoleList(roles);
                 List<String> roleList = new ArrayList<>();
                 List<String> authList = new ArrayList<>();
@@ -118,9 +121,11 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
                 }
                 JedisUtil.rPush(Constant.USER_ROLES + id, roleList.toArray(new String[roleList.size()]));
                 JedisUtil.rPush(Constant.USER_AUTHORITYS + id, authList.toArray(new String[authList.size()]));
+            }else {
+                user.setRoleList(new ArrayList<>());
             }
         }
-        JedisUtil.setJson(Constant.USER_INFO_PREFIX + id, user);
+        JedisUtil.setJson(user);
         return user;
     }
 
@@ -176,5 +181,40 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
     @Override
     public boolean hasAuthority(Integer userId, String... authority) {
         return getAuthorityList(userId).containsAll(Arrays.asList(authority));
+    }
+
+    @Override
+    public boolean updateRole(Integer userId, List<Integer> rolesNew) {
+        Map<String, Integer> map = new HashMap<>();
+        map.put("userId", userId);
+
+        User user = findFullById(userId);
+        List<Role> hasList = user.getRoleList();
+        Iterator<Role> iterator = hasList.iterator();
+        while(iterator.hasNext()){
+            Role role = iterator.next();
+            Integer id = role.getId();
+            if(rolesNew.contains(id)){//已经拥有的角色
+                iterator.remove();
+                rolesNew.remove(id);
+            }
+        }
+        /**
+         * 处理新增加的角色
+         * */
+        for(Integer roleId: rolesNew){
+            map.put("roleId", roleId);
+            baseDao.insert("tes.user.addUserRoleX", map);
+        }
+
+//        处理不再拥有的角色
+        for(Role role: hasList){
+            map.put("roleId", role.getId());
+            baseDao.delete("tes.user.deleteUserRoleX", map);
+        }
+
+//        清空缓存
+        JedisUtil.delObj(user);
+        return true;
     }
 }

@@ -107,4 +107,8 @@ public class BaseServiceImpl<T> implements IBaseService<T> {
 //        return pageInfo;
         return findByObject(record, pageInfo);
     }
+
+    protected String getKeyFromClassAndId(Integer id, Class<T> tClass){
+        return tClass.getName() + "_" + id;
+    }
 }
