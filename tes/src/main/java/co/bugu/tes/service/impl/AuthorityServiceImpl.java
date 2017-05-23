@@ -41,6 +41,12 @@ public class AuthorityServiceImpl extends BaseServiceImpl<Authority> implements 
     }
 
     @Override
+    public List<Authority> selectAuthorityByRole(Integer roleId) {
+        List<Authority> list = baseDao.selectList("tes.authority.selectAuthorityByRole", roleId);
+        return list;
+    }
+
+    @Override
     public void batchUpdate(Authority authority) {
 
     }

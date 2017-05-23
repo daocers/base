@@ -83,7 +83,7 @@
                     </thead>
                     <tbody>
                     <c:forEach items="${pi.data}" var="user" varStatus="line">
-                        <tr>
+                        <tr rowid="${user.id}">
                             <td><input type="checkbox" objId="${user.id}"></td>
                             <td>${user.username}</td>
                             <td>${user.name}</td>
@@ -185,6 +185,7 @@
                 </div><!-- /.modal-dialog -->
             </div>
             <script>
+                var roleIdNameMap = eval(${roleInfoMap});
                 $(function () {
                     $("#import").on("click", function () {
                         $("#modal").modal('show');
@@ -215,9 +216,12 @@
                     });
                     
                     $("#confirmRole").on("click", function () {
+                        var roles = "";
                         var arr = new Array();
                         $("[name='roleId']:checked").each(function () {
-                            arr.push($(this).val());
+                            var roleId = $(this).val();
+                            arr.push(roleId);
+                            roles += roleIdNameMap[roleId] + " ";
                         });
                         var userId = $("#userId").val();
                         $.ajax({
@@ -227,6 +231,8 @@
                             success: function (data) {
                                 var res = JSON.parse(data);
                                 if(res.code == 0){
+                                    $("table tr[rowid='" + userId + "']").find("td:eq(3)").html(roles);
+                                    $("#setRole").modal("hide");
 
                                 }else{
                                     swal("", "设置角色失败", "error");

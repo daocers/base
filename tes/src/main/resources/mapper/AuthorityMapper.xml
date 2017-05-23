@@ -190,7 +190,7 @@
         FROM authority auth
         LEFT JOIN role_authority_x ru
         on ru.authority_id = auth.id
-        where ru.role_id = #{role_id}
+        where ru.role_id = #{role_id} order by auth.idx
     </select>
 
 

@@ -41,9 +41,12 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li><a href="#">我的布谷</a></li>
-                <li><a href="/role/index/student.do">我是考生</a></li>
-                <li><a href="/role/index/teacher.do">我是教师</a></li>
-                <li><a href="/role/idnex/admin.do">我是管理员</a></li>
+                <c:forEach items="${sessionScope.roleList}" var="role">
+                    <li><a href="#">${role.name}</a> </li>
+                </c:forEach>
+                <%--<li><a href="/role/index/student.do">我是考生</a></li>--%>
+                <%--<li><a href="/role/index/teacher.do">我是教师</a></li>--%>
+                <%--<li><a href="/role/index/admin.do">我是管理员</a></li>--%>
                 <!--<li><a href="#">培训学习</a></li>-->
                 <!--<li><a href="#">统计分析</a></li>-->
                 <!--<li><a href="#">考试管理</a></li>-->

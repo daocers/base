@@ -28,7 +28,7 @@
         }
 
         .menu-item:hover {
-            background-color: lightblue;
+            background-color: lightskyblue;
         }
 
         .menu-item .top .left {

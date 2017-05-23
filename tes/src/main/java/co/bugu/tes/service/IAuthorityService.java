@@ -32,4 +32,6 @@ public interface IAuthorityService extends IBaseService<Authority>{
 
     List<String> getAllController();
 
+    List<Authority> selectAuthorityByRole(Integer roleId);
+
 }

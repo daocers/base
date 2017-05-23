@@ -42,14 +42,14 @@
                 <div class="" style="width:780px; vertical-align: top; display: inline-block">
                     <div class="col-md-5" style="margin-left: -15px;">
                         <div class="zTreeDemoBackground left">
-                            <ul id="treeDemo" class="ztree"></ul>
+                            <ul id="treeDemo" class="ztree" style="height: 460px;"></ul>
                         </div>
 
                         <button class="btn btn-info commit">确定</button>
                         <button class="btn btn-warning cancel">取消</button>
                     </div>
 
-                    <div class="col-md-5 col-md-offset-1">
+                    <div class="col-md-5 col-md-offset-1" id="info-box">
                         <div class="panel panel-info">
                             <div class="panel-heading">
                                 <h3 class="panel-title">
@@ -67,6 +67,10 @@
                                 <tr>
                                     <td class="col-md-1">URL</td>
                                     <td id="url"></td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-1">编码</td>
+                                    <td id="code"></td>
                                 </tr>
                                 <tr>
                                     <td class="col-md-1">Controller</td>
@@ -123,6 +127,7 @@
                                     $("#authId").val(obj.id);
                                     $("#name").val(obj.name);
                                     $("#url").text(obj.url);
+                                    $("#code").text(obj.code);
                                     $("#param").text(obj.param);
                                     $("#controller").text(obj.controller);
                                     $("#action").text(obj.action);
@@ -132,9 +137,11 @@
                                     $("#isPage").text(obj.isApi == 1);
                                     $("#needAuth").text("暂无");
                                     zeroModal.closeAll();
+                                    $("#info-box").show();
                                 } else {
                                     zeroModal.closeAll();
                                     swal("", obj.msg, "error");
+                                    $("#info-box").hide();
                                 }
                             }
                         });
@@ -182,6 +189,7 @@
                                         tree.updateNode(node);
                                     }
                                     zeroModal.closeAll();
+                                    $("#info-box").hide();
                                 }else{
                                     swal("", res.err, "error");
                                     zeroModal.closeAll();
@@ -445,6 +453,7 @@
     }
 
     $(document).ready(function () {
+        $("#info-box").hide();
         $.fn.zTree.init($("#treeDemo"), setting, zNodes);
         $("#callbackTrigger").bind("change", {}, setTrigger);
     });

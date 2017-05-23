@@ -104,6 +104,11 @@ public class UserController {
             model.put("stationMap", stationMap);
             List<Role> roleList = roleService.findByObject(null);
             model.put("roleList", roleList);
+            Map<Integer, String> roleInfoMap = new HashMap<>();
+            for(Role role: roleList){
+                roleInfoMap.put(role.getId(), role.getName());
+            }
+            model.put("roleInfoMap", JSON.toJSONString(roleInfoMap));
         } catch (Exception e) {
             logger.error("获取列表失败", e);
             model.put("errMsg", "获取列表失败");

@@ -4,8 +4,13 @@ import co.bugu.framework.core.util.BuguWebUtil;
 import co.bugu.framework.core.util.VerifyCodeUtil;
 import co.bugu.framework.util.EncryptUtil;
 import co.bugu.tes.global.Constant;
+import co.bugu.tes.model.Authority;
+import co.bugu.tes.model.Role;
 import co.bugu.tes.model.User;
+import co.bugu.tes.service.IAuthorityService;
+import co.bugu.tes.service.IRoleService;
 import co.bugu.tes.service.IUserService;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,6 +39,10 @@ public class IndexController {
 
     @Autowired
     IUserService userService;
+    @Autowired
+    IRoleService roleService;
+    @Autowired
+    IAuthorityService authorityService;
 
     /**
      * 跳转到对应的登录页面
@@ -64,6 +74,35 @@ public class IndexController {
 
     @RequestMapping("/index")
     public String index(HttpServletRequest request, HttpServletResponse response) {
+        Integer userId = BuguWebUtil.getUserId(request);
+        List<Role> roleList = roleService.selectRoleByUser(userId);
+        if(CollectionUtils.isNotEmpty(roleList)){
+            List<Role> tmpList = new ArrayList<>();
+            for(int i = roleList.size() - 1; i >= 0; i--){
+                tmpList.add(roleList.get(i));
+            }
+            roleList = tmpList;
+        }
+        Role role = roleList.get(0);
+        List<Authority> boxList = new ArrayList<>();
+        List<List<Authority>> authInfoList = new ArrayList<>();
+        List<Authority> authorityList = authorityService.selectAuthorityByRole(role.getId());
+        List<Authority> list = new ArrayList<>();
+        for(Authority a: authorityList){
+            if(a.getType() == Constant.AUTH_TYPE_BOX){
+                boxList.add(a);
+                authInfoList.add(list);
+                list = new ArrayList<>();
+            }else{
+                list.add(a);
+            }
+        }
+        authInfoList.add(list);
+        authInfoList.remove(0);
+
+        BuguWebUtil.set(request, "roleList", roleList);
+        BuguWebUtil.set(request, "boxList", boxList);
+        BuguWebUtil.set(request, "authInfoList", authInfoList);
         return "index/index";
     }
 
