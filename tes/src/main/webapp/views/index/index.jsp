@@ -12,19 +12,26 @@
     <meta name="author" content="">
 
     <style>
-        .menu-item:hover{
+        .menu-item:hover {
             cursor: pointer;
         }
-        .menu-item{
+
+        .menu-item {
             display: inline-block;
             margin: 20px;
             padding: 15px;
             border: 1px solid white;
             border-radius: 5px;
             width: 280px;
-            background-color: #ade4ff;
+            background-color: ghostwhite;
+            /*background-color: #ade4ff;*/
         }
-        .menu-item .top .left{
+
+        .menu-item:hover {
+            background-color: lightblue;
+        }
+
+        .menu-item .top .left {
             display: inline-block;
             width: 130px;
             vertical-align: bottom;
@@ -32,12 +39,14 @@
             padding-left: 10px;
             line-height: 64px;
         }
-        .menu-item .top .right{
+
+        .menu-item .top .right {
             display: inline-block;
             width: 64px;
             height: 64px;
         }
-        .menu-item .bottom{
+
+        .menu-item .bottom {
             height: 35px;
             font-size: 16px;
             margin-top: 10px;
@@ -56,49 +65,62 @@
             <%@ include file="../template/menu-left.jsp" %>
         </div>
         <div class="col-sm-12 col-sm-offset-0 col-md-10 col-md-offset-2 main" id="main">
-            <a href="/scene/index.do">
-                <div class="menu-item">
-                    <div class="top">
-                        <div class="left">
-                            开场设置
-                        </div>
-                        <div class="right">
-                            <img src="/assets/img/setting.png" class="right">
-                        </div>
-                    </div>
-                    <div class="bottom">
-                        设置场次参数，组织考试
-                    </div>
-                </div>
-            </a>
-
-            <div class="menu-item col-md-3">
-                <div class="top">
-                    <div class="left">
-                        添加信息
-                    </div>
-                    <div class="right">
-                        <img src="/assets/img/setting.png" class="right">
-                    </div>
-                </div>
-
-                <div class="bottom">
-                    添加信息发的离开发发达懒
-                </div>
+            <%--<h3 class="page-header">常用功能</h3>--%>
+            <div class="row nav-path">
+                <ol class="breadcrumb">
+                    <li><a href="#" class="active">常用功能</a></li>
+                </ol>
             </div>
-            <div class="menu-item col-md-3">
-                <div class="top">
-                    <div class="left">
-                        添加信息
-                    </div>
-                    <div class="right">
-                        <img src="/assets/img/setting.png" class="right">
-                    </div>
-                </div>
 
-                <div class="bottom">
-                    添加信息发的离开发发达懒
-                </div>
+            <div class="teacher">
+                <a href="/scene/index.do">
+                    <div class="menu-item">
+                        <div class="top">
+                            <div class="left">
+                                开场设置
+                            </div>
+                            <div class="right">
+                                <img src="/assets/img/setting.png" class="right">
+                            </div>
+                        </div>
+                        <div class="bottom">
+                            设置场次参数，组织考试
+                        </div>
+                    </div>
+                </a>
+
+                <a href="/scene/list/my.do">
+                    <div class="menu-item">
+                        <div class="top">
+                            <div class="left">
+                                场次管理
+                            </div>
+                            <div class="right">
+                                <img src="/assets/img/exam.png" class="right">
+                            </div>
+                        </div>
+                        <div class="bottom">
+                            场次信息查看
+                        </div>
+                    </div>
+                </a>
+
+                <a href="/paper/list.do">
+                    <div class="menu-item col-md-3">
+                        <div class="top">
+                            <div class="left">
+                                试卷管理
+                            </div>
+                            <div class="right">
+                                <img src="/assets/img/paper.png" class="right">
+                            </div>
+                        </div>
+
+                        <div class="bottom">
+                            查看考生试卷
+                        </div>
+                    </div>
+                </a>
             </div>
 
         </div>

@@ -109,6 +109,11 @@
             -moz-transition: All 0.3s ease;
             -o-transition: All 0.3s ease;
         }
+
+        #rootwizard > ul > li > a{
+            cursor: default;
+            text-decoration: none;
+        }
     </style>
     <%--设置向导样式--%>
     <style>
@@ -254,6 +259,9 @@
                 'tabClass': 'bwizard-steps',
                 onTabShow: function (tab, navigator, index) {
                     console.log("index: ", index);
+                },
+                onTabClick: function (tab, navigator, index) {
+                    return false;
                 }
             });
         })

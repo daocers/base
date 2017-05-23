@@ -38,6 +38,10 @@
                 <button class="btn btn-info btn-sm">查询</button>
             </form>
 
+            <div class="div-space">
+                <a href="edit.do" class="btn btn-info btn-sm">添加角色</a>
+            </div>
+
             <div class="table-responsive">
                 <table class="table table-bordered">
                     <thead>
