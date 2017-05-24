@@ -1,5 +1,6 @@
 package co.bugu.framework.util;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -186,7 +187,7 @@ public class ExcelUtilNew {
      * @param hasTitle 是否有title，没有title从第0行开始，有的话从第一行开始
      */
     private static void writeContent(Workbook workbook, Sheet sheet, List<List> content, boolean hasTitle) {
-        if (content != null) {
+        if (CollectionUtils.isNotEmpty(content)) {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
             CellStyle cellStyle = createCellStyle(workbook, false);
@@ -373,7 +374,7 @@ public class ExcelUtilNew {
      * @param title
      * @throws Exception
      */
-    public static void downloadModel(HttpServletRequest request, HttpServletResponse response, String fileName, List<String> title) throws Exception {
+    public static void downloadModel(HttpServletRequest request, HttpServletResponse response, String fileName, List<String> title, List<List> content) throws Exception {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         fileName += "-" + format.format(new Date()) + ".xlsx";
         // 给文件名编码,防止ie下载时文件名乱码
@@ -389,7 +390,7 @@ public class ExcelUtilNew {
         response.setHeader("Content-disposition", "attachment; filename=" + fileName);
         // 写入到文件
         OutputStream out = response.getOutputStream();
-        ExcelUtilNew.writeToOutputStream("xlsx", title, null, out);
+        ExcelUtilNew.writeToOutputStream("xlsx", title, content, out);
         out.close();
     }
 
