@@ -42,7 +42,8 @@
             <ul class="nav navbar-nav">
                 <li><a href="#">我的布谷</a></li>
                 <c:forEach items="${sessionScope.roleList}" var="role">
-                    <li><a href="#">${role.name}</a> </li>
+                    <li><a roleid="${role.id}" class="role" href="javascript:changeRole(${role.id});">${role.name}</a>
+                    </li>
                 </c:forEach>
                 <%--<li><a href="/role/index/student.do">我是考生</a></li>--%>
                 <%--<li><a href="/role/index/teacher.do">我是教师</a></li>--%>
@@ -64,14 +65,15 @@
                     </div>
                 </form>
                 <%--<li class="head" style="padding: 0px;">--%>
-                    <%--<a class="navbar-brand" href="#" style="padding: 9px">--%>
-                        <%--<img src="/assets/img/head-off.png">--%>
-                    <%--</a>--%>
+                <%--<a class="navbar-brand" href="#" style="padding: 9px">--%>
+                <%--<img src="/assets/img/head-off.png">--%>
+                <%--</a>--%>
                 <%--</li>--%>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="false" style="height: 50px; padding: 9px;"> <span class="person-center"></span>
-                        <img src="/assets/img/head-off.png">&nbsp;&nbsp;${sessionScope.username}&nbsp; <span class="caret"></span></a>
+                        <img src="/assets/img/head-off.png">&nbsp;&nbsp;${sessionScope.username}&nbsp; <span
+                                class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="#">账户设置</a></li>
                         <li><a href="#">我的布谷</a></li>
@@ -86,6 +88,22 @@
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
 </nav>
+
+<script>
+    $(function () {
+        var currentRoleId = $("#currentRoleId").val();
+        $("a.role[roleid='" + currentRoleId + "']").parent().addClass("active");
+    })
+
+    function changeRole(id) {
+        var currentRoleId = $("#currentRoleId").val();
+        if (id == currentRoleId) {
+            return false;
+        } else {
+            window.location.href = "/selectRole.do?roleId=" + id;
+        }
+    }
+</script>
 <%--</div>--%>
 <%--</body>--%>
 <%--</html>--%>

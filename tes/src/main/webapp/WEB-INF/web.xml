@@ -65,8 +65,11 @@
   <listener>
     <listener-class>ch.qos.logback.ext.spring.web.LogbackConfigListener</listener-class>
   </listener>
+  <!--<listener>-->
+    <!--<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>-->
+  <!--</listener>-->
   <listener>
-    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    <listener-class>co.bugu.tes.listener.TesContextLoaderListener</listener-class>
   </listener>
   <!--<listener>-->
     <!--&lt;!&ndash;<listener-class>co.bugu.tes.init.MqConsumerListener</listener-class>&ndash;&gt;-->

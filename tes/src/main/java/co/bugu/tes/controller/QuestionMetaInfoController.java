@@ -1,10 +1,8 @@
 package co.bugu.tes.controller;
 
-import co.bugu.framework.util.ExcelUtil;
 import co.bugu.framework.util.ExcelUtilNew;
 import co.bugu.tes.model.Property;
 import co.bugu.tes.model.PropertyItem;
-import co.bugu.tes.model.Question;
 import co.bugu.tes.model.QuestionMetaInfo;
 import co.bugu.tes.service.IPropertyItemService;
 import co.bugu.tes.service.IPropertyService;
@@ -12,7 +10,6 @@ import co.bugu.tes.service.IQuestionMetaInfoService;
 import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.util.JsonUtil;
 import co.bugu.tes.util.QuestionMetaInfoUtil;
-import org.apache.poi.ss.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +23,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -187,7 +183,7 @@ public class QuestionMetaInfoController {
             List<String> title = QuestionMetaInfoUtil.getModelTitle(metaInfo);
 
             String path = request.getSession().getServletContext().getRealPath("file");
-            ExcelUtilNew.downloadModel(request, response, metaName, title);
+            ExcelUtilNew.download(request, response, metaName, title, null);
             return null;
         }catch (Exception e){
             logger.error("下载模板异常", e);

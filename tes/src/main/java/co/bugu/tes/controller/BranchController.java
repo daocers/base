@@ -4,7 +4,6 @@ import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.util.ExcelUtilNew;
 import co.bugu.framework.util.JsonUtil;
 import co.bugu.tes.enums.BranchLevel;
-import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.Branch;
 import co.bugu.tes.model.User;
 import co.bugu.tes.service.IBranchService;
@@ -30,7 +29,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @Controller("/branchController/v1")
 @RequestMapping("/branch")
@@ -212,7 +210,7 @@ public class BranchController {
         try {
 //            String[] arrs = new String[]{"机构编码", "机构名称", "上级机构", "地址", "联系电话", "负责人"};
             String[] arrs = new String[]{"机构编码", "机构名称", "上级机构", "地址"};
-            ExcelUtilNew.downloadModel(request, response, "机构信息模板", Arrays.asList(arrs));
+            ExcelUtilNew.download(request, response, "机构信息模板", Arrays.asList(arrs), null);
         } catch (Exception e) {
             logger.error("下载机构信息模板失败", e);
         }

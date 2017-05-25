@@ -374,7 +374,7 @@ public class ExcelUtilNew {
      * @param title
      * @throws Exception
      */
-    public static void downloadModel(HttpServletRequest request, HttpServletResponse response, String fileName, List<String> title, List<List> content) throws Exception {
+    public static void download(HttpServletRequest request, HttpServletResponse response, String fileName, List<String> title, List<List> content) throws Exception {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         fileName += "-" + format.format(new Date()) + ".xlsx";
         // 给文件名编码,防止ie下载时文件名乱码

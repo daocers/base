@@ -53,7 +53,7 @@ public class IndexController {
      */
     @RequestMapping("/login")
     public String toLogin(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
-        if(BuguWebUtil.getUserId(request) != null){
+        if (BuguWebUtil.getUserId(request) != null) {
             return "index";
         }
         Cookie[] cookies = request.getCookies();
@@ -74,33 +74,40 @@ public class IndexController {
 
     @RequestMapping("/index")
     public String index(HttpServletRequest request, HttpServletResponse response) {
-        Integer userId = BuguWebUtil.getUserId(request);
-        List<Role> roleList = roleService.selectRoleByUser(userId);
-        if(CollectionUtils.isNotEmpty(roleList)){
-            List<Role> tmpList = new ArrayList<>();
-            for(int i = roleList.size() - 1; i >= 0; i--){
-                tmpList.add(roleList.get(i));
+        Integer roleId = (Integer) BuguWebUtil.get(request, "currentRoleId");
+        Role role = null;
+        if (roleId != null) {
+            role = roleService.findById(roleId);
+        } else {
+            List<Role> roleList = (List<Role>) BuguWebUtil.get(request, "roleList");
+            if (CollectionUtils.isEmpty(roleList)) {
+                Integer userId = BuguWebUtil.getUserId(request);
+                roleList = roleService.selectRoleByUser(userId);
+                BuguWebUtil.set(request, "roleList", roleList);
+                if (CollectionUtils.isNotEmpty(roleList)) {
+                    role = roleList.get(0);
+                }
+            } else {
+                role = roleList.get(0);
             }
-            roleList = tmpList;
         }
-        Role role = roleList.get(0);
+
         List<Authority> boxList = new ArrayList<>();
         List<List<Authority>> authInfoList = new ArrayList<>();
         List<Authority> authorityList = authorityService.selectAuthorityByRole(role.getId());
         List<Authority> list = new ArrayList<>();
-        for(Authority a: authorityList){
-            if(a.getType() == Constant.AUTH_TYPE_BOX){
+        for (Authority a : authorityList) {
+            if (a.getType() == Constant.AUTH_TYPE_BOX) {
                 boxList.add(a);
                 authInfoList.add(list);
                 list = new ArrayList<>();
-            }else{
+            } else {
                 list.add(a);
             }
         }
         authInfoList.add(list);
         authInfoList.remove(0);
 
-        BuguWebUtil.set(request, "roleList", roleList);
         BuguWebUtil.set(request, "boxList", boxList);
         BuguWebUtil.set(request, "authInfoList", authInfoList);
         return "index/index";
@@ -142,7 +149,7 @@ public class IndexController {
                     Cookie userCookie = new Cookie("username", username);
 
                     Integer maxAge = -1;
-                    if(0 == rememberMe){
+                    if (0 == rememberMe) {
                         maxAge = 3600 * 24 * 7;//cookie保存一周;
                     }
                     remCookie.setMaxAge(maxAge);
@@ -168,9 +175,12 @@ public class IndexController {
      * @return
      */
     @RequestMapping("/signOut")
-    public String signOut(HttpServletRequest request) {
+    public String signOut(HttpServletRequest request, HttpServletResponse response) {
         try {
             BuguWebUtil.remove(request, Constant.SESSION_USER_ID);
+            Cookie cookie = new Cookie("JSESSIONID", "");
+            cookie.setMaxAge(0);
+            response.addCookie(cookie);
         } catch (Exception e) {
             logger.error("注销失败", e);
         }
@@ -214,5 +224,15 @@ public class IndexController {
         String str = "*.findObject";
         str = str.replaceAll("\\*", "\\\\S*");
         System.out.println(str);
+    }
+
+
+    @RequestMapping("/selectRole")
+    public String changeRole(Integer roleId, HttpServletRequest request, ModelMap model) {
+        Integer id = (Integer) BuguWebUtil.get(request, "currentRoleId");
+        if (roleId != id) {
+            BuguWebUtil.set(request, "currentRoleId", roleId);
+        }
+        return "redirect:index.do";
     }
 }

@@ -150,6 +150,7 @@
     }
 
 </style>
+<input type="hidden" value="${sessionScope.currentRoleId}" id="currentRoleId"/>
 <ul id="accordion" class="accordion">
     <c:forEach var="box" items="${boxList}" varStatus="index">
         <li>
@@ -161,6 +162,8 @@
             </ul>
         </li>
     </c:forEach>
+
+
 
     <%--<li>--%>
         <%--<div class="link">权限管理<span class=" caret" style="float: right;"></span></div>--%>
