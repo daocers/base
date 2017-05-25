@@ -11,7 +11,6 @@ import co.bugu.tes.service.IAuthorityService;
 import co.bugu.tes.service.IRoleService;
 import co.bugu.tes.service.IUserService;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,6 @@ import org.springframework.web.util.WebUtils;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -90,7 +88,9 @@ public class IndexController {
             } else {
                 role = roleList.get(0);
             }
+            BuguWebUtil.set(request, "currentRoleId", role.getId());
         }
+
 
         List<Authority> boxList = new ArrayList<>();
         List<List<Authority>> authInfoList = new ArrayList<>();
