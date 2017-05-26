@@ -11,6 +11,9 @@ public class MyObject {
     private MyObject(){
 
     }
+    /**
+     * 保证了安全性，但是效率降低，
+     * */
     synchronized public static  MyObject getInstance(){
         try {
             if(myObject != null){

@@ -21,8 +21,13 @@ public class MyObject {
             if(myObject != null){
 
             }else{
-                Thread.sleep(new Random().nextInt(1000) + 1000);
                 synchronized (MyObject.class){
+                    /**可能会有多个线程进入到该处，然后睡眠*/
+                    Thread.sleep(new Random().nextInt(1000) + 1000);
+
+                    /**
+                     * 睡醒之后要再次判断
+                     * */
                     if(myObject == null){
                         myObject = new MyObject();
                     }

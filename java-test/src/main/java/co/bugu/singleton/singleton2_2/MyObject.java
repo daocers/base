@@ -16,6 +16,7 @@ public class MyObject {
             }else {
                 synchronized (MyObject.class){
 //                    这个时间差内仍然能造成多线程下的问题
+//                    第一个获取到锁的线程在睡眠期间，后续线程也会执行到等待锁的这段，只有会重复生成
                     Thread.sleep(2000);
                     myObject = new MyObject();
                 }
