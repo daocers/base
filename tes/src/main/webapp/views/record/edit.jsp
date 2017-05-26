@@ -3,15 +3,15 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>品类编辑</title>
+    <title>布谷培训|编辑答题记录</title>
 </head>
 <body>
 <div class="container">
     <div class="row nav-path">
         <ol class="breadcrumb">
-            <li><a href="#">首页</a></li>
-            <li><a href="#">品类管理</a></li>
-            <li><a href="#" class="active">品类编辑</a></li>
+            <li><a href="/index.do">首页</a></li>
+            <li><a href="list.do">答题记录管理</a></li>
+            <li><a href="#" class="active">编辑答题记录</a></li>
         </ol>
     </div>
     <input type="hidden" value="${param.type}" id="type">

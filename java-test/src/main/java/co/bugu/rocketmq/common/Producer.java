@@ -18,9 +18,10 @@ public class Producer {
 //        222 223 224 229
 //        {"amount":100035.31,"id":194,"type":"repayment"}
         JSONObject json = new JSONObject();
-        json.put("amount",99992.58 );
-        json.put("id", 239);
-        json.put("type", "repayment");
+        json.put("result","T" );
+        json.put("id", 564);
+        json.put("type", "cancelProduct");
+        json.put("status", 11);
         String content = json.toJSONString();
 
 
@@ -38,7 +39,7 @@ public class Producer {
          * 因为服务器会回查这个Group下的任意一个Producer
          */
         DefaultMQProducer producer = new DefaultMQProducer("zgSystemProducer");
-        producer.setNamesrvAddr("10.143.88.73:9876;10.143.88.74:9876;10.143.88.75:9876");
+        producer.setNamesrvAddr("10.151.37.40:9876;10.151.37.41:9876;10.151.37.42:9876");
 //        producer.setNamesrvAddr("10.143.88.76:9876");
 //        producer.setNamesrvAddr("192.168.1.128:9876");
         producer.setInstanceName(String.valueOf(System.currentTimeMillis()));
@@ -65,7 +66,7 @@ public class Producer {
 //                json.put("status", 3);
 //                json.put("factraise_time", 1492151400000L);
 //                json.put("type", "productStatus");
-            Message msg = new Message("mylc",// topic
+            Message msg = new Message("zgsystem",// topic
                     "bill",// tag
                     "send" + System.currentTimeMillis() / 1000,// key
                     content.getBytes());// body

@@ -4,14 +4,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>管理</title>
+    <title>布谷培训|交易管理</title>
 </head>
 <body>
 <div class="container">
     <div class="row nav-path">
         <ol class="breadcrumb">
-            <li><a href="#">首页</a> </li>
-            <li><a href="#" class="active">商品管理</a> </li>
+            <li><a href="/index.do">首页</a> </li>
+            <li><a href="#" class="active">交易管理</a> </li>
         </ol>
     </div>
     <div class="row info-search">

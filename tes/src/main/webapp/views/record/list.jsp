@@ -4,14 +4,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>管理</title>
+    <title>布谷培训|答题记录管理</title>
 </head>
 <body>
 <div class="container">
     <div class="row nav-path">
         <ol class="breadcrumb">
-            <li><a href="#">首页</a> </li>
-            <li><a href="#" class="active">商品管理</a> </li>
+            <li><a href="/index.do">首页</a></li>
+            <li><a href="#" class="active">答题记录管理</a></li>
         </ol>
     </div>
     <div class="row info-search">
@@ -31,21 +31,21 @@
         <table class="table table-bordered">
             <thead>
             <tr>
-                <th><input type="checkbox" class="selectAll"> </th>
-				                    <th >answer</th>
-				                    <th >paperId</th>
-				                    <th >questionId</th>
-				                <th>操作</th>
+                <th><input type="checkbox" class="selectAll"></th>
+                <th>answer</th>
+                <th>paperId</th>
+                <th>questionId</th>
+                <th>操作</th>
             </tr>
             </thead>
             <tbody>
             <c:forEach items="${pi.data}" var="record" varStatus="line">
                 <tr>
                     <td><input type="checkbox" objId="${record.id}"></td>
-					                        <td>${record.answer}</td>
-					                        <td>${record.paperId}</td>
-					                        <td>${record.questionId}</td>
-					                    <td>
+                    <td>${record.answer}</td>
+                    <td>${record.paperId}</td>
+                    <td>${record.questionId}</td>
+                    <td>
                         <a href="edit.do?id=${record.id}&type=detail" class="opr">详情</a>
                         <a href="edit.do?id=${record.id}" class="opr">修改</a>
                         <a href="javascript:del(${record.id})" class="opr">删除</a>
@@ -59,7 +59,7 @@
 
     <div class="row after-table">
         <div class="pull-left form-inline">
-                        <select class="form-control show-count" >
+            <select class="form-control show-count">
                 <option value="10" <c:if test="${ pi.showCount == 10 }">selected</c:if>>10</option>
                 <option value="25" <c:if test="${ pi.showCount == 25}">selected</c:if>>25</option>
                 <option value="50" <c:if test="${ pi.showCount == 50}">selected</c:if>>50</option>

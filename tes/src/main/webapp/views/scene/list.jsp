@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <title>布谷考培|用户列表</title>
+    <title>布谷考培|场次管理</title>
     <%@ include file="../template/header.jsp" %>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">

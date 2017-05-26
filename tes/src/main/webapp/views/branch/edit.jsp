@@ -16,9 +16,9 @@
 <div class="container">
     <div class="row nav-path">
         <ol class="breadcrumb">
-            <li><a href="#">首页</a></li>
-            <li><a href="#">品类管理</a></li>
-            <li><a href="#" class="active">品类编辑</a></li>
+            <li><a href="/index.do">首页</a></li>
+            <li><a href="list.do">机构管理</a></li>
+            <li><a href="#" class="active">修改机构</a></li>
         </ol>
     </div>
     <input type="hidden" value="${param.type}" id="type">

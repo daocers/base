@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <title>布谷考培|用户列表</title>
+    <title>布谷考培|下载试题模板</title>
     <%@ include file="../template/header.jsp" %>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -23,8 +23,9 @@
             <%--<h1 class="page-header">Dashboard</h1>--%>
             <div class="page-header nav-path">
                 <ol class="breadcrumb">
-                    <li><a href="#">首页</a></li>
-                    <li><a href="#" class="active">用户列表</a></li>
+                    <li><a href="/index.do">首页</a></li>
+                    <li><a href="list.do">题型管理</a></li>
+                    <li><a href="#" class="active">下载题型模板</a></li>
                 </ol>
             </div>
 

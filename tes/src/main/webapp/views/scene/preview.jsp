@@ -19,8 +19,8 @@
 <div class="container">
     <div class="row nav-path">
         <ol class="breadcrumb">
-            <li><a href="#">首页</a></li>
-            <li><a href="#">场次管理</a></li>
+            <li><a href="/index.do">首页</a></li>
+            <li><a href="list.do">场次管理</a></li>
             <li><a href="#" class="active">信息预览</a></li>
         </ol>
     </div>

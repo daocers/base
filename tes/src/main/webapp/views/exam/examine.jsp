@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>答题</title>
+    <title>布谷培训|答题</title>
     <%@ include file="../template/header.jsp" %>
     <style>
         .inline {
@@ -31,7 +31,7 @@
 <div class="container">
     <div class="row nav-path">
         <ol class="breadcrumb">
-            <li><a href="#">首页</a></li>
+            <li><a href="/index.do">首页</a></li>
             <li><a href="#">考试管理</a></li>
             <li><a href="#" class="active">答题</a></li>
         </ol>

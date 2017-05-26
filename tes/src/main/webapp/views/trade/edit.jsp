@@ -3,14 +3,14 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>品类编辑</title>
+    <title>布谷培训|编辑交易</title>
 </head>
 <body>
 <div class="container">
     <div class="row nav-path">
         <ol class="breadcrumb">
-            <li><a href="#">首页</a></li>
-            <li><a href="#">品类管理</a></li>
+            <li><a href="/index.do">首页</a></li>
+            <li><a href="list.do">交易管理</a></li>
             <li><a href="#" class="active">品类编辑</a></li>
         </ol>
     </div>

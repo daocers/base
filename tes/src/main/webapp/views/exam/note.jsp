@@ -23,8 +23,8 @@
             <%--<h1 class="page-header">Dashboard</h1>--%>
             <div class="page-header nav-path">
                 <ol class="breadcrumb">
-                    <li><a href="#">首页</a></li>
-                    <li><a href="#" class="active">用户列表</a></li>
+                    <li><a href="/index.do">首页</a></li>
+                    <li><a href="#" class="active">考试须知</a></li>
                 </ol>
             </div>
 
