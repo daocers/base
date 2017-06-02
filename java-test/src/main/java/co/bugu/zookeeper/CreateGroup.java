@@ -35,8 +35,8 @@ public class CreateGroup implements Watcher{
         zk.close();
     }
     public static void main(String[] args) throws InterruptedException, KeeperException, IOException {
-        String host = "localhost:2181";
-        String groupName = "group";
+        String host = "127.0.0.1:2181";
+        String groupName = "group1";
         CreateGroup createGroup = new CreateGroup();
         createGroup.connect(host);
         createGroup.create(groupName);
