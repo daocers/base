@@ -35,6 +35,7 @@
         <module>mq</module>
         <module>dubbo</module>
         <module>rpc</module>
+        <module>springboot</module>
 
     </modules>
     <dependencies>
