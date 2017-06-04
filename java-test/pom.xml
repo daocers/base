@@ -51,6 +51,14 @@
             <!--<version>3.6.2.Final</version>-->
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/javax/javaee-web-api -->
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-web-api</artifactId>
+            <version>7.0</version>
+        </dependency>
+
+
         <!-- https://mvnrepository.com/artifact/org.apache.storm/storm-core -->
         <dependency>
             <groupId>org.apache.storm</groupId>
@@ -129,6 +137,11 @@
             <groupId>io.protostuff</groupId>
             <artifactId>protostuff-runtime</artifactId>
             <version>1.5.5</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>compile</scope>
         </dependency>
 
 
