@@ -1,5 +1,6 @@
 package co.bugu.springboot.base;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,8 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Configuration
 public class SimpleController {
+    @Value("${book.author}")
+    private String bookAuthor;
+
+    @Value("${book.name}")
+    private String bookName;
     @RequestMapping("/simple")
     public String simple(){
-        return "simple";
+        return "book name is :" + bookName  + " and book author is : " + bookAuthor;
     }
 }

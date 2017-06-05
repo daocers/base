@@ -5,12 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.annotation.Resource;
 
 /**
  * Created by user on 2017/6/2.
@@ -22,7 +18,7 @@ public class RedisController {
     private static Logger logger = LoggerFactory.getLogger(RedisController.class);
 
     @Autowired
-    StringRedisTemplate stringRedisTemplate;
+//    StringRedisTemplate stringRedisTemplate;
 
 //    @Resource(name = "stringRedisTemplate")
 //    ValueOperations<String, String> valOprStr;

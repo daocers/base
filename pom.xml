@@ -36,6 +36,7 @@
         <module>dubbo</module>
         <module>rpc</module>
         <module>springboot</module>
+        <module>springbootmyStarter</module>
 
     </modules>
     <dependencies>
