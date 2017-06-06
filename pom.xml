@@ -37,6 +37,7 @@
         <module>rpc</module>
         <module>springboot</module>
         <module>springbootmyStarter</module>
+        <module>springcloud</module>
 
     </modules>
     <dependencies>
