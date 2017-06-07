@@ -14,7 +14,7 @@ public enum CommonStatusEnum {
 
     private String info;
 
-    private Map<Integer, String> map = new HashMap<>();
+    private static Map<Integer, String> map = new HashMap<>();
 
 
     public Integer getStatus() {
@@ -28,5 +28,12 @@ public enum CommonStatusEnum {
     CommonStatusEnum(Integer status, String info){
         this.status = status;
         this.info = info;
+    }
+
+    static {
+        CommonStatusEnum[] enums = CommonStatusEnum.values();
+        for(CommonStatusEnum e: enums){
+            map.put(e.getStatus(), e.getInfo());
+        }
     }
 }

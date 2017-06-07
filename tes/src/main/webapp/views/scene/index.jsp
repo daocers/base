@@ -623,7 +623,7 @@
                             <div class="center-block" style="display: none;" id="success-box">
                                 <img src="/assets/img/success.png" height="150px" width="150px" class="img-circle">
                                 <h3>恭喜，开场成功！</h3>
-                                <a href="list/my.do" class="btn btn-success">确定</a>
+                                <a href="list.do?type=my" class="btn btn-success">确定</a>
                             </div>
                             <div class="center-block" style="display: none;" id="error-box">
                                 <img src="/assets/img/error.png" height="150px" width="150px" class="img-cricle">
