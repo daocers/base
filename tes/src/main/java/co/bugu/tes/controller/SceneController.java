@@ -52,8 +52,8 @@ public class SceneController {
      * @param request
      * @return
      */
-    @RequestMapping("/list/{type}")
-    public String list(@PathVariable String type, Integer showCount, Integer curPage, ModelMap model, HttpServletRequest request) throws Exception {
+    @RequestMapping("/list")
+    public String list(String type, Integer showCount, Integer curPage, ModelMap model, HttpServletRequest request) throws Exception {
         Integer userId = (Integer) BuguWebUtil.getUserId(request);
 
         if("my".equals(type)){

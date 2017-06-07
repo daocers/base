@@ -87,22 +87,28 @@
                             <td>${scene.branch == null ? "" : scene.branch.name}</td>
                             <td>${scene.department == null ? "" : scene.department.name}</td>
                             <td>
+                                ${}
                                 <c:if test="${scene.status == 0}">
-                                    已开场
+                                    信息待完善
                                 </c:if>
                                 <c:if test="${scene.status == 1}">
-                                    已封场
+                                    创建成功
                                 </c:if>
                                 <c:if test="${scene.status == 2}">
-                                    已作废
+                                    已开场
                                 </c:if>
                                 <c:if test="${scene.status == 3}">
+                                    已封场
+                                </c:if>
+                                <c:if test="${scene.status == 4}">
                                     已取消
                                 </c:if>
                             </td>
                             <td>
                                 <a href="/scene/index.do?id=${scene.id}&type=detail" class="opr">详情</a>
-                                <a href="/scene/index.do?id=${scene.id}" class="opr">修改</a>
+                                <c:if test="${scene.status == 1}">
+                                    <a href="/scene/index.do?id=${scene.id}" class="opr">修改</a>
+                                </c:if>
                                 <%--<a href="javascript:del(${scene.id})" class="opr">删除</a>--%>
                             </td>
                         </tr>

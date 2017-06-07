@@ -89,7 +89,7 @@
                     </div>
                 </a>
 
-                <a href="/scene/list/my.do">
+                <a href="/scene/list.do?type=my">
                     <div class="menu-item">
                         <div class="top">
                             <div class="left">
