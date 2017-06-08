@@ -53,8 +53,8 @@ public class JedisUtil {
      * 释放资源
      */
     public static void release(Jedis jedis) {
-        if (jedis != null) {
-            jedis.close();
+
+             if (jedis != null) {       jedis.close();
         }
     }
 

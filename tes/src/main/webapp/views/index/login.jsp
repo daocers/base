@@ -58,14 +58,14 @@
 <div class="header">
     <div class="nag">
         <div class="in">
-            <a href="http://www.51job.com"><img class="logo" width="40" height="40" src="../../assets/img/login/logo.png" alt="布谷培训"></a>
+            <a href="/index.do"><img class="logo" width="40" height="40" src="../../assets/img/login/logo.png" alt="布谷培训"></a>
             <img class="slogen" width="180" height="25" src="../../assets/img/login/slogen.png" alt="在线考试就到布谷培训">
 
             <span class="gp" style="display:"></span>
             <span class="tl" style="display:">欢迎登录</span>
             <p class="nlink n2">
-                <a href="http://www.51job.com">首页</a>
-                <a href="http://www.51job.com/help/help.htm" target="_blank">帮助中心</a>
+                <a href="/index.do">首页</a>
+                <a href="/help/index.do" target="_blank">帮助中心</a>
             </p>
         </div>
     </div>
@@ -147,7 +147,7 @@
                 </div>
                 <div class="lr_ok">
                     <a tabindex="5" class="a"
-                       href="https://login.51job.com/forgetpwd.php?lang=c&from_domain=i&source=&url=http%3A%2F%2Fwww.51job.com%2F">忘记密码？</a>
+                       href="/user/forgetPassword.do">忘记密码？</a>
                     <input tabIndex="4" type="checkbox" name="rememberMe" id="rememberMe" ${rememberMe == 0 ? "checked" : ""}>
                     <label for="rememberMe">记住我</label>
                 </div>
@@ -157,11 +157,11 @@
             </form>
             <div class="lr_p">
                 还不是会员？<a tabindex="7" class="a2"
-                         href="https://login.51job.com/register.php?lang=c&from_domain=i&source=&url=http%3A%2F%2Fwww.51job.com%2F">免费注册</a>
+                         href="/user/toRegister.do">免费注册</a>
             </div>
             <div class="mind">
                 温馨提示：为了避免耽误您的考试，遇到问题请及时联系管理教师。 <a tabindex="8" class="a" target="_blank"
-                                                  href="https://login.51job.com/learnmore.php?lang=c">查看详情</a>
+                                                  href="#">查看详情</a>
             </div>
 
         </div>
