@@ -3,6 +3,7 @@ package co.bugu.tes.controller;
 import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.util.ExcelUtilNew;
 import co.bugu.framework.util.JsonUtil;
+import co.bugu.tes.annotation.Menu;
 import co.bugu.tes.enums.BranchLevel;
 import co.bugu.tes.model.Branch;
 import co.bugu.tes.model.User;
@@ -30,6 +31,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+@Menu(value = "机构管理", isBox = true)
 @Controller("/branchController/v1")
 @RequestMapping("/branch")
 public class BranchController {
@@ -49,6 +51,7 @@ public class BranchController {
      * @param model
      * @return
      */
+    @Menu(value = "机构列表", isView = true)
     @RequestMapping(value = "/list")
     public String list(HttpServletRequest request, Branch branch, Integer curPage, Integer showCount, ModelMap model) {
         try {
@@ -71,6 +74,7 @@ public class BranchController {
      * @param model
      * @return
      */
+    @Menu("")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     @ResponseBody
     public String toEdit(Integer id, ModelMap model) {

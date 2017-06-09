@@ -4,6 +4,7 @@ import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.core.util.MvcParam;
 import co.bugu.framework.core.util.ReflectUtil;
 import co.bugu.framework.util.JsonUtil;
+import co.bugu.tes.annotation.Menu;
 import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.Authority;
 import co.bugu.tes.service.IAuthorityService;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.*;
 
+@Menu(value = "权限管理", isBox = true)
 @Controller
 @RequestMapping("/authority")
 public class AuthorityController {
@@ -40,6 +42,7 @@ public class AuthorityController {
      * @param model
      * @return
      */
+    @Menu(value = "权限列表", isView = true)
     @RequestMapping(value = "/list")
     public String list(Authority authority, Integer curPage, Integer showCount, ModelMap model) {
         try {
@@ -60,11 +63,13 @@ public class AuthorityController {
 
     }
 
+    @Menu(value = "添加权限", isView = true)
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String toAdd() {
         return "authority/add";
     }
 
+    @Menu(value = "保存权限")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String add(ModelMap model, Authority authority) {
         try {
@@ -88,6 +93,7 @@ public class AuthorityController {
      * @param model
      * @return
      */
+    @Menu(value = "读取权限信息")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     @ResponseBody
     public String toEdit(Integer id, ModelMap model) {
@@ -113,6 +119,7 @@ public class AuthorityController {
      * @param model
      * @return
      */
+    @Menu(value = "保存权限信息")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
     public String save(Authority authority, ModelMap model) {
@@ -138,6 +145,7 @@ public class AuthorityController {
      * @param authority 查询条件
      * @return
      */
+    @Menu(value = "获取全部权限信息，权限管理使用")
     @RequestMapping(value = "/listAll")
     @ResponseBody
     public String listAll(Authority authority) {
@@ -156,6 +164,8 @@ public class AuthorityController {
      * @param authority id
      * @return
      */
+    
+    @Menu(value = "删除权限")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(Authority authority) {
@@ -175,6 +185,7 @@ public class AuthorityController {
      * @param model
      * @return
      */
+    @Menu(value = "初始化权限")
     @RequestMapping(value = "/init")
     public String init(ModelMap model) {
         try {
@@ -292,6 +303,7 @@ public class AuthorityController {
      * @param modelMap
      * @return
      */
+    @Menu(value = "权限管理", isView = true)
     @RequestMapping(value = "/manage", method = RequestMethod.GET)
     public String manage(ModelMap modelMap) {
         try {
@@ -325,6 +337,7 @@ public class AuthorityController {
      * @param info
      * @return
      */
+    @Menu(value = "批量更新权限信息")
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
     public String update(String info) {
@@ -359,6 +372,7 @@ public class AuthorityController {
         }
     }
 
+    @Menu(value = "更新权限")
     @RequestMapping(value = "/commit", method = RequestMethod.POST)
     @ResponseBody
     public String commit(Authority authority) {
