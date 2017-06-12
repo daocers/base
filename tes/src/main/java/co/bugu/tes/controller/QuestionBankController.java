@@ -1,5 +1,6 @@
 package co.bugu.tes.controller;
 
+import co.bugu.tes.annotation.Menu;
 import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.QuestionBank;
 import co.bugu.tes.model.User;
@@ -25,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+@Menu(value = "")
 @Controller
 @RequestMapping("/questionBank")
 public class QuestionBankController {
@@ -43,6 +45,7 @@ public class QuestionBankController {
     * @param model
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/list")
     public String list(QuestionBank questionbank, Integer curPage, Integer showCount, ModelMap model){
         try{
@@ -64,6 +67,7 @@ public class QuestionBankController {
     * @param model
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String toEdit(Integer id, ModelMap model){
         try{
@@ -86,6 +90,7 @@ public class QuestionBankController {
     * @param model
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(HttpServletRequest request, QuestionBank questionbank, ModelMap model){
         try{
@@ -118,6 +123,7 @@ public class QuestionBankController {
     * @param questionBank 查询条件
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/listAll")
     @ResponseBody
     public String listAll(QuestionBank questionBank){
@@ -135,6 +141,7 @@ public class QuestionBankController {
     * @param questionBank id
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(QuestionBank questionBank){

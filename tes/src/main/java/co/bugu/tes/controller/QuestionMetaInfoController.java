@@ -1,6 +1,7 @@
 package co.bugu.tes.controller;
 
 import co.bugu.framework.util.ExcelUtilNew;
+import co.bugu.tes.annotation.Menu;
 import co.bugu.tes.model.Property;
 import co.bugu.tes.model.PropertyItem;
 import co.bugu.tes.model.QuestionMetaInfo;
@@ -28,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Menu(value = "")
 @Controller
 @RequestMapping("/questionMetaInfo")
 public class QuestionMetaInfoController {
@@ -50,6 +52,7 @@ public class QuestionMetaInfoController {
     * @param model
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/list")
     public String list(QuestionMetaInfo questionmetainfo, Integer curPage, Integer showCount, ModelMap model){
         try{
@@ -71,6 +74,7 @@ public class QuestionMetaInfoController {
     * @param model
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String toEdit(Integer id,  ModelMap model){
         try{
@@ -112,6 +116,7 @@ public class QuestionMetaInfoController {
     * @param model
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(QuestionMetaInfo questionmetainfo, int[] propertyId, ModelMap model){
         try{
@@ -140,6 +145,7 @@ public class QuestionMetaInfoController {
     * @param questionmetainfo 查询条件
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/listAll")
     @ResponseBody
     public String listAll(QuestionMetaInfo questionmetainfo){
@@ -157,6 +163,7 @@ public class QuestionMetaInfoController {
     * @param questionmetainfo id
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(QuestionMetaInfo questionmetainfo){
@@ -169,6 +176,7 @@ public class QuestionMetaInfoController {
         }
     }
 
+    @Menu(value = "")
     @RequestMapping(value = "/downModel")
     public String downloadTemplate(@RequestParam Integer metaInfoId, ModelMap model,
                                    RedirectAttributes redirectAttributes,
@@ -193,6 +201,7 @@ public class QuestionMetaInfoController {
         }
     }
 
+    @Menu(value = "")
     @RequestMapping("/download")
     public String toDownloadPage(ModelMap model){
         List<QuestionMetaInfo> questionMetaInfos = questionMetaInfoService.findByObject(null);

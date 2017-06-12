@@ -4,6 +4,7 @@ import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.core.util.BuguWebUtil;
 import co.bugu.framework.util.JedisUtil;
 import co.bugu.framework.util.exception.TesException;
+import co.bugu.tes.annotation.Menu;
 import co.bugu.tes.enums.SceneStatusEnum;
 import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.*;
@@ -24,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+@Menu(value = "")
 @Controller
 @RequestMapping("/scene")
 public class SceneController {
@@ -51,6 +53,7 @@ public class SceneController {
      * @param request
      * @return
      */
+    @Menu(value = "")
     @RequestMapping("/list")
     public String list(String type, Integer showCount, Integer curPage, ModelMap model, HttpServletRequest request) throws Exception {
         Integer userId = BuguWebUtil.getUserId(request);
@@ -84,6 +87,7 @@ public class SceneController {
         }
     }
 
+    @Menu(value = "")
     @RequestMapping("/index")
     public String index(Integer id, ModelMap model){
         QuestionMetaInfo metaInfo= new QuestionMetaInfo();
@@ -171,6 +175,7 @@ public class SceneController {
         return null;
     }
 
+    @Menu(value = "")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
     public String save(Scene scene, HttpServletRequest request){
@@ -214,6 +219,7 @@ public class SceneController {
     }
 
 
+    @Menu(value = "")
     @RequestMapping(value = "/saveAuthCode", method = RequestMethod.POST)
     @ResponseBody
     public String saveAuthCode(Scene scene){
@@ -223,6 +229,7 @@ public class SceneController {
         return json.toJSONString();
     }
 
+    @Menu(value = "")
     @RequestMapping(value = "/savePaperPolicy", method = RequestMethod.POST)
     @ResponseBody
     public String savePaperPolicy(Integer id, Integer bankId, Integer paperPolicyId){
@@ -250,6 +257,7 @@ public class SceneController {
         return json.toJSONString();
     }
 
+    @Menu(value = "")
     @RequestMapping(value = "/confirm", method = RequestMethod.POST)
     @ResponseBody
     public String confirm(Integer id, HttpServletRequest request){
@@ -275,7 +283,7 @@ public class SceneController {
         return json.toJSONString();
     }
 
-
+    @Menu(value = "")
     @RequestMapping("/checkPaperPolicy")
     @ResponseBody
     public String checkPaperPolicy(Integer bankId, Integer paperPolicyId) throws TesException {
@@ -311,6 +319,7 @@ public class SceneController {
         return json.toJSONString();
     }
 
+    @Menu(value = "")
     @RequestMapping("/preview")
     public String preview(Integer id, ModelMap model){
         QuestionMetaInfo metaInfo= new QuestionMetaInfo();

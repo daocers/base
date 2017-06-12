@@ -1,5 +1,6 @@
 package co.bugu.tes.controller;
 
+import co.bugu.tes.annotation.Menu;
 import co.bugu.tes.model.PropertyItem;
 import co.bugu.tes.service.IPropertyItemService;
 import co.bugu.framework.core.dao.PageInfo;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
+@Menu(value = "")
 @Controller
 @RequestMapping("/propertyitem")
 public class PropertyItemController {
@@ -31,6 +33,7 @@ public class PropertyItemController {
     * @param model
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/list")
     public String list(PropertyItem propertyitem, Integer curPage, Integer showCount, ModelMap model){
         try{
@@ -52,6 +55,7 @@ public class PropertyItemController {
     * @param model
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String toEdit(Integer id, ModelMap model){
         try{
@@ -70,6 +74,7 @@ public class PropertyItemController {
     * @param model
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(PropertyItem propertyitem, ModelMap model){
         try{
@@ -92,6 +97,7 @@ public class PropertyItemController {
     * @param propertyitem 查询条件
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/listAll")
     @ResponseBody
     public String listAll(PropertyItem propertyitem){
@@ -109,6 +115,7 @@ public class PropertyItemController {
     * @param propertyitem id
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(PropertyItem propertyitem){

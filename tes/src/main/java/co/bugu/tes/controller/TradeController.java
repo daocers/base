@@ -1,6 +1,7 @@
 package co.bugu.tes.controller;
 
 import co.bugu.framework.core.util.BuguWebUtil;
+import co.bugu.tes.annotation.Menu;
 import co.bugu.tes.model.*;
 import co.bugu.tes.service.IQuestionBankService;
 import co.bugu.tes.service.ITradeQuestionService;
@@ -16,12 +17,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 
+@Menu(value = "")
 @Controller
 @RequestMapping("/trade")
 public class TradeController {
@@ -42,6 +43,7 @@ public class TradeController {
      *
      * @return
      */
+    @Menu(value = "")
     @RequestMapping("/toRecord")
     public String record(ModelMap model) {
         List<QuestionBank> bankList = questionBankService.findByObject(null);
@@ -67,6 +69,7 @@ public class TradeController {
      * @param request
      * @return
      */
+    @Menu(value = "")
     @RequestMapping("/save")
     @ResponseBody
     public String saveModelAndQuestion(String name, String code, String description,
@@ -133,6 +136,7 @@ public class TradeController {
      * @param bankId  题库管理
      * @return
      */
+    @Menu(value = "")
     @RequestMapping("/saveQuestion")
     @ResponseBody
     public String saveQuestion(String fieldInfo, Integer tradeId, Integer pageId, String description, Integer bankId) {

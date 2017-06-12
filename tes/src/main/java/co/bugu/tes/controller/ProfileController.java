@@ -1,10 +1,10 @@
 package co.bugu.tes.controller;
 
-import co.bugu.tes.model.Paper;
-import co.bugu.tes.model.Profile;
-import co.bugu.tes.service.IProfileService;
 import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.util.JsonUtil;
+import co.bugu.tes.annotation.Menu;
+import co.bugu.tes.model.Profile;
+import co.bugu.tes.service.IProfileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
-
+@Menu(value = "")
 @Controller
 @RequestMapping("/profile")
 public class ProfileController {
@@ -32,6 +32,7 @@ public class ProfileController {
     * @param model
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/list")
     public String list(Profile profile, Integer curPage, Integer showCount, ModelMap model){
         try{
@@ -53,6 +54,7 @@ public class ProfileController {
     * @param model
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String toEdit(Integer id, ModelMap model){
         try{
@@ -71,6 +73,7 @@ public class ProfileController {
     * @param model
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(Profile profile, ModelMap model){
         try{
@@ -93,6 +96,7 @@ public class ProfileController {
     * @param profile 查询条件
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/listAll")
     @ResponseBody
     public String listAll(Profile profile){
@@ -110,6 +114,7 @@ public class ProfileController {
     * @param profile id
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(Profile profile){

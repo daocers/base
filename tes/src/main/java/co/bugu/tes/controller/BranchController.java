@@ -74,7 +74,7 @@ public class BranchController {
      * @param model
      * @return
      */
-    @Menu("")
+    @Menu(value = "获取机构信息")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     @ResponseBody
     public String toEdit(Integer id, ModelMap model) {
@@ -111,6 +111,7 @@ public class BranchController {
      * @param model
      * @return
      */
+    @Menu(value = "保存机构信息")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
     public String save(Branch branch, ModelMap model) {
@@ -141,6 +142,7 @@ public class BranchController {
      * @param branch 查询条件
      * @return
      */
+    @Menu(value = "获取全部机构信息")
     @RequestMapping(value = "/listAll")
     @ResponseBody
     public String listAll(Branch branch) {
@@ -153,6 +155,7 @@ public class BranchController {
         }
     }
 
+    @Menu(value = "批量添加", isView = true)
     @RequestMapping("/batchAdd")
     public String batchAdd(MultipartFile file, ModelMap model, RedirectAttributes redirectAttributes) {
         try {
@@ -209,6 +212,7 @@ public class BranchController {
         return "redirect:list.do";
     }
 
+    @Menu(value = "下载模板")
     @RequestMapping("/download")
     public void download(HttpServletRequest request, HttpServletResponse response) {
         try {
@@ -221,6 +225,7 @@ public class BranchController {
     }
 
 
+    @Menu(value = "机构管理", isView = true)
     @RequestMapping("/manage")
     public String toManage(ModelMap model) {
         List<Branch> branchList = branchService.findByObject(null);
@@ -238,6 +243,7 @@ public class BranchController {
         return "branch/manage";
     }
 
+    @Menu(value = "获取机构信息")
     @RequestMapping("/getBranchInfo")
     @ResponseBody
     public String getBranchInfo(ModelMap model) {
@@ -261,6 +267,7 @@ public class BranchController {
      * @param branch id
      * @return
      */
+    @Menu(value = "删除机构")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(Branch branch) {
@@ -288,6 +295,7 @@ public class BranchController {
         }
     }
 
+    @Menu(value = "更新机构tree")
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
     public String updateAll(String info) {

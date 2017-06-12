@@ -5,6 +5,7 @@ import co.bugu.framework.core.mybatis.SearchParamUtil;
 import co.bugu.framework.core.mybatis.ThreadLocalUtil;
 import co.bugu.framework.core.util.BuguWebUtil;
 import co.bugu.framework.util.JsonUtil;
+import co.bugu.tes.annotation.Menu;
 import co.bugu.tes.enums.PaperPolicyType;
 import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.PaperPolicy;
@@ -33,6 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+@Menu(value = "")
 @Controller
 @RequestMapping("/paperPolicy")
 public class PaperPolicyController {
@@ -55,6 +57,7 @@ public class PaperPolicyController {
     * @param model
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/list")
     public String list(PaperPolicy paperPolicy, Integer curPage, Integer showCount, ModelMap model, HttpServletRequest request){
         try{
@@ -77,6 +80,7 @@ public class PaperPolicyController {
     * @param model
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String toEdit(Integer id, ModelMap model){
         try{
@@ -125,6 +129,7 @@ public class PaperPolicyController {
     * @param model
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(PaperPolicy paperPolicy, int[] questionMetaInfoId, ModelMap model, HttpServletRequest request, RedirectAttributes redirectAttributes){
         try{
@@ -168,6 +173,7 @@ public class PaperPolicyController {
     * @param paperPolicy 查询条件
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/listAll")
     @ResponseBody
     public String listAll(PaperPolicy paperPolicy, HttpServletRequest request){
@@ -196,6 +202,7 @@ public class PaperPolicyController {
     * @param paperpolicy id
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(PaperPolicy paperpolicy){
@@ -214,6 +221,7 @@ public class PaperPolicyController {
      * @param id
      * @return
      */
+    @Menu(value = "")
     @RequestMapping("/getPolicyInfo")
     @ResponseBody
     public String getPolicyInfo(Integer id){

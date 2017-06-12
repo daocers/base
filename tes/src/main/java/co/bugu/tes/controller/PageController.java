@@ -1,5 +1,6 @@
 package co.bugu.tes.controller;
 
+import co.bugu.tes.annotation.Menu;
 import co.bugu.tes.model.Page;
 import co.bugu.tes.service.IPageService;
 import co.bugu.framework.core.dao.PageInfo;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
+@Menu(value = "交易页面管理", isBox = true)
 @Controller
 @RequestMapping("/page")
 public class PageController {
@@ -31,6 +33,7 @@ public class PageController {
     * @param model
     * @return
     */
+    @Menu(value = "交易页面列表", isView = true)
     @RequestMapping(value = "/list")
     public String list(Page page, Integer curPage, Integer showCount, ModelMap model){
         try{
@@ -52,6 +55,7 @@ public class PageController {
     * @param model
     * @return
     */
+    @Menu(value = "编辑交易页面", isView = true)
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String toEdit(Integer id, ModelMap model){
         try{
@@ -70,6 +74,7 @@ public class PageController {
     * @param model
     * @return
     */
+    @Menu(value = "保存交易页面")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(Page page, ModelMap model){
         try{
@@ -92,6 +97,7 @@ public class PageController {
     * @param page 查询条件
     * @return
     */
+    @Menu(value = "获取全部交易页面")
     @RequestMapping(value = "/listAll")
     @ResponseBody
     public String listAll(Page page){
@@ -109,6 +115,7 @@ public class PageController {
     * @param page id
     * @return
     */
+    @Menu(value = "删除交易操作页面")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(Page page){

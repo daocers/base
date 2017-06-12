@@ -5,6 +5,7 @@ import co.bugu.framework.core.util.BuguWebUtil;
 import co.bugu.framework.util.EncryptUtil;
 import co.bugu.framework.util.ExcelUtilNew;
 import co.bugu.framework.util.JsonUtil;
+import co.bugu.tes.annotation.Menu;
 import co.bugu.tes.enums.ExamStatus;
 import co.bugu.tes.enums.UserStatus;
 import co.bugu.tes.global.Constant;
@@ -30,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.*;
 
+@Menu(value = "")
 @Controller
 @RequestMapping("/user")
 public class UserController {
@@ -58,6 +60,7 @@ public class UserController {
      * @param model
      * @return
      */
+    @Menu(value = "")
     @RequestMapping(value = "/list")
     public String list(String username, String name, Integer curPage, Integer showCount, ModelMap model) {
         try {
@@ -124,6 +127,7 @@ public class UserController {
      * @param model
      * @return
      */
+    @Menu(value = "")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String toEdit(Integer id, ModelMap model) {
         try {
@@ -168,6 +172,7 @@ public class UserController {
      * @param model
      * @return
      */
+    @Menu(value = "")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(User user, ModelMap model, RedirectAttributes redirectAttributes) {
         try {
@@ -199,6 +204,7 @@ public class UserController {
      * @param user 查询条件
      * @return
      */
+    @Menu(value = "")
     @RequestMapping(value = "/listAll")
     @ResponseBody
     public String listAll(User user) {
@@ -220,6 +226,7 @@ public class UserController {
      * @param user id
      * @return
      */
+    @Menu(value = "")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(User user) {
@@ -232,11 +239,13 @@ public class UserController {
         }
     }
 
+    @Menu(value = "")
     @RequestMapping("/toRegister")
     public String toRegister() {
         return "user/register";
     }
 
+    @Menu(value = "")
     @RequestMapping("/register")
     public String register(User user, RedirectAttributes redirectAttributes) {
         Profile profile = user.getProfile();
@@ -254,6 +263,7 @@ public class UserController {
         return "redirect:/login.do";
     }
 
+    @Menu(value = "")
     @RequestMapping("/batchAdd")
     public String batchAdd(MultipartFile file, RedirectAttributes redirectAttributes) {
         try {
@@ -303,6 +313,7 @@ public class UserController {
         return "redirect:list.do";
     }
 
+    @Menu(value = "")
     @RequestMapping("/download")
     public void download(HttpServletRequest request, HttpServletResponse response) {
         try {
@@ -320,6 +331,7 @@ public class UserController {
      * @param branchInfo
      * @return
      */
+    @Menu(value = "")
     @RequestMapping("/getUsers")
     @ResponseBody
     public String getUserForScene(String branchInfo) {
@@ -334,7 +346,7 @@ public class UserController {
         return JSON.toJSONString(res);
     }
 
-
+    @Menu(value = "")
     @RequestMapping("/toChangePassword")
     public String toChangePassword() {
         return "user/changePassword";
@@ -348,6 +360,7 @@ public class UserController {
      * @param request
      * @return
      */
+    @Menu(value = "")
     @RequestMapping("/changePassword")
     @ResponseBody
     public String changePassword(String oldPassword, String password, HttpServletRequest request) {
@@ -370,6 +383,7 @@ public class UserController {
 
     }
 
+    @Menu(value = "")
     @RequestMapping("/resetPassword")
     @ResponseBody
     public String resetPassword(Integer userId, ModelMap model) {
@@ -383,6 +397,7 @@ public class UserController {
         return json.toJSONString();
     }
 
+    @Menu(value = "")
     @RequestMapping("/getRole")
     @ResponseBody
     public String getRole(Integer id){
@@ -406,6 +421,7 @@ public class UserController {
         return res.toJSONString();
     }
 
+    @Menu(value = "")
     @RequestMapping(value = "/setRole", method = RequestMethod.POST)
     @ResponseBody
     public String setRole(Integer id, String roleId){

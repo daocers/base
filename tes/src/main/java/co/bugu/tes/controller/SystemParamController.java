@@ -1,5 +1,6 @@
 package co.bugu.tes.controller;
 
+import co.bugu.tes.annotation.Menu;
 import co.bugu.tes.model.SystemParam;
 import co.bugu.tes.service.ISystemParamService;
 import co.bugu.framework.core.dao.PageInfo;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
+@Menu(value = "")
 @Controller
 @RequestMapping("/systemparam")
 public class SystemParamController {
@@ -31,6 +33,7 @@ public class SystemParamController {
     * @param model
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/list")
     public String list(SystemParam systemparam, Integer curPage, Integer showCount, ModelMap model){
         try{
@@ -52,6 +55,7 @@ public class SystemParamController {
     * @param model
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String toEdit(Integer id, ModelMap model){
         try{
@@ -70,6 +74,7 @@ public class SystemParamController {
     * @param model
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(SystemParam systemparam, ModelMap model){
         try{
@@ -92,6 +97,7 @@ public class SystemParamController {
     * @param systemparam 查询条件
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/listAll")
     @ResponseBody
     public String listAll(SystemParam systemparam){
@@ -109,6 +115,7 @@ public class SystemParamController {
     * @param systemparam id
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(SystemParam systemparam){

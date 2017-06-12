@@ -3,6 +3,7 @@ package co.bugu.tes.controller;
 import co.bugu.framework.core.util.BuguWebUtil;
 import co.bugu.framework.core.util.VerifyCodeUtil;
 import co.bugu.framework.util.EncryptUtil;
+import co.bugu.tes.annotation.Menu;
 import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.Authority;
 import co.bugu.tes.model.Role;
@@ -31,6 +32,7 @@ import java.util.List;
 /**
  * Created by daocers on 2017/1/11.
  */
+@Menu(value = "用户中心", isBox = true)
 @Controller
 public class IndexController {
     private static Logger logger = LoggerFactory.getLogger(IndexController.class);
@@ -49,6 +51,7 @@ public class IndexController {
      * @param response
      * @return
      */
+    @Menu(value = "用户登录", isView = true)
     @RequestMapping("/login")
     public String toLogin(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
         if (BuguWebUtil.getUserId(request) != null) {
@@ -70,6 +73,7 @@ public class IndexController {
     }
 
 
+    @Menu(value = "首页", isView = true)
     @RequestMapping("/index")
     public String index(HttpServletRequest request, HttpServletResponse response) {
         Integer roleId = (Integer) BuguWebUtil.get(request, "currentRoleId");
@@ -121,6 +125,7 @@ public class IndexController {
      * @param request
      * @return
      */
+    @Menu(value = "登录")
     @RequestMapping(value = "/signIn", method = RequestMethod.POST)
     @ResponseBody
     public String signIn(String username, String password, Integer rememberMe, HttpServletRequest request, HttpServletResponse response) {
@@ -174,6 +179,7 @@ public class IndexController {
      * @param request
      * @return
      */
+    @Menu(value = "退出")
     @RequestMapping("/signOut")
     public String signOut(HttpServletRequest request, HttpServletResponse response) {
         try {
@@ -196,6 +202,7 @@ public class IndexController {
      * @return
      * @throws IOException
      */
+    @Menu(value = "验证码")
     @RequestMapping("/verifyCode")
     public String getVerifyCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String code = VerifyCodeUtil.generateVerifyCode(4);
@@ -227,6 +234,7 @@ public class IndexController {
     }
 
 
+    @Menu(value = "选择用户", isView = true)
     @RequestMapping("/selectRole")
     public String changeRole(Integer roleId, HttpServletRequest request, ModelMap model) {
         Integer id = (Integer) BuguWebUtil.get(request, "currentRoleId");

@@ -1,6 +1,7 @@
 package co.bugu.tes.controller;
 
 import co.bugu.framework.util.JsonUtil;
+import co.bugu.tes.annotation.Menu;
 import co.bugu.tes.model.Record;
 import co.bugu.tes.service.IRecordService;
 import co.bugu.framework.core.dao.PageInfo;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
+@Menu(value = "")
 @Controller
 @RequestMapping("/record")
 public class RecordController {
@@ -31,6 +33,7 @@ public class RecordController {
     * @param model
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/list")
     public String list(Record record, Integer curPage, Integer showCount, ModelMap model){
         try{
@@ -52,6 +55,7 @@ public class RecordController {
     * @param model
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String toEdit(Integer id, ModelMap model){
         try{
@@ -70,6 +74,7 @@ public class RecordController {
     * @param model
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(Record record, ModelMap model){
         try{
@@ -92,6 +97,7 @@ public class RecordController {
     * @param record 查询条件
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/listAll")
     @ResponseBody
     public String listAll(Record record){
@@ -109,6 +115,7 @@ public class RecordController {
     * @param record id
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(Record record){

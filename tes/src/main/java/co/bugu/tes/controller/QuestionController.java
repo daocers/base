@@ -5,6 +5,7 @@ import co.bugu.framework.core.mybatis.SearchParamUtil;
 import co.bugu.framework.util.ExcelUtil;
 import co.bugu.framework.util.JsonUtil;
 import co.bugu.framework.util.exception.TesException;
+import co.bugu.tes.annotation.Menu;
 import co.bugu.tes.model.Property;
 import co.bugu.tes.model.Question;
 import co.bugu.tes.model.QuestionBank;
@@ -34,6 +35,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Menu(value = "")
 @Controller
 @RequestMapping("/question")
 public class QuestionController {
@@ -56,6 +58,7 @@ public class QuestionController {
     * @param model
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/list")
     public String list(Question question, Integer curPage, Integer showCount, ModelMap model, HttpServletRequest request){
         try{
@@ -95,6 +98,7 @@ public class QuestionController {
     * @param model
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String toEdit(Integer id, ModelMap model){
         try{
@@ -144,6 +148,7 @@ public class QuestionController {
     * @param model
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(Question question, ModelMap model){
         try{
@@ -172,6 +177,7 @@ public class QuestionController {
     * @param question 查询条件
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/listAll")
     @ResponseBody
     public String listAll(Question question){
@@ -191,6 +197,7 @@ public class QuestionController {
     * @param question id
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(Question question){
@@ -210,6 +217,7 @@ public class QuestionController {
      * @return
      * @throws IOException
      */
+    @Menu(value = "")
     @RequestMapping(value = "/downModel")
     public String download(@RequestParam(value = "metaInfoId") Integer metaInfoId,
                            HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -225,6 +233,7 @@ public class QuestionController {
      * @param model
      * @return
      */
+    @Menu(value = "")
     @RequestMapping(value = "/batchAdd", method = RequestMethod.GET)
     public String batchAdd(ModelMap model){
         try{
@@ -247,6 +256,7 @@ public class QuestionController {
      * @param file
      *  @param metaInfoId 题型id
      */
+    @Menu(value = "")
     @RequestMapping(value = "/import", method = RequestMethod.POST)
     public String upload(MultipartFile file, Integer metaInfoId,
                          Integer questionBankId, ModelMap model, RedirectAttributes redirectAttributes){
@@ -366,6 +376,7 @@ public class QuestionController {
      * @param id
      * @return
      */
+    @Menu(value = "")
     @RequestMapping("/getPropertyList")
     @ResponseBody
     public String getPropertyListByMetaInfoId(Integer id){
@@ -379,6 +390,7 @@ public class QuestionController {
         }
     }
 
+    @Menu(value = "")
     @RequestMapping(value = "/{action}", method = RequestMethod.GET)
     public String answerOrShow(@PathVariable("action") String action, Integer id, ModelMap model){
         try{
@@ -399,6 +411,7 @@ public class QuestionController {
      * @param metaId
      * @return
      */
+    @Menu(value = "")
     @RequestMapping(value = "/getCount", method = RequestMethod.GET)
     @ResponseBody
     public String getCountByPropItemId(String propId, Integer metaId){
@@ -534,6 +547,7 @@ public class QuestionController {
      * @return
      * @throws Exception
      */
+    @Menu(value = "")
     @RequestMapping(value = "/updateCache", method = RequestMethod.POST)
     @ResponseBody
     public String updateCache() throws Exception {

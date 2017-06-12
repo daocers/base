@@ -1,5 +1,6 @@
 package co.bugu.tes.controller;
 
+import co.bugu.tes.annotation.Menu;
 import co.bugu.tes.model.Property;
 import co.bugu.tes.model.PropertyItem;
 import co.bugu.tes.service.IPropertyItemService;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.ArrayList;
 import java.util.List;
 
+@Menu(value = "")
 @Controller
 @RequestMapping("/property")
 public class PropertyController {
@@ -40,6 +42,7 @@ public class PropertyController {
     * @param model
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/list")
     public String list(Property property, Integer curPage, Integer showCount, ModelMap model){
         try{
@@ -61,6 +64,7 @@ public class PropertyController {
     * @param model
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String toEdit(Integer id, ModelMap model){
         try{
@@ -86,6 +90,7 @@ public class PropertyController {
     * @param model
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(Property property, String itemInfo, ModelMap model){
         try{
@@ -118,6 +123,7 @@ public class PropertyController {
     * @param property 查询条件
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/listAll")
     @ResponseBody
     public String listAll(Property property){
@@ -135,6 +141,7 @@ public class PropertyController {
     * @param property id
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(Property property){

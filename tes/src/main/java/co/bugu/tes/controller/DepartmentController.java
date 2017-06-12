@@ -3,16 +3,14 @@ package co.bugu.tes.controller;
 import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.util.ExcelUtil;
 import co.bugu.framework.util.JsonUtil;
+import co.bugu.tes.annotation.Menu;
 import co.bugu.tes.model.Department;
 import co.bugu.tes.service.IDepartmentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,12 +19,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Menu(value = "部门管理", isBox = true)
 @Controller
 @RequestMapping("/department")
 public class DepartmentController {
@@ -43,6 +41,7 @@ public class DepartmentController {
     * @param model
     * @return
     */
+    @Menu(value = "部门列表", isView = true)
     @RequestMapping(value = "/list")
     public String list(Department department, Integer curPage, Integer showCount, ModelMap model){
         try{
@@ -70,6 +69,7 @@ public class DepartmentController {
     * @param model
     * @return
     */
+    @Menu(value = "编辑部门", isView = true)
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String toEdit(Integer id, ModelMap model){
         try{
@@ -91,6 +91,7 @@ public class DepartmentController {
     * @param model
     * @return
     */
+    @Menu(value = "保存部门")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(Department department, ModelMap model){
         try{
@@ -118,6 +119,7 @@ public class DepartmentController {
     * @param department 查询条件
     * @return
     */
+    @Menu(value = "获取所有部门")
     @RequestMapping(value = "/listAll")
     @ResponseBody
     public String listAll(Department department){
@@ -135,6 +137,7 @@ public class DepartmentController {
     * @param department id
     * @return
     */
+    @Menu(value = "删除部门")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(Department department){
@@ -154,6 +157,7 @@ public class DepartmentController {
      * @return
      * @throws IOException
      */
+    @Menu(value = "下载部门模板")
     @RequestMapping(value = "/downModel")
     public String download(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String fileName = "部门信息模板";
@@ -163,10 +167,10 @@ public class DepartmentController {
         return null;
     }
 
-    @InitBinder
-    public void initBinder(WebDataBinder binder) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        dateFormat.setLenient(false);
-        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
-    }
+//    @InitBinder
+//    public void initBinder(WebDataBinder binder) {
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        dateFormat.setLenient(false);
+//        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+//    }
 }

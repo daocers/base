@@ -1,6 +1,7 @@
 package co.bugu.tes.controller;
 
 import co.bugu.framework.core.mybatis.SearchParamUtil;
+import co.bugu.tes.annotation.Menu;
 import co.bugu.tes.model.Property;
 import co.bugu.tes.model.PropertyItem;
 import co.bugu.tes.model.QuestionMetaInfo;
@@ -25,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+@Menu(value = "")
 @Controller
 @RequestMapping("/questionPolicy")
 public class QuestionPolicyController {
@@ -45,6 +47,7 @@ public class QuestionPolicyController {
     * @param model
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/list")
     public String list(QuestionPolicy questionPolicy, Integer curPage, Integer showCount, ModelMap model, HttpServletRequest request){
         try{
@@ -100,6 +103,7 @@ public class QuestionPolicyController {
     * @param model
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String toEdit(QuestionPolicy questionPolicy, ModelMap model){
         try{
@@ -137,6 +141,7 @@ public class QuestionPolicyController {
      * @param id
      * @return
      */
+    @Menu(value = "")
     @RequestMapping(value = "/getProperties", method = RequestMethod.GET)
     @ResponseBody
     public String getProperties(Integer id){
@@ -165,6 +170,7 @@ public class QuestionPolicyController {
     * @param model
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(QuestionPolicy questionpolicy, ModelMap model){
         try{
@@ -221,6 +227,7 @@ public class QuestionPolicyController {
     * @param questionpolicy 查询条件
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/listAll")
     @ResponseBody
     public String listAll(QuestionPolicy questionpolicy){
@@ -238,6 +245,7 @@ public class QuestionPolicyController {
     * @param questionpolicy id
     * @return
     */
+    @Menu(value = "")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(QuestionPolicy questionpolicy){

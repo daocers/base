@@ -3,6 +3,7 @@ package co.bugu.tes.controller;
 import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.core.mybatis.SearchParamUtil;
 import co.bugu.framework.util.JsonUtil;
+import co.bugu.tes.annotation.Menu;
 import co.bugu.tes.model.Branch;
 import co.bugu.tes.model.Department;
 import co.bugu.tes.model.Station;
@@ -23,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+@Menu(value = "")
 @Controller
 @RequestMapping("/station")
 public class StationController {
@@ -44,6 +46,7 @@ public class StationController {
      * @param model
      * @return
      */
+    @Menu(value = "")
     @RequestMapping(value = "/list")
     public String list(Station station, Integer curPage, Integer showCount, ModelMap model, HttpServletRequest request) {
         try {
@@ -73,6 +76,7 @@ public class StationController {
      * @param model
      * @return
      */
+    @Menu(value = "")
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String toEdit(Integer id, ModelMap model) {
         try {
@@ -96,6 +100,7 @@ public class StationController {
      * @param model
      * @return
      */
+    @Menu(value = "")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(Station station, ModelMap model) {
         try {
@@ -124,6 +129,7 @@ public class StationController {
      * @param station 查询条件
      * @return
      */
+    @Menu(value = "")
     @RequestMapping(value = "/listAll")
     @ResponseBody
     public String listAll(Station station) {
@@ -142,6 +148,7 @@ public class StationController {
      * @param station id
      * @return
      */
+    @Menu(value = "")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(Station station) {

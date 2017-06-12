@@ -1,5 +1,6 @@
 package co.bugu.tes.controller;
 
+import co.bugu.tes.annotation.Menu;
 import co.bugu.tes.model.Favourite;
 import co.bugu.tes.service.IFavouriteService;
 import co.bugu.framework.core.dao.PageInfo;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
+@Menu(value = "我的收藏", isBox = true)
 @Controller
 @RequestMapping("/favourite")
 public class FavouriteController {
@@ -31,6 +33,7 @@ public class FavouriteController {
     * @param model
     * @return
     */
+    @Menu(value = "收藏列表", isView = true)
     @RequestMapping(value = "/list")
     public String list(Favourite favourite, Integer curPage, Integer showCount, ModelMap model){
         try{
@@ -52,6 +55,7 @@ public class FavouriteController {
     * @param model
     * @return
     */
+    @Menu(value = "收藏编辑", isView = true)
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String toEdit(Integer id, ModelMap model){
         try{
@@ -70,6 +74,7 @@ public class FavouriteController {
     * @param model
     * @return
     */
+    @Menu(value = "添加收藏")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(Favourite favourite, ModelMap model){
         try{
@@ -92,6 +97,7 @@ public class FavouriteController {
     * @param favourite 查询条件
     * @return
     */
+    @Menu(value = "获取全部收藏")
     @RequestMapping(value = "/listAll")
     @ResponseBody
     public String listAll(Favourite favourite){
@@ -109,6 +115,7 @@ public class FavouriteController {
     * @param favourite id
     * @return
     */
+    @Menu(value = "删除收藏")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(Favourite favourite){

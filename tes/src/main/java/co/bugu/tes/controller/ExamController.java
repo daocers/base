@@ -3,9 +3,8 @@ package co.bugu.tes.controller;
 import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.core.util.BuguWebUtil;
 import co.bugu.framework.util.DateUtil;
-import co.bugu.framework.util.JedisUtil;
+import co.bugu.tes.annotation.Menu;
 import co.bugu.tes.enums.SceneStatus;
-import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.*;
 import co.bugu.tes.service.*;
 import co.bugu.websocket.WebSocketSessionUtil;
@@ -17,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -35,6 +33,7 @@ import java.util.*;
  * 考试类
  * 处理考试
  */
+@Menu(value = "考试管理", isBox = true)
 @Controller
 @RequestMapping("/exam")
 public class ExamController {
@@ -58,6 +57,7 @@ public class ExamController {
      * @param type  type= my,我开场的， type= join, 我参加的
      * @return
      */
+    @Menu(value = "考试场次列表", isView = true)
     @RequestMapping("/list")
     public String list(ModelMap model, String type, HttpServletRequest request, Integer curPage, Integer showCount) throws Exception {
         Integer userId = (Integer) BuguWebUtil.getUserId(request);
@@ -105,6 +105,7 @@ public class ExamController {
      * @param
      * @return
      */
+    @Menu(value = "考试须知", isView = true)
     @RequestMapping("/note")
     public String toNote(String authCode, ModelMap model) {
             Scene scene = new Scene();
@@ -136,6 +137,7 @@ public class ExamController {
      * @return
      * @throws Exception
      */
+    @Menu(value = "参加考试", isView = true)
     @RequestMapping("/exam")
     public String toExam(Scene scene, ModelMap model, HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes) throws Exception {
         if (scene.getId() == null) {
@@ -266,6 +268,7 @@ public class ExamController {
      * @param paperId    试卷id
      * @return
      */
+    @Menu(value = "提交试题")
     @RequestMapping(value = "/commitQuestion", method = RequestMethod.POST)
     @ResponseBody
     public String commitQuestion(Integer paperId, Integer questionId, String answer, String timeLeft) {
@@ -304,6 +307,7 @@ public class ExamController {
      * @param answerInfo
      * @return
      */
+    @Menu(value = "提交试卷")
     @RequestMapping(value = "/commitPaper", method = RequestMethod.POST)
     @ResponseBody
     public String commitPaper(Integer paperId, String answerInfo) {
@@ -354,6 +358,7 @@ public class ExamController {
      * @param questionId 试题id
      * @return
      */
+    @Menu(value = "考试获取试题信息")
     @RequestMapping("/getQuestion")
     @ResponseBody
     public String getQuestion(Integer questionId) {
@@ -381,6 +386,7 @@ public class ExamController {
     }
 
 
+    @Menu(value = "向客户端发送消息")
     @ResponseBody
     @RequestMapping("/sendMessage")
     public String sendMessageToClient() throws IOException {

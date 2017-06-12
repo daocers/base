@@ -5,6 +5,7 @@ import co.bugu.framework.core.mybatis.SearchParamUtil;
 import co.bugu.framework.core.mybatis.ThreadLocalUtil;
 import co.bugu.framework.util.JsonUtil;
 import co.bugu.framework.util.exception.TesException;
+import co.bugu.tes.annotation.Menu;
 import co.bugu.tes.model.Answer;
 import co.bugu.tes.model.Paper;
 import co.bugu.tes.model.Scene;
@@ -26,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Menu(value = "试卷管理", isBox = true)
 @Controller
 @RequestMapping("/paper")
 public class PaperController {
@@ -51,6 +53,7 @@ public class PaperController {
      * @param model
      * @return
      */
+    @Menu(value = "试卷列表", isView = true)
     @RequestMapping(value = "/list")
     public String list(Paper paper, String username, String sceneName, Integer curPage,
                        Integer showCount, ModelMap model, HttpServletRequest request) {
@@ -114,6 +117,7 @@ public class PaperController {
      * @param model
      * @return
      */
+    @Menu(value = "编辑试卷", isView = true)
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String toEdit(Integer id, ModelMap model) {
         try {
@@ -134,6 +138,7 @@ public class PaperController {
      * @param model
      * @return
      */
+    @Menu(value = "保存试卷")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(Paper paper, ModelMap model) {
         try {
@@ -151,7 +156,7 @@ public class PaperController {
         return "redirect:list.do";
     }
 
-
+    @Menu(value = "获取试卷信息", isView = true)
     @RequestMapping(value = "/paperInfo")
     public String getPaperInfo(Integer paperId, Integer showCount, Integer curPage, ModelMap model) throws Exception {
         PageInfo<Answer> pageInfo = new PageInfo<>(showCount, curPage);
@@ -168,6 +173,7 @@ public class PaperController {
      * @param paper 查询条件
      * @return
      */
+    @Menu(value = "获取全部试卷")
     @RequestMapping(value = "/listAll")
     @ResponseBody
     public String listAll(Paper paper) {
@@ -186,6 +192,7 @@ public class PaperController {
      * @param paper id
      * @return
      */
+    @Menu(value = "删除试卷")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(Paper paper) {
@@ -198,6 +205,7 @@ public class PaperController {
         }
     }
 
+    @Menu(value = "试卷管理", isView = true)
     @RequestMapping("/manage")
     public String toManage(Paper paper, ModelMap model) throws TesException {
         try {
