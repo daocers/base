@@ -26,7 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-@Menu(value = "")
+@Menu(value = "题库管理", isBox = true)
 @Controller
 @RequestMapping("/questionBank")
 public class QuestionBankController {
@@ -45,7 +45,7 @@ public class QuestionBankController {
     * @param model
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "题库列表", isView = true)
     @RequestMapping(value = "/list")
     public String list(QuestionBank questionbank, Integer curPage, Integer showCount, ModelMap model){
         try{
@@ -67,7 +67,7 @@ public class QuestionBankController {
     * @param model
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "编辑题库", isView = true)
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String toEdit(Integer id, ModelMap model){
         try{
@@ -90,7 +90,7 @@ public class QuestionBankController {
     * @param model
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "保存题库")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(HttpServletRequest request, QuestionBank questionbank, ModelMap model){
         try{
@@ -123,7 +123,7 @@ public class QuestionBankController {
     * @param questionBank 查询条件
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "获取全部题库")
     @RequestMapping(value = "/listAll")
     @ResponseBody
     public String listAll(QuestionBank questionBank){
@@ -141,7 +141,7 @@ public class QuestionBankController {
     * @param questionBank id
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "删除题库")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(QuestionBank questionBank){
@@ -152,12 +152,5 @@ public class QuestionBankController {
             logger.error("删除失败", e);
             return "-1";
         }
-    }
-
-    @InitBinder
-    public void initBinder(WebDataBinder binder) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        dateFormat.setLenient(false);
-        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
     }
 }

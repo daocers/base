@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-@Menu(value = "")
+@Menu(value = "试题策略管理", isBox = true)
 @Controller
 @RequestMapping("/questionPolicy")
 public class QuestionPolicyController {
@@ -47,7 +47,7 @@ public class QuestionPolicyController {
     * @param model
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "试题策略管理", isView = true)
     @RequestMapping(value = "/list")
     public String list(QuestionPolicy questionPolicy, Integer curPage, Integer showCount, ModelMap model, HttpServletRequest request){
         try{
@@ -103,7 +103,7 @@ public class QuestionPolicyController {
     * @param model
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "编辑试题策略", isView = true)
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String toEdit(QuestionPolicy questionPolicy, ModelMap model){
         try{
@@ -141,7 +141,7 @@ public class QuestionPolicyController {
      * @param id
      * @return
      */
-    @Menu(value = "")
+    @Menu(value = "获取试题属性")
     @RequestMapping(value = "/getProperties", method = RequestMethod.GET)
     @ResponseBody
     public String getProperties(Integer id){
@@ -170,7 +170,7 @@ public class QuestionPolicyController {
     * @param model
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "保存试题策略")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(QuestionPolicy questionpolicy, ModelMap model){
         try{
@@ -227,7 +227,7 @@ public class QuestionPolicyController {
     * @param questionpolicy 查询条件
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "获取全部试题策略")
     @RequestMapping(value = "/listAll")
     @ResponseBody
     public String listAll(QuestionPolicy questionpolicy){
@@ -245,7 +245,7 @@ public class QuestionPolicyController {
     * @param questionpolicy id
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "删除试题策略")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(QuestionPolicy questionpolicy){

@@ -61,7 +61,7 @@ public class ExamController {
     @RequestMapping("/list")
     public String list(ModelMap model, String type, HttpServletRequest request, Integer curPage, Integer showCount) throws Exception {
         Integer userId = (Integer) BuguWebUtil.getUserId(request);
-        if("join".equals(type)){
+        if ("join".equals(type)) {
             Paper obj = new Paper();
             obj.setUserId(userId);
             PageInfo<Paper> pageInfo = new PageInfo<>(showCount, curPage);
@@ -73,7 +73,7 @@ public class ExamController {
             scenePageInfo.setPageSize(pageInfo.getPageSize());
             scenePageInfo.setShowCount(pageInfo.getShowCount());
             List<Scene> sceneList = new ArrayList<>();
-            for(Paper paper : pageInfo.getData()){
+            for (Paper paper : pageInfo.getData()) {
                 Scene scene = sceneService.findById(paper.getSceneId());
                 sceneList.add(scene);
             }
@@ -81,13 +81,13 @@ public class ExamController {
             model.put("pi", scenePageInfo);
             model.put("paperList", pageInfo.getData());
             return "scene/score";
-        }else if("my".equals(type)){
+        } else if ("my".equals(type)) {
             Scene scene = new Scene();
             scene.setCreateUserId(userId);
             PageInfo<Scene> pageInfo = new PageInfo<>(showCount, curPage);
             sceneService.findByObject(scene, pageInfo);
             model.put("pi", pageInfo);
-        }else{
+        } else {
             model.put("err", "无效参数");
         }
         return "scene/list";
@@ -108,7 +108,7 @@ public class ExamController {
     @Menu(value = "考试须知", isView = true)
     @RequestMapping("/note")
     public String toNote(String authCode, ModelMap model) {
-            Scene scene = new Scene();
+        Scene scene = new Scene();
         scene.setAuthCode(authCode);
         scene.setStatus(SceneStatus.BEGIN.getStatus());//查找已经开场的场次
         List<Scene> sceneList = sceneService.findByObject(scene);
@@ -176,8 +176,7 @@ public class ExamController {
         }
 
 
-
-        Integer userId = (Integer) BuguWebUtil.getUserId(request);
+        Integer userId = BuguWebUtil.getUserId(request);
         Paper paper = new Paper();
         paper.setUserId(userId);
         paper.setSceneId(scene.getId());
@@ -187,17 +186,17 @@ public class ExamController {
             if (paper.getStatus() == 0) {
                 Date beginAnswerTime = paper.getBeginTime();
                 Date shouldEndTime = DateUtil.add(beginAnswerTime, Calendar.MINUTE, scene.getDuration());
-                if(shouldEndTime.before(now)){
+                if (shouldEndTime.before(now)) {
                     redirectAttributes.addFlashAttribute("msg", "考试时间已结束，无法继续答题");
                     return "redirect:index.do";
-                }else{
+                } else {
                     Long leftSecond = (shouldEndTime.getTime() - now.getTime());
                     model.put("timeLeft", DateUtil.formatLeft(leftSecond));
                 }
-            } else if(paper.getStatus() == 3){
+            } else if (paper.getStatus() == 3) {
                 redirectAttributes.addFlashAttribute("msg", "您已提交试卷，无法再次作答");
                 return "redirect:index.do";
-            }else{
+            } else {
                 redirectAttributes.addFlashAttribute("msg", "试卷状态异常，无法再次作答");
                 return "redirect:index.do";
             }
@@ -331,9 +330,9 @@ public class ExamController {
             Map metaInfoIdScoreMap = JSON.parseObject(scene.getMetaScoreInfo(), HashMap.class);
             Double score = paperService.computeScore(metaInfoIdScoreMap, answerMap, paperId);
             paper.setOriginMark(score.doubleValue() + "");
-            if(scene.getPercentable().equals(0)){//百分制，需要处理
-                paper.setMark(score/Double.valueOf(scene.getTotalScore()).doubleValue() * 100 + "");
-            }else{
+            if (scene.getPercentable().equals(0)) {//百分制，需要处理
+                paper.setMark(score / Double.valueOf(scene.getTotalScore()).doubleValue() * 100 + "");
+            } else {
                 paper.setMark(paper.getOriginMark());
             }
             paper.setId(paperId);

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
-@Menu(value = "")
+@Menu(value = "属性条目管理", isBox = true)
 @Controller
 @RequestMapping("/propertyitem")
 public class PropertyItemController {
@@ -33,7 +33,7 @@ public class PropertyItemController {
     * @param model
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "属性条目列表", isView = true)
     @RequestMapping(value = "/list")
     public String list(PropertyItem propertyitem, Integer curPage, Integer showCount, ModelMap model){
         try{
@@ -55,7 +55,7 @@ public class PropertyItemController {
     * @param model
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "编辑属性条目", isView = true)
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String toEdit(Integer id, ModelMap model){
         try{
@@ -74,7 +74,7 @@ public class PropertyItemController {
     * @param model
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "保存属性条目")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(PropertyItem propertyitem, ModelMap model){
         try{
@@ -97,7 +97,7 @@ public class PropertyItemController {
     * @param propertyitem 查询条件
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "获取全部属性条目")
     @RequestMapping(value = "/listAll")
     @ResponseBody
     public String listAll(PropertyItem propertyitem){
@@ -115,7 +115,7 @@ public class PropertyItemController {
     * @param propertyitem id
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "删除属性条目")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(PropertyItem propertyitem){

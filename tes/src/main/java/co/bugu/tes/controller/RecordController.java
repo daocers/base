@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
-@Menu(value = "")
+@Menu(value = "答题记录管理", isBox = true)
 @Controller
 @RequestMapping("/record")
 public class RecordController {
@@ -33,7 +33,7 @@ public class RecordController {
     * @param model
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "答题记录列表", isView = true)
     @RequestMapping(value = "/list")
     public String list(Record record, Integer curPage, Integer showCount, ModelMap model){
         try{
@@ -55,7 +55,7 @@ public class RecordController {
     * @param model
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "编辑作答记录", isView = true)
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String toEdit(Integer id, ModelMap model){
         try{
@@ -74,7 +74,7 @@ public class RecordController {
     * @param model
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "保存作答记录")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(Record record, ModelMap model){
         try{
@@ -97,7 +97,7 @@ public class RecordController {
     * @param record 查询条件
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "获取全部作答记录")
     @RequestMapping(value = "/listAll")
     @ResponseBody
     public String listAll(Record record){
@@ -115,7 +115,7 @@ public class RecordController {
     * @param record id
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "删除作答记录")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(Record record){

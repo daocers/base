@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.ArrayList;
 import java.util.List;
 
-@Menu(value = "")
+@Menu(value = "属性管理", isBox = true)
 @Controller
 @RequestMapping("/property")
 public class PropertyController {
@@ -42,7 +42,7 @@ public class PropertyController {
     * @param model
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "属性列表", isView = true)
     @RequestMapping(value = "/list")
     public String list(Property property, Integer curPage, Integer showCount, ModelMap model){
         try{
@@ -64,7 +64,7 @@ public class PropertyController {
     * @param model
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "编辑属性", isView = true)
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String toEdit(Integer id, ModelMap model){
         try{
@@ -90,7 +90,7 @@ public class PropertyController {
     * @param model
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "保存属性")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(Property property, String itemInfo, ModelMap model){
         try{
@@ -123,7 +123,7 @@ public class PropertyController {
     * @param property 查询条件
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "获取全部属性")
     @RequestMapping(value = "/listAll")
     @ResponseBody
     public String listAll(Property property){
@@ -141,7 +141,7 @@ public class PropertyController {
     * @param property id
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "删除属性")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(Property property){

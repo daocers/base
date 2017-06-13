@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Menu(value = "")
+@Menu(value = "角色管理", isBox = true)
 @Controller
 @RequestMapping("/role")
 public class RoleController {
@@ -47,7 +47,7 @@ public class RoleController {
     * @param model
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "角色列表", isView = true)
     @RequestMapping(value = "/list")
     public String list(Role role, Integer curPage, Integer showCount, ModelMap model, HttpServletRequest request){
         try{
@@ -64,7 +64,7 @@ public class RoleController {
 
     }
 
-    @Menu(value = "")
+    @Menu(value = "待确定", isView = true)
     @RequestMapping("/index/{type}")
     public String index(@PathVariable String type, ModelMap modelMap, HttpServletRequest request){
         if("student".equals(type)){
@@ -84,7 +84,7 @@ public class RoleController {
     * @param model
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "编辑角色", isView = true)
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String toEdit(Integer id, ModelMap model){
         try{
@@ -129,7 +129,7 @@ public class RoleController {
     * @param model
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "保存角色")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(Role role, @RequestParam(value = "nodeInfo", required = false) String info, ModelMap model){
         try{
@@ -159,7 +159,7 @@ public class RoleController {
     * @param role 查询条件
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "获取全部角色")
     @RequestMapping(value = "/listAll")
     @ResponseBody
     public String listAll(Role role){
@@ -177,7 +177,7 @@ public class RoleController {
     * @param role id
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "删除角色")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(Role role){

@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 
-@Menu(value = "")
+@Menu(value = "交易管理", isBox = true)
 @Controller
 @RequestMapping("/trade")
 public class TradeController {
@@ -43,7 +43,7 @@ public class TradeController {
      *
      * @return
      */
-    @Menu(value = "")
+    @Menu(value = "录制交易", isView = true)
     @RequestMapping("/toRecord")
     public String record(ModelMap model) {
         List<QuestionBank> bankList = questionBankService.findByObject(null);
@@ -69,7 +69,7 @@ public class TradeController {
      * @param request
      * @return
      */
-    @Menu(value = "")
+    @Menu(value = "保存交易模板")
     @RequestMapping("/save")
     @ResponseBody
     public String saveModelAndQuestion(String name, String code, String description,
@@ -136,7 +136,7 @@ public class TradeController {
      * @param bankId  题库管理
      * @return
      */
-    @Menu(value = "")
+    @Menu(value = "保存交易试题")
     @RequestMapping("/saveQuestion")
     @ResponseBody
     public String saveQuestion(String fieldInfo, Integer tradeId, Integer pageId, String description, Integer bankId) {

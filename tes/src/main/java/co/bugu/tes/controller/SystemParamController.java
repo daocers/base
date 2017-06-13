@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
-@Menu(value = "")
+@Menu(value = "系统参数管理", isBox = true)
 @Controller
-@RequestMapping("/systemparam")
+@RequestMapping("/systemParam")
 public class SystemParamController {
     @Autowired
     ISystemParamService systemparamService;
@@ -33,7 +33,7 @@ public class SystemParamController {
     * @param model
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "系统参数列表", isView = true)
     @RequestMapping(value = "/list")
     public String list(SystemParam systemparam, Integer curPage, Integer showCount, ModelMap model){
         try{
@@ -55,7 +55,7 @@ public class SystemParamController {
     * @param model
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "编辑系统参数", isView = true)
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String toEdit(Integer id, ModelMap model){
         try{
@@ -74,7 +74,7 @@ public class SystemParamController {
     * @param model
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "保存系统参数")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(SystemParam systemparam, ModelMap model){
         try{
@@ -97,7 +97,7 @@ public class SystemParamController {
     * @param systemparam 查询条件
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "获取所有系统参数")
     @RequestMapping(value = "/listAll")
     @ResponseBody
     public String listAll(SystemParam systemparam){
@@ -115,7 +115,7 @@ public class SystemParamController {
     * @param systemparam id
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "删除系统参数")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(SystemParam systemparam){

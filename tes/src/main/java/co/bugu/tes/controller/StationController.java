@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-@Menu(value = "")
+@Menu(value = "岗位管理", isBox = true)
 @Controller
 @RequestMapping("/station")
 public class StationController {
@@ -46,7 +46,7 @@ public class StationController {
      * @param model
      * @return
      */
-    @Menu(value = "")
+    @Menu(value = "岗位列表", isView = true)
     @RequestMapping(value = "/list")
     public String list(Station station, Integer curPage, Integer showCount, ModelMap model, HttpServletRequest request) {
         try {
@@ -76,7 +76,7 @@ public class StationController {
      * @param model
      * @return
      */
-    @Menu(value = "")
+    @Menu(value = "编辑岗位", isView = true)
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String toEdit(Integer id, ModelMap model) {
         try {
@@ -100,7 +100,7 @@ public class StationController {
      * @param model
      * @return
      */
-    @Menu(value = "")
+    @Menu(value = "保存岗位")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(Station station, ModelMap model) {
         try {
@@ -129,7 +129,7 @@ public class StationController {
      * @param station 查询条件
      * @return
      */
-    @Menu(value = "")
+    @Menu(value = "获取全部岗位")
     @RequestMapping(value = "/listAll")
     @ResponseBody
     public String listAll(Station station) {
@@ -148,7 +148,7 @@ public class StationController {
      * @param station id
      * @return
      */
-    @Menu(value = "")
+    @Menu(value = "删除岗位")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(Station station) {

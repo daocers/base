@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
-@Menu(value = "")
+
+@Menu(value = "用户数据管理", isBox = true)
 @Controller
 @RequestMapping("/profile")
 public class ProfileController {
@@ -25,22 +26,23 @@ public class ProfileController {
     private static Logger logger = LoggerFactory.getLogger(ProfileController.class);
 
     /**
-    * 列表，分页显示
-    * @param profile  查询数据
-    * @param curPage 当前页码，从1开始
-    * @param showCount 当前页码显示数目
-    * @param model
-    * @return
-    */
-    @Menu(value = "")
+     * 列表，分页显示
+     *
+     * @param profile   查询数据
+     * @param curPage   当前页码，从1开始
+     * @param showCount 当前页码显示数目
+     * @param model
+     * @return
+     */
+    @Menu(value = "用户数据列表", isView = true)
     @RequestMapping(value = "/list")
-    public String list(Profile profile, Integer curPage, Integer showCount, ModelMap model){
-        try{
+    public String list(Profile profile, Integer curPage, Integer showCount, ModelMap model) {
+        try {
             PageInfo<Profile> pageInfo = new PageInfo<>(showCount, curPage);
             pageInfo = profileService.findByObject(profile, pageInfo);
             model.put("pi", pageInfo);
             model.put("profile", profile);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("获取列表失败", e);
             model.put("errMsg", "获取列表失败");
         }
@@ -49,18 +51,19 @@ public class ProfileController {
     }
 
     /**
-    * 查询数据后跳转到对应的编辑页面
-    * @param id 查询数据，一般查找id
-    * @param model
-    * @return
-    */
-    @Menu(value = "")
+     * 查询数据后跳转到对应的编辑页面
+     *
+     * @param id    查询数据，一般查找id
+     * @param model
+     * @return
+     */
+    @Menu(value = "编辑用户数据", isView = true)
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
-    public String toEdit(Integer id, ModelMap model){
-        try{
+    public String toEdit(Integer id, ModelMap model) {
+        try {
             Profile profile = profileService.findById(id);
             model.put("profile", profile);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("获取信息失败", e);
             model.put("errMsg", "获取信息失败");
         }
@@ -68,21 +71,22 @@ public class ProfileController {
     }
 
     /**
-    * 保存结果，根据是否带有id来表示更新或者新增
-    * @param profile
-    * @param model
-    * @return
-    */
-    @Menu(value = "")
+     * 保存结果，根据是否带有id来表示更新或者新增
+     *
+     * @param profile
+     * @param model
+     * @return
+     */
+    @Menu(value = "保存用户数据")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public String save(Profile profile, ModelMap model){
-        try{
-            if(profile.getId() == null){
+    public String save(Profile profile, ModelMap model) {
+        try {
+            if (profile.getId() == null) {
                 profileService.save(profile);
-            }else{
+            } else {
                 profileService.updateById(profile);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("保存失败", e);
             model.put("profile", profile);
             model.put("errMsg", "保存失败");
@@ -92,36 +96,38 @@ public class ProfileController {
     }
 
     /**
-    * 异步请求 获取全部
-    * @param profile 查询条件
-    * @return
-    */
-    @Menu(value = "")
+     * 异步请求 获取全部
+     *
+     * @param profile 查询条件
+     * @return
+     */
+    @Menu(value = "获取全部用户数据")
     @RequestMapping(value = "/listAll")
     @ResponseBody
-    public String listAll(Profile profile){
-        try{
+    public String listAll(Profile profile) {
+        try {
             List<Profile> list = profileService.findByObject(profile);
             return JsonUtil.toJsonString(list);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("获取全部列表失败", e);
             return "-1";
         }
     }
 
     /**
-    * 异步请求 删除
-    * @param profile id
-    * @return
-    */
+     * 异步请求 删除
+     *
+     * @param profile id
+     * @return
+     */
     @Menu(value = "")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
-    public String delete(Profile profile){
-        try{
+    public String delete(Profile profile) {
+        try {
             profileService.delete(profile);
             return "0";
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("删除失败", e);
             return "-1";
         }

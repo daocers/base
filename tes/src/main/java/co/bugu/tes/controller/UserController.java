@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.*;
 
-@Menu(value = "")
+@Menu(value = "用户管理", isBox = true)
 @Controller
 @RequestMapping("/user")
 public class UserController {
@@ -60,7 +60,7 @@ public class UserController {
      * @param model
      * @return
      */
-    @Menu(value = "")
+    @Menu(value = "用户管理", isView = true)
     @RequestMapping(value = "/list")
     public String list(String username, String name, Integer curPage, Integer showCount, ModelMap model) {
         try {
@@ -127,7 +127,7 @@ public class UserController {
      * @param model
      * @return
      */
-    @Menu(value = "")
+    @Menu(value = "编辑用户信息", isView = true)
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String toEdit(Integer id, ModelMap model) {
         try {
@@ -172,7 +172,7 @@ public class UserController {
      * @param model
      * @return
      */
-    @Menu(value = "")
+    @Menu(value = "保存用户信息")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(User user, ModelMap model, RedirectAttributes redirectAttributes) {
         try {
@@ -204,7 +204,7 @@ public class UserController {
      * @param user 查询条件
      * @return
      */
-    @Menu(value = "")
+    @Menu(value = "获取全部用户信息")
     @RequestMapping(value = "/listAll")
     @ResponseBody
     public String listAll(User user) {
@@ -226,7 +226,7 @@ public class UserController {
      * @param user id
      * @return
      */
-    @Menu(value = "")
+    @Menu(value = "删除用户")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(User user) {
@@ -239,13 +239,13 @@ public class UserController {
         }
     }
 
-    @Menu(value = "")
+    @Menu(value = "用户注册", isView = true)
     @RequestMapping("/toRegister")
     public String toRegister() {
         return "user/register";
     }
 
-    @Menu(value = "")
+    @Menu(value = "注册")
     @RequestMapping("/register")
     public String register(User user, RedirectAttributes redirectAttributes) {
         Profile profile = user.getProfile();
@@ -263,7 +263,7 @@ public class UserController {
         return "redirect:/login.do";
     }
 
-    @Menu(value = "")
+    @Menu(value = "批量添加用户")
     @RequestMapping("/batchAdd")
     public String batchAdd(MultipartFile file, RedirectAttributes redirectAttributes) {
         try {
@@ -313,7 +313,7 @@ public class UserController {
         return "redirect:list.do";
     }
 
-    @Menu(value = "")
+    @Menu(value = "下载用户模板")
     @RequestMapping("/download")
     public void download(HttpServletRequest request, HttpServletResponse response) {
         try {
@@ -331,7 +331,7 @@ public class UserController {
      * @param branchInfo
      * @return
      */
-    @Menu(value = "")
+    @Menu(value = "获取用户")
     @RequestMapping("/getUsers")
     @ResponseBody
     public String getUserForScene(String branchInfo) {
@@ -346,7 +346,7 @@ public class UserController {
         return JSON.toJSONString(res);
     }
 
-    @Menu(value = "")
+    @Menu(value = "修改密码", isView = true)
     @RequestMapping("/toChangePassword")
     public String toChangePassword() {
         return "user/changePassword";
@@ -360,7 +360,7 @@ public class UserController {
      * @param request
      * @return
      */
-    @Menu(value = "")
+    @Menu(value = "保存新密码")
     @RequestMapping("/changePassword")
     @ResponseBody
     public String changePassword(String oldPassword, String password, HttpServletRequest request) {
@@ -383,7 +383,7 @@ public class UserController {
 
     }
 
-    @Menu(value = "")
+    @Menu(value = "重置密码")
     @RequestMapping("/resetPassword")
     @ResponseBody
     public String resetPassword(Integer userId, ModelMap model) {
@@ -397,7 +397,7 @@ public class UserController {
         return json.toJSONString();
     }
 
-    @Menu(value = "")
+    @Menu(value = "获取用户角色信息")
     @RequestMapping("/getRole")
     @ResponseBody
     public String getRole(Integer id){
@@ -421,7 +421,7 @@ public class UserController {
         return res.toJSONString();
     }
 
-    @Menu(value = "")
+    @Menu(value = "更新用户角色")
     @RequestMapping(value = "/setRole", method = RequestMethod.POST)
     @ResponseBody
     public String setRole(Integer id, String roleId){

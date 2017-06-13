@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-@Menu(value = "")
+@Menu(value = "场次管理", isBox = true)
 @Controller
 @RequestMapping("/scene")
 public class SceneController {
@@ -53,7 +53,7 @@ public class SceneController {
      * @param request
      * @return
      */
-    @Menu(value = "")
+    @Menu(value = "场次列表", isView = true)
     @RequestMapping("/list")
     public String list(String type, Integer showCount, Integer curPage, ModelMap model, HttpServletRequest request) throws Exception {
         Integer userId = BuguWebUtil.getUserId(request);
@@ -87,7 +87,7 @@ public class SceneController {
         }
     }
 
-    @Menu(value = "")
+    @Menu(value = "开场", isView = true)
     @RequestMapping("/index")
     public String index(Integer id, ModelMap model){
         QuestionMetaInfo metaInfo= new QuestionMetaInfo();
@@ -175,7 +175,7 @@ public class SceneController {
         return null;
     }
 
-    @Menu(value = "")
+    @Menu(value = "保存场次")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
     public String save(Scene scene, HttpServletRequest request){
@@ -219,7 +219,7 @@ public class SceneController {
     }
 
 
-    @Menu(value = "")
+    @Menu(value = "设置授权码")
     @RequestMapping(value = "/saveAuthCode", method = RequestMethod.POST)
     @ResponseBody
     public String saveAuthCode(Scene scene){
@@ -229,7 +229,7 @@ public class SceneController {
         return json.toJSONString();
     }
 
-    @Menu(value = "")
+    @Menu(value = "选择试卷策略")
     @RequestMapping(value = "/savePaperPolicy", method = RequestMethod.POST)
     @ResponseBody
     public String savePaperPolicy(Integer id, Integer bankId, Integer paperPolicyId){
@@ -257,7 +257,7 @@ public class SceneController {
         return json.toJSONString();
     }
 
-    @Menu(value = "")
+    @Menu(value = "确认开场")
     @RequestMapping(value = "/confirm", method = RequestMethod.POST)
     @ResponseBody
     public String confirm(Integer id, HttpServletRequest request){
@@ -283,7 +283,7 @@ public class SceneController {
         return json.toJSONString();
     }
 
-    @Menu(value = "")
+    @Menu(value = "校验试卷策略可用")
     @RequestMapping("/checkPaperPolicy")
     @ResponseBody
     public String checkPaperPolicy(Integer bankId, Integer paperPolicyId) throws TesException {
@@ -319,7 +319,7 @@ public class SceneController {
         return json.toJSONString();
     }
 
-    @Menu(value = "")
+    @Menu(value = "场次预览")
     @RequestMapping("/preview")
     public String preview(Integer id, ModelMap model){
         QuestionMetaInfo metaInfo= new QuestionMetaInfo();

@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-@Menu(value = "")
+@Menu(value = "数字录入管理", isBox = true)
 @Controller("typeIn")
 @RequestMapping("/typeIn")
 public class TypeInController {
@@ -36,7 +36,7 @@ public class TypeInController {
     * @param model
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "数字录入列表", isView = true)
     @RequestMapping(value = "/list")
     public String list(TypeIn typeIn, Integer curPage, Integer showCount, ModelMap model){
         try{
@@ -58,7 +58,7 @@ public class TypeInController {
     * @param model
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "编辑数字录入", isView = true)
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String toEdit(Integer id, ModelMap model){
         try{
@@ -88,7 +88,7 @@ public class TypeInController {
     * @param model
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "保存文字录入")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(TypeIn typeIn, ModelMap model){
         try{
@@ -112,7 +112,7 @@ public class TypeInController {
     * @param typeIn 查询条件
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "获取所有文字录入信息")
     @RequestMapping(value = "/listAll")
     @ResponseBody
     public String listAll(TypeIn typeIn){
@@ -130,7 +130,7 @@ public class TypeInController {
     * @param typeIn id
     * @return
     */
-    @Menu(value = "")
+    @Menu(value = "删除文字录入")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(TypeIn typeIn){
