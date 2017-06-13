@@ -319,7 +319,7 @@ public class SceneController {
         return json.toJSONString();
     }
 
-    @Menu(value = "场次预览")
+    @Menu(value = "场次预览", isView = true)
     @RequestMapping("/preview")
     public String preview(Integer id, ModelMap model){
         QuestionMetaInfo metaInfo= new QuestionMetaInfo();

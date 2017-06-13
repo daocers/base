@@ -9,11 +9,11 @@ import co.bugu.tes.annotation.MenuInfo;
 import co.bugu.tes.global.Constant;
 import co.bugu.tes.model.Authority;
 import co.bugu.tes.service.IAuthorityService;
-import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import sun.misc.resources.Messages_it;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -390,100 +389,109 @@ public class AuthorityController {
     }
 
 
-    public String initMenu(){
-        List<MvcParam> res = new ArrayList<>();
-
+    public List<MenuInfo> initMenu(){
         List<MenuInfo> menuInfoList = new ArrayList<>();
 //        获取当前包下的所有类
         Set<Class<?>> classes = ReflectUtil.getClasses(this.getClass().getPackage().getName());
-        for(Class<?> cla : classes){
-            String controller = cla.getName();
-            String rootPath = "";
-            String[] method = null;
-            Controller con = cla.getAnnotation(Controller.class);
-            RestController restCon = cla.getAnnotation(RestController.class);
-            RequestMapping requestMapping = cla.getAnnotation(RequestMapping.class);
-            Menu menu = cla.getAnnotation(Menu.class);
-            if(con == null && restCon == null){
-                continue;
-            }
-            MenuInfo parent = new MenuInfo();
-
-            if(requestMapping != null){
-                rootPath = requestMapping.value()[0];
-                parent.setRootPath(rootPath);
-                parent.setName(controller);
-                method = requestMapping.method().
-            }
-
-            if(menu != null){
-                String name = menu.value();
-                boolean isBox = menu.isBox();
-                boolean isView = menu.isView();
-                parent.setController(cla.getName());
-                parent.setAction("");
-                parent.setApi(false);
-                parent.setBox(isBox);
-                parent.setView(isView);
-                parent.setName(name);
-            }
-
-
-
-
-            menuInfoList.add(parent);
-
-
-//            扫描当前类是否有controller注解，没有就略过
-            if(con == null){
-                continue;
-            }
-            Menu menu = cla.getAnnotation(Menu.class);
-
-//            当前类是否有requestMapping注解
-            RequestMapping requestMapping = cla.getDeclaredAnnotation(RequestMapping.class);
-            if(requestMapping == null){
-                continue;
-            }
-            String[] rootPath = requestMapping.value();
-            Method[] methods = cla.getDeclaredMethods();
-
-            for(Method method: methods){
-                MvcParam mvcParam = new MvcParam();
-                mvcParam.setControllerName(cla.getSimpleName());
-                mvcParam.setController(cla.getName());
-                mvcParam.setMethodName(method.getName());
-                if(rootPath.length > 0){
-                    mvcParam.setRootPath(rootPath[0]);
-                }
-                method.setAccessible(true);
-                RequestMapping methodRequestMapping = method.getDeclaredAnnotation(RequestMapping.class);
-                if(methodRequestMapping == null){
-                    continue;
-                }
-                String[] path = methodRequestMapping.value();
-                if(path.length > 0){
-                    mvcParam.setPath(path[0]);
-                }
-                RequestMethod[] requestMethods = methodRequestMapping.method();
-                if(requestMethods.length > 0){
-                    StringBuilder builder = new StringBuilder();
-                    for(RequestMethod m: requestMethods){
-                        builder.append(m.name()).append("|");
-                    }
-                    if(builder.length() > 0){
-                        mvcParam.setMethod(builder.substring(0, builder.length() - 1));
-                    }
-                }
-                ResponseBody responseBody = method.getAnnotation(ResponseBody.class);
-                if(responseBody != null){
-                    mvcParam.setApi(true);
-                }else{
-                    mvcParam.setApi(false);
-                }
-                res.add(mvcParam);
-            }
+        for(Class<?> cla : classes) {
+            menuInfoList.addAll(getOnClass(cla));
+            menuInfoList.addAll(getOnMethod(cla));
         }
-        return res;
+        return menuInfoList;
     }
+
+    private String getMethod(RequestMapping requestMapping){
+        RequestMethod[] ms = requestMapping.method();
+        if(ms == null && ms.length > 0){
+            StringBuffer buffer = new StringBuffer();
+            for(RequestMethod m: ms){
+                buffer.append(m.name())
+                        .append(",");
+            }
+            return buffer.toString();
+        }
+        return "";
+    }
+
+    private List<MenuInfo> getOnClass(Class<?> clazz){
+        List<MenuInfo> list = new ArrayList<>();
+        String controller = clazz.getName();
+        String rootPath = "";
+        String method = null;
+        Controller con = clazz.getAnnotation(Controller.class);
+        RestController restCon = clazz.getAnnotation(RestController.class);
+        RequestMapping requestMapping = clazz.getAnnotation(RequestMapping.class);
+        Menu menu = clazz.getAnnotation(Menu.class);
+        if(con == null && restCon == null){
+            return list;
+        }
+        MenuInfo parent = new MenuInfo();
+
+        if(requestMapping != null){
+            rootPath = requestMapping.value()[0];
+            parent.setRootPath(rootPath);
+            parent.setName(controller);
+            method = getMethod(requestMapping);
+            parent.setMethod(method);
+        }
+
+        if(menu != null){
+            String name = menu.value();
+            boolean isBox = menu.isBox();
+            boolean isView = menu.isView();
+            parent.setController(controller);
+            parent.setAction("");
+            parent.setApi(false);
+            parent.setBox(isBox);
+            parent.setView(isView);
+            parent.setName(name);
+        }
+        list.add(parent);
+        return list;
+    }
+
+    private List<MenuInfo> getOnMethod(Class<?> clazz){
+        List<MenuInfo> list = new ArrayList<>();
+
+        String controller = clazz.getName();
+        String rootPath = "";
+        Controller con = clazz.getAnnotation(Controller.class);
+        RestController restCon = clazz.getAnnotation(RestController.class);
+        RequestMapping requestMapping = clazz.getAnnotation(RequestMapping.class);
+        Menu menu = clazz.getAnnotation(Menu.class);
+        if(con == null && restCon == null){
+            return list;
+        }
+
+        if(requestMapping != null){
+            rootPath = requestMapping.value()[0];
+        }
+
+        Method[] methods = clazz.getDeclaredMethods();
+        for(Method m: methods){
+            Menu actionMenu = m.getAnnotation(Menu.class);
+            RequestMapping actionRequestMapping = m.getAnnotation(RequestMapping.class);
+            ResponseBody actionResponseBody = m.getAnnotation(ResponseBody.class);
+            MenuInfo menuInfo = new MenuInfo();
+            menuInfo.setMethod(getMethod(actionRequestMapping));
+            menuInfo.setAction(m.getName());
+            menuInfo.setApi(actionResponseBody != null);
+            menuInfo.setController(controller);
+            menuInfo.setRootPath(rootPath);
+
+            String name = actionMenu.value();
+            boolean isBox = actionMenu.isBox();
+            boolean isView = actionMenu.isView();
+            if(StringUtils.isEmpty(name)){
+                name = m.getName();
+            }
+            menuInfo.setName(name);
+            menuInfo.setBox(isBox);
+            menuInfo.setView(isView);
+            list.add(menuInfo);
+
+        }
+        return list;
+    }
+
 }
