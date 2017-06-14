@@ -28,7 +28,8 @@
         }
 
         .menu-item:hover {
-            background-color: #1296db;
+            background-color: #a5e0ff;
+            /*background-color: darkgray;*/
         }
 
         .menu-item .top .left {
