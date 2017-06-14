@@ -12,6 +12,7 @@ import co.bugu.tes.service.IAuthorityService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -191,96 +192,97 @@ public class AuthorityController {
     @Menu(value = "初始化权限")
     @RequestMapping(value = "/init")
     public String init(ModelMap model) {
-        try {
-            List<Authority> authorities = authorityService.findByObject(null);
-            List<String> codeList = new ArrayList<>();
-
-            Map<String, Integer> authCodeIdMap = new HashMap<>();
-            for (Authority a : authorities) {
-                codeList.add(a.getCode());
-                authCodeIdMap.put(a.getCode(), a.getId());
-            }
-            List<MvcParam> list = ReflectUtil.getAnnotationInfo(AuthorityController.class.getPackage().getName());
-
-            Set<String> controllerSet = new HashSet<>();
-            for (MvcParam param : list) {
-                controllerSet.add(param.getControllerName());
-            }
-
-
-            /**
-             * 处理菜单权限外层容器的增删改
-             * */
-            for (String ctrler : controllerSet) {
-                String code = ctrler.toUpperCase();
-
-                Authority auth = new Authority();
-                auth.setStatus(Constant.STATUS_ENABLE);
-                auth.setController(ctrler);
-                auth.setType(Constant.AUTH_TYPE_BOX);
-                auth.setCode(code);
-
-
-                auth.setIsApi(Constant.AUTH_API_FALSE);
-                if (authCodeIdMap.containsKey(code)) {
-                    auth.setId(authCodeIdMap.get(code));
-                    authorityService.updateById(auth);
-                } else {
-                    auth.setName(ctrler);
-                    auth.setDescription(code + "菜单");
-                    authorityService.save(auth);
-                    authCodeIdMap.put(code, auth.getId());
-                }
-            }
-
-            /**
-             * 处理菜单权限
-             * */
-            for (MvcParam param : list) {
-                String method = StringUtils.isEmpty(param.getMethod()) ? "" : param.getMethod().toUpperCase();
-                String url = param.getRootPath() + param.getPath();
-                String code = getCodeFromUrl(url) + (StringUtils.isEmpty(method) ? "" : "_" + method);
-                String parentCode = param.getControllerName().toUpperCase();
-
-
-                Authority auth = new Authority();
-                auth.setSuperiorId(authCodeIdMap.get(parentCode));
-                auth.setStatus(Constant.STATUS_ENABLE);
-                auth.setAction(param.getMethodName());
-                auth.setController(param.getControllerName());
-                auth.setDescription("");
-                auth.setName(code);
-                auth.setParam(null);
-                auth.setType(Constant.AUTH_TYPE_MENU);
-                auth.setUrl(url);
-                auth.setCode(code);
-                auth.setAcceptMethod(method);
-                auth.setIsApi(param.getApi() ? Constant.AUTH_API_TRUE : Constant.AUTH_API_FALSE);
-
-                if (authCodeIdMap.containsKey(code)) {
-                    auth.setId(authCodeIdMap.get(code));
-                    authorityService.updateById(auth);
-                } else {
-                    authorityService.save(auth);
-                }
-                codeList.remove(code);
-            }
-
-            /**
-             * 删除系统中不存在的权限信息
-             * */
-            for (String item : codeList) {
-                Integer id = authCodeIdMap.get(item);
-                Authority authority = new Authority();
-                authority.setId(id);
-                authorityService.delete(authority);
-            }
-
-
-        } catch (Exception e) {
-            logger.error("初始化工程内的信息失败", e);
-        }
-        return "redirect:list.do";
+//        try {
+//            List<Authority> authorities = authorityService.findByObject(null);
+//            List<String> codeList = new ArrayList<>();
+//
+//            Map<String, Integer> authCodeIdMap = new HashMap<>();
+//            for (Authority a : authorities) {
+//                codeList.add(a.getCode());
+//                authCodeIdMap.put(a.getCode(), a.getId());
+//            }
+//            List<MvcParam> list = ReflectUtil.getAnnotationInfo(AuthorityController.class.getPackage().getName());
+//
+//            Set<String> controllerSet = new HashSet<>();
+//            for (MvcParam param : list) {
+//                controllerSet.add(param.getControllerName());
+//            }
+//
+//
+//            /**
+//             * 处理菜单权限外层容器的增删改
+//             * */
+//            for (String ctrler : controllerSet) {
+//                String code = ctrler.toUpperCase();
+//
+//                Authority auth = new Authority();
+//                auth.setStatus(Constant.STATUS_ENABLE);
+//                auth.setController(ctrler);
+//                auth.setType(Constant.AUTH_TYPE_BOX);
+//                auth.setCode(code);
+//
+//
+//                auth.setIsApi(Constant.AUTH_API_FALSE);
+//                if (authCodeIdMap.containsKey(code)) {
+//                    auth.setId(authCodeIdMap.get(code));
+//                    authorityService.updateById(auth);
+//                } else {
+//                    auth.setName(ctrler);
+//                    auth.setDescription(code + "菜单");
+//                    authorityService.save(auth);
+//                    authCodeIdMap.put(code, auth.getId());
+//                }
+//            }
+//
+//            /**
+//             * 处理菜单权限
+//             * */
+//            for (MvcParam param : list) {
+//                String method = StringUtils.isEmpty(param.getMethod()) ? "" : param.getMethod().toUpperCase();
+//                String url = param.getRootPath() + param.getPath();
+//                String code = getCodeFromUrl(url) + (StringUtils.isEmpty(method) ? "" : "_" + method);
+//                String parentCode = param.getControllerName().toUpperCase();
+//
+//
+//                Authority auth = new Authority();
+//                auth.setSuperiorId(authCodeIdMap.get(parentCode));
+//                auth.setStatus(Constant.STATUS_ENABLE);
+//                auth.setAction(param.getMethodName());
+//                auth.setController(param.getControllerName());
+//                auth.setDescription("");
+//                auth.setName(code);
+//                auth.setParam(null);
+//                auth.setType(Constant.AUTH_TYPE_MENU);
+//                auth.setUrl(url);
+//                auth.setCode(code);
+//                auth.setAcceptMethod(method);
+//                auth.setIsApi(param.getApi() ? Constant.AUTH_API_TRUE : Constant.AUTH_API_FALSE);
+//
+//                if (authCodeIdMap.containsKey(code)) {
+//                    auth.setId(authCodeIdMap.get(code));
+//                    authorityService.updateById(auth);
+//                } else {
+//                    authorityService.save(auth);
+//                }
+//                codeList.remove(code);
+//            }
+//
+//            /**
+//             * 删除系统中不存在的权限信息
+//             * */
+//            for (String item : codeList) {
+//                Integer id = authCodeIdMap.get(item);
+//                Authority authority = new Authority();
+//                authority.setId(id);
+//                authorityService.delete(authority);
+//            }
+//
+//
+//        } catch (Exception e) {
+//            logger.error("初始化工程内的信息失败", e);
+//        }
+//        return "redirect:list.do";
+        return "";
     }
 
     private static String getCodeFromUrl(String url) {
@@ -389,109 +391,15 @@ public class AuthorityController {
     }
 
 
-    public List<MenuInfo> initMenu(){
-        List<MenuInfo> menuInfoList = new ArrayList<>();
-//        获取当前包下的所有类
-        Set<Class<?>> classes = ReflectUtil.getClasses(this.getClass().getPackage().getName());
-        for(Class<?> cla : classes) {
-            menuInfoList.addAll(getOnClass(cla));
-            menuInfoList.addAll(getOnMethod(cla));
-        }
-        return menuInfoList;
+    @RequestMapping(value = "initMenu", method = RequestMethod.POST)
+    public String initMenu(){
+       try{
+           authorityService.initAuthority(this.getClass().getPackage().getName());
+       }catch (Exception e){
+           logger.error("初始化菜单失败", e);
+       }
+       return "redirect:list.do";
     }
 
-    private String getMethod(RequestMapping requestMapping){
-        RequestMethod[] ms = requestMapping.method();
-        if(ms == null && ms.length > 0){
-            StringBuffer buffer = new StringBuffer();
-            for(RequestMethod m: ms){
-                buffer.append(m.name())
-                        .append(",");
-            }
-            return buffer.toString();
-        }
-        return "";
-    }
-
-    private List<MenuInfo> getOnClass(Class<?> clazz){
-        List<MenuInfo> list = new ArrayList<>();
-        String controller = clazz.getName();
-        String rootPath = "";
-        String method = null;
-        Controller con = clazz.getAnnotation(Controller.class);
-        RestController restCon = clazz.getAnnotation(RestController.class);
-        RequestMapping requestMapping = clazz.getAnnotation(RequestMapping.class);
-        Menu menu = clazz.getAnnotation(Menu.class);
-        if(con == null && restCon == null){
-            return list;
-        }
-        MenuInfo parent = new MenuInfo();
-
-        if(requestMapping != null){
-            rootPath = requestMapping.value()[0];
-            parent.setRootPath(rootPath);
-            parent.setName(controller);
-            method = getMethod(requestMapping);
-            parent.setMethod(method);
-        }
-
-        if(menu != null){
-            String name = menu.value();
-            boolean isBox = menu.isBox();
-            boolean isView = menu.isView();
-            parent.setController(controller);
-            parent.setAction("");
-            parent.setApi(false);
-            parent.setBox(isBox);
-            parent.setView(isView);
-            parent.setName(name);
-        }
-        list.add(parent);
-        return list;
-    }
-
-    private List<MenuInfo> getOnMethod(Class<?> clazz){
-        List<MenuInfo> list = new ArrayList<>();
-
-        String controller = clazz.getName();
-        String rootPath = "";
-        Controller con = clazz.getAnnotation(Controller.class);
-        RestController restCon = clazz.getAnnotation(RestController.class);
-        RequestMapping requestMapping = clazz.getAnnotation(RequestMapping.class);
-        Menu menu = clazz.getAnnotation(Menu.class);
-        if(con == null && restCon == null){
-            return list;
-        }
-
-        if(requestMapping != null){
-            rootPath = requestMapping.value()[0];
-        }
-
-        Method[] methods = clazz.getDeclaredMethods();
-        for(Method m: methods){
-            Menu actionMenu = m.getAnnotation(Menu.class);
-            RequestMapping actionRequestMapping = m.getAnnotation(RequestMapping.class);
-            ResponseBody actionResponseBody = m.getAnnotation(ResponseBody.class);
-            MenuInfo menuInfo = new MenuInfo();
-            menuInfo.setMethod(getMethod(actionRequestMapping));
-            menuInfo.setAction(m.getName());
-            menuInfo.setApi(actionResponseBody != null);
-            menuInfo.setController(controller);
-            menuInfo.setRootPath(rootPath);
-
-            String name = actionMenu.value();
-            boolean isBox = actionMenu.isBox();
-            boolean isView = actionMenu.isView();
-            if(StringUtils.isEmpty(name)){
-                name = m.getName();
-            }
-            menuInfo.setName(name);
-            menuInfo.setBox(isBox);
-            menuInfo.setView(isView);
-            list.add(menuInfo);
-
-        }
-        return list;
-    }
 
 }

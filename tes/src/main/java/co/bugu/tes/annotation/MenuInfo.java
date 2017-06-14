@@ -12,10 +12,19 @@ public class MenuInfo {
     private String url;
 
     private String rootPath;
-    private String path;
     private Boolean isApi;
     private String method;
     private String controller;
+
+    private String parameter;
+
+    public String getParameter() {
+        return parameter;
+    }
+
+    public void setParameter(String parameter) {
+        this.parameter = parameter;
+    }
 
     public Integer getId() {
         return id;
@@ -71,14 +80,6 @@ public class MenuInfo {
 
     public void setRootPath(String rootPath) {
         this.rootPath = rootPath;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
     }
 
     public Boolean getApi() {

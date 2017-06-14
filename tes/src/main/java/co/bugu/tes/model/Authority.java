@@ -13,7 +13,7 @@ public class Authority {
 
     private String code;
 
-    private String param;
+    private String parameter;
 
     private Integer status;
 
@@ -25,9 +25,53 @@ public class Authority {
 
     private String acceptMethod;
 
-    private Integer isApi;
+    private Boolean isApi;
+    private Boolean isView;
+    private Boolean isBox;
+    private Integer version;
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
 
     private Integer idx;
+
+
+    public String getParameter() {
+        return parameter;
+    }
+
+    public void setParameter(String parameter) {
+        this.parameter = parameter;
+    }
+
+    public boolean isApi() {
+        return isApi;
+    }
+
+    public void setApi(boolean api) {
+        isApi = api;
+    }
+
+    public boolean isView() {
+        return isView;
+    }
+
+    public void setView(boolean view) {
+        isView = view;
+    }
+
+    public boolean isBox() {
+        return isBox;
+    }
+
+    public void setBox(boolean box) {
+        isBox = box;
+    }
 
     public Integer getIdx() {
         return idx;
@@ -35,14 +79,6 @@ public class Authority {
 
     public void setIdx(Integer idx) {
         this.idx = idx;
-    }
-
-    public Integer getIsApi() {
-        return isApi;
-    }
-
-    public void setIsApi(Integer isApi) {
-        this.isApi = isApi;
     }
 
     public Integer getId() {
@@ -85,21 +121,12 @@ public class Authority {
         this.name = name;
     }
 
-
     public String getCode() {
         return code;
     }
 
     public void setCode(String code) {
         this.code = code;
-    }
-
-    public String getParam() {
-        return param;
-    }
-
-    public void setParam(String param) {
-        this.param = param;
     }
 
     public Integer getStatus() {

@@ -7,19 +7,22 @@
         <result column="controller" property="controller" jdbcType="VARCHAR"/>
         <result column="description" property="description" jdbcType="VARCHAR"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
-        <result column="param" property="param" jdbcType="VARCHAR"/>
+        <result column="parameter" property="parameter" jdbcType="VARCHAR"/>
         <result column="status" property="status" jdbcType="INTEGER"/>
         <result column="superior_id" property="superiorId" jdbcType="INTEGER"/>
         <result column="type" property="type" jdbcType="INTEGER"/>
         <result column="url" property="url" jdbcType="VARCHAR"/>
         <result column="accept_method" property="acceptMethod" jdbcType="VARCHAR"/>
-        <result column="is_api" property="isApi" jdbcType="INTEGER"/>
+        <result column="is_api" property="isApi" jdbcType="BOOLEAN"/>
+        <result column="is_view" property="isView" jdbcType="BOOLEAN"/>
+        <result column="is_box" property="isBox" jdbcType="BOOLEAN"/>
         <result column="idx" property="idx" jdbcType="INTEGER"/>
         <result column="code" property="code" jdbcType="VARCHAR"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
     </resultMap>
     <sql id="authority_list">
-    id, action, controller, description, name, param, status, superior_id, type,
-    url, accept_method, is_api, idx, code
+    id, action, controller, description, name, parameter, status, superior_id, type,
+    url, accept_method, is_api, idx, code, is_view, is_box, version
   </sql>
     <select id="selectById" resultMap="AuthorityMap" parameterType="java.lang.Integer">
         select
@@ -50,8 +53,8 @@
             <if test="name != null">
                 name,
             </if>
-            <if test="param != null">
-                param,
+            <if test="parameter != null">
+                parameter,
             </if>
             <if test="status != null">
                 status,
@@ -77,6 +80,15 @@
             <if test="code != null">
                 code,
             </if>
+            <if test="isView != null">
+                is_view,
+            </if>
+            <if test="isBox != null">
+                is_box,
+            </if>
+            <if test="version != null">
+                version,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -94,8 +106,8 @@
             <if test="name != null">
                 #{name,jdbcType=VARCHAR},
             </if>
-            <if test="param != null">
-                #{param,jdbcType=VARCHAR},
+            <if test="parameter != null">
+                #{parameter,jdbcType=VARCHAR},
             </if>
             <if test="status != null">
                 #{status,jdbcType=INTEGER},
@@ -121,6 +133,15 @@
             <if test="code != null">
                 #{code},
             </if>
+            <if test="isView != null">
+                #{isView},
+            </if>
+            <if test="isBox != null">
+                #{isBox},
+            </if>
+            <if test="version != null">
+                #{version},
+            </if>
         </trim>
     </insert>
     <update id="updateById" parameterType="co.bugu.tes.model.Authority">
@@ -138,8 +159,8 @@
             <if test="name != null">
                 name = #{name,jdbcType=VARCHAR},
             </if>
-            <if test="param != null">
-                param = #{param,jdbcType=VARCHAR},
+            <if test="parameter != null">
+                parameter = #{parameter,jdbcType=VARCHAR},
             </if>
             <if test="status != null">
                 status = #{status,jdbcType=INTEGER},
@@ -164,6 +185,15 @@
             </if>
             <if test="code != null">
                 code = #{code},
+            </if>
+            <if test="isView != null">
+                is_view = #{isView},
+            </if>
+            <if test="isBox != null">
+                is_box = #{isBox},
+            </if>
+            <if test="version != null">
+                version = #{version},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
@@ -197,4 +227,12 @@
     <select id="getAllController" resultType="string">
         SELECT DISTINCT controller from authority order by controller
     </select>
+    
+    <select id="getMaxVersion" resultType="int">
+        select max(version) from authority;
+    </select>
+
+    <update id="enablePreviousVersion" parameterType="int">
+        update authority set status = 1 WHERE  version <![CDATA[<]]> #{version}
+    </update>
 </mapper>

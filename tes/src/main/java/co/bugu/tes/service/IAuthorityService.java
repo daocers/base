@@ -34,4 +34,6 @@ public interface IAuthorityService extends IBaseService<Authority>{
 
     List<Authority> selectAuthorityByRole(Integer roleId);
 
+    void initAuthority(String packageName);
+
 }

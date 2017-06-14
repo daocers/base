@@ -35,18 +35,18 @@
                     </div>
                     <input type="name" value="${param.name}" class="form-control">
                 </div>
-                <div class="input-group input-group-sm">
-                    <div class="input-group-addon">类型</div>
-                    <select class="form-control" name="type">
-                        <option value="-1">全部</option>
-                        <option value="0"
-                                <c:if test="${param.type == 0}">selected</c:if>>操作权限
-                        </option>
-                        <option value="2"
-                                <c:if test="${param.type == 2}">selected</c:if>>菜单权限
-                        </option>
-                    </select>
-                </div>
+                <%--<div class="input-group input-group-sm">--%>
+                <%--<div class="input-group-addon">类型</div>--%>
+                <%--<select class="form-control" name="type">--%>
+                <%--<option value="-1">全部</option>--%>
+                <%--<option value="0"--%>
+                <%--<c:if test="${param.type == 0}">selected</c:if>>操作权限--%>
+                <%--</option>--%>
+                <%--<option value="2"--%>
+                <%--<c:if test="${param.type == 2}">selected</c:if>>菜单权限--%>
+                <%--</option>--%>
+                <%--</select>--%>
+                <%--</div>--%>
                 <div class="input-group input-group-sm">
                     <div class="input-group-addon">Controller</div>
                     <select class="form-control" name="controller" value="${param.controller}">
@@ -63,43 +63,56 @@
                     <button class="btn btn-sm btn-info">提交</button>
                 </div>
             </form>
+
+            <button class="btn btn-sm btn-danger" id="initMenu" type="button">初始化菜单</button>
+
             <div class="table-responsive">
                 <table class="table table-bordered editable-table">
                     <thead>
                     <tr>
                         <th><input type="checkbox" class="selectAll"></th>
-                        <th>action</th>
+                        <th class="col-md-2">名称</th>
                         <th>controller</th>
-                        <th>描述</th>
-                        <th>名称</th>
+                        <th>action</th>
                         <th>参数</th>
-                        <th>状态</th>
-                        <th>上级权限</th>
-                        <th>类型</th>
+                        <th>描述</th>
+                        <%--<th>状态</th>--%>
+                        <%--<th>上级权限</th>--%>
+                        <%--<th>类型</th>--%>
                         <th>url</th>
                         <th>请求方法</th>
-                        <th>操作</th>
+                        <th>菜单容器</th>
+                        <th>页面</th>
+                        <th>接口</th>
+                        <%--<th class="col-md-2">操作</th>--%>
                     </tr>
                     </thead>
                     <tbody>
                     <c:forEach items="${pi.data}" var="authority" varStatus="line">
                         <tr>
                             <td><input type="checkbox" objId="${authority.id}"></td>
-                            <td>${authority.action}</td>
-                            <td>${authority.controller}</td>
-                            <td>${authority.description}</td>
                             <td>${authority.name}</td>
-                            <td>${authority.param}</td>
-                            <td>${authority.status}</td>
-                            <td>${authority.superiorId}</td>
-                            <td>${authority.type}</td>
+                            <td>${authority.controller}</td>
+                            <td>${authority.action}</td>
+                            <td>${authority.parameter}</td>
+                            <td>${authority.description}</td>
+
+                                <%--<td>${authority.status}</td>--%>
+                                <%--<td>${authority.superiorId}</td>--%>
+                                <%--<td>${authority.type}</td>--%>
                             <td>${authority.url}</td>
                             <td>${authority.acceptMethod}</td>
-                            <td>
-                                <a href="edit.do?id=${authority.id}&type=detail" class="opr">详情</a>
-                                <a href="edit.do?id=${authority.id}" class="opr">修改</a>
-                                <a href="javascript:del(${authority.id})" class="opr">删除</a>
-                            </td>
+                            <th>${authority.box ? "是": "否"}</th>
+                            <th>${authority.view ? "是": "否"}</th>
+                            <th>${authority.api ? "是": "否"}</th>
+                                <%--<th>${authority.box}</th>--%>
+                                <%--<th>${authority.view}</th>--%>
+                                <%--<th>${authority.api}</th>--%>
+                                <%--<td>--%>
+                                <%--<a href="edit.do?id=${authority.id}&type=detail" class="opr">详情</a>--%>
+                                <%--<a href="edit.do?id=${authority.id}" class="opr">修改</a>--%>
+                                <%--<a href="javascript:del(${authority.id})" class="opr">删除</a>--%>
+                                <%--</td>--%>
                         </tr>
                     </c:forEach>
 
@@ -129,38 +142,36 @@
 
 
 <script type="javascript">
-    $(function () {
-        $("td").on("blur", ".cell-input > input", function (e) {
-            console.log("开始")
-            var id, name, desc;
-            $(this).parents("tr").find("td").each(function (idx, e) {
 
-                if (idx == 0) {
-                    id = $(e).find("input").attr("objId");
-                }
-                if (idx == 3) {
-                    desc = $(e).find(".cell-label").text();
-                }
-                if (idx == 4) {
-                    name = $(e).find(".cell-label").text();
-                }
-            });
-            $.ajax({
-                url: "commit.do",
-                type: "post",
-                data: {"id": id, "name": name, "description": desc},
-                success: function (data) {
-                    if (data == "0") {
-                        console.log("更新成功");
-                    } else {
-                        alert("更新失败");
+    $("#initMenu").on("click", function () {
+        console.log("click")
+        swal({
+            type: "question",
+            text: "耗时较长，确定要执行初始化菜单操作吗？",
+            showCancelButton: true
+        }).then(function (isConfirm) {
+            if (isConfirm == true) {
+                $.ajax({
+                    type: 'post',
+                    url: 'initMenu.do',
+                    success: function () {
+
+                    },
+                    error: function () {
+
                     }
-                },
-                error: function () {
-                    alert("更新失败");
-                }
-            })
+
+                })
+            } else {
+                return false;
+            }
         })
+        return false;
+
+    })
+
+    $(function () {
+
     })
 
 </script>

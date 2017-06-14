@@ -101,12 +101,14 @@ public class IndexController {
         List<Authority> authorityList = authorityService.selectAuthorityByRole(role.getId());
         List<Authority> list = new ArrayList<>();
         for (Authority a : authorityList) {
-            if (a.getType() == Constant.AUTH_TYPE_BOX) {
+            if (a.isBox()) {
                 boxList.add(a);
                 authInfoList.add(list);
                 list = new ArrayList<>();
-            } else {
+            } else if (a.isView()) {
                 list.add(a);
+            } else {
+
             }
         }
         authInfoList.add(list);
