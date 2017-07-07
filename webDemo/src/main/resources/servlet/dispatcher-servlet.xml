@@ -7,7 +7,7 @@
 
     <mvc:annotation-driven/>
 
-    <context:component-scan base-package="com.pinkbox.kacha.web.controller"/>
+    <context:component-scan base-package="co.bugu.web.controller"/>
     <!--<context:component-scan base-package="co.bugu.tes.api"/>-->
 
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
@@ -21,22 +21,30 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
-    <mvc:annotation-driven>
-        <mvc:name-converters register-defaults="true">
-            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
-                <constructor-arg value="UTF-8" />
-            </bean>
-        </mvc:name-converters>
-    </mvc:annotation-driven>
+
+    <bean id="basicService" class="co.bugu.hessian.service.BasicService"/>
+
+    <bean name="testInterface"
+          class="org.springframework.remoting.caucho.HessianExporter">
+        <property name="service" ref="basicService"/>
+        <property name="serviceInterface" value="co.bugu.hessian.service.IBaseService"/>
+    </bean>
+    <!--<mvc:annotation-driven>-->
+        <!--<mvc:name-converters register-defaults="true">-->
+            <!--<bean class="org.springframework.http.converter.StringHttpMessageConverter">-->
+                <!--<constructor-arg value="UTF-8" />-->
+            <!--</bean>-->
+        <!--</mvc:name-converters>-->
+    <!--</mvc:annotation-driven>-->
 
 
-    <!--拦截所有请求-->
-    <mvc:interceptors>
-        <mvc:interceptor>
-            <mvc:mapping path="/"/>
-            <mvc:mapping path="*"/>
-            <mvc:mapping path="/*/*"/>
-            <bean class="com.pinkbox.kacha.sso.interceptor.AuthInterceptor"/>
-        </mvc:interceptor>
-    </mvc:interceptors>
+    <!--&lt;!&ndash;拦截所有请求&ndash;&gt;-->
+    <!--<mvc:interceptors>-->
+        <!--<mvc:interceptor>-->
+            <!--<mvc:mapping path="/"/>-->
+            <!--<mvc:mapping path="*"/>-->
+            <!--<mvc:mapping path="/*/*"/>-->
+            <!--<bean class="com.pinkbox.kacha.sso.interceptor.AuthInterceptor"/>-->
+        <!--</mvc:interceptor>-->
+    <!--</mvc:interceptors>-->
 </beans>
