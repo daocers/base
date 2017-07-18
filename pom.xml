@@ -38,6 +38,7 @@
         <module>springboot</module>
         <module>springbootmyStarter</module>
         <module>springcloud</module>
+        <module>monitor</module>
 
     </modules>
     <dependencies>
