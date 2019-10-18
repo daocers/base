@@ -55,7 +55,7 @@
         <project.build.souceEncoding>UTF-8</project.build.souceEncoding>
         <commons-codec.version>1.8</commons-codec.version>
         <commons-lang.version>2.4</commons-lang.version>
-        <commons-fileupload.version>1.3.1</commons-fileupload.version>
+        <commons-fileupload.version>1.3.3</commons-fileupload.version>
         <commons-io.version>2.4</commons-io.version>
 
         <servlet-api.version>2.5</servlet-api.version>
