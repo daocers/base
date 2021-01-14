@@ -87,7 +87,7 @@
 
         <xstream.version>1.4.9</xstream.version>
         <dom4j.version>1.6.1</dom4j.version>
-        <poi.version>3.15-beta1</poi.version>
+        <poi.version>4.1.2</poi.version>
         <jstl.version>1.2</jstl.version>
         <standard.version>1.1.2</standard.version>
         <zxing.version>3.2.1</zxing.version>
