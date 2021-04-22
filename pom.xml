@@ -60,7 +60,7 @@
 
         <servlet-api.version>2.5</servlet-api.version>
         <jsp-api.version>2.1</jsp-api.version>
-        <mybatis.version>3.3.0</mybatis.version>
+        <mybatis.version>3.5.6</mybatis.version>
         <mybatis-spring.version>1.2.3</mybatis-spring.version>
         <slf4j-api.version>1.7.13</slf4j-api.version>
         <slf4j-log4j12.version>1.7.21</slf4j-log4j12.version>
