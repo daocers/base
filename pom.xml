@@ -51,7 +51,7 @@
 
 
     <properties>
-        <spring.version>4.2.6.RELEASE</spring.version>
+        <spring.version>6.0.0</spring.version>
         <project.build.souceEncoding>UTF-8</project.build.souceEncoding>
         <commons-codec.version>1.8</commons-codec.version>
         <commons-lang.version>2.4</commons-lang.version>
